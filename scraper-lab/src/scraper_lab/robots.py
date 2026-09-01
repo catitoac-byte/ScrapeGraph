@@ -18,7 +18,9 @@ curinga `*`, ancora `$` e vitoria da regra mais especifica (a mais longa).
 from __future__ import annotations
 
 import re
+import time
 from urllib.parse import urlparse
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 UA_PADRAO = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -91,26 +93,80 @@ class Robots:
         return melhor_permite >= melhor_proibe if melhor_proibe >= 0 else True
 
 
-_cache: dict[str, Robots | None] = {}
+# O certificado de varios sites e aceito pelo repositorio do sistema e nao
+# pelo pacote embutido do Python. Sem isto o handshake falha, a leitura do
+# robots.txt e abortada e a verificacao passa a liberar tudo em silencio.
+try:
+    import truststore
+
+    truststore.inject_into_ssl()
+except Exception:
+    pass
+
+# (situacao, regras). situacao em: lido, ausente, falhou.
+#   lido    o arquivo foi obtido e interpretado
+#   ausente o servidor respondeu 404: nao existe robots.txt, e a convencao
+#           da web e permitir
+#   falhou  nao conseguimos ler (TLS, timeout, 5xx). NAO e prova de que o
+#           acesso e livre, apenas ausencia de informacao
+_cache: dict[str, tuple[str, "Robots | None"]] = {}
+
+# Quem chama pode querer saber que a verificacao nao pode ser feita.
+_avisados: set[str] = set()
 
 
-def para(url: str, *, agente: str = UA_PADRAO, timeout: int = 15) -> Robots | None:
-    """Robots do dominio da URL. Devolve None quando nao foi possivel ler."""
+def _buscar(base: str, agente: str, timeout: int) -> tuple[str, "Robots | None"]:
+    ultimo = None
+    for tentativa in range(3):
+        for esquema in ("", "http://"):   # alguns hosts so servem em http
+            alvo = (base if not esquema else esquema + base.split("://", 1)[1])
+            try:
+                req = Request(alvo + "/robots.txt", headers={"User-Agent": agente})
+                with urlopen(req, timeout=timeout) as r:
+                    texto = r.read(500_000).decode("utf-8", errors="replace")
+                return "lido", Robots(texto, agente)
+            except HTTPError as e:
+                if e.code in (404, 410):
+                    return "ausente", None
+                ultimo = e
+            except Exception as e:
+                ultimo = e
+        time.sleep(0.6 * (tentativa + 1))
+    return "falhou", None
+
+
+def situacao(url: str, *, agente: str = UA_PADRAO, timeout: int = 15) -> str:
+    """lido, ausente ou falhou. Util para registrar no relatorio de coleta."""
+    return _situacao_e_regras(url, agente=agente, timeout=timeout)[0]
+
+
+def _situacao_e_regras(url: str, *, agente: str = UA_PADRAO,
+                       timeout: int = 15) -> tuple[str, "Robots | None"]:
     p = urlparse(url)
     base = f"{p.scheme}://{p.netloc}"
-    if base in _cache:
-        return _cache[base]
-    try:
-        req = Request(base + "/robots.txt", headers={"User-Agent": agente})
-        with urlopen(req, timeout=timeout) as r:
-            texto = r.read(500_000).decode("utf-8", errors="replace")
-        _cache[base] = Robots(texto, agente)
-    except Exception:
-        # Sem robots.txt legivel, o padrao da web e permitir.
-        _cache[base] = None
+    if base not in _cache:
+        _cache[base] = _buscar(base, agente, timeout)
     return _cache[base]
 
 
-def permitido(url: str, *, agente: str = UA_PADRAO) -> bool:
-    r = para(url, agente=agente)
-    return True if r is None else r.permite(url)
+def para(url: str, *, agente: str = UA_PADRAO, timeout: int = 15) -> "Robots | None":
+    return _situacao_e_regras(url, agente=agente, timeout=timeout)[1]
+
+
+def permitido(url: str, *, agente: str = UA_PADRAO, silencioso: bool = False) -> bool:
+    """
+    True quando a URL pode ser acessada.
+
+    Falha de leitura devolve True, seguindo a convencao da web, porem avisa
+    uma vez por dominio. Antes o erro era engolido, e um dominio com TLS
+    quebrado passava a liberar ate caminhos que ele proibia explicitamente.
+    """
+    sit, regras = _situacao_e_regras(url, agente=agente)
+    if sit == "falhou":
+        base = "{0.scheme}://{0.netloc}".format(urlparse(url))
+        if base not in _avisados and not silencioso:
+            _avisados.add(base)
+            print(f"  [robots] {base}: nao foi possivel ler o robots.txt; "
+                  f"seguindo com a convencao de permitir")
+        return True
+    return True if regras is None else regras.permite(url)

@@ -184,6 +184,66 @@ def linha_usaspending(r: dict) -> dict:
     }
 
 
+# Os 13 extratores dos squads seguem o mesmo contrato de campos, com
+# extras proprios de cada fonte. Um adaptador generico evita repetir treze
+# funcoes quase identicas; o que muda de fato vira parametro.
+FONTES_SQUAD = [
+    # (arquivo, rotulo da fonte, pais fixo ou None, campo de decisores)
+    ("amai_mexico",    "amai",      "Mexico",         "contato"),
+    ("apeim_peru",     "apeim",     "Peru",           "contato"),
+    ("ceim_argentina", "ceim",      "Argentina",      None),
+    ("acei_colombia",  "acei",      "Colombia",       None),
+    ("bvm",            "bvm",       None,             None),
+    ("adm",            "adm",       "Germany",        "direcao"),
+    ("syntec_etudes",  "syntec",    "France",         None),
+    ("assirm",         "assirm",    "Italy",          "gruppo_dirigente"),
+    ("cric",           "cric",      "Canada",         None),
+    ("jmra",           "jmra",      "Japan",          "representante"),
+    ("kora",           "kora",      "South Korea",    "representante"),
+    ("mrsi",           "mrsi",      "India",          "contatos"),
+    ("congressos",     "congresso", None,             None),
+]
+
+
+def _texto(v) -> str:
+    """Campos ricos vem como lista ou dict conforme a fonte."""
+    if not v:
+        return ""
+    if isinstance(v, str):
+        return v.strip()
+    if isinstance(v, dict):
+        return " | ".join(f"{k}: {x}" for k, x in v.items() if x)
+    return " | ".join(
+        (x if isinstance(x, str) else
+         " ".join(str(y) for y in x.values() if y)) for x in v if x)
+
+
+def linha_squad(r: dict, fonte: str, pais_fixo: str | None,
+                campo_decisor: str | None) -> dict:
+    # O nome de mercado casa melhor entre fontes que a razao social.
+    nome = r.get("nome_comercial") or r.get("nome") or r.get("nome_latino") or ""
+    return {
+        "fonte": fonte, "nome": nome.strip(),
+        "email": (r.get("email") or "").strip().lower(),
+        "site": r.get("site", ""), "pais": pais_fixo or r.get("pais", ""),
+        "uf": r.get("estado") or r.get("cidade", ""),
+        "telefone": r.get("telefone", ""), "endereco": r.get("endereco", ""),
+        "linkedin": "", "fundacao": str(r.get("fundacao") or r.get("ano_fundacao") or ""),
+        "funcionarios": str(r.get("funcionarios") or ""),
+        "tipos": _texto(r.get("tipo_associado") or r.get("tipo_membro")
+                        or r.get("tipo_associacao") or r.get("categoria")
+                        or r.get("tipo_participacao")),
+        "contatos": _texto(r.get(campo_decisor)) if campo_decisor else "",
+        "campos_atuacao": _texto(r.get("especializacoes") or r.get("servicos")
+                                 or r.get("especialidades") or r.get("expertise")),
+        "metodos_tecnicas": _texto(r.get("metodos")),
+        "outros_servicos": _texto(r.get("setores") or r.get("industrias")
+                                  or r.get("nivel_patrocinio")),
+        "url_perfil": r.get("url_perfil", ""),
+        "filtros": _texto(r.get("evento")),
+    }
+
+
 def carregar(nome: str, conversor):
     caminho = SAIDA / f"{nome}.json"
     if not caminho.exists():
@@ -202,16 +262,22 @@ if __name__ == "__main__":
     ia = carregar("ia_espana", linha_ia)
     qk = carregar("quirks_united_states", linha_quirks)
     us = carregar("usaspending_naics541910", linha_usaspending)
+    squads = []
+    for arquivo, fonte, pais, dec in FONTES_SQUAD:
+        regs = carregar(arquivo, lambda r, f=fonte, p=pais, d=dec: linha_squad(r, f, p, d))
+        squads += regs
+        if regs:
+            print(f"  {fonte}: {len(regs)}")
     print(f"esomar {len(eso)} | abep {len(abp)} | aim {len(aim)} | "
           f"greenbook {len(gb)} | mrs {len(mrs)} | ia-espana {len(ia)} | "
-          f"quirks {len(qk)} | usaspending {len(us)}")
+          f"quirks {len(qk)} | usaspending {len(us)} | squads {len(squads)}")
 
     # A chave inclui o pais: "Ipsos" no Chile e "Ipsos" nos EUA sao escritorios
     # diferentes, e fundi-los apagaria uma empresa real da base.
     por_nome = {(r["pais"], norm(r["nome"])): i
                 for i, r in enumerate(eso) if norm(r["nome"])}
     fundidas, novas = 0, 0
-    for r in abp + aim + gb + mrs + ia + qk + us:
+    for r in abp + aim + gb + mrs + ia + qk + us + squads:
         chave = (r["pais"], norm(r["nome"]))
         if chave[1] and chave in por_nome:
             eso[por_nome[chave]] = fundir(eso[por_nome[chave]], r)
@@ -224,6 +290,31 @@ if __name__ == "__main__":
                 por_nome[chave] = len(eso)
             eso.append(r)
             novas += 1
+
+    # O enriquecimento por site roda depois da coleta e grava em cache. Sem
+    # reaplicar aqui, cada reconstrucao da base descartava esses e-mails: os
+    # EUA caiam de 465 para 108 acionaveis sem nenhum aviso.
+    cache_enr = Path("dados/cache")
+    aplicados = 0
+    for arquivo in ["enriquecimento.json", "enriquecimento_eua.json"]:
+        f = cache_enr / arquivo
+        if not f.exists():
+            continue
+        por_dominio = {}
+        for v in json.loads(f.read_text(encoding="utf-8")).values():
+            if v.get("email_comercial") and v.get("site"):
+                d = v["site"].split("//")[-1].split("/")[0].replace("www.", "").lower()
+                por_dominio.setdefault(d, v["email_comercial"])
+        for r in eso:
+            if r["email"] or not r["site"]:
+                continue
+            d = r["site"].split("//")[-1].split("/")[0].replace("www.", "").lower()
+            if d in por_dominio:
+                r["email"] = por_dominio[d]
+                r["fonte"] += "+site"
+                aplicados += 1
+    if aplicados:
+        print(f"  e-mails do enriquecimento reaplicados: {aplicados}")
 
     eso.sort(key=lambda r: (r["pais"], r["nome"]))
     destino = SAIDA / "base_unificada.csv"
