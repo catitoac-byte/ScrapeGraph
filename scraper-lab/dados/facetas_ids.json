@@ -1,0 +1,663 @@
+{
+ "solution": [
+  {
+   "id": 1,
+   "total": 135,
+   "rotulo": "Market Research Companies specialised in Adv"
+  },
+  {
+   "id": 2,
+   "total": 42,
+   "rotulo": "Market Research Companies specialised in Aud"
+  },
+  {
+   "id": 3,
+   "total": 287,
+   "rotulo": "Market Research Companies specialised in Bra"
+  },
+  {
+   "id": 4,
+   "total": 288,
+   "rotulo": "Market Research Companies specialised in Bus"
+  },
+  {
+   "id": 5,
+   "total": 36,
+   "rotulo": "Market Research Companies specialised in Chi"
+  },
+  {
+   "id": 6,
+   "total": 498,
+   "rotulo": "Market Research Companies specialised in Con"
+  },
+  {
+   "id": 7,
+   "total": 177,
+   "rotulo": "Market Research Companies specialised in Con"
+  },
+  {
+   "id": 8,
+   "total": 241,
+   "rotulo": "Market Research Companies specialised in Cus"
+  },
+  {
+   "id": 10,
+   "total": 18,
+   "rotulo": "Market Research Companies specialised in Dem"
+  },
+  {
+   "id": 11,
+   "total": 47,
+   "rotulo": "Market Research Companies specialised in Emp"
+  },
+  {
+   "id": 12,
+   "total": 100,
+   "rotulo": "Market Research Companies specialised in Eth"
+  },
+  {
+   "id": 13,
+   "total": 40,
+   "rotulo": "Market Research Companies specialised in Ima"
+  },
+  {
+   "id": 14,
+   "total": 205,
+   "rotulo": "Market Research Companies specialised in Int"
+  },
+  {
+   "id": 15,
+   "total": 50,
+   "rotulo": "Market Research Companies specialised in Med"
+  },
+  {
+   "id": 16,
+   "total": 131,
+   "rotulo": "Market Research Companies specialised in New"
+  },
+  {
+   "id": 18,
+   "total": 97,
+   "rotulo": "Market Research Companies specialised in Opi"
+  },
+  {
+   "id": 19,
+   "total": 60,
+   "rotulo": "Market Research Companies specialised in Pac"
+  },
+  {
+   "id": 21,
+   "total": 68,
+   "rotulo": "Market Research Companies specialised in Pri"
+  },
+  {
+   "id": 22,
+   "total": 26,
+   "rotulo": "Market Research Companies specialised in Pro"
+  },
+  {
+   "id": 23,
+   "total": 132,
+   "rotulo": "Market Research Companies specialised in Pro"
+  },
+  {
+   "id": 24,
+   "total": 31,
+   "rotulo": "Market Research Companies specialised in Sto"
+  },
+  {
+   "id": 25,
+   "total": 11,
+   "rotulo": "Market Research Companies specialised in Sce"
+  },
+  {
+   "id": 26,
+   "total": 107,
+   "rotulo": "Market Research Companies specialised in Seg"
+  },
+  {
+   "id": 27,
+   "total": 24,
+   "rotulo": "Market Research Companies specialised in Sem"
+  },
+  {
+   "id": 28,
+   "total": 9,
+   "rotulo": "Market Research Companies specialised in Sen"
+  },
+  {
+   "id": 30,
+   "total": 19,
+   "rotulo": "Market Research Companies specialised in Syn"
+  },
+  {
+   "id": 31,
+   "total": 171,
+   "rotulo": "Market Research Companies specialised in Tra"
+  },
+  {
+   "id": 32,
+   "total": 220,
+   "rotulo": "Market Research Companies specialised in Usa"
+  },
+  {
+   "id": 33,
+   "total": 143,
+   "rotulo": "Market Research Companies specialised in Onl"
+  },
+  {
+   "id": 34,
+   "total": 9,
+   "rotulo": "Market Research Companies specialised in Val"
+  },
+  {
+   "id": 35,
+   "total": 62,
+   "rotulo": "Market Research Companies specialised in Con"
+  },
+  {
+   "id": 37,
+   "total": 31,
+   "rotulo": "Market Research Companies specialised in Int"
+  },
+  {
+   "id": 38,
+   "total": 2,
+   "rotulo": "Market Research Companies specialised in Pri"
+  },
+  {
+   "id": 39,
+   "total": 4,
+   "rotulo": "Market Research Companies specialised in Rad"
+  },
+  {
+   "id": 40,
+   "total": 5,
+   "rotulo": "Market Research Companies specialised in Tel"
+  }
+ ],
+ "market": [
+  {
+   "id": 1,
+   "total": 194,
+   "rotulo": "Market Research Companies specialised in Adv"
+  },
+  {
+   "id": 2,
+   "total": 50,
+   "rotulo": "Market Research Companies specialised in Agr"
+  },
+  {
+   "id": 3,
+   "total": 283,
+   "rotulo": "Market Research Companies specialised in Aut"
+  },
+  {
+   "id": 4,
+   "total": 222,
+   "rotulo": "Market Research Companies specialised in Bev"
+  },
+  {
+   "id": 5,
+   "total": 17,
+   "rotulo": "Market Research Companies specialised in Cat"
+  },
+  {
+   "id": 6,
+   "total": 17,
+   "rotulo": "Market Research Companies specialised in Cha"
+  },
+  {
+   "id": 7,
+   "total": 16,
+   "rotulo": "Market Research Companies specialised in Che"
+  },
+  {
+   "id": 8,
+   "total": 37,
+   "rotulo": "Market Research Companies specialised in Con"
+  },
+  {
+   "id": 9,
+   "total": 135,
+   "rotulo": "Market Research Companies specialised in Con"
+  },
+  {
+   "id": 10,
+   "total": 165,
+   "rotulo": "Market Research Companies specialised in Cos"
+  },
+  {
+   "id": 11,
+   "total": 91,
+   "rotulo": "Market Research Companies specialised in Dur"
+  },
+  {
+   "id": 12,
+   "total": 33,
+   "rotulo": "Market Research Companies specialised in Det"
+  },
+  {
+   "id": 13,
+   "total": 59,
+   "rotulo": "Market Research Companies specialised in Ene"
+  },
+  {
+   "id": 14,
+   "total": 302,
+   "rotulo": "Market Research Companies specialised in Fin"
+  },
+  {
+   "id": 15,
+   "total": 27,
+   "rotulo": "Market Research Companies specialised in Fra"
+  },
+  {
+   "id": 16,
+   "total": 312,
+   "rotulo": "Market Research Companies specialised in Foo"
+  },
+  {
+   "id": 17,
+   "total": 360,
+   "rotulo": "Market Research Companies specialised in Hea"
+  },
+  {
+   "id": 18,
+   "total": 169,
+   "rotulo": "Market Research Companies specialised in IT "
+  },
+  {
+   "id": 19,
+   "total": 9,
+   "rotulo": "Market Research Companies specialised in Leg"
+  },
+  {
+   "id": 20,
+   "total": 30,
+   "rotulo": "Market Research Companies specialised in Log"
+  },
+  {
+   "id": 21,
+   "total": 13,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 22,
+   "total": 32,
+   "rotulo": "Market Research Companies specialised in Pet"
+  },
+  {
+   "id": 23,
+   "total": 143,
+   "rotulo": "Market Research Companies specialised in Pub"
+  },
+  {
+   "id": 24,
+   "total": 23,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 25,
+   "total": 249,
+   "rotulo": "Market Research Companies specialised in Tel"
+  },
+  {
+   "id": 26,
+   "total": 27,
+   "rotulo": "Market Research Companies specialised in Tex"
+  },
+  {
+   "id": 27,
+   "total": 66,
+   "rotulo": "Market Research Companies specialised in Tob"
+  },
+  {
+   "id": 28,
+   "total": 13,
+   "rotulo": "Market Research Companies specialised in Toy"
+  },
+  {
+   "id": 29,
+   "total": 149,
+   "rotulo": "Market Research Companies specialised in Tra"
+  },
+  {
+   "id": 30,
+   "total": 16,
+   "rotulo": "Market Research Companies specialised in Air"
+  },
+  {
+   "id": 31,
+   "total": 24,
+   "rotulo": "Market Research Companies specialised in App"
+  },
+  {
+   "id": 32,
+   "total": 4,
+   "rotulo": "Market Research Companies specialised in Cas"
+  },
+  {
+   "id": 33,
+   "total": 173,
+   "rotulo": "Market Research Companies specialised in Con"
+  },
+  {
+   "id": 34,
+   "total": 3,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 35,
+   "total": 20,
+   "rotulo": "Market Research Companies specialised in Aff"
+  },
+  {
+   "id": 36,
+   "total": 11,
+   "rotulo": "Market Research Companies specialised in Chi"
+  },
+  {
+   "id": 37,
+   "total": 16,
+   "rotulo": "Market Research Companies specialised in Eth"
+  },
+  {
+   "id": 38,
+   "total": 7,
+   "rotulo": "Market Research Companies specialised in Mat"
+  },
+  {
+   "id": 39,
+   "total": 17,
+   "rotulo": "Market Research Companies specialised in Mot"
+  },
+  {
+   "id": 40,
+   "total": 11,
+   "rotulo": "Market Research Companies specialised in Par"
+  }
+ ],
+ "service": [
+  {
+   "id": 1,
+   "total": 134,
+   "rotulo": "Market Research Companies specialised in Des"
+  },
+  {
+   "id": 2,
+   "total": 125,
+   "rotulo": "Market Research Companies specialised in PAP"
+  },
+  {
+   "id": 3,
+   "total": 230,
+   "rotulo": "Market Research Companies specialised in CAP"
+  },
+  {
+   "id": 4,
+   "total": 258,
+   "rotulo": "Market Research Companies specialised in CAT"
+  },
+  {
+   "id": 5,
+   "total": 57,
+   "rotulo": "Market Research Companies specialised in Mai"
+  },
+  {
+   "id": 6,
+   "total": 252,
+   "rotulo": "Market Research Companies specialised in Onl"
+  },
+  {
+   "id": 7,
+   "total": 163,
+   "rotulo": "Market Research Companies specialised in Mys"
+  },
+  {
+   "id": 8,
+   "total": 315,
+   "rotulo": "Market Research Companies specialised in Foc"
+  },
+  {
+   "id": 9,
+   "total": 268,
+   "rotulo": "Market Research Companies specialised in In-"
+  },
+  {
+   "id": 10,
+   "total": 154,
+   "rotulo": "Market Research Companies specialised in Rec"
+  },
+  {
+   "id": 11,
+   "total": 127,
+   "rotulo": "Market Research Companies specialised in Onl"
+  },
+  {
+   "id": 12,
+   "total": 23,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 14,
+   "total": 68,
+   "rotulo": "Market Research Companies specialised in Dat"
+  },
+  {
+   "id": 15,
+   "total": 47,
+   "rotulo": "Market Research Companies specialised in Seg"
+  },
+  {
+   "id": 16,
+   "total": 113,
+   "rotulo": "Market Research Companies specialised in Sta"
+  },
+  {
+   "id": 17,
+   "total": 2,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 18,
+   "total": 19,
+   "rotulo": "Market Research Companies specialised in Eye"
+  },
+  {
+   "id": 19,
+   "total": 4,
+   "rotulo": "Market Research Companies specialised in Fac"
+  },
+  {
+   "id": 20,
+   "total": 47,
+   "rotulo": "Market Research Companies specialised in Neu"
+  },
+  {
+   "id": 21,
+   "total": 13,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 22,
+   "total": 35,
+   "rotulo": "Market Research Companies specialised in Adv"
+  },
+  {
+   "id": 23,
+   "total": 101,
+   "rotulo": "Market Research Companies specialised in Bus"
+  },
+  {
+   "id": 24,
+   "total": 147,
+   "rotulo": "Market Research Companies specialised in Con"
+  },
+  {
+   "id": 25,
+   "total": 135,
+   "rotulo": "Market Research Companies specialised in Int"
+  },
+  {
+   "id": 26,
+   "total": 135,
+   "rotulo": "Market Research Companies specialised in Mar"
+  },
+  {
+   "id": 27,
+   "total": 84,
+   "rotulo": "Market Research Companies specialised in New"
+  },
+  {
+   "id": 28,
+   "total": 28,
+   "rotulo": "Market Research Companies specialised in Pol"
+  },
+  {
+   "id": 29,
+   "total": 22,
+   "rotulo": "Market Research Companies specialised in Soc"
+  },
+  {
+   "id": 30,
+   "total": 53,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 31,
+   "total": 26,
+   "rotulo": "Market Research Companies specialised in Pre"
+  },
+  {
+   "id": 32,
+   "total": 17,
+   "rotulo": "Market Research Companies specialised in Fie"
+  },
+  {
+   "id": 33,
+   "total": 27,
+   "rotulo": "Market Research Companies specialised in Fie"
+  },
+  {
+   "id": 36,
+   "total": 7,
+   "rotulo": "Market Research Companies specialised in Gam"
+  },
+  {
+   "id": 37,
+   "total": 2,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 38,
+   "total": 19,
+   "rotulo": "Market Research Companies specialised in Mob"
+  },
+  {
+   "id": 39,
+   "total": 22,
+   "rotulo": "Market Research Companies specialised in Mob"
+  },
+  {
+   "id": 40,
+   "total": 25,
+   "rotulo": "Market Research Companies specialised in Mob"
+  },
+  {
+   "id": 41,
+   "total": 19,
+   "rotulo": "Market Research Companies specialised in Mob"
+  },
+  {
+   "id": 42,
+   "total": 93,
+   "rotulo": "Market Research Companies specialised in Omn"
+  },
+  {
+   "id": 43,
+   "total": 10,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 44,
+   "total": 55,
+   "rotulo": "Market Research Companies specialised in Onl"
+  },
+  {
+   "id": 45,
+   "total": 11,
+   "rotulo": "Market Research Companies specialised in Dia"
+  },
+  {
+   "id": 46,
+   "total": 18,
+   "rotulo": "Market Research Companies specialised in Tel"
+  },
+  {
+   "id": 47,
+   "total": 36,
+   "rotulo": "Market Research Companies specialised in Que"
+  },
+  {
+   "id": 48,
+   "total": 49,
+   "rotulo": "Market Research Companies specialised in Sam"
+  },
+  {
+   "id": 49,
+   "total": 10,
+   "rotulo": "Market Research Companies specialised in Sem"
+  },
+  {
+   "id": 50,
+   "total": 28,
+   "rotulo": "Market Research Companies specialised in Sen"
+  },
+  {
+   "id": 51,
+   "total": 3,
+   "rotulo": "BROWSE RESEARCH COMPANIES"
+  },
+  {
+   "id": 52,
+   "total": 33,
+   "rotulo": "Market Research Companies specialised in Bus"
+  },
+  {
+   "id": 53,
+   "total": 52,
+   "rotulo": "Market Research Companies specialised in Mon"
+  },
+  {
+   "id": 54,
+   "total": 43,
+   "rotulo": "Market Research Companies specialised in Qua"
+  },
+  {
+   "id": 55,
+   "total": 27,
+   "rotulo": "Market Research Companies specialised in Sam"
+  },
+  {
+   "id": 57,
+   "total": 100,
+   "rotulo": "Market Research Companies specialised in Dat"
+  },
+  {
+   "id": 58,
+   "total": 11,
+   "rotulo": "Market Research Companies specialised in Dat"
+  },
+  {
+   "id": 59,
+   "total": 9,
+   "rotulo": "Market Research Companies specialised in Tra"
+  },
+  {
+   "id": 60,
+   "total": 2,
+   "rotulo": "Market Research Companies specialised in Sca"
+  }
+ ]
+}

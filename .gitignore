@@ -1,0 +1,16 @@
+# Clone da biblioteca upstream: tem repositorio proprio
+Scrapegraph-ai/
+
+# Ambientes e caches
+.venv/
+__pycache__/
+*.pyc
+
+# Dados volumosos e temporarios da coleta
+scraper-lab/dados/temp_rf/
+scraper-lab/dados/cache/
+scraper-lab/logs/
+*.tmp
+
+# Segredos
+.env
