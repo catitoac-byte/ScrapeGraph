@@ -311,7 +311,7 @@ def separar_email_do_endereco(endereco: str, email_atual: str) -> tuple[str, str
     Tira e-mails colados no campo de endereco e devolve (endereco, email).
 
     Algumas associadas preencheram o cadastro do proprio site com e-mails
-    dentro do endereco ("info@orison..., insightorison@gmail.com, Noida").
+    dentro do endereco ("info@exemplo..., exemploinsight@gmail.com, Noida").
     Deixar isso no endereco suja a coluna, e jogar fora perderia contato de
     quem nao publicou e-mail em outro lugar. O e-mail so e adotado quando a
     coluna esta vazia; nunca substitui o que a ficha declarou como contato.

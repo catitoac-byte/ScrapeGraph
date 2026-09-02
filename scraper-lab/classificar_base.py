@@ -15,7 +15,7 @@ S = Path("dados/saida")
 COLUNAS = [
     "tier", "tipo_email", "alcance_email", "mx_ok", "smtp",
     "nome", "email", "site", "pais", "uf", "telefone",
-    "decisores", "contatos", "endereco", "fonte", "url_perfil",
+    "decisores", "contatos", "endereco", "fonte", "url_perfil", "restricao_fonte",
 ]
 
 
@@ -47,6 +47,7 @@ if __name__ == "__main__":
             "uf": r["uf"], "telefone": r["telefone"], "decisores": "",
             "contatos": r["contatos"], "endereco": r["endereco"],
             "fonte": r["fonte"], "url_perfil": r["url_perfil"],
+            "restricao_fonte": r.get("restricao_fonte", ""),
         })
 
     for r in csv.DictReader(open(S / "brasil_leads_pesquisa.csv", encoding="utf-8-sig")):
@@ -57,6 +58,7 @@ if __name__ == "__main__":
             "telefone": r["telefone"], "decisores": r["decisores"],
             "contatos": "", "endereco": r["endereco"],
             "fonte": "receita", "url_perfil": "",
+            "restricao_fonte": "robots.txt do dominio declara Disallow: / (dado aberto por lei)",
         })
 
     # A base internacional ja tem 118 brasileiras vindas de diretorio; o

@@ -20,7 +20,7 @@ COLUNAS = [
     "fonte", "nome", "email", "site", "pais", "uf", "telefone", "endereco",
     "linkedin", "fundacao", "funcionarios", "tipos", "contatos",
     "campos_atuacao", "metodos_tecnicas", "outros_servicos",
-    "url_perfil", "filtros",
+    "url_perfil", "filtros", "restricao_fonte",
 ]
 
 _RUIDO = re.compile(
@@ -187,6 +187,16 @@ def linha_usaspending(r: dict) -> dict:
 # Os 13 extratores dos squads seguem o mesmo contrato de campos, com
 # extras proprios de cada fonte. Um adaptador generico evita repetir treze
 # funcoes quase identicas; o que muda de fato vira parametro.
+# Fontes cujo robots.txt restringe rastreamento. Ficam marcadas na coluna
+# `restricao_fonte` para que a decisao de manter ou remover seja auditavel
+# e reversivel, em vez de invisivel dentro da base.
+#   receita: arquivos.receitafederal.gov.br declara "User-agent: * /
+#            Disallow: /". O dado e oficialmente aberto e o portal existe
+#            para distribui-lo, mas a regra escrita e categorica.
+RESTRICAO_FONTE = {
+    "receita": "robots.txt do dominio declara Disallow: / (dado aberto por lei)",
+}
+
 FONTES_SQUAD = [
     # (arquivo, rotulo da fonte, pais fixo ou None, campo de decisores)
     ("amai_mexico",    "amai",      "Mexico",         "contato"),
@@ -202,6 +212,14 @@ FONTES_SQUAD = [
     ("kora",           "kora",      "South Korea",    "representante"),
     ("mrsi",           "mrsi",      "India",          "contatos"),
     ("congressos",     "congresso", None,             None),
+    ("din_holanda",    "din",       "Netherlands",    None),
+    ("vmoe_austria",   "vmoe",      None,             "contato"),
+    ("swiss_insights", "swiss",     "Switzerland",    None),
+    ("cube_belgica",   "cube",      "Belgium",        "contato"),
+    ("tuad",           "tuad",      "Turkey",         None),
+    ("sedea",          "sedea",     "Greece",         "pessoas"),
+    ("ofbor",          "ofbor",     "Poland",         None),
+    ("ptbrio",         "ptbrio",    "Poland",         None),
 ]
 
 
@@ -316,6 +334,11 @@ if __name__ == "__main__":
                 aplicados += 1
     if aplicados:
         print(f"  e-mails do enriquecimento reaplicados: {aplicados}")
+
+    for r in eso:
+        r["restricao_fonte"] = "; ".join(
+            RESTRICAO_FONTE[f] for f in str(r.get("fonte", "")).split("+")
+            if f in RESTRICAO_FONTE)
 
     eso.sort(key=lambda r: (r["pais"], r["nome"]))
     destino = SAIDA / "base_unificada.csv"

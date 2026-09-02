@@ -225,7 +225,7 @@ def extrair_asociada(html: str, url: str, sid: str = "", nome_logo: str = "",
 
         if campo == "email":
             # Varias fichas colam dois enderecos no mesmo link
-            # ("yolanda@altazor.com.mx-claudio@altazor.com.mx") ou deixam uma
+            # ("ana@exemplo.com.mx-bruno@exemplo.com.mx") ou deixam uma
             # barra no fim. Por isso extraimos por regex em vez de aproveitar
             # o texto do link inteiro: cada endereco sai separado e limpo.
             achados: list[str] = []

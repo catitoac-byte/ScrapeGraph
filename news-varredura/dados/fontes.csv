@@ -1,0 +1,40 @@
+﻿nome,categoria,tipo_coleta,url,status,cadencia,por_que_importa
+OpenAI,lab,rss,https://openai.com/news/rss.xml,ok,diaria,Lancamentos e pesquisa aplicada da OpenAI
+Google DeepMind,lab,rss,https://deepmind.google/blog/rss.xml,ok,semanal,Fronteira de pesquisa e lancamentos Gemini
+Google Research,lab,rss,https://research.google/blog/rss/,ok,semanal,"Pesquisa aplicada, infra e sistemas"
+Hugging Face,lab,rss,https://huggingface.co/blog/feed.xml,ok,diaria,"Modelos abertos, leaderboards, ferramentas"
+Allen Institute for AI,lab,rss,https://medium.com/feed/ai2-blog,ok,mensal,Origem do Tulu 3 e do termo RLVR. Pos-treino aberto
+Anthropic Engineering,lab,html,https://www.anthropic.com/engineering,ok,quinzenal,O material mais aplicavel do ano sobre harness e agentes. Sem RSS
+Anthropic News,lab,html,https://www.anthropic.com/news,ok,semanal,Lancamentos de modelo e produto. Sem RSS
+Anthropic Research,lab,html,https://www.anthropic.com/research,ok,mensal,"Interpretabilidade, alinhamento, avaliacao. Sem RSS"
+Epoch AI,analise,rss,https://epochai.substack.com/feed,ok,quinzenal,Rigor quantitativo sobre ritmo de progresso. Origem do ECI
+Simon Willison,analise,rss,https://simonwillison.net/atom/everything/,ok,diaria,O melhor filtro pratico do que importa de verdade
+"Sebastian Raschka, Ahead of AI",analise,rss,https://magazine.sebastianraschka.com/feed,ok,mensal,Curadoria trimestral de papers e explicacao tecnica clara
+"Import AI, Jack Clark",analise,rss,https://importai.substack.com/feed,ok,semanal,Fronteira com vies de politica publica
+"Interconnects, Nathan Lambert",analise,rss,https://www.interconnects.ai/feed,ok,semanal,"Pos-treino, RLHF e RLVR por dentro"
+Latent Space,analise,rss,https://www.latent.space/feed,ok,semanal,"Engenharia de IA na pratica, entrevistas de quem constroi"
+"MIT Technology Review, IA",midia,rss,https://www.technologyreview.com/topic/artificial-intelligence/feed,ok,diaria,Cobertura com checagem editorial
+"Ars Technica, IA",midia,rss,https://arstechnica.com/ai/feed/,ok,diaria,Cobertura tecnica com ceticismo saudavel
+VentureBeat AI,midia,rss,https://venturebeat.com/category/ai/feed/,ok,diaria,Angulo empresarial e de mercado
+Model Context Protocol,ferramenta,rss,https://blog.modelcontextprotocol.io/index.xml,ok,mensal,Evolucao da especificacao MCP
+Weights and Biases,ferramenta,rss,https://wandb.ai/fully-connected/rss.xml,ok,semanal,"Evals, observabilidade e MLOps"
+Greenbook,insights,html,https://www.greenbook.org/insights,ok,diaria,GRIT e o pulso do setor de pesquisa de mercado. Sem RSS
+"Research World, ESOMAR",insights,html,https://researchworld.com/articles,ok,semanal,Voz oficial do setor global de insights. Sem RSS
+Quirks,insights,html,https://www.quirks.com/articles,ok,diaria,Cobertura pratica do dia a dia da pesquisa. Sem RSS
+arXiv cs.AI,paper,api,http://export.arxiv.org/api/query,ok,diaria,Preprints de IA. Filtrar sempre
+arXiv cs.CL,paper,api,http://export.arxiv.org/api/query,ok,diaria,Preprints de linguagem computacional
+Artificial Analysis,leaderboard,manual,https://artificialanalysis.ai/leaderboards/models,sem feed,checar mensal,Benchmark independente com metodologia aberta. Sem RSS
+Arena,leaderboard,manual,https://arena.ai/leaderboard,sem feed,checar mensal,"Elo por preferencia humana, texto e agentes. Sem RSS"
+Epoch Capabilities Index,leaderboard,manual,https://epoch.ai/eci,sem feed,checar trimestral,"Capacidade agregada, resiste a saturacao de benchmark"
+MTEB,leaderboard,manual,https://huggingface.co/spaces/mteb/leaderboard,sem feed,checar trimestral,"Embeddings. Space em JavaScript, so pelo navegador"
+SWE-bench,leaderboard,manual,https://www.swebench.com,sem feed,checar trimestral,Resolucao de issue real de software
+Stanford HAI AI Index,relatorio,manual,https://hai.stanford.edu/ai-index,sem feed,"anual, sai em marco",A fonte mais citavel para numero de mercado
+"Menlo Ventures, State of Generative AI",relatorio,manual,https://menlovc.com,sem feed,anual,Gasto empresarial com LLM e market share
+"GRIT, Greenbook",relatorio,manual,https://www.greenbook.org/grit,sem feed,semestral,O maior estudo do setor de insights
+ESOMAR Global Market Research Report,relatorio,manual,https://shop.esomar.org/knowledge-center/library,sem feed,anual,Tamanho e composicao da industria de insights
+"Anthropic, feed RSS",lab,indisponivel,https://www.anthropic.com,404,-,Nao publica RSS em nenhuma variante testada. Coletado por HTML
+"The Batch, DeepLearning.AI",analise,indisponivel,https://www.deeplearning.ai/the-batch/,404,-,Sem feed publico funcional. Assinar por e-mail
+Meta AI Blog,lab,indisponivel,https://ai.meta.com/blog/,400,-,Bloqueia coleta automatizada
+Mistral AI,lab,indisponivel,https://mistral.ai/news,404,-,Sem feed publico
+BAIR Berkeley,analise,indisponivel,https://bair.berkeley.edu/blog/,erro de rede,-,Feed instavel na varredura de 2026-09-02
+LangChain,ferramenta,indisponivel,https://blog.langchain.com,devolve HTML,-,"A rota de RSS existe mas devolve pagina, nao XML"
