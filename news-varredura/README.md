@@ -24,6 +24,7 @@ Primeira varredura completa em **2026-09-02**.
 | `08-ia-pesquisa-de-mercado.md` | O setor de insights, GRIT, respondentes sintéticos |
 | `09-fontes-para-acompanhar.md` | Livros, blogs, cursos, newsletters, papers, leaderboards |
 | `10-achados-da-varredura.md` | O que a varredura automática trouxe de novo, com correções |
+| `11-fundamentos-biblioteca.md` | Curadoria da bibliografia de fundamentos, com caminho legítimo |
 | `dados/fatos-citaveis.csv` | Base estruturada de claims com fonte, data e nível de confiança |
 | `dados/fontes.csv` | Catálogo de fontes com feed RSS quando existe |
 | `dados/biblioteca-anthropic.csv` | Arquivo completo de 44 posts de engenharia e pesquisa da Anthropic |
