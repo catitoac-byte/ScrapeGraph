@@ -1,0 +1,45 @@
+﻿data,secao,titulo,link
+2026-09-01,Anthropic News,Developing Enterprise Frontier Safeguards with our customers,https://www.anthropic.com/news/enterprise-frontier-safeguards
+2026-08-31,Anthropic News,Improving our alignment and security efforts,https://www.anthropic.com/news/improving-alignment-security-efforts
+2026-08-28,Anthropic Research,Automated researchers can reliably mitigate alignment failures,https://www.anthropic.com/research/automated-researchers-mitigate-alignment-failures
+2026-08-27,Anthropic News,"Previewing the Model Hardware Standard We’re opening a research preview of the Model Hardware Standard (MHS), a shared specification for AI agents to safely operate physical devices, to a first group ",https://www.anthropic.com/news/model-hardware-standard-research-preview
+2026-08-27,Anthropic News,Expanding our support for scientists,https://www.anthropic.com/news/expanding-support-for-scientists
+2026-08-26,Anthropic Research,Enabling independent research on how people use Claude,https://www.anthropic.com/research/enabling-independent-research
+2026-08-25,Anthropic News,Funding better evaluations of AI’s impact on wellbeing,https://www.anthropic.com/news/wellbeing-research-grants
+2026-08-14,Anthropic News,"How Claude’s text watermark works In this article, we share answers to some of the questions we’ve received about how our chosen watermarking method works, whether it affects Claude’s outputs, and why",https://www.anthropic.com/news/claude-text-watermark
+2026-08-13,Anthropic Research,Patterns and problems in emerging multiagent systems,https://www.anthropic.com/research/multiagent-systems
+2026-08-12,Anthropic Research,"Reviewing the evidence on worker retraining programs We re sharing a review of the evidence on worker retraining programs, coauthored by independent researcher David Roodman and Anthropic s Maxim Mass",https://www.anthropic.com/research/reviewing-the-evidence-on-worker-retraining-programs
+2026-08-10,Anthropic Research,Learning more about Claude s mathematical capabilities Science An unreleased research version of Claude has made strides on a problem related to the Riemann hypothesis. It improved a longstanding lowe,https://www.anthropic.com/research/riemann-zeta
+2026-08-07,Anthropic News,Improving Fable 5 s biology safeguards,https://www.anthropic.com/news/improving-fable-5-s-biology-safeguards
+2026-08-04,Anthropic News,Mariano-Florentino (Tino) Cuéllar to join Anthropic as Chief Global Affairs Officer,https://www.anthropic.com/news/tino-cuellar
+2026-07-30,Anthropic News,Investigating three real-world incidents in our cybersecurity evaluations,https://www.anthropic.com/news/investigating-incidents-cybersecurity-evals
+2026-07-28,Anthropic Research,Discovering cryptographic weaknesses with Claude,https://www.anthropic.com/research/discovering-cryptographic-weaknesses
+2026-07-27,Anthropic News,Our position on open-weights models,https://www.anthropic.com/news/position-open-weights-models
+2026-07-24,Anthropic News,Introducing Claude Opus 5 Opus 5 is a step change improvement for the Opus tier powering long-running agents while delivering improvements in coding and professional work.,https://www.anthropic.com/news/claude-opus-5
+2026-07-24,Anthropic Research,Project Pilot: Can AI control a drone?,https://www.anthropic.com/research/project-pilot
+2026-07-14,Anthropic Research,How Canada uses Claude: Findings from the Anthropic Economic Index,https://www.anthropic.com/research/how-canada-uses-claude
+2026-07-13,Anthropic Research,Claude’s values across models and languages,https://www.anthropic.com/research/claude-values-models-languages
+2026-07-06,Anthropic Research,A global workspace in language models New interpretability research reveals an emergent mental workspace in Claude that holds internal thoughts that don’t appear in the model’s output.,https://www.anthropic.com/research/global-workspace
+2026-05-08,Anthropic Research,Teaching Claude why New research on how we ve reduced agentic misalignment.,https://www.anthropic.com/research/teaching-claude-why
+2026-04-23,Anthropic Engineering,An update on recent Claude Code quality reports,https://www.anthropic.com/engineering/april-23-postmortem
+2026-04-08,Anthropic Engineering,Scaling Managed Agents: Decoupling the brain from the hands,https://www.anthropic.com/engineering/managed-agents
+2026-03-25,Anthropic Engineering,How we built Claude Code auto mode: a safer way to skip permissions,https://www.anthropic.com/engineering/claude-code-auto-mode
+2026-03-24,Anthropic Engineering,Harness design for long-running application development,https://www.anthropic.com/engineering/harness-design-long-running-apps
+2026-03-06,Anthropic Engineering,Eval awareness in Claude Opus 4.6’s BrowseComp performance,https://www.anthropic.com/engineering/eval-awareness-browsecomp
+2026-02-05,Anthropic Engineering,Quantifying infrastructure noise in agentic coding evals,https://www.anthropic.com/engineering/infrastructure-noise
+2026-02-05,Anthropic Engineering,Building a C compiler with a team of parallel Claudes,https://www.anthropic.com/engineering/building-c-compiler
+2026-01-09,Anthropic Engineering,Demystifying evals for AI agents,https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents
+2025-11-26,Anthropic Engineering,Effective harnesses for long-running agents,https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
+2025-11-24,Anthropic Engineering,Introducing advanced tool use on the Claude Developer Platform,https://www.anthropic.com/engineering/advanced-tool-use
+2025-11-04,Anthropic Engineering,Code execution with MCP: Building more efficient agents,https://www.anthropic.com/engineering/code-execution-with-mcp
+2025-10-20,Anthropic Engineering,Beyond permission prompts: making Claude Code more secure and autonomous,https://www.anthropic.com/engineering/claude-code-sandboxing
+2025-10-16,Anthropic Engineering,Equipping agents for the real world with Agent Skills,https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
+2025-09-29,Anthropic Engineering,Effective context engineering for AI agents,https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+2025-09-17,Anthropic Engineering,A postmortem of three recent issues,https://www.anthropic.com/engineering/a-postmortem-of-three-recent-issues
+2025-09-11,Anthropic Engineering,Writing effective tools for agents — with agents,https://www.anthropic.com/engineering/writing-tools-for-agents
+2025-06-26,Anthropic Engineering,Desktop Extensions: One-click MCP server installation for Claude Desktop,https://www.anthropic.com/engineering/desktop-extensions
+2025-06-13,Anthropic Engineering,How we built our multi-agent research system,https://www.anthropic.com/engineering/multi-agent-research-system
+2025-04-18,Anthropic Engineering,Claude Code: Best practices for agentic coding,https://www.anthropic.com/engineering/claude-code-best-practices
+2025-03-20,Anthropic Engineering,The think tool: Enabling Claude to stop and think in complex tool use situations,https://www.anthropic.com/engineering/claude-think-tool
+2025-01-06,Anthropic Engineering,Raising the bar on SWE-bench Verified with Claude 3.5 Sonnet,https://www.anthropic.com/engineering/swe-bench-sonnet
+,Anthropic Engineering,"How we contain Claude across products As agents grow more capable, so does their potential blast radius. The engineering question is how to cap it. Here’s what we’ve learned building containment for c",https://www.anthropic.com/engineering/how-we-contain-claude

@@ -29,6 +29,7 @@ Primeira varredura completa em **2026-09-02**.
 | `dados/fontes.csv` | Catálogo de fontes com feed RSS quando existe |
 | `dados/biblioteca-anthropic.csv` | Arquivo completo de 44 posts de engenharia e pesquisa da Anthropic |
 | `raspar_news_ia.py` | Varredura recorrente por RSS, Atom e arXiv |
+| `export/` | Pacote pronto para compartilhar com outro projeto |
 
 ## Níveis de confiança
 
@@ -70,3 +71,18 @@ status `sem feed`. São justamente os leaderboards e os relatórios anuais, que 
 compensam olhar de mês em mês.
 
 Primeira execução em 2026-09-02, janela de 21 dias. 272 itens relevantes de 3.224 coletados.
+
+## Compartilhar com outro projeto
+
+A pasta `export/` traz tudo empacotado e autossuficiente.
+
+```bash
+cp -R "/Users/cassianoalbuquerque/Antigravity Projects/ScrapeGraph/news-varredura/export" /caminho/do/outro/projeto/varredura-ia
+```
+
+Dentro dela, `varredura-ia-dossie-completo.md` reúne os 13 documentos num arquivo só, com
+índice e com a regra de níveis de confiança logo no topo. É o arquivo para apontar um agente
+de outro projeto.
+
+Para regenerar o dossiê depois de editar qualquer arquivo temático, rodar de novo o bloco de
+consolidação descrito em `export/LEIA-ME.md`.
