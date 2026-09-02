@@ -296,7 +296,8 @@ if __name__ == "__main__":
     # EUA caiam de 465 para 108 acionaveis sem nenhum aviso.
     cache_enr = Path("dados/cache")
     aplicados = 0
-    for arquivo in ["enriquecimento.json", "enriquecimento_eua.json"]:
+    for arquivo in ["enriquecimento.json", "enriquecimento_eua.json",
+                    "enriquecimento_global.json"]:
         f = cache_enr / arquivo
         if not f.exists():
             continue
