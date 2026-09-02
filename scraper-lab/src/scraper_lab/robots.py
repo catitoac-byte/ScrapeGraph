@@ -46,6 +46,16 @@ class Robots:
         self._parsear(texto, agente)
 
     def _parsear(self, texto: str, agente: str) -> None:
+        # O BOM (U+FEFF) sobrevive ao strip(): para o Python ele nao conta
+        # como espaco. Deixando-o passar, a primeira chave de um arquivo
+        # salvo em UTF-8 com BOM vira "\ufeffuser-agent", o teste de grupo
+        # falha, o grupo inteiro e descartado e as regras dele somem em
+        # silencio. Foi o que aconteceu com researchsociety.com.au, que
+        # proibe tudo no primeiro grupo e passava a liberar tudo. Nenhum
+        # token de robots.txt tem uso legitimo para esse caractere, entao
+        # ele sai do texto todo. A limpeza mora aqui, e nao so no _buscar,
+        # porque outros modulos constroem Robots(texto, agente) direto.
+        texto = texto.replace("\ufeff", "")
         alvo = agente.lower()
         atuais: list[str] = []
         aplicavel = False
@@ -123,7 +133,8 @@ def _buscar(base: str, agente: str, timeout: int) -> tuple[str, "Robots | None"]
             try:
                 req = Request(alvo + "/robots.txt", headers={"User-Agent": agente})
                 with urlopen(req, timeout=timeout) as r:
-                    texto = r.read(500_000).decode("utf-8", errors="replace")
+                    # utf-8-sig descarta o BOM inicial; ver _parsear.
+                    texto = r.read(500_000).decode("utf-8-sig", errors="replace")
                 return "lido", Robots(texto, agente)
             except HTTPError as e:
                 if e.code in (404, 410):
