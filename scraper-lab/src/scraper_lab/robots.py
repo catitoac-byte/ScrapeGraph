@@ -41,11 +41,16 @@ class Robots:
 
     def __init__(self, texto: str, agente: str = "*") -> None:
         self.permitir: list[tuple[int, re.Pattern]] = []
+        self.crawl_delay: float | None = None
         self.proibir: list[tuple[int, re.Pattern]] = []
         self._bloqueados: set[str] = set()
         self._parsear(texto, agente)
 
     def _parsear(self, texto: str, agente: str) -> None:
+        # BOM no inicio do arquivo transformava a primeira chave em
+        # "\ufeffuser-agent", o grupo inteiro era ignorado e um site que
+        # proibia tudo passava por liberado. E o pior erro possivel aqui.
+        texto = texto.lstrip("\ufeff\ufffe")
         alvo = agente.lower()
         atuais: list[str] = []
         aplicavel = False
@@ -54,7 +59,8 @@ class Robots:
             if not linha or ":" not in linha:
                 continue
             chave, _, valor = linha.partition(":")
-            chave, valor = chave.strip().lower(), valor.strip()
+            chave = chave.strip().lstrip("\ufeff\ufffe").lower()
+            valor = valor.strip()
 
             if chave == "user-agent":
                 # linhas de user-agent consecutivas formam um so grupo
@@ -63,6 +69,19 @@ class Robots:
                 else:
                     atuais = [valor.lower()]
                 aplicavel = any(a == "*" or a in alvo for a in atuais)
+                continue
+
+            if chave == "crawl-delay" and aplicavel:
+                # Ignorar isto fazia a pausa depender de conferencia manual
+                # de quem escrevesse cada extrator. A AMAI do Mexico declara
+                # 30s; um extrator distraido bateria no site 20x mais rapido
+                # do que o dono pediu.
+                try:
+                    d = float(valor.replace(",", "."))
+                    if d > 0:
+                        self.crawl_delay = max(self.crawl_delay or 0, d)
+                except ValueError:
+                    pass
                 continue
 
             if chave in ("disallow", "allow"):
@@ -151,6 +170,18 @@ def _situacao_e_regras(url: str, *, agente: str = UA_PADRAO,
 
 def para(url: str, *, agente: str = UA_PADRAO, timeout: int = 15) -> "Robots | None":
     return _situacao_e_regras(url, agente=agente, timeout=timeout)[1]
+
+
+def pausa_minima(url: str, *, agente: str = UA_PADRAO, padrao: float = 1.5) -> float:
+    """
+    Pausa que o dominio pede, ou o padrao do projeto se for maior.
+
+    Use no lugar de uma constante fixa: a regra do site sempre vence quando
+    e mais conservadora que a nossa.
+    """
+    _, regras = _situacao_e_regras(url, agente=agente)
+    declarada = getattr(regras, "crawl_delay", None) if regras else None
+    return max(padrao, declarada) if declarada else padrao
 
 
 def permitido(url: str, *, agente: str = UA_PADRAO, silencioso: bool = False) -> bool:
