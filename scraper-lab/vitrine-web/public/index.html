@@ -108,24 +108,20 @@ blockquote{margin:28px 0 0;font-size:clamp(20px,2vw,26px);font-weight:300;font-s
 .pg p{color:var(--ink-2);font-size:16px}
 .beta{font-family:var(--f-tech);font-size:11px;letter-spacing:.06em;border:1px solid var(--blue);border-radius:3px;padding:1px 5px;color:var(--blue)}
 
-/* metodologia: rota dobrada */
-.rota{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin-top:8px;filter:drop-shadow(0 24px 30px rgba(29,37,133,.10))}
-@media (max-width:1060px){.rota{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:620px){.rota{grid-template-columns:minmax(0,1fr)}}
-.dobra{position:relative;padding:26px 22px 30px;min-height:100%;display:grid;align-content:start;gap:12px}
-.dobra:nth-child(odd){background:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 70%,#EEF3FD 100%)}
-.dobra:nth-child(even){background:linear-gradient(100deg,#DDE8FC 0%,#EEF3FD 35%,#F7FAFF 100%)}
-@media (min-width:1061px){
-  .dobra:nth-child(odd){transform:perspective(900px) rotateY(3deg);transform-origin:right center}
-  .dobra:nth-child(even){transform:perspective(900px) rotateY(-3deg);transform-origin:left center}
-  .dobra:first-child{border-radius:4px 0 0 4px}
-  .dobra:last-child{border-radius:0 4px 4px 0}
-}
-@media (prefers-reduced-motion:reduce){.dobra{transform:none!important}}
-.dobra .n{font-family:var(--f-display);font-weight:800;font-size:44px;letter-spacing:-.04em;line-height:1;color:var(--blue)}
-.dobra h3{font-size:19px;line-height:1.15}
-.dobra p{font-size:15px;color:var(--ink-2)}
-.dobra .tech{border-top:1px dashed var(--line-2);padding-top:10px;font-size:12px}
+/* metodologia: rota dobrada. A dobra e so sombreado: sem inclinacao 3D,
+   que jogava o texto de uma coluna sobre a outra. */
+.rota{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:8px;border-radius:4px;overflow:hidden;box-shadow:0 24px 40px -28px rgba(29,37,133,.30);border:1px solid var(--line)}
+@media (max-width:900px){.rota{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.rota{grid-template-columns:minmax(0,1fr)}}
+.dobra{position:relative;min-width:0;padding:28px 26px 30px;display:grid;grid-template-rows:auto auto 1fr auto;gap:12px}
+.dobra:nth-child(odd){background:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 72%,#EEF3FD 100%)}
+.dobra:nth-child(even){background:linear-gradient(100deg,#DFE9FC 0%,#EEF3FD 30%,#F9FBFF 100%)}
+.dobra:nth-child(-n+3){border-bottom:1px solid var(--line)}
+@media (max-width:900px){.dobra:nth-child(-n+3){border-bottom:0}.dobra{border-bottom:1px solid var(--line)}}
+.dobra .n{font-family:var(--f-display);font-weight:800;font-size:40px;letter-spacing:-.04em;line-height:1;color:var(--blue)}
+.dobra h3{font-size:20px;line-height:1.15;overflow-wrap:break-word;hyphens:auto}
+.dobra p{font-size:15.5px;color:var(--ink-2);overflow-wrap:break-word}
+.dobra .tech{border-top:1px dashed var(--line-2);padding-top:10px;font-size:12.5px;overflow-wrap:anywhere}
 .nota-rota{margin-top:26px;color:var(--ink-2);max-width:78ch;font-size:16px}
 .nota-rota b{font-weight:600;color:var(--ink)}
 
