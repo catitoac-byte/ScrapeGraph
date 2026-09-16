@@ -213,6 +213,15 @@ textarea{width:100%;min-height:92px;resize:vertical;border-radius:10px;border:1p
 .mcell .v b{font-family:var(--f-display);font-size:20px;letter-spacing:-.02em}
 .mtrack{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
 .mtrack>div{height:100%;border-radius:0 3px 3px 0}
+.evo{display:flex;flex-direction:column;gap:6px}
+.evo-row{display:grid;grid-template-columns:104px minmax(0,1fr) 72px;gap:10px;align-items:center}
+.evo-head{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:6px}
+.evo-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));text-align:center;gap:4px}
+.evo-plot{position:relative;border-bottom:1px solid var(--line)}
+.evo-plot svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.evo-pt{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap}
+.evo-pt i{width:10px;height:10px;border-radius:50%;border:2px solid var(--panel);box-sizing:content-box}
+.evo-pt b{font-size:11.5px;background:var(--panel);padding:0 3px;border-radius:3px}
 .foot{margin-top:28px;color:var(--ink-3);font-size:12px;max-width:90ch;line-height:1.6}
 .callout{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;background:var(--warn-bg);color:var(--ink);font-size:12.5px;margin-top:12px}
 .callout b{color:var(--warn)}
@@ -270,13 +279,13 @@ const marcasNoShopping = s => new Set(LOJAS.filter(l=>l.shopping===s).map(l=>l.m
 
 const PERIODOS = [
   {id:"todos", nome:"Todos", ok:()=>true},
-  {id:"12", nome:"Até 1 ano", ok:m=>m!=null&&m<=12.5},
+  {id:"12", nome:"Último ano", ok:m=>m!=null&&m<=12.5},
   {id:"36", nome:"1 a 3 anos", ok:m=>m!=null&&m>12.5&&m<=36.5},
   {id:"mais", nome:"Mais de 3 anos", ok:m=>m!=null&&m>36.5},
 ];
-const idadeFaixa = m => m==null?"?": m<=1.5?"Último mês": m<=12.5?"Até 1 ano": m<=24.5?"1 a 2 anos": m<=36.5?"2 a 3 anos":"Mais de 3 anos";
+const idadeFaixa = m => m==null?"?": m<=12.5?"Último ano": m<=24.5?"1 a 2 anos": m<=36.5?"2 a 3 anos":"Mais de 3 anos";
 // do mais antigo para o mais recente, para ler a evolucao da esquerda para a direita
-const FAIXAS = ["Mais de 3 anos","2 a 3 anos","1 a 2 anos","Até 1 ano","Último mês"];
+const FAIXAS = ["Mais de 3 anos","2 a 3 anos","1 a 2 anos","Último ano"];
 
 /* ------------------------------------------------------------ agregacoes */
 function curvaMarca(lojas, marca, dia){
@@ -454,14 +463,60 @@ function GroupBars({rows,max=100,fmtV=v=>pct(v),onPick,picked,hint}){
   </div>`;
 }
 
+function Evolucao({idade}){
+  const todos = idade.flatMap(x=>Object.values(x.pts));
+  if(!todos.length) return html`<div class="empty">Sem avaliações suficientes neste recorte</div>`;
+  const lo = Math.min(...todos), hi = Math.max(...todos);
+  const pad = Math.max(0.15,(hi-lo)*0.15);
+  const y0 = lo-pad, y1 = hi+pad;
+  const H = 64, n = FAIXAS.length;
+  const cx = i => (i+0.5)/n*100;
+  const cy = v => 14 + (1-(v-y0)/(y1-y0))*(H-30);
+  return html`<div class="evo">
+    <div class="evo-row evo-head">
+      <span></span>
+      <div class="evo-cols">${FAIXAS.map(f=>html`<span key=${f}>${f}</span>`)}</div>
+      <span style=${{textAlign:"right"}}>Variação</span>
+    </div>
+    ${idade.map(x=>{
+      const idx = Object.keys(x.pts).map(Number).sort((a,b)=>a-b);
+      const pts = idx.map(i=>[cx(i),cy(x.pts[i])]);
+      const primeiro = idx[0], ultimo = idx[idx.length-1];
+      const delta = idx.length>1 && ultimo===n-1 ? x.pts[ultimo]-x.pts[primeiro] : null;
+      const tom = delta==null?"t-info":delta<=-0.15?"t-crit":delta>=0.15?"t-good":"t-info";
+      return html`<div class="evo-row" key=${x.m}>
+        <${Brand} m=${x.m}/>
+        <div class="evo-plot" style=${{height:H}}>
+          <svg viewBox=${`0 0 100 ${H}`} preserveAspectRatio="none" aria-hidden="true">
+            ${FAIXAS.map((f,i)=>html`<line key=${f} x1=${cx(i)} x2=${cx(i)} y1="4" y2=${H-4} stroke="var(--line)" vector-effect="non-scaling-stroke"/>`)}
+            ${pts.length>1 && html`<polyline points=${pts.map(p=>p.join(",")).join(" ")} fill="none" stroke=${cor(x.m)} stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`}
+          </svg>
+          ${FAIXAS.map((f,i)=>{
+            const v = x.pts[i];
+            if(v==null) return html`<div key=${f} class="evo-pt" style=${{left:cx(i)+"%",top:H/2-8}}><span class="note">${x.n[i]?"poucas ("+x.n[i]+")":"sem dado"}</span></div>`;
+            return html`<div key=${f} class="evo-pt" style=${{left:cx(i)+"%",top:cy(v)-5}} title=${`${x.m}, ${f}: ${fmt(v,2)} em ${x.n[i]} avaliações`}>
+              <i class=${"sh"+MI[x.m]} style=${{background:cor(x.m),borderRadius:MI[x.m]===0?"50%":MI[x.m]===1?"2px":0}}></i>
+              <b class="num">${fmt(v,2)}</b>
+            </div>`;
+          })}
+        </div>
+        <div style=${{textAlign:"right"}}>${delta==null?html`<span class="note">–</span>`:html`<span class=${"tag "+tom} style=${{fontSize:12,letterSpacing:0}}>${delta>0?"▲":delta<0?"▼":"●"} ${fmt(Math.abs(delta),2)}</span>`}</div>
+      </div>`;
+    })}
+    <p class="note" style=${{margin:"6px 0 0"}}>Amostra por período: ${idade.map(x=>`${x.m} ${FAIXAS.map((f,i)=>x.n[i]).join(" · ")}`).join("  |  ")}</p>
+  </div>`;
+}
+
 /* ------------------------------------------------------------ abas */
-function Panorama({lojas,revs,dia,setTab,setTema}){
+function Panorama({lojas,revs,revsNeg,estrelas,dia,setTab,setTema}){
   const dados = MARCAS.map(m=>{
     const rep = reputacao(lojas,m);
     const st = revStats(revs.filter(r=>r.marca===m));
     const pk = dia==="todos" ? picoSemana(lojas,m) : (()=>{const r=resumoCurva(curvaMarca(lojas,m,dia).curva); return r&&{...r,dia};})();
-    const piorTema = TEMAS.map(t=>({t,neg:st.temas[t.id].neg,n:st.temas[t.id].n})).filter(x=>x.n>=8&&x.neg!=null).sort((a,b)=>b.neg-a.neg)[0];
-    return {m,rep,st,pk,piorTema};
+    const stNeg = revStats(revsNeg.filter(r=>r.marca===m));
+    const piorTema = TEMAS.map(t=>({t,neg:stNeg.temas[t.id].neg,n:stNeg.temas[t.id].n})).filter(x=>x.n>=10&&x.neg!=null).sort((a,b)=>b.neg-a.neg)[0];
+    const stN = stNeg;
+    return {m,rep,st,stN,pk,piorTema};
   });
   const melhor = (k,dir=1)=>{ const vs=dados.filter(d=>k(d)!=null); if(vs.length<2) return {}; const s=[...vs].sort((a,b)=>dir*(k(b)-k(a))); return {best:s[0].m, worst:s[s.length-1].m}; };
   const rkNota = melhor(d=>d.rep.nota), rkNeg = melhor(d=>d.rep.neg,-1), rkResp = melhor(d=>d.st.resp);
@@ -475,7 +530,7 @@ function Panorama({lojas,revs,dia,setTab,setTema}){
     }
     const cart = dados.map(d=>({m:d.m,v:d.st.temas.cartao.n,p:d.st.temas.cartao.pct})).sort((a,b)=>b.v-a.v);
     if(cart[0].v>=5) out.push({k:"t-warn",t:"Tema",x:`Cartão e crédito aparece em ${fmt(cart[0].v)} avaliações da ${cart[0].m} (${pct(cart[0].p,1)} das que têm texto), quase sempre ligado a venda insistente do cartão da loja.`,tema:"cartao"});
-    const fila = dados.map(d=>({m:d.m,neg:d.st.temas.fila.neg,n:d.st.temas.fila.n})).filter(x=>x.n>=8).sort((a,b)=>b.neg-a.neg);
+    const fila = dados.map(d=>({m:d.m,neg:d.stN.temas.fila.neg,n:d.stN.temas.fila.n})).filter(x=>x.n>=10).sort((a,b)=>b.neg-a.neg);
     if(fila.length) out.push({k:"t-warn",t:"Operação",x:`Quando falam de fila e caixa, ${pct(fila[0].neg)} das avaliações da ${fila[0].m} são negativas.`,tema:"fila"});
     const pk = dados.filter(d=>d.pk).map(d=>`${d.m} ${DIA_LONGO[d.pk.dia]} às ${hh(d.pk.pico)}`);
     if(pk.length) out.push({k:"t-info",t:"Movimento",x:`${dia==="todos"?"Pico da semana":"Pico de "+DIA_LONGO[dia]}: ${pk.join(", ")}.`,tab:"movimento"});
@@ -603,8 +658,6 @@ function Reputacao({lojas,revs}){
     FAIXAS.forEach((f,i)=>{ const x=rs.filter(r=>idadeFaixa(r.m)===f); if(x.length>=10) pts[i]=x.reduce((s,r)=>s+r.e,0)/x.length; });
     return {m,pts,n:Object.fromEntries(FAIXAS.map((f,i)=>[i,rs.filter(r=>idadeFaixa(r.m)===f).length]))};
   });
-  const minIdade = Math.min(...idade.flatMap(x=>Object.values(x.pts)));
-  const piso = Math.min(3, Math.floor((isFinite(minIdade)?minIdade:3)*2)/2 - 0.5);
   const shoppings = [...new Set(lojas.map(l=>l.shopping))].sort((a,b)=>marcasNoShopping(b).size-marcasNoShopping(a).size||a.localeCompare(b));
   const starCol = {5:"#2f9e5b",4:"#7cbf6b",3:"#c9b458",2:"#e08a4e",1:"#d4513f"};
   return html`<div>
@@ -643,12 +696,8 @@ function Reputacao({lojas,revs}){
         </table></div>
       </section>
       <section class="panel">
-        <div class="ph"><div><h2>Nota média por período da avaliação</h2><p class="sub">Do período mais antigo ao mais recente, para ver se a percepção melhora ou piora. Períodos com menos de 10 avaliações na amostra ficam fora do gráfico, para uma loja com poucas notas não distorcer a linha.</p></div></div>
-        <${LineChart} series=${idade} xs=${[0,1,2,3,4]} fmtX=${i=>FAIXAS[i]} tipTitle=${i=>FAIXAS[i]} fmtV=${v=>fmt(v,2)+" ★"} yMin=${piso} yMax=${5} ticks=${Array.from({length:(5-piso)*2+1},(_,i)=>piso+i*0.5).filter((t,i,a)=>a.length<=7||i%2===0||t===5)} every=${1} height=${240} label="Nota média por período da avaliação"/>
-        <div class="tablewrap" style=${{marginTop:8}}><table>
-          <thead><tr><th>Período</th>${MARCAS.map(m=>html`<th key=${m} class="r"><${Brand} m=${m}/></th>`)}</tr></thead>
-          <tbody>${FAIXAS.map((f,i)=>html`<tr key=${f}><td>${f}</td>${idade.map(x=>html`<td key=${x.m} class="r num">${x.pts[i]!=null?fmt(x.pts[i],2):x.n[i]?"poucas":"–"} <span class="note">(${x.n[i]})</span></td>`)}</tr>`)}</tbody>
-        </table></div>
+        <div class="ph"><div><h2>Nota média por período da avaliação</h2><p class="sub">Da esquerda (mais antigo) para a direita (mais recente). A variação compara o último ano com o período mais antigo. Períodos com menos de 10 avaliações na amostra aparecem como “poucas”.</p></div></div>
+        <${Evolucao} idade=${idade}/>
       </section>
     </div>
 
@@ -675,12 +724,13 @@ function highlight(text, termo, tema){
   return parts;
 }
 
-function Voz({lojas,revs,tema,setTema,busca}){
+function Voz({lojas,revs,revsNeg,estrelas,tema,setTema,busca}){
   const [ordem,setOrdem] = useState("piores");
   const [limite,setLimite] = useState(8);
   useEffect(()=>setLimite(8),[tema,busca,ordem,revs]);
   const comTexto = revs.filter(r=>r.t);
   const st = Object.fromEntries(MARCAS.map(m=>[m,revStats(revs.filter(r=>r.marca===m))]));
+  const stNeg = Object.fromEntries(MARCAS.map(m=>[m,revStats(revsNeg.filter(r=>r.marca===m))]));
   const topicos = MARCAS.map(m=>{
     const acc={}; lojas.filter(l=>l.marca===m).forEach(l=>{for(const k in l.topicos) acc[k]=(acc[k]||0)+l.topicos[k];});
     return {m, lista:Object.entries(acc).sort((a,b)=>b[1]-a[1]).slice(0,12)};
@@ -693,8 +743,9 @@ function Voz({lojas,revs,tema,setTema,busca}){
         <${GroupBars} rows=${TEMAS.map(t=>({id:t.id,nome:t.nome,v:Object.fromEntries(MARCAS.map(m=>[m,st[m].comTexto?st[m].temas[t.id].pct:null]))}))} max=${60} onPick=${id=>setTema(tema===id?"":id)} picked=${tema}/>
       </section>
       <section class="panel">
-        <div class="ph"><div><h2>Quando o tema aparece, quanto é reclamação</h2><p class="sub">Parcela de notas 1 e 2 entre as avaliações que citam o tema. Temas com menos de 5 citações ficam sem valor.</p></div></div>
-        <${GroupBars} rows=${TEMAS.map(t=>({id:t.id,nome:t.nome,v:Object.fromEntries(MARCAS.map(m=>[m,st[m].temas[t.id].n>=5?st[m].temas[t.id].neg:null]))}))} max=${100} onPick=${id=>setTema(tema===id?"":id)} picked=${tema}/>
+        <div class="ph"><div><h2>Quando o tema aparece, quanto é reclamação</h2><p class="sub">Das avaliações que citam o tema, quantas deram nota 1 ou 2. Ao lado, o número de citações. Temas com menos de 10 citações ficam sem valor.</p>
+          ${estrelas.length?html`<p class="sub" style=${{color:"var(--warn)",fontWeight:600}}>Este gráfico ignora o filtro de estrelas, que deixaria tudo em 0% ou 100%.</p>`:null}</div></div>
+        <${GroupBars} rows=${TEMAS.map(t=>({id:t.id,nome:t.nome,sub:MARCAS.map(m=>stNeg[m].temas[t.id].n).join(" · ")+" citações",v:Object.fromEntries(MARCAS.map(m=>[m,stNeg[m].temas[t.id].n>=10?stNeg[m].temas[t.id].neg:null]))}))} max=${100} onPick=${id=>setTema(tema===id?"":id)} picked=${tema}/>
       </section>
     </div>
 
@@ -934,6 +985,12 @@ function App(){
     const q = buscaDeb.toLowerCase();
     return revsBase.filter(r=>(!tema||r.temas.includes(tema)) && (!q||(r.t&&r.t.toLowerCase().includes(q))));
   },[revsBase,tema,buscaDeb]);
+  // Parcela de reclamacao por tema nao pode usar o filtro de estrelas: com so
+  // 1 e 2 estrelas marcadas tudo vira 100%
+  const revsSemEstrela = useMemo(()=>{
+    const q = buscaDeb.toLowerCase();
+    return REVS.filter(r=>ids.has(r.s) && per.ok(r.m) && (!q||(r.t&&r.t.toLowerCase().includes(q))));
+  },[ids,periodo,buscaDeb]);
   // panorama e reputacao usam o recorte sem tema/busca (esses filtram leitura)
   const revsSemTema = tab==="voz"||tab==="ia" ? revs : revsBase;
 
@@ -991,10 +1048,10 @@ function App(){
     </nav>
 
     <main role="tabpanel" aria-labelledby=${"tab-"+tab}>
-      ${tab==="panorama" && html`<${Panorama} lojas=${lojas} revs=${revsSemTema} dia=${dia} setTab=${setTab} setTema=${setTema}/>`}
+      ${tab==="panorama" && html`<${Panorama} lojas=${lojas} revs=${revsSemTema} revsNeg=${revsSemEstrela} estrelas=${estrelas} dia=${dia} setTab=${setTab} setTema=${setTema}/>`}
       ${tab==="movimento" && html`<${Movimento} lojas=${lojas} dia=${dia} setDia=${setDia}/>`}
       ${tab==="reputacao" && html`<${Reputacao} lojas=${lojas} revs=${revsSemTema}/>`}
-      ${tab==="voz" && html`<${Voz} lojas=${lojas} revs=${revs} tema=${tema} setTema=${setTema} busca=${buscaDeb}/>`}
+      ${tab==="voz" && html`<${Voz} lojas=${lojas} revs=${revs} revsNeg=${revsSemEstrela} estrelas=${estrelas} tema=${tema} setTema=${setTema} busca=${buscaDeb}/>`}
       ${tab==="lojas" && html`<${Lojas} lojas=${lojas}/>`}
       ${tab==="ia" && html`<${Analista} lojas=${lojas} revs=${revs} filtrosTxt=${filtrosTxt}/>`}
     </main>
