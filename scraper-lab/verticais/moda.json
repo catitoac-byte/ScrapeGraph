@@ -36,54 +36,64 @@
   ],
   "temas": [
     {
+      "net": "Atendimento",
       "id": "atendimento",
       "nome": "Atendimento",
       "re": "atend|vendedor|funcion[aá]ri|educad|grosse|simp[aá]tic|mal educ|gerente|equipe"
     },
     {
+      "net": "Loja e operação",
       "id": "fila",
       "nome": "Fila e caixa",
       "re": "\\bfila|caixa|demor|esper[ae]i|lentid"
     },
     {
-      "id": "cartao",
-      "nome": "Cartão e crédito",
-      "re": "cart[aã]o|cr[eé]dito|juros|\\bpay\\b|fatura|cobran|empr[eé]stimo|parcel"
-    },
-    {
-      "id": "preco",
-      "nome": "Preço e promoção",
-      "re": "pre[çc]o|barat|\\bcaro|promo|oferta|desconto|liquida"
-    },
-    {
-      "id": "produto",
-      "nome": "Variedade e produto",
-      "re": "variedad|op[çc][õo]es|modelo|cole[çc]|pe[çc]as|qualidade|tecido|estilo"
-    },
-    {
-      "id": "tamanho",
-      "nome": "Tamanhos",
-      "re": "tamanho|numera[çc]|plus size|\\bgg\\b|\\bpp\\b"
-    },
-    {
+      "net": "Loja e operação",
       "id": "provador",
       "nome": "Provador",
       "re": "provador"
     },
     {
-      "id": "troca",
-      "nome": "Troca e devolução",
-      "re": "\\btroca|devolu|reembols|estorno"
-    },
-    {
+      "net": "Loja e operação",
       "id": "organizacao",
       "nome": "Organização e limpeza",
       "re": "organiz|bagun|limp[ae]|suj[ao]|arrumad|desarrum"
     },
     {
+      "net": "Loja e operação",
       "id": "estrutura",
       "nome": "Espaço e conforto",
       "re": "ar condicionado|espa[çc]o|ampl[ao]|banheiro|estacionamento|acess[ií]v|climatiz|quente"
+    },
+    {
+      "net": "Preço",
+      "id": "preco",
+      "nome": "Preço e promoção",
+      "re": "pre[çc]o|barat|\\bcaro|promo|oferta|desconto|liquida"
+    },
+    {
+      "net": "Produto",
+      "id": "produto",
+      "nome": "Variedade e produto",
+      "re": "variedad|op[çc][õo]es|modelo|cole[çc]|pe[çc]as|qualidade|tecido|estilo"
+    },
+    {
+      "net": "Produto",
+      "id": "tamanho",
+      "nome": "Tamanhos",
+      "re": "tamanho|numera[çc]|plus size|\\bgg\\b|\\bpp\\b"
+    },
+    {
+      "net": "Crédito e cobrança",
+      "id": "cartao",
+      "nome": "Cartão e crédito",
+      "re": "cart[aã]o|cr[eé]dito|juros|\\bpay\\b|fatura|cobran|empr[eé]stimo|parcel"
+    },
+    {
+      "net": "Pós-venda",
+      "id": "troca",
+      "nome": "Troca e devolução",
+      "re": "\\btroca|devolu|reembols|estorno"
     }
   ],
   "destaque_tema": "cartao",

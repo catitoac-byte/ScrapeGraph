@@ -36,59 +36,154 @@
   ],
   "temas": [
     {
-      "id": "atendimento",
-      "nome": "Atendimento",
-      "re": "atend|funcion[aá]ri|educad|grosse|simp[aá]tic|mal educ|gerente|equipe|seguran[çc]a"
+      "net": "Atendimento",
+      "id": "cordialidade",
+      "nome": "Cordialidade da equipe",
+      "re": "educad|simp[aá]tic|grosse|mal educ|atencios|cordial|ignor|prestativ"
     },
     {
+      "net": "Atendimento",
+      "id": "equipe",
+      "nome": "Equipe disponível na loja",
+      "re": "n[ãa]o tinha (ningu[ée]m|funcion)|poucos funcion|falta de funcion|sem funcion|repositor|atendente|funcion[aá]rios?"
+    },
+    {
+      "net": "Atendimento",
+      "id": "seguranca",
+      "nome": "Segurança e abordagem",
+      "re": "seguran[çc]as?\\b|fiscal|revist|abordag"
+    },
+    {
+      "net": "Caixa e fila",
       "id": "fila",
-      "nome": "Fila e caixa",
-      "re": "\\bfila|caixa|demor|esper[ae]i|lentid|self.?checkout|autoatendimento"
+      "nome": "Fila e espera",
+      "re": "\\bfilas?\\b|demor|esper(a|ei|ar)\\b|lentid|\\blent[oa]s?\\b"
     },
     {
-      "id": "preco",
-      "nome": "Preço e promoção",
-      "re": "pre[çc]o|barat|\\bcaro|promo|oferta|desconto|econom"
+      "net": "Caixa e fila",
+      "id": "caixas",
+      "nome": "Caixas abertos",
+      "re": "caixas? (fechad|abert)|poucos caixas|s[óo] (um|dois|1|2) caixas?|um caixa"
     },
     {
+      "net": "Caixa e fila",
+      "id": "self",
+      "nome": "Autoatendimento",
+      "re": "self.?checkout|autoatendimento|caixa r[áa]pido"
+    },
+    {
+      "net": "Preço",
+      "id": "preco_bom",
+      "nome": "Preço competitivo",
+      "re": "pre[çc]os? (bom|bons|[óo]timo|justo|baixo)|barat|econom|em conta"
+    },
+    {
+      "net": "Preço",
+      "id": "preco_alto",
+      "nome": "Preço alto",
+      "re": "\\bcaros?\\b|car[ií]ssim|pre[çc]os? (alto|salgado)"
+    },
+    {
+      "net": "Preço",
+      "id": "promocao",
+      "nome": "Promoção e ofertas",
+      "re": "promo|ofertas?|desconto|encarte"
+    },
+    {
+      "net": "Preço",
       "id": "divergencia",
-      "nome": "Preço da gôndola no caixa",
-      "re": "etiqueta|diverg|pre[çc]o errado|cobr(ou|aram|ado|ada) (a mais|diferente|errado)|pre[çc]o diferente|placa"
+      "nome": "Preço da gôndola diferente no caixa",
+      "re": "etiqueta|diverg|pre[çc]o (errado|diferente)|cobr(ou|aram|ado|ada) (a mais|diferente|errado)|placa"
     },
     {
+      "net": "Preço",
+      "id": "atacado",
+      "nome": "Regra de preço de atacado",
+      "re": "pre[çc]o de atacado|quantidade m[íi]nima|a partir de \\d+ unidades|\\bleve \\d"
+    },
+    {
+      "net": "Sortimento",
+      "id": "variedade",
+      "nome": "Variedade e marcas",
+      "re": "variedad|op[çc][õo]es|\\bmix\\b|marcas"
+    },
+    {
+      "net": "Sortimento",
       "id": "falta",
-      "nome": "Variedade e falta de produto",
-      "re": "variedad|op[çc][õo]es|\\bfalta|faltando|n[ãa]o (tem|tinha|encontr)|estoque|acab(ou|ado)"
+      "nome": "Falta de produto",
+      "re": "\\bfalta\\b|faltando|n[ãa]o (tem|tinha|encontr|achei)|estoque|acab(ou|ado)|prateleiras? vazia|g[ôo]ndolas? vazia"
     },
     {
-      "id": "pereciveis",
-      "nome": "Hortifrúti e validade",
-      "re": "hortifr|frutas?\\b|verdura|legume|vencid|validade|estragad|podre|mofad|qualidade"
+      "net": "Perecíveis",
+      "id": "hortifruti",
+      "nome": "Hortifrúti",
+      "re": "hortifr|frutas?\\b|verduras?\\b|legumes?\\b|sacol[ãa]o"
     },
     {
+      "net": "Perecíveis",
       "id": "acougue",
       "nome": "Açougue, padaria e frios",
       "re": "a[çc]ougue|carnes?\\b|padaria|\\bp[ãa]es?\\b|frios|peixaria|rotisseria"
     },
     {
-      "id": "pagamento",
-      "nome": "Pagamento e cartão",
-      "re": "cart[aã]o|cr[eé]dito|d[eé]bito|\\bpix\\b|pagamento|parcel|passa[ií]|vale.?alimenta"
+      "net": "Perecíveis",
+      "id": "validade",
+      "nome": "Validade e qualidade",
+      "re": "vencid|validade|estragad|podre|mofad|azed"
     },
     {
-      "id": "estacionamento",
-      "nome": "Estacionamento e acesso",
-      "re": "estacionamento|\\bvagas?\\b|carro|acesso|entrada"
+      "net": "Pagamento",
+      "id": "cartao_loja",
+      "nome": "Cartão da loja",
+      "re": "passa[ií]|cart[ãa]o (da loja|pr[óo]prio|do assa|do bretas|do costa)"
     },
     {
-      "id": "organizacao",
-      "nome": "Organização e limpeza",
-      "re": "organiz|bagun|limp[ae]|suj[ao]|arrumad|desarrum|cheiro|fedor"
+      "net": "Pagamento",
+      "id": "meios",
+      "nome": "Meios de pagamento",
+      "re": "\\bpix\\b|d[ée]bito|cr[ée]dito|pagamento|parcel|maquininha"
     },
     {
+      "net": "Pagamento",
+      "id": "vale",
+      "nome": "Vale-alimentação",
+      "re": "vale.?(alimenta|refei)|\\bticket\\b|sodexo|alelo|\\bvr\\b"
+    },
+    {
+      "net": "Loja e estrutura",
+      "id": "limpeza",
+      "nome": "Limpeza e organização",
+      "re": "organiz|bagun|limp[ae]|suj[ao]|arrumad|cheiro|fedor|moscas?\\b"
+    },
+    {
+      "net": "Loja e estrutura",
       "id": "conforto",
-      "nome": "Carrinho e conforto",
-      "re": "carrinho|ar condicionado|quente|calor|climatiz|corredor|apertad|banheiro|lotad"
+      "nome": "Conforto e lotação",
+      "re": "ar condicionado|quente|calor|climatiz|corredor|apertad|lotad|banheiro"
+    },
+    {
+      "net": "Loja e estrutura",
+      "id": "carrinho",
+      "nome": "Carrinhos e cestas",
+      "re": "carrinhos?\\b|cestinhas?\\b|cestas?\\b"
+    },
+    {
+      "net": "Acesso",
+      "id": "estacionamento",
+      "nome": "Estacionamento",
+      "re": "estacionamento|\\bvagas?\\b"
+    },
+    {
+      "net": "Acesso",
+      "id": "localizacao",
+      "nome": "Localização e horário",
+      "re": "localiza[çc]|f[áa]cil acesso|hor[áa]rio|24 ?h|abre cedo|fecha cedo"
+    },
+    {
+      "net": "Avaliação geral",
+      "id": "elogio",
+      "nome": "Elogio geral",
+      "re": "^\\W*(muito )?(bom|boa|[óo]tim[oa]|excelente|top|show|maravilh)|recomendo|gostei|adoro"
     }
   ],
   "destaque_tema": "divergencia",

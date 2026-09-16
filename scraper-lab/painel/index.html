@@ -224,6 +224,7 @@ textarea{width:100%;min-height:92px;resize:vertical;border-radius:10px;border:1p
 .evo-pt i{width:10px;height:10px;border-radius:50%;border:2px solid var(--panel);box-sizing:content-box}
 .evo-pt b{font-size:11.5px;background:var(--panel);padding:0 3px;border-radius:3px}
 .escopo{display:flex;gap:10px;align-items:flex-start;margin-top:8px;font-size:12.5px;color:var(--ink-2);max-width:110ch}
+.nivel{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end;margin-top:14px}
 .foot{margin-top:28px;color:var(--ink-3);font-size:12px;max-width:90ch;line-height:1.6}
 .callout{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;background:var(--warn-bg);color:var(--ink);font-size:12.5px;margin-top:12px}
 .callout b{color:var(--warn)}
@@ -267,13 +268,21 @@ const TEMAS_MODA = [
   {id:"organizacao", nome:"Organização e limpeza", re:/organiz|bagun|limp[ae]|suj[ao]|arrumad|desarrum/i},
   {id:"estrutura", nome:"Espaço e conforto", re:/ar condicionado|espa[çc]o|ampl[ao]|banheiro|estacionamento|acess[ií]v|climatiz|quente/i},
 ];
-const TEMAS = D.temas ? D.temas.map(t=>({id:t.id, nome:t.nome, re:new RegExp(t.re,"i")})) : TEMAS_MODA;
-const TEMA_POR_ID = Object.fromEntries(TEMAS.map(t=>[t.id,t]));
+// Livro de codigos: codigos (TEMAS) agrupados em nets. Uma net marca a
+// avaliacao que cita qualquer codigo dela.
+const TEMAS = D.temas ? D.temas.map(t=>({id:t.id, nome:t.nome, net:t.net||"Temas", re:new RegExp(t.re,"i")})) : TEMAS_MODA.map(t=>({...t,net:"Temas"}));
+const NETS = [...new Set(TEMAS.map(t=>t.net))].map(n=>{
+  const cods = TEMAS.filter(t=>t.net===n);
+  return {id:"net-"+n.normalize("NFD").replace(/[^\w]+/g,"-").toLowerCase(), nome:n, net:n, ehNet:true, codigos:cods.map(c=>c.id),
+    re:new RegExp(cods.map(c=>"(?:"+c.re.source+")").join("|"),"i")};
+});
+const TODOS = [...NETS, ...TEMAS];
+const TEMA_POR_ID = Object.fromEntries(TODOS.map(t=>[t.id,t]));
 
 const LOJAS = D.lojas;
 const ORDEM_TXT = D.ordenacao === "mais recentes" ? "as mais recentes de cada loja" : "na ordem de relevância do Google";
 const LOJA = Object.fromEntries(LOJAS.map(l=>[l.id,l]));
-const REVS = D.avaliacoes.map((r,i)=>({...r, i, marca:LOJA[r.s].marca, temas:r.t?TEMAS.filter(t=>t.re.test(r.t)).map(t=>t.id):[]}));
+const REVS = D.avaliacoes.map((r,i)=>({...r, i, marca:LOJA[r.s].marca, temas:r.t?TODOS.filter(t=>t.re.test(r.t)).map(t=>t.id):[]}));
 const SHOPPINGS = [...new Set(LOJAS.map(l=>l.shopping))].sort((a,b)=>{
   const na = new Set(LOJAS.filter(l=>l.shopping===a).map(l=>l.marca)).size;
   const nb = new Set(LOJAS.filter(l=>l.shopping===b).map(l=>l.marca)).size;
@@ -365,13 +374,16 @@ function revStats(revs){
     negPct: revs.length ? neg.length/revs.length*100 : null,
     resp: revs.length ? revs.filter(r=>r.r).length/revs.length*100 : null,
     respNeg: neg.length ? neg.filter(r=>r.r).length/neg.length*100 : null,
-    temas: Object.fromEntries(TEMAS.map(t=>{
+    temas: Object.fromEntries(TODOS.map(t=>{
       const com = txt.filter(r=>r.temas.includes(t.id));
       return [t.id,{n:com.length, pct: txt.length? com.length/txt.length*100 : 0,
         neg: com.length? com.filter(r=>r.e<=2).length/com.length*100 : null}];
     })),
   };
 }
+
+// Maximo da regua das barras: um pouco acima do maior valor, sem passar de 100
+const escala = vs => { const m = Math.max(0, ...vs.filter(v=>v!=null&&isFinite(v))); return Math.min(100, Math.max(20, Math.ceil(m*1.15/10)*10)); };
 
 /* ------------------------------------------------------------ pecas visuais */
 const Swatch = ({m,size=12}) => html`<span class=${"sw sh"+MI[m]} style=${{background:cor(m),width:size,height:size}} aria-hidden="true"></span>`;
@@ -621,10 +633,10 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
     </div>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Do que os clientes falam</h2><p class="sub">Parcela das avaliações com texto que citam cada tema. Mostra todos os temas mesmo com filtro de tema ligado. Clique num tema para ler as avaliações.</p></div></div>
+      <div class="ph"><div><h2>Do que os clientes falam</h2><p class="sub">Parcela das avaliações com texto que citam cada net (grupo de códigos). Mostra todos os temas mesmo com filtro de tema ligado. Clique num tema para ler as avaliações.</p></div></div>
       <div class="grid g2" style=${{marginTop:0}}>
-        <${GroupBars} rows=${TEMAS.slice(0,5).map(t=>({id:t.id,nome:t.nome,v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${60} onPick=${id=>{setTema(id);setTab("voz");}}/>
-        <${GroupBars} rows=${TEMAS.slice(5).map(t=>({id:t.id,nome:t.nome,v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${60} onPick=${id=>{setTema(id);setTab("voz");}}/>
+        <${GroupBars} rows=${NETS.slice(0,Math.ceil(NETS.length/2)).map(t=>({id:t.id,nome:t.nome,sub:TEMAS.filter(c=>c.net===t.net).length+" códigos",v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${escala(dados.flatMap(d=>NETS.map(t=>d.stT.temas[t.id].pct)))} onPick=${id=>{setTema(id);setTab("voz");}}/>
+        <${GroupBars} rows=${NETS.slice(Math.ceil(NETS.length/2)).map(t=>({id:t.id,nome:t.nome,sub:TEMAS.filter(c=>c.net===t.net).length+" códigos",v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${escala(dados.flatMap(d=>NETS.map(t=>d.stT.temas[t.id].pct)))} onPick=${id=>{setTema(id);setTab("voz");}}/>
       </div>
     </section>
   </div>`;
@@ -765,6 +777,10 @@ function highlight(text, termo, tema){
 
 function Voz({lojas,revs,revsTemas,revsNeg,estrelas,tema,setTema,busca}){
   const [ordem,setOrdem] = useState("piores");
+  const [nivel,setNivel] = useState("nets");
+  const [netAberta,setNetAberta] = useState("");
+  const lista = nivel==="nets" ? NETS : TEMAS.filter(t=>!netAberta||t.net===netAberta);
+  const pick = id => { const t=TEMA_POR_ID[id]; setTema(tema===id?"":id); if(t.ehNet&&nivel==="nets"){ setNetAberta(t.net); } };
   const [limite,setLimite] = useState(8);
   useEffect(()=>setLimite(8),[tema,busca,ordem,revs]);
   const comTexto = revs.filter(r=>r.t);
@@ -776,15 +792,22 @@ function Voz({lojas,revs,revsTemas,revsNeg,estrelas,tema,setTema,busca}){
   });
   const ord = {piores:(a,b)=>a.e-b.e||a.m-b.m, melhores:(a,b)=>b.e-a.e||a.m-b.m, recentes:(a,b)=>(a.m??99)-(b.m??99), longas:(a,b)=>b.t.length-a.t.length};
   return html`<div>
+    <div class="nivel">
+      <div class="fld"><span class="flabel">Livro de códigos</span>
+        <${Seg} value=${nivel} onChange=${v=>{setNivel(v); if(v==="nets") setNetAberta("");}} label="Nível do livro de códigos" options=${[{id:"nets",nome:`Nets (${NETS.length})`},{id:"codigos",nome:`Códigos (${TEMAS.length})`}]}/></div>
+      ${nivel==="codigos" && html`<div class="fld"><label for="f-net">Net</label>
+        <select id="f-net" value=${netAberta} onChange=${e=>setNetAberta(e.target.value)}><option value="">Todas as nets</option>${NETS.map(n=>html`<option key=${n.id} value=${n.net}>${n.nome}</option>`)}</select></div>`}
+      ${nivel==="nets" && netAberta && html`<button class="linkbtn" onClick=${()=>setNivel("codigos")}>Abrir os códigos de ${netAberta}</button>`}
+    </div>
     <div class="grid g2">
       <section class="panel">
-        <div class="ph"><div><h2>Quanto se fala de cada tema</h2><p class="sub">Parcela das avaliações com texto. Mostra todos os temas mesmo com um tema escolhido, que fica destacado. Clique para filtrar as avaliações abaixo.</p></div></div>
-        <${GroupBars} rows=${TEMAS.map(t=>({id:t.id,nome:t.nome,v:Object.fromEntries(MARCAS.map(m=>[m,st[m].comTexto?st[m].temas[t.id].pct:null]))}))} max=${60} onPick=${id=>setTema(tema===id?"":id)} picked=${tema}/>
+        <div class="ph"><div><h2>Quanto se fala de cada ${nivel==="nets"?"net":"código"}</h2><p class="sub">Parcela das avaliações com texto. ${nivel==="nets"?"Cada net agrupa códigos parecidos; clique para filtrar e depois abra os códigos.":"Códigos"+(netAberta?" da net "+netAberta:" de todas as nets")+". Clique para filtrar as avaliações abaixo."}</p></div></div>
+        <${GroupBars} rows=${lista.map(t=>({id:t.id,nome:t.nome,sub:nivel==="nets"?TEMAS.filter(c=>c.net===t.net).length+" códigos":(netAberta?null:t.net),v:Object.fromEntries(MARCAS.map(m=>[m,st[m].comTexto?st[m].temas[t.id].pct:null]))}))} max=${escala(MARCAS.flatMap(m=>lista.map(t=>st[m].temas[t.id].pct)))} onPick=${pick} picked=${tema}/>
       </section>
       <section class="panel">
         <div class="ph"><div><h2>Quando o tema aparece, quanto é reclamação</h2><p class="sub">Das avaliações que citam o tema, quantas deram nota 1 ou 2. Ao lado, o número de citações. Temas com menos de 10 citações ficam sem valor.</p>
           ${estrelas.length?html`<p class="sub" style=${{color:"var(--warn)",fontWeight:600}}>Este gráfico ignora o filtro de estrelas, que deixaria tudo em 0% ou 100%.</p>`:null}</div></div>
-        <${GroupBars} rows=${TEMAS.map(t=>({id:t.id,nome:t.nome,sub:MARCAS.map(m=>stNeg[m].temas[t.id].n).join(" · ")+" citações",v:Object.fromEntries(MARCAS.map(m=>[m,stNeg[m].temas[t.id].n>=10?stNeg[m].temas[t.id].neg:null]))}))} max=${100} onPick=${id=>setTema(tema===id?"":id)} picked=${tema}/>
+        <${GroupBars} rows=${lista.map(t=>({id:t.id,nome:t.nome,sub:MARCAS.map(m=>stNeg[m].temas[t.id].n).join(" · ")+" citações",v:Object.fromEntries(MARCAS.map(m=>[m,stNeg[m].temas[t.id].n>=10?stNeg[m].temas[t.id].neg:null]))}))} max=${100} onPick=${pick} picked=${tema}/>
       </section>
     </div>
 
@@ -924,7 +947,7 @@ function contexto(lojas,revs,filtrosTxt,amostra){
     const rep=reputacao(lojas,m,amostra), st=revStats(revs.filter(r=>r.marca===m));
     return {marca:m, lojas:rep.lojas, nota_ponderada:+fmt(rep.nota,2).replace(",","."), avaliacoes_google:rep.tot, pct_notas_1e2:+(rep.neg||0).toFixed(1),
       amostra:st.n, media_amostra:st.media&&+st.media.toFixed(2), pct_respondidas:st.resp&&+st.resp.toFixed(0), pct_negativas_respondidas:st.respNeg&&+st.respNeg.toFixed(0),
-      temas:Object.fromEntries(TEMAS.map(t=>[t.nome,{citacoes:st.temas[t.id].n, pct_do_texto:+st.temas[t.id].pct.toFixed(1), pct_negativas:st.temas[t.id].neg==null?null:+st.temas[t.id].neg.toFixed(0)}])),
+      temas:Object.fromEntries(TODOS.map(t=>[(t.ehNet?"NET ":"")+t.nome,{citacoes:st.temas[t.id].n, pct_do_texto:+st.temas[t.id].pct.toFixed(1), pct_negativas:st.temas[t.id].neg==null?null:+st.temas[t.id].neg.toFixed(0)}])),
       pico_por_dia:Object.fromEntries(DIAS.map(d=>{const r=resumoCurva(curvaMarca(lojas,m,d).curva); return [d, r?{hora_pico:r.pico,lotacao:Math.round(r.valor),tres_mais_cheias:r.top,mais_vazia:r.vazia}:"fechada"];})),
     };
   });
@@ -1082,7 +1105,7 @@ function App(){
         <div class="fld"><span class="flabel">Estrelas</span>
           <div class="seg stars" role="group" aria-label="Estrelas">${[1,2,3,4,5].map(k=>html`<button key=${k} type="button" aria-pressed=${estrelas.includes(k)} onClick=${()=>setEstrelas(estrelas.includes(k)?estrelas.filter(x=>x!==k):[...estrelas,k])}>${k}★</button>`)}</div></div>
         <div class="fld"><label for="f-tema">Tema</label>
-          <select id="f-tema" value=${tema} onChange=${e=>setTema(e.target.value)}><option value="">Todos os temas</option>${TEMAS.map(t=>html`<option key=${t.id} value=${t.id}>${t.nome}</option>`)}</select></div>
+          <select id="f-tema" value=${tema} onChange=${e=>setTema(e.target.value)}><option value="">Todos os temas</option>${NETS.map(n=>html`<optgroup key=${n.id} label=${n.nome}><option value=${n.id}>${n.nome} (net inteira)</option>${TEMAS.filter(t=>t.net===n.net).map(t=>html`<option key=${t.id} value=${t.id}>${t.nome}</option>`)}</optgroup>`)}</select></div>
         <div class="fld"><label for="f-per">Período da avaliação</label>
           <select id="f-per" value=${periodo} onChange=${e=>setPeriodo(e.target.value)}>${PERIODOS.map(p=>html`<option key=${p.id} value=${p.id}>${p.nome}</option>`)}</select></div>
         <div class="fld"><label for="f-busca">Buscar no texto</label>
