@@ -64,6 +64,22 @@ TEMA_INICIAL = """<script>
 """
 
 
+EM_COLETA = """<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><title>{nome}</title><link rel="icon" href="/cassi-wordmark.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:wght@300;400;500&display=swap">
+<style>body{{margin:0;min-height:100vh;display:grid;place-items:center;background:#F8FAFC;color:#0F172A;font:300 17px/1.6 "Instrument Sans",system-ui,sans-serif;padding-inline:20px}}
+main{{max-width:560px;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:1rem;padding:36px}}
+h1{{font:800 30px/1.1 "Syne",sans-serif;letter-spacing:-.025em;margin:14px 0 12px}}
+.l{{font:700 12px "Syne",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#2563EB}}
+p{{color:#475569;margin:0 0 12px}} a{{color:#2563EB}}</style></head>
+<body><main><span class="l">{cidade}</span><h1>Coleta em andamento</h1>
+<p>O painel de {marcas} está sendo montado. A varredura das fichas públicas roda com pausas para respeitar os limites da fonte.</p>
+<p>Assim que os dados forem conferidos, este endereço passa a mostrar o painel completo.</p>
+<p><a href="/api/sair">Sair</a></p></main></body></html>
+"""
+
+
 def milhar(n: int) -> str:
     return f"{n:,}".replace(",", ".")
 
@@ -84,15 +100,19 @@ def painel(cfg: dict) -> str:
     return doc.replace('<script src="data.js"></script>', '<script src="/painel/data.js"></script>')
 
 
-def pagina(cfg: dict, dados: dict) -> str:
-    leituras = sum(1 for l in dados["lojas"] for d in l["pico"].values() for v in d.values() if v is not None)
+def pagina(cfg: dict, dados: dict | None) -> str:
     site = cfg["site"]
+    if dados:
+        leituras = sum(1 for l in dados["lojas"] for d in l["pico"].values() for v in d.values() if v is not None)
+        n_lojas, n_aval, n_leit = milhar(len(dados["lojas"])), milhar(len(dados["avaliacoes"])), milhar(leituras)
+    else:
+        n_lojas = n_aval = n_leit = "…"
     trocas = {
-        "{{ROTULO_PILOTO}}": cfg["rotulo_piloto"],
-        "{{N_LOJAS}}": milhar(len(dados["lojas"])),
+        "{{ROTULO_PILOTO}}": cfg["rotulo_piloto"] + ("" if dados else " · coleta em andamento"),
+        "{{N_LOJAS}}": n_lojas,
         "{{N_MARCAS}}": milhar(len(cfg["marcas"])),
-        "{{N_AVALIACOES}}": milhar(len(dados["avaliacoes"])),
-        "{{N_LEITURAS}}": milhar(leituras),
+        "{{N_AVALIACOES}}": n_aval,
+        "{{N_LEITURAS}}": n_leit,
         "{{N_TEMAS}}": milhar(len(cfg["temas"])),
         "{{TEMAS_LISTA}}": site["temas_lista"],
         "{{PERGUNTA_LOCAL}}": site["pergunta_local"],
@@ -108,8 +128,10 @@ def pagina(cfg: dict, dados: dict) -> str:
 def main(vertical: str) -> None:
     cfg = json.loads((VERTICAIS / f"{vertical}.json").read_text(encoding="utf-8"))
     data_js = DADOS / cfg["id"] / "data.js"
-    texto = data_js.read_text(encoding="utf-8")
-    dados = json.loads(texto[texto.index("=") + 1:].rstrip().rstrip(";"))
+    dados = None
+    if data_js.exists():
+        texto = data_js.read_text(encoding="utf-8")
+        dados = json.loads(texto[texto.index("=") + 1:].rstrip().rstrip(";"))
 
     destino = SITES / cfg["id"]
     pub = destino / "public"
@@ -119,8 +141,12 @@ def main(vertical: str) -> None:
     shutil.copytree(MODELO / "api", destino / "api", dirs_exist_ok=True)
     shutil.copy(MODELO / "template" / "cassi-wordmark.svg", pub / "cassi-wordmark.svg")
     (pub / "index.html").write_text(pagina(cfg, dados), encoding="utf-8")
-    (pub / "painel" / "index.html").write_text(painel(cfg), encoding="utf-8")
-    shutil.copy(data_js, pub / "painel" / "data.js")
+    if dados:
+        (pub / "painel" / "index.html").write_text(painel(cfg), encoding="utf-8")
+        shutil.copy(data_js, pub / "painel" / "data.js")
+    else:
+        (pub / "painel" / "index.html").write_text(EM_COLETA.format(nome=cfg["nome_pagina"],
+            marcas=", ".join(m["nome"] for m in cfg["marcas"]), cidade=cfg["cidade"]), encoding="utf-8")
     print("ok:", destino)
 
 
