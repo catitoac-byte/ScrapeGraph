@@ -39,13 +39,13 @@
       "net": "Atendimento",
       "id": "atendimento",
       "nome": "Atendimento",
-      "re": "atend|vendedor|funcion[aá]ri|educad|grosse|simp[aá]tic|mal educ|gerente|equipe"
+      "re": "atendiment|atendente|(bem|mal) atendid|funcion[aá]ri|vendedor|colaborador|educad|grosse|simp[aá]tic|gerente|equipe|tratad[ao]|respeit|descaso|ignor|despreparad|\\bcontato\\b|n[ãa]o (me |ti |te |nos )?ajud|atende(m)? (as |a )?liga|\\bgross[ao]s?\\b|atencios|solicit"
     },
     {
       "net": "Loja e operação",
       "id": "fila",
       "nome": "Fila e caixa",
-      "re": "\\bfila|caixa|demor|esper[ae]i|lentid"
+      "re": "\\bfila|caixas?\\b(?! d.? ?spam)|\\bcxs?\\b|demor|esper[ae]i|lentid|self.?check"
     },
     {
       "net": "Loja e operação",
@@ -63,37 +63,37 @@
       "net": "Loja e operação",
       "id": "estrutura",
       "nome": "Espaço e conforto",
-      "re": "ar condicionado|espa[çc]o|ampl[ao]|banheiro|estacionamento|acess[ií]v|climatiz|quente"
+      "re": "ar.?condicionado|climatiz|quente|banheiro|estacionamento|acessibilidade|elevador|escada|sof[áa]|ambiente|espa[çc]os[ao]|loja (ampla|grande)|\\bampl[ao]\\b|instala[çc]|aconcheg|loja (feia|bonita|linda)|reforma"
     },
     {
       "net": "Preço",
       "id": "preco",
       "nome": "Preço e promoção",
-      "re": "pre[çc]o|barat|\\bcaro|promo|oferta|desconto|liquida"
+      "re": "pre[çc]o|barat|\\bcar[oa]s?\\b|careir|\\bvalores\\b|custo.?benef|promo|oferta|desconto|liquida"
     },
     {
       "net": "Produto",
       "id": "produto",
       "nome": "Variedade e produto",
-      "re": "variedad|op[çc][õo]es|modelo|cole[çc]|pe[çc]as|qualidade|tecido|estilo"
+      "re": "variedad|op[çc][õo]es|modelo|cole[çc]|qualidade|tecido|estilo|jeans|cal[çc]ados|t[êe]nis|perfum|novidades|tem de tudo|complet[ao]|encolh|(bo[an]s|lind[ao]s|bonit[ao]s|feio?s?|[óo]tim[ao]s|excelentes|descolad[ao]s|medianos|fracos?) (roupas|produtos?|pe[çc]as|itens)|(roupas|produtos?|pe[çc]as|itens) (bo[an]s|lind[ao]s|bonit[ao]s|feio?s?|de qualidade|descolad[ao]s|medianos|fracos?|variados|mais bem feitas)|ponta de estoque|estoque deficiente"
     },
     {
       "net": "Produto",
       "id": "tamanho",
       "nome": "Tamanhos",
-      "re": "tamanho|numera[çc]|plus size|\\bgg\\b|\\bpp\\b"
+      "re": "numera[çc]|plus size|\\bgg\\b|\\bxg\\b|acima do peso|meu tamanho|tamanhos? (grande|pequen|maior|menor|\\d)|\\b(3[4-9]|4[0-9]|5[0-4]) ?(a|-|ao) ?(3[6-9]|4[0-9]|5[0-6])\\b"
     },
     {
       "net": "Crédito e cobrança",
       "id": "cartao",
       "nome": "Cartão e crédito",
-      "re": "cart[aã]o|cr[eé]dito|juros|\\bpay\\b|fatura|cobran|empr[eé]stimo|parcel"
+      "re": "cart(ão|ao|ões|oes) (da loja|deles|dela|pr[óo]prio|renner|riachuelo|c&a)|cart(ões|oes) oferecid|fazer o cart|fiz o cart|cr[eé]dito|crediário|juros|\\bpay\\b|fatura|cobran|empr[eé]stimo|seguro do cart|parcel"
     },
     {
       "net": "Pós-venda",
       "id": "troca",
       "nome": "Troca e devolução",
-      "re": "\\btroca|devolu|reembols|estorno"
+      "re": "\\btroca|trocar|devolu|reembols|estorno|garantia"
     }
   ],
   "destaque_tema": "cartao",
