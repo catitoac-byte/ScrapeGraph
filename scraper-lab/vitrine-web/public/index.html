@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitrine · Cassi.ai</title>
+<meta name="description" content="Inteligência de lojas físicas a partir de dados públicos: movimento por hora, reputação e voz do cliente, loja a loja, com a concorrência lado a lado.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/cassi-wordmark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* Design system cassiai.com: fundo #F8FAFC, tinta #0F172A, azul #2563EB,
+   Syne nos titulos, Instrument Sans no corpo. Courier para etiqueta tecnica. */
+:root{
+  color-scheme:light;
+  --bg:#F8FAFC; --paper:#FFFFFF; --ink:#0F172A; --ink-2:#475569; --ink-3:#64748B;
+  --line:rgba(15,23,42,.08); --line-2:rgba(15,23,42,.14);
+  --blue:#2563EB; --blue-deep:#1D2585; --blue-soft:#EAF1FE; --blue-softer:#F3F7FF;
+  --mint:#8FFFCB; --err:#C2410C; --err-bg:#FFF1EA;
+  --r:1rem; --r-sm:.5rem;
+  --f-display:"Syne", "Avenir Next", system-ui, sans-serif;
+  --f-body:"Instrument Sans", "Helvetica Neue", system-ui, sans-serif;
+  --f-tech:"Courier Prime", "Courier New", ui-monospace, monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-weight:300;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);font-weight:800;letter-spacing:-.025em;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:24px}
+@media (max-width:600px){.wrap{padding-inline:18px}}
+.tech{font-family:var(--f-tech);font-size:13px;letter-spacing:.02em;color:var(--ink-3)}
+.label{font-family:var(--f-display);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+
+/* topo */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:22px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+.brand img{height:26px;width:auto;display:block}
+.brand .prod{font-family:var(--f-display);font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);padding-left:14px;border-left:1px solid var(--line-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 22px;border-radius:.75rem;border:0;background:var(--blue);color:#F8FAFC;font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:transform .2s, box-shadow .2s}
+.btn:hover{transform:scale(1.03);box-shadow:0 0 40px rgba(37,99,235,.35)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
+.btn.ghost:hover{box-shadow:none;border-color:var(--blue);color:var(--blue)}
+@media (prefers-reduced-motion:reduce){.btn,.btn:hover{transition:none;transform:none}}
+
+/* abertura */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:56px;align-items:center;padding-block:40px 56px}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr);gap:36px;padding-block:20px 40px}}
+.hero h1{font-size:clamp(38px,4.8vw,62px);line-height:1;margin-top:18px}
+.hero h1 .out{-webkit-text-stroke:1.5px var(--blue);-webkit-text-fill-color:transparent;color:transparent}
+.hero .lede{font-size:clamp(18px,1.6vw,21px);color:var(--ink-2);max-width:56ch;margin-top:24px}
+.hero .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+
+.login{background:rgba(255,255,255,.85);border:1px solid var(--line);border-radius:var(--r);padding:28px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 30px 60px -40px rgba(29,37,133,.35);scroll-margin-top:24px}
+.login h2{font-size:24px}
+.login .sub{color:var(--ink-2);font-size:15px;margin-top:6px}
+.login form{display:grid;gap:14px;margin-top:22px}
+.login label{display:grid;gap:6px;font-size:13px;font-weight:500;color:var(--ink-2)}
+.login input{height:46px;border-radius:.6rem;border:1px solid var(--line-2);background:#fff;padding:0 14px;font:inherit;font-weight:400;color:var(--ink)}
+.login input:focus{outline:2px solid var(--blue);outline-offset:0;border-color:transparent}
+.login .btn{width:100%;margin-top:4px}
+.msg{display:none;border-radius:.6rem;padding:10px 12px;font-size:14px;font-weight:400}
+.msg.on{display:block}
+.msg.err{background:var(--err-bg);color:var(--err)}
+.msg.info{background:var(--blue-soft);color:var(--blue-deep)}
+.login .foot{margin-top:16px;font-size:13px;color:var(--ink-3)}
+
+/* ficha de coleta */
+.ficha{border-block:1px solid var(--line-2);display:grid;grid-template-columns:auto repeat(5,minmax(0,1fr));align-items:stretch}
+.ficha>div{padding:16px 18px;border-left:1px solid var(--line)}
+.ficha>div:first-child{border-left:0;padding-left:0;display:flex;align-items:center}
+.ficha b{display:block;font-family:var(--f-display);font-weight:800;font-size:30px;letter-spacing:-.03em;line-height:1.05;color:var(--ink)}
+@media (max-width:900px){.ficha{grid-template-columns:repeat(2,minmax(0,1fr))}.ficha>div:first-child{grid-column:1/-1;padding-block:14px 4px}.ficha>div{border-left:0;border-top:1px solid var(--line);padding-left:0}}
+
+/* secoes */
+section{padding-block:88px 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:48px;align-items:end;margin-bottom:40px}
+@media (max-width:900px){.sec-head{grid-template-columns:minmax(0,1fr);gap:16px}}
+.sec-head h2{font-size:clamp(30px,3.6vw,46px);line-height:1.02;margin-top:12px}
+.sec-head p{color:var(--ink-2);max-width:60ch}
+
+/* o trabalho: arquivo de caso */
+.caso{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--paper);border:1px solid var(--line);border-radius:4px;box-shadow:0 1px 0 var(--line)}
+@media (max-width:900px){.caso{grid-template-columns:minmax(0,1fr)}}
+.caso>div{padding:26px 24px 30px;border-left:1px solid var(--line);display:grid;align-content:start;gap:12px}
+.caso>div:first-child{border-left:0}
+@media (max-width:900px){.caso>div{border-left:0;border-top:1px solid var(--line)}.caso>div:first-child{border-top:0}}
+.caso h3{font-size:20px}
+.caso p{color:var(--ink-2);font-size:16px}
+.caso .onde{background:var(--blue-softer)}
+.caso .onde h3{color:var(--blue)}
+.caso .carimbo{justify-self:start;font-family:var(--f-tech);font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:2px 7px;color:var(--ink-3)}
+.caso .onde .carimbo{color:var(--blue)}
+blockquote{margin:28px 0 0;font-size:clamp(20px,2vw,26px);font-weight:300;font-style:italic;color:var(--ink);max-width:48ch;padding-left:20px;border-left:3px solid var(--blue)}
+
+/* perguntas que o painel responde */
+.perguntas{display:grid;border-top:1px solid var(--line-2)}
+.pg{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr) minmax(0,1.2fr);gap:32px;padding:26px 0;border-bottom:1px solid var(--line-2);align-items:baseline}
+@media (max-width:900px){.pg{grid-template-columns:minmax(0,1fr);gap:8px}}
+.pg q{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,2vw,26px);letter-spacing:-.02em;quotes:"“" "”";line-height:1.2}
+.pg .mod{font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);display:flex;gap:10px;align-items:center}
+.pg .mod small{font-family:var(--f-tech);letter-spacing:0;text-transform:none;font-weight:400;color:var(--ink-3);font-size:12px}
+.pg p{color:var(--ink-2);font-size:16px}
+.beta{font-family:var(--f-tech);font-size:11px;letter-spacing:.06em;border:1px solid var(--blue);border-radius:3px;padding:1px 5px;color:var(--blue)}
+
+/* metodologia: rota dobrada */
+.rota{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin-top:8px;filter:drop-shadow(0 24px 30px rgba(29,37,133,.10))}
+@media (max-width:1060px){.rota{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.rota{grid-template-columns:minmax(0,1fr)}}
+.dobra{position:relative;padding:26px 22px 30px;min-height:100%;display:grid;align-content:start;gap:12px}
+.dobra:nth-child(odd){background:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 70%,#EEF3FD 100%)}
+.dobra:nth-child(even){background:linear-gradient(100deg,#DDE8FC 0%,#EEF3FD 35%,#F7FAFF 100%)}
+@media (min-width:1061px){
+  .dobra:nth-child(odd){transform:perspective(900px) rotateY(3deg);transform-origin:right center}
+  .dobra:nth-child(even){transform:perspective(900px) rotateY(-3deg);transform-origin:left center}
+  .dobra:first-child{border-radius:4px 0 0 4px}
+  .dobra:last-child{border-radius:0 4px 4px 0}
+}
+@media (prefers-reduced-motion:reduce){.dobra{transform:none!important}}
+.dobra .n{font-family:var(--f-display);font-weight:800;font-size:44px;letter-spacing:-.04em;line-height:1;color:var(--blue)}
+.dobra h3{font-size:19px;line-height:1.15}
+.dobra p{font-size:15px;color:var(--ink-2)}
+.dobra .tech{border-top:1px dashed var(--line-2);padding-top:10px;font-size:12px}
+.nota-rota{margin-top:26px;color:var(--ink-2);max-width:78ch;font-size:16px}
+.nota-rota b{font-weight:600;color:var(--ink)}
+
+/* principios */
+.principios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px}
+@media (max-width:760px){.principios{grid-template-columns:minmax(0,1fr)}}
+.pr{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;padding:18px 0;border-top:1px solid var(--line)}
+@media (max-width:480px){.pr{grid-template-columns:minmax(0,1fr);gap:4px}}
+.pr .tech{color:var(--blue);text-transform:uppercase;letter-spacing:.06em;font-size:12px;padding-top:4px}
+.pr p{color:var(--ink-2);font-size:16px}
+.pr p b{color:var(--ink);font-weight:600}
+
+/* para quem */
+.quem{display:flex;flex-wrap:wrap;gap:10px}
+.quem span{border:1px solid var(--line-2);background:var(--paper);border-radius:999px;padding:10px 18px;font-weight:500;font-size:16px}
+
+/* assinatura */
+.assina{margin-top:88px;background:var(--ink);color:#E2E8F0;border-radius:var(--r);padding:clamp(28px,5vw,64px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:48px;position:relative;overflow:hidden}
+@media (max-width:900px){.assina{grid-template-columns:minmax(0,1fr)}}
+.assina h2{color:#fff;font-size:clamp(28px,3.4vw,44px);line-height:1.04}
+.assina h2 em{font-style:normal;color:var(--mint)}
+.assina p{color:#CBD5E1;margin-top:18px;max-width:58ch}
+.assina .cta{display:grid;gap:16px;align-content:end}
+.assina .cta p{margin:0;font-size:15px}
+.assina .btn{justify-self:start}
+.assina .cred{border-top:1px solid rgba(255,255,255,.14);padding-top:16px;font-size:14px;color:#94A3B8}
+footer{padding-block:40px 48px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;color:var(--ink-3);font-size:14px}
+footer img{height:20px;display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="nav">
+    <a class="brand" href="/" aria-label="Vitrine, um produto Cassi.ai">
+      <img src="/cassi-wordmark.svg" alt="Cassi.ai" width="78" height="26">
+      <span class="prod">Vitrine</span>
+    </a>
+    <a class="btn ghost" href="#entrar">Entrar</a>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <span class="label">Inteligência de lojas físicas</span>
+        <h1>Cada loja da sua rede e do concorrente, <span class="out">lida</span> hora a hora.</h1>
+        <p class="lede">Movimento por hora, reputação e o que os clientes escrevem, loja a loja, com a concorrência sempre lado a lado. Tudo a partir de dados públicos, com método de pesquisa por trás de cada número.</p>
+        <div class="acts">
+          <a class="btn" href="#metodo">Ver o método</a>
+          <a class="btn ghost" href="mailto:cassiano@cassiai.com?subject=Vitrine%20%C2%B7%20quero%20conhecer">Pedir acesso</a>
+        </div>
+      </div>
+
+      <aside class="login" id="entrar" aria-labelledby="login-t">
+        <h2 id="login-t">Acesse o painel</h2>
+        <p class="sub">Área restrita a clientes com projeto ativo.</p>
+        <div class="msg err" id="m-erro" role="alert">Usuário ou senha não conferem. Confira e tente de novo.</div>
+        <div class="msg info" id="m-entrar" role="status">Entre com seu usuário para abrir o painel.</div>
+        <form method="post" action="/api/login">
+          <label for="usuario">Usuário
+            <input id="usuario" name="usuario" autocomplete="username" required autocapitalize="none" spellcheck="false">
+          </label>
+          <label for="senha">Senha
+            <input id="senha" name="senha" type="password" autocomplete="current-password" required>
+          </label>
+          <button class="btn" type="submit">Entrar no painel</button>
+        </form>
+        <p class="foot">Sem acesso ainda? Escreva para <a href="mailto:cassiano@cassiai.com">cassiano@cassiai.com</a>.</p>
+      </aside>
+    </div>
+
+    <div class="ficha" aria-label="Números do projeto piloto">
+      <div><span class="tech">Piloto · uma capital · redes de moda</span></div>
+      <div><b>16</b><span class="tech">lojas acompanhadas</span></div>
+      <div><b>3</b><span class="tech">redes comparadas</span></div>
+      <div><b>3.957</b><span class="tech">avaliações lidas</span></div>
+      <div><b>1.727</b><span class="tech">leituras de movimento por hora</span></div>
+      <div><b>10</b><span class="tech">temas de reclamação e elogio</span></div>
+    </div>
+
+    <section aria-labelledby="t-trabalho">
+      <div class="sec-head">
+        <div><span class="label">O trabalho</span><h2 id="t-trabalho">Saber como cada loja física está indo. E como está o vizinho de corredor.</h2></div>
+        <p>Toda rede faz essa pergunta. A resposta costuma chegar tarde, em arquivos diferentes, e a comparação com a concorrência fica na impressão de quem visitou a loja.</p>
+      </div>
+      <div class="caso">
+        <div>
+          <span class="carimbo">Assunto</span>
+          <h3>Desempenho de loja física</h3>
+          <p>Fluxo ao longo do dia, nota no Google, o que os clientes elogiam e reclamam, e como tudo isso se compara com a concorrência na mesma praça.</p>
+        </div>
+        <div>
+          <span class="carimbo">Como é feito hoje</span>
+          <h3>Visita, planilha e leitura manual</h3>
+          <p>Ainda se faz com visita de campo, cliente oculto e avaliações lidas uma a uma. Cada praça manda um arquivo, e alguém consolida tudo numa planilha no fim do mês.</p>
+        </div>
+        <div>
+          <span class="carimbo">A dor</span>
+          <h3>O dado chega velho e sem régua</h3>
+          <p>A reclamação sobre fila no caixa aparece no relatório semanas depois de virar nota 1. O pico de sábado é conhecido de ouvido. E ninguém consegue dizer, com número, onde a loja perde para a do lado.</p>
+        </div>
+        <div class="onde">
+          <span class="carimbo">Onde a Cassi.ai entra</span>
+          <h3>Um painel lido com método</h3>
+          <p>A Vitrine lê as fichas públicas das lojas, converte gráfico e texto em número, classifica o que os clientes escrevem e entrega tudo num painel com as marcas lado a lado.</p>
+        </div>
+      </div>
+      <blockquote>Primeiro a lista de decisões. Depois a lista de gráficos. Cada bloco do painel existe porque responde a uma pergunta de operação.</blockquote>
+    </section>
+
+    <section aria-labelledby="t-perguntas">
+      <div class="sec-head">
+        <div><span class="label">O que o painel responde</span><h2 id="t-perguntas">Perguntas de operação, com a concorrência na mesma tela.</h2></div>
+        <p>Todos os filtros valem para todos os blocos: dia da semana, local, estrelas, tema, período da avaliação e busca no texto. E cada gráfico mostra sempre as marcas comparadas.</p>
+      </div>
+      <div class="perguntas">
+        <div class="pg">
+          <q>Em que dia e horário eu preciso de mais gente no caixa?</q>
+          <span class="mod">Movimento <small>7 dias × 18 horas</small></span>
+          <p>Lotação por hora de cada loja, a hora de pico de cada dia, as três horas mais cheias e a mais vazia. Mapa de calor por marca e curva comparada hora a hora.</p>
+        </div>
+        <div class="pg">
+          <q>Minha nota está caindo ou é impressão?</q>
+          <span class="mod">Reputação <small>por período</small></span>
+          <p>Nota ponderada de cada marca, distribuição das estrelas, evolução do período mais antigo ao mais recente e quanto cada rede responde às avaliações negativas.</p>
+        </div>
+        <div class="pg">
+          <q>Do que os clientes reclamam, e em qual loja?</q>
+          <span class="mod">Voz do cliente <small>10 temas</small></span>
+          <p>Quanto se fala de atendimento, fila, crédito, preço, produto, troca e provador. Quando o tema aparece, quanto disso é reclamação. E as avaliações lado a lado, com os termos destacados.</p>
+        </div>
+        <div class="pg">
+          <q>Onde eu perco para o concorrente no mesmo shopping?</q>
+          <span class="mod">Lojas e locais <small>matriz por local</small></span>
+          <p>Nota de cada loja, local a local, com a vencedora marcada. Presença das marcas por local, mapa das lojas, horário do dia e contatos.</p>
+        </div>
+        <div class="pg">
+          <q>E se eu quiser perguntar do meu jeito?</q>
+          <span class="mod">Analista com IA <span class="beta">beta</span></span>
+          <p>Uma pergunta em texto livre, respondida só com os números e trechos do recorte filtrado. A resposta compara as marcas e avisa quando a amostra é pequena.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="metodo" aria-labelledby="t-metodo">
+      <div class="sec-head">
+        <div><span class="label">Metodologia</span><h2 id="t-metodo">Seis etapas entre a ficha pública e o número no painel.</h2></div>
+        <p>A coleta roda sem modelo de linguagem, com regras explícitas e verificáveis. A IA entra só no fim, para conversar com os dados que já foram conferidos.</p>
+      </div>
+      <div class="rota">
+        <div class="dobra">
+          <span class="n">01</span>
+          <h3>Descoberta</h3>
+          <p>Buscas por marca e cidade com várias formulações, para nenhuma loja ficar de fora.</p>
+          <span class="tech">cada loja identificada pelo código único da ficha, sem duplicar</span>
+        </div>
+        <div class="dobra">
+          <span class="n">02</span>
+          <h3>Leitura estruturada</h3>
+          <p>Endereço, horários, telefone, estrelas, tópicos e o gráfico de horários de pico. O gráfico vira número: percentual de lotação por hora e por dia.</p>
+          <span class="tech">o valor publicado com cada barra é lido direto, sem interpretar imagem</span>
+        </div>
+        <div class="dobra">
+          <span class="n">03</span>
+          <h3>Validação</h3>
+          <p>Município conferido pelo CEP, porque a ficha às vezes rotula a cidade vizinha. Loja fora do recorte sai antes de gastar coleta.</p>
+          <span class="tech">limite de acesso da fonte: a coleta pausa e a loja fica marcada como parcial</span>
+        </div>
+        <div class="dobra">
+          <span class="n">04</span>
+          <h3>Padronização</h3>
+          <p>Nota da marca calculada pela contagem de estrelas de todas as avaliações, sem o arredondamento da ficha. Cada loja pesa pelo volume que tem.</p>
+          <span class="tech">média de movimento só nas horas com metade das lojas abertas</span>
+        </div>
+        <div class="dobra">
+          <span class="n">05</span>
+          <h3>Classificação de texto</h3>
+          <p>Cada avaliação com texto recebe um ou mais temas. O painel mostra quantas citações sustentam cada percentual.</p>
+          <span class="tech">tema com menos de 10 citações fica sem percentual</span>
+        </div>
+        <div class="dobra">
+          <span class="n">06</span>
+          <h3>Comparação e análise</h3>
+          <p>Filtros recalculam tudo com as marcas lado a lado. O analista com IA recebe apenas o recorte que está na tela.</p>
+          <span class="tech">empate não vira ranking · amostra sempre visível</span>
+        </div>
+      </div>
+      <p class="nota-rota">Sobre a etapa 06. O analista trabalha com <b>recuperação a partir dos próprios dados</b>: antes de responder, ele recebe os números e os trechos de avaliação que passam nos filtros escolhidos, e responde só com isso. Assim a resposta pode ser conferida contra o painel, e não depende do que um modelo genérico acha que sabe sobre a sua rede.</p>
+    </section>
+
+    <section aria-labelledby="t-principios">
+      <div class="sec-head">
+        <div><span class="label">Princípios</span><h2 id="t-principios">O que o painel nunca faz.</h2></div>
+        <p>Regras de pesquisa aplicadas a dados públicos. Elas aparecem na tela, junto com o número, para quem lê saber de onde ele veio.</p>
+      </div>
+      <div class="principios">
+        <div class="pr"><span class="tech">Amostra</span><p><b>Nunca esconde a base.</b> Cada percentual mostra quantas avaliações ou lojas o sustentam, e o painel avisa quando um filtro troca o total da fonte pela amostra lida.</p></div>
+        <div class="pr"><span class="tech">Privacidade</span><p><b>Nunca exibe nome de quem avaliou.</b> O texto da avaliação serve à análise. A identidade de quem escreveu fica fora da coleta publicada.</p></div>
+        <div class="pr"><span class="tech">Comparação</span><p><b>Nunca compara lojas de públicos diferentes sem avisar.</b> A matriz por local põe frente a frente lojas do mesmo shopping.</p></div>
+        <div class="pr"><span class="tech">Fonte</span><p><b>Nunca contorna limite de acesso.</b> Quando a fonte restringe a leitura, a coleta para, a loja é marcada como parcial e volta depois.</p></div>
+        <div class="pr"><span class="tech">Ranking</span><p><b>Nunca inventa vencedor.</b> Selo de melhor e pior só aparece quando há diferença real entre as marcas.</p></div>
+        <div class="pr"><span class="tech">Datas</span><p><b>Nunca apresenta data aproximada como exata.</b> O período vem da idade que a própria avaliação informa, e o painel diz isso.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="t-quem">
+      <div class="sec-head">
+        <div><span class="label">Para quem</span><h2 id="t-quem">Quem decide sobre loja física com dado de fora da própria casa.</h2></div>
+        <p>A mesma coleta serve a outras redes, outros setores e outras cidades. O desenho do painel parte das decisões de cada time.</p>
+      </div>
+      <div class="quem">
+        <span>Redes de varejo e franquias</span>
+        <span>Shopping centers</span>
+        <span>Times de expansão e novos pontos</span>
+        <span>Operações e escala de equipe</span>
+        <span>Trade e inteligência de mercado</span>
+        <span>Institutos de pesquisa e consultorias</span>
+      </div>
+    </section>
+
+    <div class="assina">
+      <div>
+        <h2>Loja física deixa rastro público todos os dias. <em>Quem lê esse rastro com método decide antes.</em></h2>
+        <p>Se a sua rede ainda consolida visita de campo em planilha, vale medir quantos dias separam a primeira reclamação no Google do plano de ação na loja.</p>
+      </div>
+      <div class="cta">
+        <p>Produtos disponíveis via SaaS por crédito, por projeto ou compra da plataforma. Fale com a gente, temos formato que cabe no seu orçamento.</p>
+        <a class="btn" href="mailto:cassiano@cassiai.com?subject=Vitrine%20%C2%B7%20quero%20conhecer">Falar com a Cassi.ai</a>
+        <p class="cred">A Cassi.ai é uma empresa de engenharia de software especializada nas dores de pesquisa, inovação e insights. Vinte anos em pesquisa de mercado, ex-ESOMAR Brasil, com palestras no IIEX, na ESOMAR e na ABEP.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <img src="/cassi-wordmark.svg" alt="Cassi.ai" width="60" height="20">
+    <span>Vitrine é um produto <a href="https://cassiai.com">Cassi.ai</a>. Dados de fichas públicas, coletados com data e método registrados.</span>
+  </footer>
+</div>
+<script>
+(function(){
+  var q = new URLSearchParams(location.search);
+  if(q.get("erro")) document.getElementById("m-erro").classList.add("on");
+  else if(q.get("entrar")) document.getElementById("m-entrar").classList.add("on");
+  if(q.get("erro") || q.get("entrar")) document.getElementById("usuario").focus();
+})();
+</script>
+</body>
+</html>

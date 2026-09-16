@@ -979,7 +979,7 @@ PERGUNTA: ${pergunta}`;
       if(e.code==="not_granted") setSample(null);
     }
   };
-  if(sample===null) return html`<section class="panel" style=${{marginTop:14}}><h2>Analista <span class="beta">Beta</span></h2><p class="sub">A análise com IA funciona quando o painel é aberto no Claude. Os demais painéis continuam completos aqui.</p></section>`;
+  if(sample===null) return html`<section class="panel" style=${{marginTop:14}}><h2>Analista <span class="beta">Beta</span></h2><div class="callout" style=${{marginTop:10}}><b>Em construção</b><span>O analista com IA ainda não está disponível nesta versão. Os demais painéis estão completos e usam os mesmos filtros.</span></div></section>`;
   return html`<section class="panel" style=${{marginTop:14}}>
     <div class="callout" style=${{marginTop:0,marginBottom:14}}><b>Beta</b><span>Recurso em construção. As respostas são geradas por IA a partir dos dados do painel e podem ter imprecisões. Confira os números nas outras abas antes de usar.</span></div>
     <div class="ph"><div><h2 style=${{display:"flex",alignItems:"center",gap:8}}>Pergunte ao painel <span class="beta">Beta</span></h2><p class="sub">O analista lê os números e trechos de avaliações do recorte atual (${filtrosTxt}) e responde comparando as três marcas. Cada pergunta usa a sua conta do Claude.</p></div></div>

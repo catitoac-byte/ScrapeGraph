@@ -1,0 +1,5 @@
+# Painel com dados coletados: gerado por gerar_site.py, nunca versionado
+public/painel/
+.vercel
+node_modules
+.env*
