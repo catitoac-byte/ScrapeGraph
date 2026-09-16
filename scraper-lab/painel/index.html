@@ -199,6 +199,20 @@ textarea{width:100%;min-height:92px;resize:vertical;border-radius:10px;border:1p
 .thinking i:nth-child(2){animation-delay:.15s}.thinking i:nth-child(3){animation-delay:.3s}
 @keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){.thinking i{animation:none;opacity:.7}}
+.maxpk{display:inline-block;color:#fff;font-weight:700;border-radius:5px;padding:1px 6px}
+.beta{display:inline-block;font-family:var(--f-body);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:5px;padding:2px 6px;background:var(--warn-bg);color:var(--warn);vertical-align:2px}
+.info{position:relative;display:inline-flex}
+.info>button{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--ink-3);background:var(--panel);color:var(--ink-2);font-size:11px;font-weight:800;line-height:1;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.info>button:hover,.info>button[aria-expanded="true"]{border-color:var(--ink);color:var(--ink)}
+.pop{position:absolute;z-index:30;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(320px,80vw);background:var(--panel);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;font-size:12.5px;line-height:1.55;color:var(--ink-2);text-align:left;white-space:normal}
+.pop b{color:var(--ink)}
+.pop p{margin:0 0 6px}
+.matrix td{vertical-align:top}
+.mcell{display:flex;flex-direction:column;gap:5px;min-width:130px}
+.mcell .v{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.mcell .v b{font-family:var(--f-display);font-size:20px;letter-spacing:-.02em}
+.mtrack{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
+.mtrack>div{height:100%;border-radius:0 3px 3px 0}
 .foot{margin-top:28px;color:var(--ink-3);font-size:12px;max-width:90ch;line-height:1.6}
 .callout{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;background:var(--warn-bg);color:var(--ink);font-size:12.5px;margin-top:12px}
 .callout b{color:var(--warn)}
@@ -251,6 +265,7 @@ const SHOPPINGS = [...new Set(LOJAS.map(l=>l.shopping))].sort((a,b)=>{
   const nb = new Set(LOJAS.filter(l=>l.shopping===b).map(l=>l.marca)).size;
   return nb-na || a.localeCompare(b);
 });
+const notaLoja = l => { const t=[1,2,3,4,5].reduce((a,k)=>a+(l.dist?.[k]||0),0); return t ? [1,2,3,4,5].reduce((a,k)=>a+k*(l.dist?.[k]||0),0)/t : l.nota; };
 const marcasNoShopping = s => new Set(LOJAS.filter(l=>l.shopping===s).map(l=>l.marca));
 
 const PERIODOS = [
@@ -260,7 +275,8 @@ const PERIODOS = [
   {id:"mais", nome:"Mais de 3 anos", ok:m=>m!=null&&m>36.5},
 ];
 const idadeFaixa = m => m==null?"?": m<=1.5?"Último mês": m<=12.5?"Até 1 ano": m<=24.5?"1 a 2 anos": m<=36.5?"2 a 3 anos":"Mais de 3 anos";
-const FAIXAS = ["Último mês","Até 1 ano","1 a 2 anos","2 a 3 anos","Mais de 3 anos"];
+// do mais antigo para o mais recente, para ler a evolucao da esquerda para a direita
+const FAIXAS = ["Mais de 3 anos","2 a 3 anos","1 a 2 anos","Até 1 ano","Último mês"];
 
 /* ------------------------------------------------------------ agregacoes */
 function curvaMarca(lojas, marca, dia){
@@ -296,12 +312,15 @@ function picoSemana(lojas, marca){
 function reputacao(lojas, marca){
   const ls = lojas.filter(l=>l.marca===marca && l.total);
   const tot = ls.reduce((s,l)=>s+l.total,0);
-  const nota = tot ? ls.reduce((s,l)=>s+l.nota*l.total,0)/tot : null;
   const dist = {5:0,4:0,3:0,2:0,1:0};
   ls.forEach(l=>{ for(const k in l.dist) dist[k]+=l.dist[k]; });
   const dtot = Object.values(dist).reduce((a,b)=>a+b,0);
+  // Media de todas as avaliacoes, pela contagem de estrelas: evita o
+  // arredondamento de uma casa que o Google aplica na nota de cada loja
+  const nota = dtot ? [1,2,3,4,5].reduce((s,k)=>s+k*dist[k],0)/dtot : null;
+  const simples = ls.length ? ls.reduce((s,l)=>s+l.nota,0)/ls.length : null;
   const neg = dtot ? (dist[1]+dist[2])/dtot*100 : null;
-  return {nota, tot, dist, dtot, neg, lojas: lojas.filter(l=>l.marca===marca).length};
+  return {nota, simples, tot, dist, dtot, neg, lojas: lojas.filter(l=>l.marca===marca).length};
 }
 function revStats(revs){
   const txt = revs.filter(r=>r.t);
@@ -337,6 +356,17 @@ function Seg({value,onChange,options,label,className=""}){
   return html`<div class=${"seg "+className} role="group" aria-label=${label}>
     ${options.map(o=>html`<button key=${o.id} type="button" aria-pressed=${value===o.id} onClick=${()=>onChange(o.id)}>${o.nome}</button>`)}
   </div>`;
+}
+
+function InfoTip({label,children}){
+  const [open,setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(()=>{ if(!open) return; const f=e=>{ if(ref.current&&!ref.current.contains(e.target)) setOpen(false); }; const k=e=>{ if(e.key==="Escape") setOpen(false); };
+    document.addEventListener("mousedown",f); document.addEventListener("keydown",k); return ()=>{document.removeEventListener("mousedown",f);document.removeEventListener("keydown",k);}; },[open]);
+  return html`<span class="info" ref=${ref}>
+    <button type="button" aria-label=${label} aria-expanded=${open} onClick=${()=>setOpen(!open)}>!</button>
+    ${open && html`<div class="pop" role="dialog" aria-label=${label}>${children}</div>`}
+  </span>`;
 }
 
 /* grafico de linhas com cruz e dica */
@@ -464,7 +494,13 @@ function Panorama({lojas,revs,dia,setTab,setTema}){
         ${d.rep.lojas===0 ? html`<div class="empty">Sem loja neste recorte</div>` : html`
         <div class="bc-hero">
           <div class="bc-big num">${fmt(d.rep.nota,2)}</div>
-          <div class="bc-stars"><${Stars} v=${d.rep.nota} size=${15}/><span class="note">nota média ponderada ${rkNota.best===d.m?html`<span class="rank r-best">melhor</span>`:rkNota.worst===d.m?html`<span class="rank r-worst">menor</span>`:null}</span></div>
+          <div class="bc-stars"><${Stars} v=${d.rep.nota} size=${15}/><span class="note" style=${{display:"inline-flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>nota média ponderada <${InfoTip} label="Como a nota é calculada">
+            <p><b>Nota média ponderada</b></p>
+            <p>É a média de todas as avaliações do Google das lojas da ${d.m} no recorte, calculada pela contagem de estrelas (quantas de 5★, 4★, 3★, 2★ e 1★).</p>
+            <p>Cada avaliação pesa igual. Por isso uma loja com 3.800 avaliações pesa mais que uma com 24, e a nota reflete o que a maioria dos clientes disse.</p>
+            <p>Não usamos a nota arredondada que o Google mostra em cada loja (por exemplo 4,3), para não esconder diferenças pequenas entre as marcas.</p>
+            <p>Base: <b class="num">${fmt(d.rep.dtot)}</b> avaliações. Média simples das lojas, sem peso: <b class="num">${fmt(d.rep.simples,2)}</b>.</p>
+          </${InfoTip}>${rkNota.best===d.m?html`<span class="rank r-best">melhor</span>`:rkNota.worst===d.m?html`<span class="rank r-worst">menor</span>`:null}</span></div>
         </div>
         <dl class="kv">
           <div><dt>Avaliações no Google</dt><dd class="num">${fmt(d.rep.tot)}</dd></div>
@@ -523,7 +559,7 @@ function Movimento({lojas,dia,setDia}){
     </div>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Horas mais cheias e pico de cada dia</h2><p class="sub">Hora de pico com o percentual de lotação, as três horas mais cheias e a hora mais vazia do período aberto.</p></div></div>
+      <div class="ph"><div><h2>Horas mais cheias e pico de cada dia</h2><p class="sub">Para cada marca: a hora de pico com o percentual de lotação, as três horas mais cheias e a hora mais vazia enquanto a loja está aberta.</p></div></div>
       <div class="tablewrap"><table>
         <thead><tr><th>Dia</th>${MARCAS.map(m=>html`<th key=${m} colSpan="3"><${Brand} m=${m}/></th>`)}</tr>
           <tr><th></th>${MARCAS.map(m=>html`<${React.Fragment} key=${m}><th>Pico</th><th>3 mais cheias</th><th>Mais vazia</th></${React.Fragment}>`)}</tr></thead>
@@ -532,19 +568,19 @@ function Movimento({lojas,dia,setDia}){
           return html`<tr key=${row.d} style=${{background: dia===row.d?"var(--panel-2)":null}}>
             <td><button class="linkbtn" style=${{padding:0,fontSize:13,fontWeight:700,color:"var(--ink)",textDecoration:dia===row.d?"underline":"none"}} onClick=${()=>setDia(dia===row.d?"todos":row.d)}>${DIA_LONGO[row.d]}</button></td>
             ${MARCAS.map(m=>{const r=row.r[m]; return html`<${React.Fragment} key=${m}>
-              <td class="num" style=${{whiteSpace:"nowrap"}}>${r?html`<b>${hh(r.pico)}</b> <span style=${{color:r.valor===mx?"var(--crit)":"var(--ink-2)",fontWeight:r.valor===mx?700:400}}>${pct(r.valor)}</span>`:html`<span class="note">fechada</span>`}</td>
+              <td class="num" style=${{whiteSpace:"nowrap"}}>${r?html`<b>${hh(r.pico)}</b> ${r.valor===mx?html`<span class="maxpk" style=${{background:cor(m)}} title="Maior pico do dia entre as marcas">${pct(r.valor)}</span>`:html`<span style=${{color:"var(--ink-2)"}}>${pct(r.valor)}</span>`}`:html`<span class="note">fechada</span>`}</td>
               <td class="num note" style=${{whiteSpace:"nowrap"}}>${r?r.top.map(hh).join(" · "):""}</td>
               <td class="num note">${r?hh(r.vazia):""}</td>
             </${React.Fragment}>`;})}
           </tr>`;})}</tbody>
       </table></div>
-      <p class="note" style=${{marginTop:8}}>Em vermelho, a marca mais lotada no pico daquele dia.</p>
+      <p class="note" style=${{marginTop:8,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>O percentual com fundo na cor da marca mostra quem tem o maior pico do dia entre as três. Exemplo: <span class="maxpk" style=${{background:cor("C&A")}}>85%</span> é a C&A no sábado.</p>
     </section>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Pico por loja</h2><p class="sub">${dia==="todos"?"Pico da semana de cada loja.":"Pico de "+DIA_LONGO[dia]+" em cada loja."} Lojas no mesmo shopping ficam lado a lado.</p></div></div>
+      <div class="ph"><div><h2>Pico por loja</h2><p class="sub">${dia==="todos"?"Pico da semana de cada loja.":"Pico de "+DIA_LONGO[dia]+" em cada loja."} Lojas do mesmo local ficam lado a lado.</p></div></div>
       <div class="tablewrap"><table>
-        <thead><tr><th>Shopping</th><th>Marca</th><th class="r">Pico</th><th>Horário</th><th>3 mais cheias</th><th class="r">Média aberta</th></tr></thead>
+        <thead><tr><th>Local</th><th>Marca</th><th class="r">Pico</th><th>Horário</th><th>3 mais cheias</th><th class="r">Média aberta</th></tr></thead>
         <tbody>${[...lojas].sort((a,b)=>a.shopping.localeCompare(b.shopping)||MI[a.marca]-MI[b.marca]).map(l=>{
           const dias = dia==="todos"?DIAS:[dia];
           let best=null;
@@ -564,13 +600,13 @@ function Reputacao({lojas,revs}){
   const idade = MARCAS.map(m=>{
     const rs = revs.filter(r=>r.marca===m);
     const pts = {};
-    FAIXAS.forEach((f,i)=>{ const x=rs.filter(r=>idadeFaixa(r.m)===f); if(x.length>=5) pts[i]=x.reduce((s,r)=>s+r.e,0)/x.length; });
+    FAIXAS.forEach((f,i)=>{ const x=rs.filter(r=>idadeFaixa(r.m)===f); if(x.length>=10) pts[i]=x.reduce((s,r)=>s+r.e,0)/x.length; });
     return {m,pts,n:Object.fromEntries(FAIXAS.map((f,i)=>[i,rs.filter(r=>idadeFaixa(r.m)===f).length]))};
   });
+  const minIdade = Math.min(...idade.flatMap(x=>Object.values(x.pts)));
+  const piso = Math.min(3, Math.floor((isFinite(minIdade)?minIdade:3)*2)/2 - 0.5);
   const shoppings = [...new Set(lojas.map(l=>l.shopping))].sort((a,b)=>marcasNoShopping(b).size-marcasNoShopping(a).size||a.localeCompare(b));
   const starCol = {5:"#2f9e5b",4:"#7cbf6b",3:"#c9b458",2:"#e08a4e",1:"#d4513f"};
-  const minN = Math.min(3.4,...lojas.filter(l=>l.nota).map(l=>l.nota))-0.1;
-  const xN = v => (v-minN)/(5-minN)*100;
   return html`<div>
     <section class="panel" style=${{marginTop:14}}>
       <div class="ph"><div><h2>Distribuição das estrelas no Google</h2><p class="sub">Todas as avaliações das lojas no recorte, de 5 a 1 estrela.</p></div>
@@ -588,26 +624,30 @@ function Reputacao({lojas,revs}){
 
     <div class="grid g2">
       <section class="panel">
-        <div class="ph"><div><h2>Nota por loja, shopping a shopping</h2><p class="sub">Mesmo shopping, mesmo público. A régua começa em ${fmt(minN,1)} para mostrar a diferença.</p></div></div>
-        <div style=${{display:"grid",gap:14}}>
-          ${shoppings.map(s=>{const ls=lojas.filter(l=>l.shopping===s&&l.nota); return html`<div key=${s}>
-            <div style=${{display:"flex",justifyContent:"space-between",fontSize:12.5,fontWeight:600,marginBottom:4}}><span>${s}</span><span class="note">${[...marcasNoShopping(s)].length===3?"três marcas":[...marcasNoShopping(s)].join(", ")}</span></div>
-            <div style=${{position:"relative",height:26,borderRadius:6,background:"var(--panel-2)"}}>
-              ${[4,4.5].map(t=>t>minN&&html`<div key=${t} style=${{position:"absolute",left:xN(t)+"%",top:0,bottom:0,borderLeft:"1px dashed var(--line-2)"}}></div>`)}
-              ${ls.map((l,i)=>html`<div key=${l.id} title=${`${l.marca}: ${fmt(l.nota,1)} (${fmt(l.total)} avaliações)`}
-                style=${{position:"absolute",left:`calc(${xN(l.nota)}% - 7px)`,top:6+ (i*0),width:14,height:14,background:cor(l.marca),border:"2px solid var(--panel)",borderRadius:MI[l.marca]===0?"50%":MI[l.marca]===1?"3px":"0",clipPath:MI[l.marca]===2?"polygon(50% 0,100% 100%,0 100%)":null,transform:`translateY(${(MI[l.marca]-1)*4}px)`}}></div>`)}
-            </div>
-            <div class="note" style=${{display:"flex",gap:12,marginTop:3,flexWrap:"wrap"}}>${ls.map(l=>html`<span key=${l.id} class="num">${l.marca} ${fmt(l.nota,1)} · ${fmt(l.total)}</span>`)}</div>
-          </div>`;})}
-          <div class="num note" style=${{display:"flex",justifyContent:"space-between"}}><span>${fmt(minN,1)}</span><span>4,0</span><span>4,5</span><span>5,0</span></div>
-        </div>
+        <div class="ph"><div><h2>Nota de cada loja, local a local</h2><p class="sub">Compara as marcas dentro do mesmo local, onde o público é o mesmo. Cada célula é uma loja: nota pela contagem de estrelas, barra de 3 a 5 e total de avaliações.</p></div></div>
+        <div class="tablewrap"><table class="matrix">
+          <thead><tr><th>Local</th>${MARCAS.map(m=>html`<th key=${m}><${Brand} m=${m}/></th>`)}</tr></thead>
+          <tbody>${shoppings.map(sh=>{
+            const cel = Object.fromEntries(MARCAS.map(m=>{const l=lojas.find(x=>x.shopping===sh&&x.marca===m); return [m,l?{l,n:notaLoja(l)}:null];}));
+            const vals = MARCAS.map(m=>cel[m]?.n).filter(v=>v!=null);
+            const top = vals.length>1 ? Math.max(...vals) : null;
+            return html`<tr key=${sh}>
+              <td style=${{fontWeight:600,minWidth:150}}>${sh}<div class="note" style=${{fontWeight:400}}>${vals.length===3?"três marcas":vals.length+(vals.length===1?" marca":" marcas")}</div></td>
+              ${MARCAS.map(m=>{const c=cel[m]; if(!c) return html`<td key=${m}><span class="note">Sem loja</span></td>`;
+                return html`<td key=${m}><div class="mcell">
+                  <div class="v"><b class="num">${fmt(c.n,2)}</b>${top!=null&&c.n===top?html`<span class="maxpk" style=${{background:cor(m),fontSize:10.5}}>melhor do local</span>`:null}</div>
+                  <div class="mtrack"><div style=${{width:Math.max(0,(c.n-3)/2*100)+"%",background:cor(m)}}></div></div>
+                  <span class="note num">${fmt(c.l.total)} avaliações</span>
+                </div></td>`;})}
+            </tr>`;})}</tbody>
+        </table></div>
       </section>
       <section class="panel">
-        <div class="ph"><div><h2>Nota média pela idade da avaliação</h2><p class="sub">Amostra coletada. Faixas com menos de 5 avaliações ficam de fora.</p></div></div>
-        <${LineChart} series=${idade} xs=${[0,1,2,3,4]} fmtX=${i=>FAIXAS[i]} tipTitle=${i=>FAIXAS[i]} fmtV=${v=>fmt(v,2)+" ★"} yMin=${3} yMax=${5} ticks=${[3,3.5,4,4.5,5]} every=${1} height=${240} label="Nota média por idade da avaliação"/>
+        <div class="ph"><div><h2>Nota média por período da avaliação</h2><p class="sub">Do período mais antigo ao mais recente, para ver se a percepção melhora ou piora. Períodos com menos de 10 avaliações na amostra ficam fora do gráfico, para uma loja com poucas notas não distorcer a linha.</p></div></div>
+        <${LineChart} series=${idade} xs=${[0,1,2,3,4]} fmtX=${i=>FAIXAS[i]} tipTitle=${i=>FAIXAS[i]} fmtV=${v=>fmt(v,2)+" ★"} yMin=${piso} yMax=${5} ticks=${Array.from({length:(5-piso)*2+1},(_,i)=>piso+i*0.5).filter((t,i,a)=>a.length<=7||i%2===0||t===5)} every=${1} height=${240} label="Nota média por período da avaliação"/>
         <div class="tablewrap" style=${{marginTop:8}}><table>
-          <thead><tr><th>Faixa</th>${MARCAS.map(m=>html`<th key=${m} class="r"><${Brand} m=${m}/></th>`)}</tr></thead>
-          <tbody>${FAIXAS.map((f,i)=>html`<tr key=${f}><td>${f}</td>${idade.map(x=>html`<td key=${x.m} class="r num">${x.pts[i]!=null?fmt(x.pts[i],2):"–"} <span class="note">(${x.n[i]})</span></td>`)}</tr>`)}</tbody>
+          <thead><tr><th>Período</th>${MARCAS.map(m=>html`<th key=${m} class="r"><${Brand} m=${m}/></th>`)}</tr></thead>
+          <tbody>${FAIXAS.map((f,i)=>html`<tr key=${f}><td>${f}</td>${idade.map(x=>html`<td key=${x.m} class="r num">${x.pts[i]!=null?fmt(x.pts[i],2):x.n[i]?"poucas":"–"} <span class="note">(${x.n[i]})</span></td>`)}</tr>`)}</tbody>
         </table></div>
       </section>
     </div>
@@ -715,13 +755,13 @@ function Lojas({lojas}){
     const dt = Object.values(l.dist||{}).reduce((a,b)=>a+b,0);
     return {...l, neg: dt?((l.dist[1]||0)+(l.dist[2]||0))/dt*100:null, best, resp:st.resp, hoje:l.horario[hoje]||l.horario[hoje.replace("terca","terça").replace("sabado","sábado")]||"–"};
   });
-  const keyf = {shopping:r=>r.shopping+MI[r.marca], marca:r=>MI[r.marca], nota:r=>r.nota??0, total:r=>r.total??0, neg:r=>r.neg??0, pico:r=>r.best?.v??0, resp:r=>r.resp??0};
+  const keyf = {shopping:r=>r.shopping+MI[r.marca], marca:r=>MI[r.marca], nota:r=>notaLoja(r)??0, total:r=>r.total??0, neg:r=>r.neg??0, pico:r=>r.best?.v??0, resp:r=>r.resp??0};
   rows.sort((a,b)=>{const x=keyf[sort.k](a),y=keyf[sort.k](b); return (x>y?1:x<y?-1:0)*sort.dir;});
   const H_ = ({k,children,r}) => html`<th class=${r?"r":""} aria-sort=${sort.k===k?(sort.dir>0?"ascending":"descending"):"none"}><button onClick=${()=>setSort({k,dir:sort.k===k?-sort.dir:(k==="shopping"||k==="marca"?1:-1)})}>${children}${sort.k===k?(sort.dir>0?" ↑":" ↓"):""}</button></th>`;
   return html`<div>
     <div class="grid g21">
       <section class="panel">
-        <div class="ph"><div><h2>Onde estão as lojas</h2><p class="sub">Posição real em Goiânia, sem mapa de fundo. Lojas do mesmo shopping ficam agrupadas.</p></div>
+        <div class="ph"><div><h2>Onde estão as lojas</h2><p class="sub">Posição real em Goiânia, sem mapa de fundo. Lojas do mesmo local ficam agrupadas.</p></div>
           <div class="legend">${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}</span>`)}</div></div>
         <div class="mapbox tablewrap">
           <svg viewBox=${`-20 -10 ${W+40} ${H+20}`} style=${{width:"100%",minWidth:420,display:"block"}} role="img" aria-label="Mapa esquemático das lojas em Goiânia">
@@ -745,8 +785,8 @@ function Lojas({lojas}){
         </div>
       </section>
       <section class="panel">
-        <div class="ph"><div><h2>Presença por shopping</h2><p class="sub">Onde as três marcas disputam o mesmo público.</p></div></div>
-        <table><thead><tr><th>Shopping</th>${MARCAS.map(m=>html`<th key=${m} style=${{textAlign:"center"}}><${Swatch} m=${m}/></th>`)}</tr></thead>
+        <div class="ph"><div><h2>Presença por local</h2><p class="sub">Onde as três marcas disputam o mesmo público.</p></div></div>
+        <table><thead><tr><th>Local</th>${MARCAS.map(m=>html`<th key=${m} style=${{textAlign:"center"}}><${Swatch} m=${m}/></th>`)}</tr></thead>
           <tbody>${SHOPPINGS.map(s=>{const ms=new Set(lojas.filter(l=>l.shopping===s).map(l=>l.marca)); if(!ms.size) return null; return html`<tr key=${s}><td style=${{fontWeight:ms.size===3?700:400}}>${s}</td>${MARCAS.map(m=>html`<td key=${m} style=${{textAlign:"center"}}>${ms.has(m)?html`<${Swatch} m=${m} size=${10}/>`:html`<span class="note">·</span>`}</td>`)}</tr>`;})}</tbody></table>
       </section>
     </div>
@@ -754,11 +794,11 @@ function Lojas({lojas}){
     <section class="panel" style=${{marginTop:16}}>
       <div class="ph"><div><h2>Todas as lojas</h2><p class="sub">Clique no cabeçalho para ordenar. Horário de hoje (${DIA_LONGO[hoje]}).</p></div></div>
       <div class="tablewrap"><table>
-        <thead><tr><${H_} k="shopping">Shopping</${H_}><${H_} k="marca">Marca</${H_}><${H_} k="nota" r>Nota</${H_}><${H_} k="total" r>Avaliações</${H_}><${H_} k="neg" r>Notas 1 e 2</${H_}><${H_} k="pico" r>Pico máx.</${H_}><th>Quando</th><th>Hoje</th><${H_} k="resp" r>Responde</${H_}><th>Telefone</th><th>Endereço</th></tr></thead>
+        <thead><tr><${H_} k="shopping">Local</${H_}><${H_} k="marca">Marca</${H_}><${H_} k="nota" r>Nota</${H_}><${H_} k="total" r>Avaliações</${H_}><${H_} k="neg" r>Notas 1 e 2</${H_}><${H_} k="pico" r>Pico máx.</${H_}><th>Quando</th><th>Hoje</th><${H_} k="resp" r>Responde</${H_}><th>Telefone</th><th>Endereço</th></tr></thead>
         <tbody>${rows.map(r=>html`<tr key=${r.id}>
           <td style=${{fontWeight:600}}>${r.shopping}${r.pendente?html` <span class="badge" style=${{background:"var(--warn-bg)",color:"var(--warn)"}} title=${r.pendente}>coleta parcial</span>`:null}</td>
           <td><${Brand} m=${r.marca}/></td>
-          <td class="r num"><b>${fmt(r.nota,1)}</b></td>
+          <td class="r num"><b>${fmt(notaLoja(r),2)}</b></td>
           <td class="r num">${fmt(r.total)}</td>
           <td class="r num" style=${{color:r.neg>=9?"var(--crit)":null}}>${pct(r.neg,1)}</td>
           <td class="r num">${r.best?pct(r.best.v):"–"}</td>
@@ -798,7 +838,7 @@ function contexto(lojas,revs,filtrosTxt){
       pico_por_dia:Object.fromEntries(DIAS.map(d=>{const r=resumoCurva(curvaMarca(lojas,m,d).curva); return [d, r?{hora_pico:r.pico,lotacao:Math.round(r.valor),tres_mais_cheias:r.top,mais_vazia:r.vazia}:"fechada"];})),
     };
   });
-  const porLoja = lojas.map(l=>({marca:l.marca, shopping:l.shopping, nota:l.nota, avaliacoes:l.total, topicos_google:l.topicos}));
+  const porLoja = lojas.map(l=>({marca:l.marca, local:l.shopping, nota:+notaLoja(l).toFixed(2), avaliacoes:l.total, topicos_google:l.topicos}));
   const amostra = [];
   MARCAS.forEach(m=>{
     const rs = revs.filter(r=>r.marca===m&&r.t);
@@ -853,9 +893,10 @@ PERGUNTA: ${pergunta}`;
       if(e.code==="not_granted") setSample(null);
     }
   };
-  if(sample===null) return html`<section class="panel" style=${{marginTop:14}}><h2>Analista</h2><p class="sub">A análise com IA funciona quando o painel é aberto no Claude. Os demais painéis continuam completos aqui.</p></section>`;
+  if(sample===null) return html`<section class="panel" style=${{marginTop:14}}><h2>Analista <span class="beta">Beta</span></h2><p class="sub">A análise com IA funciona quando o painel é aberto no Claude. Os demais painéis continuam completos aqui.</p></section>`;
   return html`<section class="panel" style=${{marginTop:14}}>
-    <div class="ph"><div><h2>Pergunte ao painel</h2><p class="sub">O analista lê os números e trechos de avaliações do recorte atual (${filtrosTxt}) e responde comparando as três marcas. Cada pergunta usa a sua conta do Claude.</p></div></div>
+    <div class="callout" style=${{marginTop:0,marginBottom:14}}><b>Beta</b><span>Recurso em construção. As respostas são geradas por IA a partir dos dados do painel e podem ter imprecisões. Confira os números nas outras abas antes de usar.</span></div>
+    <div class="ph"><div><h2 style=${{display:"flex",alignItems:"center",gap:8}}>Pergunte ao painel <span class="beta">Beta</span></h2><p class="sub">O analista lê os números e trechos de avaliações do recorte atual (${filtrosTxt}) e responde comparando as três marcas. Cada pergunta usa a sua conta do Claude.</p></div></div>
     <div class="ask">
       <div class="sugg">${SUG.map(s=>html`<button key=${s} onClick=${()=>{setQ(s);perguntar(s);}} disabled=${!sample||estado!=="pronto"}>${s}</button>`)}</div>
       <label class="flabel" for="pergunta">Sua pergunta</label>
@@ -898,7 +939,7 @@ function App(){
 
   const ativos = [];
   if(dia!=="todos") ativos.push({t:"Dia: "+DIA_LONGO[dia], x:()=>setDia("todos")});
-  if(shop!=="todos") ativos.push({t:shop==="tres"?"Shoppings com as três marcas":shop, x:()=>setShop("todos")});
+  if(shop!=="todos") ativos.push({t:shop==="tres"?"Locais com as três marcas":"Local: "+shop, x:()=>setShop("todos")});
   if(estrelas.length) ativos.push({t:"Estrelas: "+[...estrelas].sort().join(", "), x:()=>setEstrelas([])});
   if(periodo!=="todos") ativos.push({t:"Período: "+per.nome, x:()=>setPeriodo("todos")});
   if(tema) ativos.push({t:"Tema: "+TEMA_POR_ID[tema].nome, x:()=>setTema("")});
@@ -907,7 +948,7 @@ function App(){
   const limpar = ()=>{setDia("todos");setShop("todos");setEstrelas([]);setPeriodo("todos");setTema("");setBusca("");};
   const pend = LOJAS.filter(l=>l.pendente);
 
-  const TABS = [{id:"panorama",nome:"Panorama"},{id:"movimento",nome:"Movimento"},{id:"reputacao",nome:"Reputação"},{id:"voz",nome:"Voz do cliente"},{id:"lojas",nome:"Lojas"},{id:"ia",nome:"Analista IA"}];
+  const TABS = [{id:"panorama",nome:"Panorama"},{id:"movimento",nome:"Movimento"},{id:"reputacao",nome:"Reputação"},{id:"voz",nome:"Voz do cliente"},{id:"lojas",nome:"Lojas"},{id:"ia",nome:"Analista IA",beta:true}];
 
   return html`<div class="wrap">
     <header class="top">
@@ -923,17 +964,17 @@ function App(){
       <div class="frow">
         <div class="fld"><span class="flabel">Dia da semana</span>
           <${Seg} value=${dia} onChange=${setDia} label="Dia da semana" options=${[{id:"todos",nome:"Semana"},...DIAS.map(d=>({id:d,nome:DIA_CURTO[d]}))]}/></div>
-        <div class="fld"><label for="f-shop">Shopping</label>
+        <div class="fld"><label for="f-shop">Locais</label>
           <select id="f-shop" value=${shop} onChange=${e=>setShop(e.target.value)}>
             <option value="todos">Todos os locais</option>
-            <option value="tres">Só onde as três marcas estão</option>
+            <option value="tres">Só locais com as três marcas</option>
             ${SHOPPINGS.map(s=>html`<option key=${s} value=${s}>${s} (${[...marcasNoShopping(s)].length}/3)</option>`)}
           </select></div>
         <div class="fld"><span class="flabel">Estrelas</span>
           <div class="seg stars" role="group" aria-label="Estrelas">${[1,2,3,4,5].map(k=>html`<button key=${k} type="button" aria-pressed=${estrelas.includes(k)} onClick=${()=>setEstrelas(estrelas.includes(k)?estrelas.filter(x=>x!==k):[...estrelas,k])}>${k}★</button>`)}</div></div>
         <div class="fld"><label for="f-tema">Tema</label>
           <select id="f-tema" value=${tema} onChange=${e=>setTema(e.target.value)}><option value="">Todos os temas</option>${TEMAS.map(t=>html`<option key=${t.id} value=${t.id}>${t.nome}</option>`)}</select></div>
-        <div class="fld"><label for="f-per">Idade da avaliação</label>
+        <div class="fld"><label for="f-per">Período da avaliação</label>
           <select id="f-per" value=${periodo} onChange=${e=>setPeriodo(e.target.value)}>${PERIODOS.map(p=>html`<option key=${p.id} value=${p.id}>${p.nome}</option>`)}</select></div>
         <div class="fld"><label for="f-busca">Buscar no texto</label>
           <input id="f-busca" type="search" value=${busca} onInput=${e=>setBusca(e.target.value)} placeholder="provador, troca, Pix…"/></div>
@@ -946,7 +987,7 @@ function App(){
     </div>
 
     <nav class="tabs" role="tablist" aria-label="Seções">
-      ${TABS.map(t=>html`<button key=${t.id} role="tab" id=${"tab-"+t.id} aria-selected=${tab===t.id} class=${t.id==="ia"?"ai":""} onClick=${()=>setTab(t.id)}>${t.nome}</button>`)}
+      ${TABS.map(t=>html`<button key=${t.id} role="tab" id=${"tab-"+t.id} aria-selected=${tab===t.id} class=${t.id==="ia"?"ai":""} onClick=${()=>setTab(t.id)}>${t.nome}${t.beta?html` <span class="beta">Beta</span>`:null}</button>`)}
     </nav>
 
     <main role="tabpanel" aria-labelledby=${"tab-"+tab}>
