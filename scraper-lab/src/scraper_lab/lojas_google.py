@@ -484,7 +484,7 @@ def _escrever_csv(caminho: Path, linhas: list[dict]) -> None:
 
 def tabelas(lojas: list[Loja]) -> dict[str, list[dict]]:
     t: dict[str, list[dict]] = {k: [] for k in
-        ("lojas", "horario_funcionamento", "horarios_pico", "pico_resumo",
+        ("lojas", "horario_funcionamento", "horarios_pico", "pico_resumo", "pico_marca",
          "avaliacoes", "topicos", "atributos")}
     for lj in lojas:
         chave = {"marca": lj.marca, "loja": lj.nome, "place_id": lj.place_id,
@@ -518,6 +518,8 @@ def tabelas(lojas: list[Loja]) -> dict[str, list[dict]]:
                 **chave, "dia": dia, "fechado_ou_sem_dado": not abertas,
                 "hora_pico": int(pico_h) if pico_h else None,
                 "movimento_pico_pct": abertas.get(pico_h) if pico_h else None,
+                "horas_mais_cheias": ", ".join(f"{h}h ({abertas[h]}%)" for h in
+                    sorted(abertas, key=abertas.get, reverse=True)[:3]),
                 "movimento_medio_pct": round(sum(abertas.values()) / len(abertas), 1) if abertas else None,
                 "indice_dia": sum(abertas.values()),
             })
@@ -528,7 +530,41 @@ def tabelas(lojas: list[Loja]) -> dict[str, list[dict]]:
         for secao, itens in lj.atributos.items():
             for item in itens:
                 t["atributos"].append({**chave, "secao": secao, "atributo": item})
+    t["pico_marca"] = pico_por_marca(lojas)
     return t
+
+
+def pico_por_marca(lojas: list[Loja], top: int = 3) -> list[dict]:
+    """Curva media por marca, dia e hora (so lojas abertas naquela hora)."""
+    soma: dict[tuple[str, str, int], list[int]] = {}
+    for lj in lojas:
+        for dia, horas in lj.horarios_pico.items():
+            for hora, pct in horas.items():
+                if pct > 0:
+                    soma.setdefault((lj.marca, dia, int(hora)), []).append(pct)
+    linhas = []
+    for marca in dict.fromkeys(lj.marca for lj in lojas):
+        for dia in DIAS:
+            n_lojas = sum(1 for lj in lojas if lj.marca == marca
+                          and any(lj.horarios_pico.get(dia, {}).values()))
+            # Hora com poucas lojas abertas (ex.: 22h so no Goiania Shopping)
+            # distorce a media da marca. Exige ao menos metade das lojas.
+            minimo = max(1, -(-n_lojas // 2))
+            curva = {h: sum(v) / len(v) for (m, d, h), v in soma.items()
+                     if m == marca and d == dia and len(v) >= minimo}
+            if not curva:
+                continue
+            ordem = sorted(curva, key=curva.get, reverse=True)
+            linhas.append({
+                "marca": marca, "dia": dia,
+                "hora_pico": ordem[0], "movimento_pico_pct": round(curva[ordem[0]]),
+                "horas_mais_cheias": ", ".join(f"{h:02d}h ({round(curva[h])}%)" for h in ordem[:top]),
+                "hora_mais_vazia": min(curva, key=curva.get),
+                "movimento_medio_pct": round(sum(curva.values()) / len(curva)),
+                "lojas_com_dado": n_lojas,
+                **{f"h{h:02d}": round(curva[h]) if h in curva else None for h in range(6, 24)},
+            })
+    return linhas
 
 
 def exportar(lojas: list[Loja], nome: str) -> dict[str, Path]:
