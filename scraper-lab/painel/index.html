@@ -208,8 +208,9 @@ textarea{width:100%;min-height:92px;resize:vertical;border-radius:10px;border:1p
 .pop b{color:var(--ink)}
 .pop p{margin:0 0 6px}
 .matrix td{vertical-align:top}
-.mcell{display:flex;flex-direction:column;gap:5px;min-width:130px}
-.mcell .v{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.mcell{display:grid;grid-template-rows:30px 6px auto;row-gap:7px;min-width:130px}
+.mcell .v{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;white-space:nowrap;height:30px;overflow:hidden}
+.mcell .top{display:inline-flex;align-items:center;gap:3px;color:#fff;font-weight:700;font-size:10.5px;border-radius:5px;padding:2px 6px;line-height:1.2}
 .mcell .v b{font-family:var(--f-display);font-size:20px;letter-spacing:-.02em}
 .mtrack{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
 .mtrack>div{height:100%;border-radius:0 3px 3px 0}
@@ -710,7 +711,7 @@ function Reputacao({lojas,revs,amostra}){
 
     <div class="grid g2">
       <section class="panel">
-        <div class="ph"><div><h2>Nota de cada loja, local a local</h2><p class="sub">Compara as marcas dentro do mesmo local, onde o público é o mesmo. Cada célula é uma loja: nota, barra de 3 a 5 e total de avaliações. ${amostra?"Com filtro de avaliação ligado, os números saem da amostra filtrada.":"Sem filtro de avaliação, os números são o total do Google."}</p></div></div>
+        <div class="ph"><div><h2>Nota de cada loja, local a local</h2><p class="sub">Compara as marcas dentro do mesmo local, onde o público é o mesmo. Cada célula é uma loja: nota, barra de 3 a 5 na mesma régua para todas e total de avaliações. “▲ melhor” marca a maior nota do local. ${amostra?"Com filtro de avaliação ligado, os números saem da amostra filtrada.":"Sem filtro de avaliação, os números são o total do Google."}</p></div></div>
         <div class="tablewrap"><table class="matrix">
           <thead><tr><th>Local</th>${MARCAS.map(m=>html`<th key=${m}><${Brand} m=${m}/></th>`)}</tr></thead>
           <tbody>${shoppings.map(sh=>{
@@ -722,7 +723,7 @@ function Reputacao({lojas,revs,amostra}){
               ${MARCAS.map(m=>{const c=cel[m]; if(!c) return html`<td key=${m}><span class="note">Sem loja</span></td>`;
                 if(c.nota==null) return html`<td key=${m}><span class="note">Sem avaliações no filtro</span></td>`;
                 return html`<td key=${m}><div class="mcell">
-                  <div class="v"><b class="num">${fmt(c.nota,2)}</b>${top!=null&&c.nota===top?html`<span class="maxpk" style=${{background:cor(m),fontSize:10.5}}>melhor do local</span>`:null}</div>
+                  <div class="v"><b class="num">${fmt(c.nota,2)}</b>${top!=null&&c.nota===top?html`<span class="top" style=${{background:cor(m)}} title="Maior nota deste local">▲ melhor</span>`:null}</div>
                   <div class="mtrack"><div style=${{width:Math.max(0,(c.nota-3)/2*100)+"%",background:cor(m)}}></div></div>
                   <span class="note num">${fmt(c.total)} avaliações${amostra?" no filtro":""}</span>
                 </div></td>`;})}
