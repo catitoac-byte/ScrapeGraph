@@ -193,12 +193,12 @@ footer img{height:20px;display:block}
     </div>
 
     <div class="ficha" aria-label="Números do projeto piloto">
-      <div><span class="tech">Piloto · uma capital · redes de moda</span></div>
-      <div><b>16</b><span class="tech">lojas acompanhadas</span></div>
-      <div><b>3</b><span class="tech">redes comparadas</span></div>
-      <div><b>3.957</b><span class="tech">avaliações lidas</span></div>
-      <div><b>1.727</b><span class="tech">leituras de movimento por hora</span></div>
-      <div><b>10</b><span class="tech">temas de reclamação e elogio</span></div>
+      <div><span class="tech">Piloto · uma capital · {{ROTULO_PILOTO}}</span></div>
+      <div><b>{{N_LOJAS}}</b><span class="tech">lojas acompanhadas</span></div>
+      <div><b>{{N_MARCAS}}</b><span class="tech">redes comparadas</span></div>
+      <div><b>{{N_AVALIACOES}}</b><span class="tech">avaliações lidas</span></div>
+      <div><b>{{N_LEITURAS}}</b><span class="tech">leituras de movimento por hora</span></div>
+      <div><b>{{N_TEMAS}}</b><span class="tech">temas de reclamação e elogio</span></div>
     </div>
 
     <section aria-labelledby="t-trabalho">
@@ -249,11 +249,11 @@ footer img{height:20px;display:block}
         </div>
         <div class="pg">
           <q>Do que os clientes reclamam, e em qual loja?</q>
-          <span class="mod">Voz do cliente <small>10 temas</small></span>
-          <p>Quanto se fala de atendimento, fila, crédito, preço, produto, troca e provador. Quando o tema aparece, quanto disso é reclamação. E as avaliações lado a lado, com os termos destacados.</p>
+          <span class="mod">Voz do cliente <small>{{N_TEMAS}} temas</small></span>
+          <p>Quanto se fala de {{TEMAS_LISTA}}. Quando o tema aparece, quanto disso é reclamação. E as avaliações lado a lado, com os termos destacados.</p>
         </div>
         <div class="pg">
-          <q>Onde eu perco para o concorrente no mesmo shopping?</q>
+          <q>{{PERGUNTA_LOCAL}}</q>
           <span class="mod">Lojas e locais <small>matriz por local</small></span>
           <p>Nota de cada loja, local a local, com a vencedora marcada. Presença das marcas por local, mapa das lojas, horário do dia e contatos.</p>
         </div>
@@ -319,7 +319,7 @@ footer img{height:20px;display:block}
       <div class="principios">
         <div class="pr"><span class="tech">Amostra</span><p><b>Nunca esconde a base.</b> Cada percentual mostra quantas avaliações ou lojas o sustentam, e o painel avisa quando um filtro troca o total da fonte pela amostra lida.</p></div>
         <div class="pr"><span class="tech">Privacidade</span><p><b>Nunca exibe nome de quem avaliou.</b> O texto da avaliação serve à análise. A identidade de quem escreveu fica fora da coleta publicada.</p></div>
-        <div class="pr"><span class="tech">Comparação</span><p><b>Nunca compara lojas de públicos diferentes sem avisar.</b> A matriz por local põe frente a frente lojas do mesmo shopping.</p></div>
+        <div class="pr"><span class="tech">Comparação</span><p><b>Nunca compara lojas de públicos diferentes sem avisar.</b> {{COMPARACAO_LOCAL}}</p></div>
         <div class="pr"><span class="tech">Fonte</span><p><b>Nunca contorna limite de acesso.</b> Quando a fonte restringe a leitura, a coleta para, a loja é marcada como parcial e volta depois.</p></div>
         <div class="pr"><span class="tech">Ranking</span><p><b>Nunca inventa vencedor.</b> Selo de melhor e pior só aparece quando há diferença real entre as marcas.</p></div>
         <div class="pr"><span class="tech">Datas</span><p><b>Nunca apresenta data aproximada como exata.</b> O período vem da idade que a própria avaliação informa, e o painel diz isso.</p></div>

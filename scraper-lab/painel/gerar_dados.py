@@ -1,14 +1,17 @@
 """
 Gera o data.js do painel a partir do JSON da varredura.
 
-    uv run python painel/gerar_dados.py lojas_goiania
+    uv run python painel/gerar_dados.py moda
+    uv run python painel/gerar_dados.py supermercados
 
-O arquivo sai em dados/saida/lojas_google/painel/ (fora do git) porque carrega
+Le verticais/<id>.json (marcas, temas, textos) e o JSON da coleta indicado
+em "saida". O arquivo sai em dados/saida/lojas_google/painel/<id>/ (fora do git) porque carrega
 o texto das avaliacoes. Nome de autor nunca entra: o painel nao precisa dele
 e a pagina pode ser compartilhada.
 """
 
 import json
+from pathlib import Path
 import re
 import sys
 from datetime import date
@@ -29,7 +32,9 @@ def shopping(loja: dict) -> str:
     for padrao, nome in SHOPPING_POR_ENDERECO:
         if re.search(padrao, loja["endereco"]):
             return nome
-    return "Loja de rua"
+    # Loja de rua (caso comum em atacarejo): o local vira o bairro
+    b = bairro(loja["endereco"])
+    return f"Rua · {b}" if b else "Loja de rua"
 
 
 def bairro(endereco: str) -> str:
@@ -44,7 +49,12 @@ def meses(data_iso: str, hoje: date) -> float | None:
     return round((hoje - d).days / 30.4, 1)
 
 
-def main(nome: str) -> None:
+VERTICAIS = Path(__file__).resolve().parents[1] / "verticais"
+
+
+def main(vertical: str) -> None:
+    cfg = json.loads((VERTICAIS / f"{vertical}.json").read_text(encoding="utf-8"))
+    nome = cfg["saida"]
     lojas = json.load(open(SAIDA / f"{nome}.json", encoding="utf-8"))
     hoje = date.fromisoformat(lojas[0]["coletado_em"][:10])
     saida_lojas, avaliacoes = [], []
@@ -72,9 +82,14 @@ def main(nome: str) -> None:
     for l in saida_lojas:
         if "shopping" in l["bairro"].lower():
             l["bairro"] = bairros.get(l["shopping"], "")
-    dados = {"coleta": hoje.isoformat(), "cidade": "Goiânia, GO", "dias": DIAS,
+    ordens = {l.get("ordenacao", "relevancia") for l in lojas if l["avaliacoes"]}
+    dados = {"coleta": hoje.isoformat(), "cidade": cfg["cidade"], "dias": DIAS,
+             "vertical": cfg["id"], "titulo": cfg["titulo"],
+             "marcas": [m["nome"] for m in cfg["marcas"]], "temas": cfg["temas"],
+             "destaque_tema": cfg.get("destaque_tema"), "destaque_texto": cfg.get("destaque_texto"),
+             "ordenacao": "mais recentes" if ordens == {"mais recentes"} else "relevancia",
              "lojas": saida_lojas, "avaliacoes": avaliacoes}
-    destino = SAIDA / "painel"
+    destino = SAIDA / "painel" / cfg["id"]
     destino.mkdir(parents=True, exist_ok=True)
     js = "window.PAINEL = " + json.dumps(dados, ensure_ascii=False, separators=(",", ":")) + ";\n"
     (destino / "data.js").write_text(js, encoding="utf-8")
@@ -82,4 +97,4 @@ def main(nome: str) -> None:
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "lojas_goiania")
+    main(sys.argv[1] if len(sys.argv) > 1 else "moda")

@@ -6,3 +6,6 @@ dados/temp_rf/
 dados/cache/
 logs/
 *.tmp
+
+# Sites montados por vitrine-web/gerar_site.py (carregam dados coletados)
+sites/

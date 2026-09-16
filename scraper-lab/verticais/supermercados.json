@@ -1,0 +1,104 @@
+{
+  "id": "supermercados",
+  "titulo": "Costa Atacadão, Assaí e Bretas, loja a loja",
+  "nome_pagina": "Vitrine Atacarejo Goiânia",
+  "rotulo_piloto": "redes de atacarejo",
+  "cidade": "Goiânia, GO",
+  "saida": "atacarejo_goiania",
+  "marcas": [
+    {
+      "nome": "Costa Atacadão",
+      "padrao": "\\bcosta atacad",
+      "consultas": [
+        "Costa Atacadão {cidade}",
+        "Costa Atacadão loja {cidade}",
+        "Costa atacarejo {cidade}"
+      ]
+    },
+    {
+      "nome": "Assaí",
+      "padrao": "\\bassai\\b",
+      "consultas": [
+        "Assaí Atacadista {cidade}",
+        "Assaí {cidade}",
+        "Assaí Atacadista loja {cidade}"
+      ]
+    },
+    {
+      "nome": "Bretas",
+      "padrao": "\\bbretas\\b",
+      "consultas": [
+        "Bretas Atacarejo {cidade}",
+        "Bretas supermercado {cidade}",
+        "Bretas {cidade}"
+      ]
+    }
+  ],
+  "temas": [
+    {
+      "id": "atendimento",
+      "nome": "Atendimento",
+      "re": "atend|funcion[aá]ri|educad|grosse|simp[aá]tic|mal educ|gerente|equipe|seguran[çc]a"
+    },
+    {
+      "id": "fila",
+      "nome": "Fila e caixa",
+      "re": "\\bfila|caixa|demor|esper[ae]i|lentid|self.?checkout|autoatendimento"
+    },
+    {
+      "id": "preco",
+      "nome": "Preço e promoção",
+      "re": "pre[çc]o|barat|\\bcaro|promo|oferta|desconto|econom"
+    },
+    {
+      "id": "divergencia",
+      "nome": "Preço da gôndola no caixa",
+      "re": "etiqueta|diverg|pre[çc]o errado|cobr(ou|aram|ado|ada) (a mais|diferente|errado)|pre[çc]o diferente|placa"
+    },
+    {
+      "id": "falta",
+      "nome": "Variedade e falta de produto",
+      "re": "variedad|op[çc][õo]es|\\bfalta|faltando|n[ãa]o (tem|tinha|encontr)|estoque|acab(ou|ado)"
+    },
+    {
+      "id": "pereciveis",
+      "nome": "Hortifrúti e validade",
+      "re": "hortifr|frutas?\\b|verdura|legume|vencid|validade|estragad|podre|mofad|qualidade"
+    },
+    {
+      "id": "acougue",
+      "nome": "Açougue, padaria e frios",
+      "re": "a[çc]ougue|carnes?\\b|padaria|\\bp[ãa]es?\\b|frios|peixaria|rotisseria"
+    },
+    {
+      "id": "pagamento",
+      "nome": "Pagamento e cartão",
+      "re": "cart[aã]o|cr[eé]dito|d[eé]bito|\\bpix\\b|pagamento|parcel|passa[ií]|vale.?alimenta"
+    },
+    {
+      "id": "estacionamento",
+      "nome": "Estacionamento e acesso",
+      "re": "estacionamento|\\bvagas?\\b|carro|acesso|entrada"
+    },
+    {
+      "id": "organizacao",
+      "nome": "Organização e limpeza",
+      "re": "organiz|bagun|limp[ae]|suj[ao]|arrumad|desarrum|cheiro|fedor"
+    },
+    {
+      "id": "conforto",
+      "nome": "Carrinho e conforto",
+      "re": "carrinho|ar condicionado|quente|calor|climatiz|corredor|apertad|banheiro|lotad"
+    }
+  ],
+  "destaque_tema": "divergencia",
+  "destaque_texto": "cliente que vê um preço na prateleira e paga outro no caixa",
+  "site": {
+    "projeto": "vitrine-atacarejo",
+    "dominio": "atacarejo.cassiai.com",
+    "temas_lista": "atendimento, fila, preço, divergência entre gôndola e caixa, falta de produto, hortifrúti, açougue e estacionamento",
+    "pergunta_local": "Em qual bairro a concorrência atende melhor que a minha loja?",
+    "comparacao_local": "A matriz por local separa lojas de shopping e de rua, bairro a bairro.",
+    "usuario": "atacarejo"
+  }
+}

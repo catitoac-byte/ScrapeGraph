@@ -1,21 +1,26 @@
 """
-Monta public/painel/ para o deploy na Vercel.
+Monta o site de uma vertical a partir do modelo em vitrine-web/.
 
-    uv run python vitrine-web/gerar_site.py
+    uv run python vitrine-web/gerar_site.py moda
+    uv run python vitrine-web/gerar_site.py supermercados
 
-Envolve painel/index.html num documento completo (charset, barra com Sair) e
-copia o data.js gerado por painel/gerar_dados.py. public/painel/ fica fora do
-git: carrega texto de avaliacoes. O acesso e protegido pelo middleware.js.
+Saida em scraper-lab/sites/<vertical>/ (fora do git: carrega dados coletados):
+api/, middleware.js, package.json, vercel.json e public/ com a pagina comercial
+preenchida com os numeros da vertical e o painel protegido em public/painel/.
+Depois: cd sites/<vertical> && vercel deploy --prod --yes --scope cassiai
 """
 
+import json
 import shutil
+import sys
 from pathlib import Path
 
-AQUI = Path(__file__).resolve().parent
-LAB = AQUI.parent
-FONTE = LAB / "painel" / "index.html"
-DADOS = LAB / "dados" / "saida" / "lojas_google" / "painel" / "data.js"
-DESTINO = AQUI / "public" / "painel"
+MODELO = Path(__file__).resolve().parent
+LAB = MODELO.parent
+VERTICAIS = LAB / "verticais"
+PAINEL = LAB / "painel" / "index.html"
+DADOS = LAB / "dados" / "saida" / "lojas_google" / "painel"
+SITES = LAB / "sites"
 
 BARRA = """<style>
 .vg-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 24px;background:#0F172A;color:#E2E8F0;font:500 13px/1.2 "Figtree",system-ui,sans-serif}
@@ -59,13 +64,16 @@ TEMA_INICIAL = """<script>
 """
 
 
-def main() -> None:
-    corpo = FONTE.read_text(encoding="utf-8")
-    titulo_fim = corpo.index("</title>") + len("</title>")
-    head = corpo[:titulo_fim]
-    resto = corpo[titulo_fim:]
-    # tudo antes do primeiro <div id="app"> e head (meta, fontes, estilo)
+def milhar(n: int) -> str:
+    return f"{n:,}".replace(",", ".")
+
+
+def painel(cfg: dict) -> str:
+    corpo = PAINEL.read_text(encoding="utf-8")
+    fim_titulo = corpo.index("</title>") + len("</title>")
+    resto = corpo[fim_titulo:]
     corte = resto.index('<div id="app"></div>')
+    head = f"<title>{cfg['nome_pagina']}</title>"
     doc = (
         "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
@@ -73,13 +81,48 @@ def main() -> None:
         "<link rel=\"icon\" href=\"/cassi-wordmark.svg\">\n"
         f"{TEMA_INICIAL}{head}\n{resto[:corte]}\n</head>\n<body>\n{BARRA}\n{resto[corte:]}\n</body>\n</html>\n"
     )
-    # data.js relativo a /painel/ (cleanUrls serve /painel sem barra)
-    doc = doc.replace('<script src="data.js"></script>', '<script src="/painel/data.js"></script>')
-    DESTINO.mkdir(parents=True, exist_ok=True)
-    (DESTINO / "index.html").write_text(doc, encoding="utf-8")
-    shutil.copy(DADOS, DESTINO / "data.js")
-    print("ok:", DESTINO)
+    return doc.replace('<script src="data.js"></script>', '<script src="/painel/data.js"></script>')
+
+
+def pagina(cfg: dict, dados: dict) -> str:
+    leituras = sum(1 for l in dados["lojas"] for d in l["pico"].values() for v in d.values() if v is not None)
+    site = cfg["site"]
+    trocas = {
+        "{{ROTULO_PILOTO}}": cfg["rotulo_piloto"],
+        "{{N_LOJAS}}": milhar(len(dados["lojas"])),
+        "{{N_MARCAS}}": milhar(len(cfg["marcas"])),
+        "{{N_AVALIACOES}}": milhar(len(dados["avaliacoes"])),
+        "{{N_LEITURAS}}": milhar(leituras),
+        "{{N_TEMAS}}": milhar(len(cfg["temas"])),
+        "{{TEMAS_LISTA}}": site["temas_lista"],
+        "{{PERGUNTA_LOCAL}}": site["pergunta_local"],
+        "{{COMPARACAO_LOCAL}}": site["comparacao_local"],
+    }
+    s = (MODELO / "template" / "index.html").read_text(encoding="utf-8")
+    for k, v in trocas.items():
+        s = s.replace(k, v)
+    assert "{{" not in s, "campo do modelo sem valor"
+    return s
+
+
+def main(vertical: str) -> None:
+    cfg = json.loads((VERTICAIS / f"{vertical}.json").read_text(encoding="utf-8"))
+    data_js = DADOS / cfg["id"] / "data.js"
+    texto = data_js.read_text(encoding="utf-8")
+    dados = json.loads(texto[texto.index("=") + 1:].rstrip().rstrip(";"))
+
+    destino = SITES / cfg["id"]
+    pub = destino / "public"
+    (pub / "painel").mkdir(parents=True, exist_ok=True)
+    for nome in ("middleware.js", "package.json", "package-lock.json", "vercel.json"):
+        shutil.copy(MODELO / nome, destino / nome)
+    shutil.copytree(MODELO / "api", destino / "api", dirs_exist_ok=True)
+    shutil.copy(MODELO / "template" / "cassi-wordmark.svg", pub / "cassi-wordmark.svg")
+    (pub / "index.html").write_text(pagina(cfg, dados), encoding="utf-8")
+    (pub / "painel" / "index.html").write_text(painel(cfg), encoding="utf-8")
+    shutil.copy(data_js, pub / "painel" / "data.js")
+    print("ok:", destino)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1] if len(sys.argv) > 1 else "moda")

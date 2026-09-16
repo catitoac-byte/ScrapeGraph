@@ -242,8 +242,9 @@ const html = htm.bind(React.createElement);
 const D = window.PAINEL;
 
 /* ------------------------------------------------------------ base */
-const MARCAS = ["C&A","Renner","Riachuelo"];
-const MI = {"C&A":0,"Renner":1,"Riachuelo":2};
+// Marcas, temas e textos vem da vertical (verticais/<id>.json via gerar_dados.py)
+const MARCAS = D.marcas || ["C&A","Renner","Riachuelo"];
+const MI = Object.fromEntries(MARCAS.map((m,i)=>[m,i]));
 const cor = m => `var(--b${MI[m]})`;
 const soft = m => `var(--b${MI[m]}-soft)`;
 const DIAS = D.dias;
@@ -254,7 +255,7 @@ const fmt = (n,d=0)=> n==null||isNaN(n) ? "–" : n.toLocaleString("pt-BR",{mini
 const pct = (n,d=0)=> n==null||isNaN(n) ? "–" : fmt(n,d)+"%";
 const hh = h => String(h).padStart(2,"0")+"h";
 
-const TEMAS = [
+const TEMAS_MODA = [
   {id:"atendimento", nome:"Atendimento", re:/atend|vendedor|funcion[aá]ri|educad|grosse|simp[aá]tic|mal educ|gerente|equipe/i},
   {id:"fila", nome:"Fila e caixa", re:/\bfila|caixa|demor|esper[ae]i|lentid/i},
   {id:"cartao", nome:"Cartão e crédito", re:/cart[aã]o|cr[eé]dito|juros|\bpay\b|fatura|cobran|empr[eé]stimo|parcel/i},
@@ -266,9 +267,11 @@ const TEMAS = [
   {id:"organizacao", nome:"Organização e limpeza", re:/organiz|bagun|limp[ae]|suj[ao]|arrumad|desarrum/i},
   {id:"estrutura", nome:"Espaço e conforto", re:/ar condicionado|espa[çc]o|ampl[ao]|banheiro|estacionamento|acess[ií]v|climatiz|quente/i},
 ];
+const TEMAS = D.temas ? D.temas.map(t=>({id:t.id, nome:t.nome, re:new RegExp(t.re,"i")})) : TEMAS_MODA;
 const TEMA_POR_ID = Object.fromEntries(TEMAS.map(t=>[t.id,t]));
 
 const LOJAS = D.lojas;
+const ORDEM_TXT = D.ordenacao === "mais recentes" ? "as mais recentes de cada loja" : "na ordem de relevância do Google";
 const LOJA = Object.fromEntries(LOJAS.map(l=>[l.id,l]));
 const REVS = D.avaliacoes.map((r,i)=>({...r, i, marca:LOJA[r.s].marca, temas:r.t?TEMAS.filter(t=>t.re.test(r.t)).map(t=>t.id):[]}));
 const SHOPPINGS = [...new Set(LOJAS.map(l=>l.shopping))].sort((a,b)=>{
@@ -558,9 +561,10 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
       const s=[...com].sort((a,b)=>b.rep.neg-a.rep.neg);
       out.push({k:"t-crit",t:"Atenção",x:`${s[0].m} concentra a maior parcela de notas 1 e 2 ${amostra?"na amostra filtrada":"no Google"} (${pct(s[0].rep.neg,1)}), contra ${pct(s[s.length-1].rep.neg,1)} de ${s[s.length-1].m}.`});
     }
-    const cart = dados.map(d=>({m:d.m,v:d.stT.temas.cartao.n,p:d.stT.temas.cartao.pct})).sort((a,b)=>b.v-a.v);
-    if(cart[0].v>=5) out.push({k:"t-warn",t:"Tema",x:`Cartão e crédito aparece em ${fmt(cart[0].v)} avaliações da ${cart[0].m} (${pct(cart[0].p,1)} das que têm texto), quase sempre ligado a venda insistente do cartão da loja.`,tema:"cartao"});
-    const fila = dados.map(d=>({m:d.m,neg:d.stN.temas.fila.neg,n:d.stN.temas.fila.n})).filter(x=>x.n>=10).sort((a,b)=>b.neg-a.neg);
+    const dt = D.destaque_tema && TEMA_POR_ID[D.destaque_tema] ? D.destaque_tema : null;
+    const cart = dt ? dados.map(d=>({m:d.m,v:d.stT.temas[dt].n,p:d.stT.temas[dt].pct})).sort((a,b)=>b.v-a.v) : [];
+    if(cart.length && cart[0].v>=5) out.push({k:"t-warn",t:"Tema",x:`${TEMA_POR_ID[dt].nome} aparece em ${fmt(cart[0].v)} avaliações da ${cart[0].m} (${pct(cart[0].p,1)} das que têm texto)${D.destaque_texto?", "+D.destaque_texto:""}.`,tema:dt});
+    const fila = TEMA_POR_ID.fila ? dados.map(d=>({m:d.m,neg:d.stN.temas.fila.neg,n:d.stN.temas.fila.n})).filter(x=>x.n>=10).sort((a,b)=>b.neg-a.neg) : [];
     if(fila.length) out.push({k:"t-warn",t:"Operação",x:`Quando falam de fila e caixa, ${pct(fila[0].neg)} das avaliações da ${fila[0].m} são negativas.`,tema:"fila"});
     const pk = dados.filter(d=>d.pk).map(d=>`${d.m} ${DIA_LONGO[d.pk.dia]} às ${hh(d.pk.pico)}`);
     if(pk.length) out.push({k:"t-info",t:"Movimento",x:`${dia==="todos"?"Pico da semana":"Pico de "+DIA_LONGO[dia]}: ${pk.join(", ")}.`,tab:"movimento"});
@@ -663,7 +667,7 @@ function Movimento({lojas,dia,setDia}){
             </${React.Fragment}>`;})}
           </tr>`;})}</tbody>
       </table></div>
-      <p class="note" style=${{marginTop:8,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>O percentual com fundo na cor da marca mostra quem tem o maior pico do dia entre as três. Exemplo: <span class="maxpk" style=${{background:cor("C&A")}}>85%</span> é a C&A no sábado.</p>
+      <p class="note" style=${{marginTop:8,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>O percentual com fundo na cor da marca mostra quem tem o maior pico do dia entre as três. Exemplo: <span class="maxpk" style=${{background:cor(MARCAS[0])}}>80%</span> seria a ${MARCAS[0]} liderando aquele dia.</p>
     </section>
 
     <section class="panel" style=${{marginTop:16}}>
@@ -934,7 +938,7 @@ function contexto(lojas,revs,filtrosTxt,amostra){
   return `DADOS DO PAINEL (coleta ${D.coleta}, ${D.cidade}, fonte: fichas públicas do Google Maps)
 Filtros ativos: ${filtrosTxt}
 ${amostra?"Nota, avaliações e notas 1 e 2 abaixo saem da amostra filtrada, não do total do Google.":"Nota, avaliações e notas 1 e 2 abaixo são o total do Google."}
-Lotação é o percentual de movimento que o Google mostra por hora. As avaliações são uma amostra de até 300 por loja, na ordem de relevância do Google.
+Lotação é o percentual de movimento que o Google mostra por hora. As avaliações são uma amostra de até 300 por loja, ${ORDEM_TXT}.
 
 RESUMO POR MARCA (JSON):
 ${JSON.stringify(marcas)}
@@ -956,16 +960,16 @@ function Analista({lojas,revs,filtrosTxt,amostra}){
   useEffect(()=>{ let vivo=true; (async()=>{ const s = window.claude ? await window.claude.use("sample") : null; if(vivo) setSample(s); })(); return ()=>{vivo=false}; },[]);
   const SUG = [
     "Qual marca tem a operação de loja mais problemática e por quê?",
-    "Compare as três marcas no Flamboyant: movimento, nota e reclamações.",
+    `Compare as três marcas no local onde a disputa é mais direta: movimento, nota e reclamações.`,
     "Em que dia e horário cada marca precisa de mais gente no caixa?",
-    "Resuma as reclamações sobre cartão e crédito, marca a marca.",
-    "Quais três ações a C&A deveria priorizar frente a Renner e Riachuelo?",
+    `Resuma as reclamações sobre ${(TEMA_POR_ID[D.destaque_tema]||TEMAS[1]).nome.toLowerCase()}, marca a marca.`,
+    `Quais três ações a ${MARCAS[0]} deveria priorizar frente a ${MARCAS.slice(1).join(" e ")}?`,
   ];
   const perguntar = async (pergunta) => {
     if(!sample || !pergunta.trim()) return;
     ctl.current?.abort(); ctl.current = new AbortController();
     setEstado("pensando"); setResp(""); setErro("");
-    const prompt = `Você é analista de inteligência de varejo. Responda em português do Brasil, de forma direta, comparando SEMPRE as três marcas (C&A, Renner, Riachuelo) quando fizer sentido. Use só os dados abaixo, cite números, e diga quando a amostra for pequena. Formato: um parágrafo curto de resposta, depois tópicos com "- " e negrito com **. Nunca use travessão nem hífen para separar ideias; use ponto ou vírgula.
+    const prompt = `Você é analista de inteligência de varejo. Responda em português do Brasil, de forma direta, comparando SEMPRE as três marcas (${MARCAS.join(", ")}) quando fizer sentido. Use só os dados abaixo, cite números, e diga quando a amostra for pequena. Formato: um parágrafo curto de resposta, depois tópicos com "- " e negrito com **. Nunca use travessão nem hífen para separar ideias; use ponto ou vírgula.
 
 ${contexto(lojas,revs,filtrosTxt,amostra)}
 
@@ -987,7 +991,7 @@ PERGUNTA: ${pergunta}`;
     <div class="ask">
       <div class="sugg">${SUG.map(s=>html`<button key=${s} onClick=${()=>{setQ(s);perguntar(s);}} disabled=${!sample||estado!=="pronto"}>${s}</button>`)}</div>
       <label class="flabel" for="pergunta">Sua pergunta</label>
-      <textarea id="pergunta" value=${q} onInput=${e=>setQ(e.target.value)} placeholder="Ex.: onde a Riachuelo perde para a Renner no mesmo shopping?"
+      <textarea id="pergunta" value=${q} onInput=${e=>setQ(e.target.value)} placeholder=${`Ex.: onde a ${MARCAS[2]} perde para a ${MARCAS[1]} no mesmo local?`}
         onKeyDown=${e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)) perguntar(q);}}></textarea>
       <div style=${{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
         <button class="primary" onClick=${()=>perguntar(q)} disabled=${!sample||estado!=="pronto"||!q.trim()}>${sample===undefined?"Conectando…":"Analisar"}</button>
@@ -1058,8 +1062,8 @@ function App(){
   return html`<div class="wrap">
     <header class="top">
       <div class="brandmark">
-        <span class="eyebrow">Inteligência de varejo · Goiânia, GO</span>
-        <h1>C<span class="amp">&</span>A, Renner e Riachuelo, loja a loja</h1>
+        <span class="eyebrow">Inteligência de varejo · ${D.cidade}</span>
+        <h1>${D.titulo || "C&A, Renner e Riachuelo, loja a loja"}</h1>
         <div class="meta"><span>Coleta <b>${new Date(D.coleta+"T12:00").toLocaleDateString("pt-BR",{day:"2-digit",month:"short",year:"numeric"})}</b></span><span><b>${LOJAS.length}</b> lojas</span><span><b>${fmt(REVS.length)}</b> avaliações lidas</span><span>Fonte: Google Maps</span></div>
       </div>
       <div class="legend" aria-label="Legenda das marcas">${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}</span>`)}</div>
@@ -1106,7 +1110,7 @@ function App(){
 
     <footer class="foot">
       ${pend.length ? html`<div class="callout" style=${{marginBottom:12}}><b>Coleta parcial</b><span>${pend.map(l=>`${l.marca} ${l.shopping}`).join(", ")}: o Google limitou o acesso durante a coleta e as avaliações e o gráfico de movimento dessa loja ficaram de fora. A nota e o total no Google continuam valendo.</span></div>`:null}
-      Lotação por hora é o índice relativo que o Google Maps mostra em “Horários de pico” (100% é a hora mais cheia daquela loja na semana). As avaliações são uma amostra de até 300 por loja, na ordem de relevância do Google, com datas aproximadas a partir de “há X meses”. Sem filtro de avaliação, nota e distribuição de estrelas usam todas as avaliações do Google; com filtro de período, estrelas, tema ou busca, usam as avaliações lidas que passam no filtro. Lojas de Aparecida de Goiânia ficaram fora do recorte. Nomes de autores não são exibidos.
+      Lotação por hora é o índice relativo que o Google Maps mostra em “Horários de pico” (100% é a hora mais cheia daquela loja na semana). As avaliações são uma amostra de até 300 por loja, ${ORDEM_TXT}, com datas aproximadas a partir de “há X meses”. Sem filtro de avaliação, nota e distribuição de estrelas usam todas as avaliações do Google; com filtro de período, estrelas, tema ou busca, usam as avaliações lidas que passam no filtro. Lojas de outros municípios ficaram fora do recorte. Nomes de autores não são exibidos.
     </footer>
   </div>`;
 }

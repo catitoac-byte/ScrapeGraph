@@ -114,6 +114,7 @@ class Loja:
     total_fotos: str = ""
     foto_capa: str = ""
     avaliacoes: list[Avaliacao] = field(default_factory=list)
+    ordenacao: str = "relevancia"
     coletado_em: str = ""
     erro: str = ""
 
@@ -142,8 +143,13 @@ def _ir(page: Page, url: str, espera: float = 4.0) -> None:
 
 # ---------------------------------------------------------------- descoberta
 
-def _casa_marca(nome: str, padrao: str) -> bool:
-    return re.search(padrao, _sem_acento(nome)) is not None
+# Fichas que carregam o nome da marca mas nao sao loja (posto, drogaria...)
+EXCLUIR_PADRAO = r"posto|combustivel|drogaria|farmacia|caixa eletronico|centro de distribuicao|escritorio|\bcd\b"
+
+
+def _casa_marca(nome: str, padrao: str, excluir: str = EXCLUIR_PADRAO) -> bool:
+    n = _sem_acento(nome)
+    return re.search(padrao, n) is not None and not (excluir and re.search(excluir, n))
 
 
 def descobrir(page: Page, marca: str, padrao: str, consultas: list[str],
@@ -350,10 +356,16 @@ def _extrair_avaliacoes(page: Page, loja: Loja, maximo: int) -> None:
     if ordenar.count():
         ordenar.click()
         page.wait_for_timeout(1200)
-        item = page.locator('[role="menuitemradio"]', has_text="Mais recentes").first
+        # Existe um "Mais recentes" escondido na pagina: sem filtrar por
+        # visivel, o clique ia para ele e a lista seguia por relevancia.
+        item = (page.locator('[role="menuitemradio"]').filter(has_text="Mais recentes")
+                .filter(visible=True).first)
         if item.count():
             item.click()
             page.wait_for_timeout(2500)
+            loja.ordenacao = "mais recentes"
+        else:
+            loja.ordenacao = "relevancia (menu de ordenacao nao abriu)"
 
     parado, anterior = 0, -1
     while parado < 8:
@@ -443,10 +455,27 @@ def raspar_loja(page: Page, marca: str, url: str, max_avaliacoes: int,
 
 # ---------------------------------------------------------------- orquestracao
 
+class AcessoLimitado(RuntimeError):
+    """O Google entrou em visualizacao limitada: parar e tentar mais tarde."""
+
+
+def _limitada(loja: Loja) -> bool:
+    return loja.erro.startswith("visualizacao limitada")
+
+
+def acesso_liberado(page: Page, url_ficha: str) -> bool:
+    """Abre a aba de avaliacoes de uma ficha e confere se o Google limitou."""
+    _ir(page, f"{url_ficha}{'&' if '?' in url_ficha else '?'}hl=pt-BR&gl=br", espera=4)
+    _abrir_aba(page, "Avaliações")
+    return page.get_by_text("visualização limitada").count() == 0
+
+
 def varrer(marcas: dict[str, dict], cidade: str, max_avaliacoes: int,
            headless: bool = False, delay: float = 2.0,
-           so_cidade: bool = True) -> list[Loja]:
-    lojas: list[Loja] = []
+           so_cidade: bool = True, lojas: list[Loja] | None = None) -> list[Loja]:
+    """Preenche `lojas` (lista do chamador) para que uma parada por limite
+    ainda deixe o que foi coletado disponivel para exportar."""
+    lojas = [] if lojas is None else lojas
     with sync_playwright() as pw:
         browser, page = abrir_navegador(pw, headless=headless)
         try:
@@ -456,6 +485,9 @@ def varrer(marcas: dict[str, dict], cidade: str, max_avaliacoes: int,
                 urls = descobrir(page, marca, cfg["padrao"], consultas, delay)
                 print(f"[{marca}] {len(urls)} fichas para abrir")
                 alvo = _sem_acento(cidade.split(",")[0].strip())
+                if urls and not acesso_liberado(page, urls[0]):
+                    raise AcessoLimitado("Google em visualizacao limitada antes de comecar")
+                seguidas = 0
                 for i, url in enumerate(urls, 1):
                     loja = raspar_loja(page, marca, url, max_avaliacoes,
                                        cidade_alvo=alvo if so_cidade else "")
@@ -465,6 +497,9 @@ def varrer(marcas: dict[str, dict], cidade: str, max_avaliacoes: int,
                           f"pico={len(loja.horarios_pico)}d aval={len(loja.avaliacoes)} {marca_status}")
                     if not fora:
                         lojas.append(loja)
+                    seguidas = seguidas + 1 if _limitada(loja) else 0
+                    if seguidas >= 2:
+                        raise AcessoLimitado(f"duas lojas seguidas limitadas em {marca}")
                     time.sleep(delay + random.random() * 2)
         finally:
             browser.close()

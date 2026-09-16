@@ -1,0 +1,99 @@
+{
+  "id": "moda",
+  "titulo": "C&A, Renner e Riachuelo, loja a loja",
+  "nome_pagina": "Vitrine Goiânia",
+  "rotulo_piloto": "redes de moda",
+  "cidade": "Goiânia, GO",
+  "saida": "lojas_goiania",
+  "marcas": [
+    {
+      "nome": "C&A",
+      "padrao": "^c\\s*&\\s*a\\b|^c&a\\b|\\bc&a modas\\b",
+      "consultas": [
+        "C&A {cidade}",
+        "C&A Modas {cidade}",
+        "loja C&A shopping {cidade}"
+      ]
+    },
+    {
+      "nome": "Renner",
+      "padrao": "\\brenner\\b",
+      "consultas": [
+        "Lojas Renner {cidade}",
+        "Renner {cidade}",
+        "Renner shopping {cidade}"
+      ]
+    },
+    {
+      "nome": "Riachuelo",
+      "padrao": "\\briachuelo\\b",
+      "consultas": [
+        "Riachuelo {cidade}",
+        "Lojas Riachuelo {cidade}",
+        "Riachuelo shopping {cidade}"
+      ]
+    }
+  ],
+  "temas": [
+    {
+      "id": "atendimento",
+      "nome": "Atendimento",
+      "re": "atend|vendedor|funcion[aá]ri|educad|grosse|simp[aá]tic|mal educ|gerente|equipe"
+    },
+    {
+      "id": "fila",
+      "nome": "Fila e caixa",
+      "re": "\\bfila|caixa|demor|esper[ae]i|lentid"
+    },
+    {
+      "id": "cartao",
+      "nome": "Cartão e crédito",
+      "re": "cart[aã]o|cr[eé]dito|juros|\\bpay\\b|fatura|cobran|empr[eé]stimo|parcel"
+    },
+    {
+      "id": "preco",
+      "nome": "Preço e promoção",
+      "re": "pre[çc]o|barat|\\bcaro|promo|oferta|desconto|liquida"
+    },
+    {
+      "id": "produto",
+      "nome": "Variedade e produto",
+      "re": "variedad|op[çc][õo]es|modelo|cole[çc]|pe[çc]as|qualidade|tecido|estilo"
+    },
+    {
+      "id": "tamanho",
+      "nome": "Tamanhos",
+      "re": "tamanho|numera[çc]|plus size|\\bgg\\b|\\bpp\\b"
+    },
+    {
+      "id": "provador",
+      "nome": "Provador",
+      "re": "provador"
+    },
+    {
+      "id": "troca",
+      "nome": "Troca e devolução",
+      "re": "\\btroca|devolu|reembols|estorno"
+    },
+    {
+      "id": "organizacao",
+      "nome": "Organização e limpeza",
+      "re": "organiz|bagun|limp[ae]|suj[ao]|arrumad|desarrum"
+    },
+    {
+      "id": "estrutura",
+      "nome": "Espaço e conforto",
+      "re": "ar condicionado|espa[çc]o|ampl[ao]|banheiro|estacionamento|acess[ií]v|climatiz|quente"
+    }
+  ],
+  "destaque_tema": "cartao",
+  "destaque_texto": "quase sempre ligado a venda insistente do cartão da loja",
+  "site": {
+    "projeto": "vitrine-cassiai",
+    "dominio": "vitrine.cassiai.com",
+    "temas_lista": "atendimento, fila, crédito, preço, produto, troca e provador",
+    "pergunta_local": "Onde eu perco para o concorrente no mesmo shopping?",
+    "comparacao_local": "A matriz por local põe frente a frente lojas do mesmo shopping.",
+    "usuario": "vitrine"
+  }
+}
