@@ -59,6 +59,17 @@ def completa(d: dict) -> bool:
     return not d.get("erro")
 
 
+def proxima(estado: dict) -> int:
+    """Indice da proxima ficha: alterna as marcas, comecando pela que tem menos
+    lojas coletadas. Assim um lote interrompido ainda deixa as marcas comparaveis."""
+    feitas = {}
+    for d in estado["feitas"].values():
+        if completa(d):
+            feitas[d["marca"]] = feitas.get(d["marca"], 0) + 1
+    return min(range(len(estado["fila"])),
+               key=lambda i: (feitas.get(estado["fila"][i]["marca"], 0), i))
+
+
 def status(cfg: dict, estado: dict) -> None:
     feitas = estado["feitas"]
     print(f"vertical ........ {cfg['id']}  ({cfg['cidade']})")
@@ -129,7 +140,7 @@ def main() -> int:
                 resultado, codigo = "Google limitado antes do lote, nada foi aberto", 2
             else:
                 for _ in range(min(args.tamanho, len(estado["fila"]))):
-                    item = estado["fila"].pop(0)
+                    item = estado["fila"].pop(proxima(estado))
                     loja = raspar_loja(page, item["marca"], item["url"], args.max_avaliacoes, cidade_alvo=alvo)
                     if loja.cidade and _sem_acento(loja.cidade) != alvo:
                         estado["fora"].append({**item, "cidade": loja.cidade})
@@ -147,6 +158,7 @@ def main() -> int:
                     else:
                         estado["feitas"][loja.place_id] = asdict(loja)
                         novas += 1
+                        # conta a loja nova antes de escolher a proxima marca
                         print(f"   ok: {loja.marca} · {loja.nome} · pico={len(loja.horarios_pico)}d · aval={len(loja.avaliacoes)}")
                     salvar(caminho, estado)
                     time.sleep(args.delay)
