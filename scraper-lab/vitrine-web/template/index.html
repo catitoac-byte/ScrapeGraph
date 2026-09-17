@@ -279,6 +279,29 @@ footer img{height:20px;display:block}
 .caso>div:hover .carimbo{background:var(--blue);border-color:var(--blue);color:#F8FAFC}
 .caso .onde:hover{background:var(--blue-soft)}
 @media (prefers-reduced-motion:reduce){.vt,.vt svg,.caso>div,.caso>div::before,.caso>div h3{transition:none}.vt:hover,.caso>div:hover{transform:none}.vt:hover svg{transform:none}.caso>div:hover h3{transform:none}}
+
+/* caixa de contato */
+dialog.contato{border:0;padding:0;border-radius:var(--r);width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 32px);background:var(--paper);color:var(--ink);box-shadow:0 40px 80px -30px rgba(15,23,42,.5)}
+dialog.contato::backdrop{background:rgba(15,23,42,.45);backdrop-filter:blur(4px)}
+dialog.contato[open]{animation:ct-abre .4s cubic-bezier(.3,1.3,.5,1)}
+@keyframes ct-abre{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.ct-in{padding:28px;display:grid;gap:14px}
+.ct-top{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.ct-top h2{font-size:clamp(21px,4vw,26px);line-height:1.05}
+.ct-x{border:0;background:var(--blue-softer);width:36px;height:36px;border-radius:.6rem;font-size:20px;line-height:1;color:var(--ink-2);cursor:pointer;flex:none}
+.ct-in .sub{color:var(--ink-2);font-size:15px;margin-top:-6px}
+.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.ct-grid{grid-template-columns:1fr}}
+.ct-in label{display:grid;gap:6px;font-size:13px;font-weight:500;color:var(--ink-2)}
+.ct-in input,.ct-in select,.ct-in textarea{min-height:46px;border-radius:.6rem;border:1px solid var(--line-2);background:#fff;padding:10px 14px;font:inherit;font-weight:400;color:var(--ink);width:100%}
+.ct-in textarea{min-height:90px;resize:vertical}
+.ct-in input:focus,.ct-in select:focus,.ct-in textarea:focus{outline:2px solid var(--blue);outline-offset:0;border-color:transparent}
+.ct-in .full{grid-column:1/-1}
+.ct-in .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ct-in .btn{width:100%}
+.ct-in .btn[disabled]{opacity:.6;cursor:wait;transform:none}
+.ct-ok{text-align:center;padding:12px 0 6px;display:grid;gap:10px;justify-items:center}
+.ct-ok .v{width:56px;height:56px;border-radius:50%;background:var(--mint);display:grid;place-items:center;font-size:26px;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -302,7 +325,7 @@ footer img{height:20px;display:block}
         <p class="lede" data-t="t3">A partir de dados públicos, com método de pesquisa por trás de cada número: movimento por hora, reputação e o que os clientes escrevem, loja a loja.</p>
         <div class="acts">
           <a class="btn" href="#metodo" data-t="t4">Ver o método</a>
-          <a class="btn ghost" href="mailto:cassiano@cassiai.com?subject=Rival%20Pulse%20%C2%B7%20quero%20conhecer" data-t="t5">Pedir acesso</a>
+          <a class="btn ghost" href="#contato" data-contato data-t="t5">Pedir acesso</a>
         </div>
       </div>
 
@@ -330,14 +353,6 @@ footer img{height:20px;display:block}
         <div class="demo-main" role="tabpanel" id="demo-main" aria-live="off"></div>
       </div>
       <p class="capa-nota" data-t="x3">Dados ilustrativos. Os exemplos passam sozinhos: pare o mouse em cima para ler com calma.</p>
-    </div>
-    <div class="ficha" aria-label="Números do projeto piloto">
-      <div><span class="tech" data-t="t12">Piloto · uma capital · {{ROTULO_PILOTO}}</span></div>
-      <div><b>{{N_LOJAS}}</b><span class="tech" data-t="t13">lojas acompanhadas</span></div>
-      <div><b>{{N_MARCAS}}</b><span class="tech" data-t="t14">redes comparadas</span></div>
-      <div><b>{{N_AVALIACOES}}</b><span class="tech" data-t="t15">avaliações lidas</span></div>
-      <div><b>{{N_LEITURAS}}</b><span class="tech" data-t="t16">leituras de movimento por hora</span></div>
-      <div><b>{{N_TEMAS}}</b><span class="tech" data-t="t17">temas de reclamação e elogio</span></div>
     </div>
 
     <section aria-labelledby="t-trabalho">
@@ -513,7 +528,7 @@ footer img{height:20px;display:block}
       </div>
       <div class="cta">
         <p data-t="t99">Produtos disponíveis via SaaS por crédito, por projeto ou compra da plataforma. Fale com a gente, temos formato que cabe no seu orçamento.</p>
-        <a class="btn" href="mailto:cassiano@cassiai.com?subject=Rival%20Pulse%20%C2%B7%20quero%20conhecer" data-t="t100">Falar com a Cassi.ai</a>
+        <a class="btn" href="#contato" data-contato data-t="t100">Falar com a Cassi.ai</a>
         <p class="cred" data-t="t101">A Cassi.ai é uma empresa de engenharia de software especializada nas dores de pesquisa, inovação e insights. Vinte anos em pesquisa de mercado, ex-ESOMAR Brasil, com palestras no IIEX, na ESOMAR e na ABEP.</p>
       </div>
     </div>
@@ -837,8 +852,6 @@ document.documentElement.lang = l;
 var d = DIC[l], m = META[l];
 document.querySelectorAll("[data-t]").forEach(function(e){ var v = d[e.getAttribute("data-t")]; if (v) e.innerHTML = v; });
 document.querySelector('meta[name="description"]').setAttribute("content", m.desc);
-document.querySelector(".ficha").setAttribute("aria-label", m.nome);
-if (l === "en") document.querySelectorAll(".ficha b").forEach(function(b){ b.textContent = b.textContent.replace(/\./g, ","); });
 document.querySelector(".idioma").setAttribute("aria-label", m.lang);
 document.querySelectorAll('a[title^="Cassi.ai"]').forEach(function(a){ a.title = m.cassi; });
 document.querySelectorAll('a[href*="subject=Rival"]').forEach(function(a){ a.href = a.href.replace(/subject=.*$/, "subject=" + m.assunto); });
@@ -1041,7 +1054,7 @@ function agenda(){
   if (barra && !tocando) barra.classList.remove("corre");
   if (!ativo) return;
   var resta = barra ? (ABAS[atual].tempo || 3500) * (1 - (barra.getBoundingClientRect().width / barra.parentNode.getBoundingClientRect().width)) : 3500;
-  if (barra && !barra.classList.contains("corre")) { barra.style.animationDuration = (ABAS[atual].tempo || 3500) + "ms"; barra.classList.add("corre"); resta = ABAS[atual].tempo || 7000; }
+  if (barra && !barra.classList.contains("corre")) { barra.style.animationDuration = (ABAS[atual].tempo || 3500) + "ms"; barra.classList.add("corre"); resta = ABAS[atual].tempo || 3500; }
   timer = setTimeout(function(){ mostra((atual + 1) % ABAS.length); }, Math.max(200, resta));
 }
 play.addEventListener("click", function(){ tocando = !tocando; if (tocando) mostra(atual); else agenda(); });
@@ -1049,7 +1062,7 @@ demo.addEventListener("mouseenter", function(){ sobre = true; agenda(); });
 demo.addEventListener("mouseleave", function(){ sobre = false; agenda(); });
 demo.addEventListener("focusin", function(){ sobre = true; agenda(); });
 demo.addEventListener("focusout", function(){ sobre = false; agenda(); });
-if ("IntersectionObserver" in window) new IntersectionObserver(function(es){ visivel = es[0].isIntersecting; agenda(); }, {threshold:.35}).observe(demo);
+if ("IntersectionObserver" in window) new IntersectionObserver(function(es){ visivel = es[0].isIntersecting; agenda(); }, {threshold:0}).observe(demo);
 else visivel = true;
 function mostra(i, foco){
   limpar.forEach(function(f){ f(); }); limpar = [];
@@ -1070,7 +1083,20 @@ ABAS.forEach(function(a, i){
   b.addEventListener("keydown", function(e){ var d = {ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key]; if (d) { e.preventDefault(); tocando = false; mostra((atual + d + ABAS.length) % ABAS.length, true); } });
   tabs.appendChild(b);
 });
+// Altura fixa pelo maior quadro, para a pagina abaixo nao pular a cada troca
+function medir(){
+  main.style.minHeight = "";
+  var maior = 0;
+  ABAS.forEach(function(a){
+    main.innerHTML = '<div class="demo-prog"><i></i></div><div class="demo-top"><span class="demo-t">' + a.nome + '</span></div><div class="demo-body" style="animation:none">' + a.f() + '</div>';
+    maior = Math.max(maior, main.getBoundingClientRect().height);
+  });
+  main.style.minHeight = Math.ceil(maior) + "px";
+}
+medir();
 mostra(0);
+var larguraMedida = innerWidth;
+addEventListener("resize", function(){ if (Math.abs(innerWidth - larguraMedida) > 40) { larguraMedida = innerWidth; medir(); mostra(atual); } });
 addEventListener("resize", function(){ var b = tabs.querySelectorAll("button")[atual]; gota.style.transform = "translate(" + b.offsetLeft + "px," + b.offsetTop + "px)"; gota.style.width = b.offsetWidth + "px"; gota.style.height = b.offsetHeight + "px"; });
 })();
 </script>
@@ -1080,6 +1106,84 @@ addEventListener("resize", function(){ var b = tabs.querySelectorAll("button")[a
   if(q.get("erro")) document.getElementById("m-erro").classList.add("on");
   else if(q.get("entrar")) document.getElementById("m-entrar").classList.add("on");
   if(q.get("erro") || q.get("entrar")) document.getElementById("usuario").focus();
+})();
+</script>
+<dialog class="contato" id="contato" aria-labelledby="ct-t">
+  <form class="ct-in" id="ct-form" novalidate>
+    <div class="ct-top"><h2 id="ct-t" data-c="t">Pedir acesso ao Rival Pulse</h2><button type="button" class="ct-x" id="ct-x" data-c-aria="fechar" aria-label="Fechar">×</button></div>
+    <p class="sub" data-c="sub">Conte quem você é e qual vertical quer acompanhar. A Cassi.ai responde por e-mail.</p>
+    <div class="msg err" id="ct-erro" role="alert"></div>
+    <div class="ct-grid">
+      <label for="ct-nome"><span data-c="nome">Nome</span><input id="ct-nome" name="nome" autocomplete="name" required maxlength="120"></label>
+      <label for="ct-empresa"><span data-c="empresa">Empresa</span><input id="ct-empresa" name="empresa" autocomplete="organization" maxlength="160"></label>
+      <label for="ct-email"><span data-c="email">E-mail de trabalho</span><input id="ct-email" name="email" type="email" autocomplete="email" required maxlength="160"></label>
+      <label for="ct-tel"><span data-c="tel">Telefone (opcional)</span><input id="ct-tel" name="telefone" type="tel" autocomplete="tel" maxlength="40"></label>
+      <label for="ct-vertical" class="full"><span data-c="vertical">Vertical de interesse</span><select id="ct-vertical" name="vertical" required></select></label>
+      <label for="ct-msg" class="full"><span data-c="msg">Mensagem (opcional)</span><textarea id="ct-msg" name="mensagem" maxlength="2000" data-c-ph="msgph" placeholder="Marcas, cidades ou perguntas que você quer responder"></textarea></label>
+      <label class="hp" aria-hidden="true">Site<input name="site" tabindex="-1" autocomplete="off"></label>
+    </div>
+    <button class="btn" type="submit" id="ct-enviar" data-c="enviar">Enviar pedido</button>
+  </form>
+  <div class="ct-in ct-ok" id="ct-ok" hidden>
+    <span class="v" aria-hidden="true">✓</span>
+    <h2 data-c="okt">Pedido enviado</h2>
+    <p class="sub" data-c="okx">Obrigado. A Cassi.ai responde no e-mail informado.</p>
+    <button type="button" class="btn ghost" id="ct-fim" data-c="fechar">Fechar</button>
+  </div>
+</dialog>
+<script>
+(function(){
+var l = null;
+try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
+l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
+if (["pt","es","en"].indexOf(l) < 0) l = "pt";
+var T = {
+  pt:{t:"Pedir acesso ao Rival Pulse",sub:"Conte quem você é e qual vertical quer acompanhar. A Cassi.ai responde por e-mail.",nome:"Nome",empresa:"Empresa",email:"E-mail de trabalho",tel:"Telefone (opcional)",vertical:"Vertical de interesse",escolha:"Escolha uma vertical",outra:"Outra vertical",msg:"Mensagem (opcional)",msgph:"Marcas, cidades ou perguntas que você quer responder",enviar:"Enviar pedido",enviando:"Enviando…",okt:"Pedido enviado",okx:"Obrigado. A Cassi.ai responde no e-mail informado.",fechar:"Fechar",campos:"Preencha nome, e-mail válido e vertical.",falha:"O envio direto não funcionou agora. Abrimos o seu e-mail com a mensagem pronta para cassiano@cassiai.com.",assunto:"Rival Pulse · pedido de acesso"},
+  es:{t:"Solicitar acceso a Rival Pulse",sub:"Cuéntenos quién es y qué vertical quiere seguir. Cassi.ai responde por correo.",nome:"Nombre",empresa:"Empresa",email:"Correo de trabajo",tel:"Teléfono (opcional)",vertical:"Vertical de interés",escolha:"Elija una vertical",outra:"Otra vertical",msg:"Mensaje (opcional)",msgph:"Marcas, ciudades o preguntas que quiere responder",enviar:"Enviar solicitud",enviando:"Enviando…",okt:"Solicitud enviada",okx:"Gracias. Cassi.ai responde al correo informado.",fechar:"Cerrar",campos:"Complete nombre, un correo válido y la vertical.",falha:"El envío directo no funcionó ahora. Abrimos su correo con el mensaje listo para cassiano@cassiai.com.",assunto:"Rival Pulse · solicitud de acceso"},
+  en:{t:"Request access to Rival Pulse",sub:"Tell us who you are and which vertical you want to track. Cassi.ai replies by email.",nome:"Name",empresa:"Company",email:"Work email",tel:"Phone (optional)",vertical:"Vertical of interest",escolha:"Choose a vertical",outra:"Other vertical",msg:"Message (optional)",msgph:"Brands, cities or questions you want answered",enviar:"Send request",enviando:"Sending…",okt:"Request sent",okx:"Thank you. Cassi.ai will reply to the email you provided.",fechar:"Close",campos:"Fill in your name, a valid email and the vertical.",falha:"Direct sending did not work right now. We opened your email app with the message ready for cassiano@cassiai.com.",assunto:"Rival Pulse · access request"}
+}[l];
+var dlg = document.getElementById("contato"), form = document.getElementById("ct-form"), ok = document.getElementById("ct-ok");
+var erro = document.getElementById("ct-erro"), btn = document.getElementById("ct-enviar"), sel = document.getElementById("ct-vertical");
+document.querySelectorAll("[data-c]").forEach(function(e){ e.textContent = T[e.getAttribute("data-c")]; });
+document.querySelectorAll("[data-c-ph]").forEach(function(e){ e.placeholder = T[e.getAttribute("data-c-ph")]; });
+document.getElementById("ct-x").setAttribute("aria-label", T.fechar);
+function opcoes(){
+  // nomes das verticais ja traduzidos pela pagina
+  var nomes = [].map.call(document.querySelectorAll(".vt:not(.sua) h3"), function(h){ return h.textContent.trim(); });
+  sel.innerHTML = '<option value="">' + T.escolha + '</option>' + nomes.concat([T.outra]).map(function(n){ var o = document.createElement("option"); o.value = n; o.textContent = n; return o.outerHTML; }).join("");
+}
+function abrir(e){
+  if (e) e.preventDefault();
+  opcoes();
+  form.hidden = false; ok.hidden = true; erro.classList.remove("on");
+  if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+  document.getElementById("ct-nome").focus();
+}
+function fechar(){ if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
+document.querySelectorAll("[data-contato]").forEach(function(a){ a.addEventListener("click", abrir); });
+if (location.hash === "#contato") setTimeout(abrir, 300);
+document.getElementById("ct-x").addEventListener("click", fechar);
+document.getElementById("ct-fim").addEventListener("click", fechar);
+dlg.addEventListener("click", function(e){ if (e.target === dlg) fechar(); });
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  var d = {}; new FormData(form).forEach(function(v, k){ d[k] = String(v).trim(); });
+  d.idioma = l;
+  if (!d.nome || !d.vertical || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) { erro.textContent = T.campos; erro.classList.add("on"); return; }
+  erro.classList.remove("on");
+  btn.disabled = true; btn.textContent = T.enviando;
+  fetch("/api/contato", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(d)})
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok && j.ok, j:j}; }); })
+    .catch(function(){ return {ok:false, j:{erro:"rede"}}; })
+    .then(function(res){
+      btn.disabled = false; btn.textContent = T.enviar;
+      if (res.ok) { form.hidden = true; ok.hidden = false; form.reset(); document.getElementById("ct-fim").focus(); return; }
+      if (res.j && res.j.erro === "campos") { erro.textContent = T.campos; erro.classList.add("on"); return; }
+      var corpo = [T.nome + ": " + d.nome, T.empresa + ": " + (d.empresa || "-"), T.email + ": " + d.email, T.tel + ": " + (d.telefone || "-"), T.vertical + ": " + d.vertical, "", d.mensagem || ""].join("\n");
+      erro.textContent = T.falha; erro.classList.add("on");
+      location.href = "mailto:cassiano@cassiai.com?subject=" + encodeURIComponent(T.assunto + " · " + d.vertical) + "&body=" + encodeURIComponent(corpo);
+    });
+});
 })();
 </script>
 </body>
