@@ -205,6 +205,37 @@ footer img{height:20px;display:block}
 .dstack i{display:block;height:100%}
 .dheat{display:grid;grid-template-columns:34px repeat(14,minmax(0,1fr));gap:3px;font:500 10px "Instrument Sans",sans-serif;color:var(--d-ink3)}
 .dheat i{aspect-ratio:1;border-radius:4px;display:block}
+.demo-rail .demo-play{margin-top:auto;width:40px;height:40px;border:0;border-radius:14px;background:rgba(255,255,255,.07);color:#C7CDD4;display:grid;place-items:center;cursor:pointer}
+.demo-play:hover{background:rgba(255,255,255,.14);color:#fff}
+.demo-play svg{width:16px;height:16px}
+.demo-prog{height:4px;border-radius:999px;background:#DADDE2;overflow:hidden;margin:-4px 0 12px}
+.demo-prog i{display:block;height:100%;width:100%;background:var(--d-ink);border-radius:999px;transform-origin:left;transform:scaleX(0)}
+.demo-prog i.corre{animation:demo-prog linear forwards}
+.demo.pausa .demo-prog i{animation-play-state:paused}
+@keyframes demo-prog{to{transform:scaleX(1)}}
+.demo-beta{font:700 10px "Instrument Sans",sans-serif;letter-spacing:.06em;text-transform:uppercase;background:var(--d-ink);color:var(--d-lime);border-radius:999px;padding:2px 8px;vertical-align:4px;margin-left:6px}
+.chat{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:12px}
+.chat-log{display:flex;flex-direction:column;gap:12px;min-height:300px}
+.msg-u{align-self:flex-end;max-width:78%;background:var(--d-ink);color:#fff;border-radius:18px 18px 4px 18px;padding:10px 14px;font:500 13.5px/1.45 "Instrument Sans",sans-serif;animation:demo-entra .4s both}
+.msg-a{display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;align-items:start;animation:demo-entra .4s .3s both}
+.msg-a .av{width:32px;height:32px;border-radius:11px;background:var(--d-lime);display:grid;place-items:center}
+.msg-a .av svg{width:17px;height:17px}
+.msg-a .bx{background:var(--d-sunk);border-radius:4px 18px 18px 18px;padding:12px 14px;font:400 13.5px/1.55 "Instrument Sans",sans-serif;min-height:44px}
+.msg-a .bx b{font-weight:600}
+.msg-a .bx ul{margin:6px 0 0;padding-left:18px}
+.digit{display:inline-flex;gap:4px}
+.digit i{width:6px;height:6px;border-radius:50%;background:var(--d-ink3);animation:demo-pula 1s infinite}
+.digit i:nth-child(2){animation-delay:.15s}.digit i:nth-child(3){animation-delay:.3s}
+@keyframes demo-pula{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+.fonte{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.fonte span{font:500 11px "Courier Prime",monospace;background:var(--d-panel);border-radius:999px;padding:3px 9px;color:var(--d-ink2)}
+.chat-in{display:flex;gap:8px;align-items:center;background:var(--d-sunk);border-radius:999px;padding:6px 6px 6px 16px;margin-top:auto;font:400 13px "Instrument Sans",sans-serif;color:var(--d-ink3)}
+.chat-in span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-in b{width:34px;height:34px;border-radius:50%;background:var(--d-ink);color:var(--d-lime);display:grid;place-items:center;flex:none}
+.sug{display:grid;gap:8px;align-content:start}
+.sug span{background:var(--d-sunk);border-radius:14px;padding:9px 12px;font:500 12.5px/1.4 "Instrument Sans",sans-serif}
+.sug .ctx{background:transparent;border:1px dashed #C9CED6;color:var(--d-ink3);font-weight:400}
+@media (max-width:860px){.chat{grid-template-columns:minmax(0,1fr)}.demo-rail .demo-play{margin-top:0}}
 @media (max-width:860px){.demo{grid-template-columns:minmax(0,1fr)}.demo-rail{flex-direction:row;justify-content:center;padding:8px}.demo-logo{display:none}.demo-tabs{flex-direction:row}.demo-g3,.demo-g2{grid-template-columns:minmax(0,1fr)}.dbar{grid-template-columns:96px minmax(0,1fr) 40px}}
 @media (prefers-reduced-motion:reduce){.demo *{animation:none!important;transition:none!important}.dline{stroke-dashoffset:0}}
 </style>
@@ -294,10 +325,10 @@ footer img{height:20px;display:block}
     <section id="exemplos" aria-labelledby="t-exemplos">
       <div class="sec-head">
         <div><span class="label" data-t="x1">Veja por dentro</span><h2 id="t-exemplos" data-t="x2">O painel, aba por aba, com dados ilustrativos.</h2></div>
-        <p data-t="x3">Marcas e números abaixo são exemplos. No projeto, cada gráfico mostra as suas lojas e as da concorrência, com os filtros de dia, local, estrelas, tema e período.</p>
+        <p data-t="x3">Os exemplos passam sozinhos: pare o mouse em cima para ler com calma. Marcas e números são ilustrativos. No projeto, cada gráfico mostra as suas lojas e as da concorrência, com os filtros de dia, local, estrelas, tema e período.</p>
       </div>
       <div class="demo" id="demo">
-        <div class="demo-rail"><span class="demo-logo" role="img" aria-label="Cassi.ai"></span><div class="demo-tabs" role="tablist" aria-label="Exemplos" id="demo-tabs"><span class="demo-gota" id="demo-gota" aria-hidden="true"></span></div></div>
+        <div class="demo-rail"><span class="demo-logo" role="img" aria-label="Cassi.ai"></span><div class="demo-tabs" role="tablist" aria-label="Exemplos" id="demo-tabs"><span class="demo-gota" id="demo-gota" aria-hidden="true"></span></div><button type="button" class="demo-play" id="demo-play"></button></div>
         <div class="demo-main" role="tabpanel" id="demo-main" aria-live="polite"></div>
       </div>
     </section>
@@ -541,7 +572,7 @@ var DIC = {
 "f2": "Contraseña",
 "x1": "Véalo por dentro",
 "x2": "El panel, pestaña por pestaña, con datos ilustrativos.",
-"x3": "Las marcas y los números de abajo son ejemplos. En el proyecto, cada gráfico muestra sus tiendas y las de la competencia, con los filtros de día, lugar, estrellas, tema y período."
+"x3": "Los ejemplos avanzan solos: pase el mouse por encima para leer con calma. Las marcas y los números son ilustrativos. En el proyecto, cada gráfico muestra sus tiendas y las de la competencia, con los filtros de día, lugar, estrellas, tema y período."
 },
 "en": {
 "t0": "Sign in",
@@ -651,7 +682,7 @@ var DIC = {
 "f2": "Password",
 "x1": "Take a look inside",
 "x2": "The dashboard, tab by tab, with illustrative data.",
-"x3": "Brands and numbers below are examples. In a project, every chart shows your stores and your competitors’, with filters for day, location, stars, topic and period."
+"x3": "The examples play on their own: hover to read at your pace. Brands and numbers are illustrative. In a project, every chart shows your stores and your competitors’, with filters for day, location, stars, topic and period."
 }
 };
 var META = {"es": {"title": "Rival Pulse · Cassi.ai", "desc": "Inteligencia de tiendas físicas a partir de datos públicos: afluencia por hora, reputación y voz del cliente, tienda por tienda, con la competencia lado a lado.", "nome": "Números del proyecto piloto", "cassi": "Cassi.ai: abrir el sitio", "lang": "Idioma", "assunto": "Rival%20Pulse%20%C2%B7%20quiero%20conocerla"}, "en": {"title": "Rival Pulse · Cassi.ai", "desc": "Physical store intelligence from public data: hourly busyness, reputation and voice of the customer, store by store, with competitors side by side.", "nome": "Pilot project figures", "cassi": "Cassi.ai: open the website", "lang": "Language", "assunto": "Rival%20Pulse%20%C2%B7%20I%20want%20to%20learn%20more"}};
@@ -695,6 +726,7 @@ var ICO = {
   geral:'<path d="M3.5 3.5h7v7h-7zM13.5 3.5h7v4.5h-7zM13.5 11h7v9.5h-7zM3.5 13.5h7v7h-7z"/>',
   mov:'<path d="M3 13h3.5l2.5-7 4 13 2.8-8H21"/>',
   rep:'<path d="M12 3.6l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6L12 16.2 6.9 19l1.1-5.6-4.2-3.9 5.7-.7z"/>',
+  ia:'<path d="M12 3.5l1.6 4.4 4.4 1.6-4.4 1.6L12 15.5l-1.6-4.4L6 9.5l4.4-1.6z"/><path d="M18.5 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
   voz:'<path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8.5A1.5 1.5 0 0 1 19 17H10l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 5 5.5z"/>'
 };
 // Dados ilustrativos (nao sao de nenhuma rede real)
@@ -783,28 +815,88 @@ var ABAS = [
     var bloco = function(lista, max){ return lista.map(function(t){ return '<div style="display:grid;gap:5px;margin-bottom:10px"><b style="font:600 12.5px Instrument Sans,sans-serif">' + t.n + '</b>' + t.v.map(function(v, i){ return barra('<span style="display:inline-flex;align-items:center">' + sw(i, 9) + M[i] + '</span>', v, max, COR[i], pct); }).join("") + '</div>'; }).join(""); };
     return '<div class="demo-g2"><div class="dp"><h4>' + L("Quanto se fala de cada tema","Cuánto se habla de cada tema","How much each topic comes up") + '</h4><p class="ds">' + L("Parcela das avaliações com texto que citam o tema.","Proporción de reseñas con texto que mencionan el tema.","Share of text reviews that mention the topic.") + '</p>' + bloco(TEMAS.slice(0, 3), 50) + '</div>' +
       '<div class="dp"><h4>' + L("Quando o tema aparece, quanto é reclamação","Cuando el tema aparece, cuánto es queja","When a topic comes up, how much is a complaint") + '</h4><p class="ds">' + L("Menções com nota 1 ou 2.","Menciones con nota 1 o 2.","Mentions with 1 or 2 stars.") + '</p>' + bloco(RECL, 100) + '</div></div>';
-  }}
+  }},
+  {id:"ia", beta:true, tempo:13000, nome:L("Analista IA","Analista IA","AI analyst"), f:function(){
+    var sug = [L("Onde a Marca B perde para a Marca A no mesmo local?","¿Dónde pierde la Marca B frente a la Marca A en el mismo lugar?","Where does Brand B lose to Brand A at the same location?"),
+               L("Em que dia e horário cada marca precisa de mais gente no caixa?","¿Qué día y a qué hora necesita cada marca más personal en caja?","On which day and hour does each brand need more checkout staff?"),
+               L("Resuma as reclamações sobre preço, marca a marca.","Resuma las quejas sobre precio, marca por marca.","Summarize price complaints, brand by brand.")];
+    return '<div class="chat"><div class="dp" style="display:flex;flex-direction:column;gap:12px"><h4>' + L("Pergunte ao painel","Pregunte al panel","Ask the dashboard") + '<span class="demo-beta">' + L("em breve","próximamente","coming soon") + '</span></h4>' +
+      '<div class="chat-log"><div class="msg-u">' + L("Por que a Marca B tem mais notas 1 e 2 que as outras?","¿Por qué la Marca B tiene más notas 1 y 2 que las demás?","Why does Brand B get more 1 and 2 star reviews than the others?") + '</div>' +
+      '<div class="msg-a"><span class="av"><svg viewBox="0 0 24 24" fill="none" stroke="#0F1318" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">' + ICO.ia + '</svg></span><div class="bx" id="demo-resp"><span class="digit" aria-label="' + L("digitando","escribiendo","typing") + '"><i></i><i></i><i></i></span></div></div></div>' +
+      '<div class="chat-in"><span>' + L("Escreva sua pergunta sobre o recorte filtrado…","Escriba su pregunta sobre la selección filtrada…","Ask about the filtered selection…") + '</span><b aria-hidden="true">↑</b></div></div>' +
+      '<div class="sug"><div class="dp" style="display:grid;gap:8px"><h4>' + L("Sugestões","Sugerencias","Suggestions") + '</h4>' + sug.map(function(t){ return '<span>' + t + '</span>'; }).join("") +
+      '<span class="ctx">' + L("A IA responde só com os números e trechos que passam nos filtros da tela.","La IA responde solo con los números y fragmentos que pasan los filtros de la pantalla.","The AI answers only with the numbers and excerpts that pass the on-screen filters.") + '</span></div></div></div>';
+  }, depois:function(){
+    var alvo = document.getElementById("demo-resp");
+    var html = L(
+      '<b>Fila e caixa explicam a maior parte.</b> Na Marca B, 13,1% das avaliações são nota 1 ou 2, contra 9,4% da Marca A e 6,8% da Marca C.<ul><li>Quando fila aparece, 78% das menções são reclamação (Marca A 62%, Marca C 49%).</li><li>O pico de sábado às 18h coincide com as queixas de espera.</li><li>A Marca B responde só 12% das notas baixas; a Marca C responde 67%.</li></ul>',
+      '<b>Las filas y la caja explican la mayor parte.</b> En la Marca B, el 13,1% de las reseñas son nota 1 o 2, frente al 9,4% de la Marca A y el 6,8% de la Marca C.<ul><li>Cuando aparecen las filas, el 78% de las menciones son quejas (Marca A 62%, Marca C 49%).</li><li>El pico del sábado a las 18h coincide con las quejas por espera.</li><li>La Marca B responde solo el 12% de las notas bajas; la Marca C responde el 67%.</li></ul>',
+      '<b>Queues and checkout explain most of it.</b> At Brand B, 13.1% of reviews are 1 or 2 stars, versus 9.4% at Brand A and 6.8% at Brand C.<ul><li>When queues come up, 78% of mentions are complaints (Brand A 62%, Brand C 49%).</li><li>The Saturday 6pm peak matches the waiting complaints.</li><li>Brand B replies to only 12% of low ratings; Brand C replies to 67%.</li></ul>');
+    var fonte = '<div class="fonte"><span>' + L("fonte: 2.140 avaliações filtradas","fuente: 2.140 reseñas filtradas","source: 2,140 filtered reviews") + '</span><span>' + L("temas: fila e caixa","temas: filas y caja","topics: queues and checkout") + '</span></div>';
+    var tmp = document.createElement("div"); tmp.innerHTML = html;
+    var texto = tmp.textContent, n = 0;
+    var t0 = setTimeout(function(){
+      if (!alvo.isConnected) return;
+      var passo = setInterval(function(){
+        if (!alvo.isConnected) { clearInterval(passo); return; }
+        n += 3;
+        if (n >= texto.length) { clearInterval(passo); alvo.innerHTML = html + fonte; return; }
+        alvo.textContent = texto.slice(0, n);
+      }, 22);
+      limpar.push(function(){ clearInterval(passo); });
+    }, 1300);
+    limpar.push(function(){ clearTimeout(t0); });
+  }},
 ];
 var tabs = document.getElementById("demo-tabs"), main = document.getElementById("demo-main"), gota = document.getElementById("demo-gota");
 if (!tabs) return;
-var atual = 0;
+var atual = 0, limpar = [];
+var demo = document.getElementById("demo"), play = document.getElementById("demo-play");
+var calmo = matchMedia("(prefers-reduced-motion: reduce)").matches;
+var tocando = !calmo, visivel = false, sobre = false, timer = null;
+var ICO_PAUSA = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+var ICO_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>';
+function agenda(){
+  clearTimeout(timer);
+  var ativo = tocando && visivel && !sobre;
+  demo.classList.toggle("pausa", !ativo);
+  play.innerHTML = tocando ? ICO_PAUSA : ICO_PLAY;
+  play.setAttribute("aria-label", tocando ? L("Pausar exemplos","Pausar ejemplos","Pause examples") : L("Passar exemplos sozinho","Pasar ejemplos solo","Autoplay examples"));
+  play.title = play.getAttribute("aria-label");
+  var barra = main.querySelector(".demo-prog i");
+  if (barra && !tocando) barra.classList.remove("corre");
+  if (!ativo) return;
+  var resta = barra ? (ABAS[atual].tempo || 7000) * (1 - (barra.getBoundingClientRect().width / barra.parentNode.getBoundingClientRect().width)) : 7000;
+  if (barra && !barra.classList.contains("corre")) { barra.style.animationDuration = (ABAS[atual].tempo || 7000) + "ms"; barra.classList.add("corre"); resta = ABAS[atual].tempo || 7000; }
+  timer = setTimeout(function(){ mostra((atual + 1) % ABAS.length); }, Math.max(200, resta));
+}
+play.addEventListener("click", function(){ tocando = !tocando; if (tocando) mostra(atual); else agenda(); });
+demo.addEventListener("mouseenter", function(){ sobre = true; agenda(); });
+demo.addEventListener("mouseleave", function(){ sobre = false; agenda(); });
+demo.addEventListener("focusin", function(){ sobre = true; agenda(); });
+demo.addEventListener("focusout", function(){ sobre = false; agenda(); });
+if ("IntersectionObserver" in window) new IntersectionObserver(function(es){ visivel = es[0].isIntersecting; agenda(); }, {threshold:.35}).observe(demo);
+else visivel = true;
 function mostra(i, foco){
+  limpar.forEach(function(f){ f(); }); limpar = [];
   atual = i;
   [].forEach.call(tabs.querySelectorAll("button"), function(b, k){ b.setAttribute("aria-selected", String(k === i)); b.tabIndex = k === i ? 0 : -1; if (k === i && foco) b.focus(); });
   var b = tabs.querySelectorAll("button")[i];
   gota.style.transform = "translate(" + b.offsetLeft + "px," + b.offsetTop + "px)";
-  main.innerHTML = '<div class="demo-top"><span class="demo-t">' + ABAS[i].nome + '</span><div class="demo-leg">' + M.map(function(m, k){ return '<span>' + sw(k) + m + '</span>'; }).join("") + '<span class="demo-ilus">' + L("dados ilustrativos","datos ilustrativos","illustrative data") + '</span></div></div><div class="demo-body">' + ABAS[i].f() + '</div>';
+  main.innerHTML = '<div class="demo-prog" aria-hidden="true"><i></i></div><div class="demo-top"><span class="demo-t">' + ABAS[i].nome + (ABAS[i].beta ? '<span class="demo-beta">Beta</span>' : '') + '</span><div class="demo-leg">' + M.map(function(m, k){ return '<span>' + sw(k) + m + '</span>'; }).join("") + '<span class="demo-ilus">' + L("dados ilustrativos","datos ilustrativos","illustrative data") + '</span></div></div><div class="demo-body">' + ABAS[i].f() + '</div>';
+  if (ABAS[i].depois) ABAS[i].depois();
+  agenda();
 }
 ABAS.forEach(function(a, i){
   var b = document.createElement("button");
   b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-label", a.nome); b.title = a.nome;
   b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICO[a.id] + '</svg>';
-  b.addEventListener("click", function(){ mostra(i); });
-  b.addEventListener("keydown", function(e){ var d = {ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key]; if (d) { e.preventDefault(); mostra((atual + d + ABAS.length) % ABAS.length, true); } });
+  b.addEventListener("click", function(){ tocando = false; mostra(i); });
+  b.addEventListener("keydown", function(e){ var d = {ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key]; if (d) { e.preventDefault(); tocando = false; mostra((atual + d + ABAS.length) % ABAS.length, true); } });
   tabs.appendChild(b);
 });
 mostra(0);
-addEventListener("resize", function(){ mostra(atual); });
+addEventListener("resize", function(){ var b = tabs.querySelectorAll("button")[atual]; gota.style.transform = "translate(" + b.offsetLeft + "px," + b.offsetTop + "px)"; });
 })();
 </script>
 <script>
