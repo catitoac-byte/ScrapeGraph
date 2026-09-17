@@ -201,5 +201,19 @@
     "pergunta_local": "Em qual bairro a concorrência atende melhor que a minha loja?",
     "comparacao_local": "A matriz por local separa lojas de shopping e de rua, bairro a bairro.",
     "usuario": "atacarejo"
-  }
+  },
+  "cores": {
+    "light": [
+      "#CF0A1E",
+      "#F37021",
+      "#254F9B"
+    ],
+    "dark": [
+      "#C8303E",
+      "#D9781E",
+      "#4C82DA"
+    ],
+    "origem": "Costa vermelho do logo (#CF0A1E); Assai laranja do logo 2024 (#F37021); Carrefour azul do logo do grupo (#254F9B)"
+  },
+  "periodo_mensal_desde": "2026-01"
 }

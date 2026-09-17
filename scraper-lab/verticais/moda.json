@@ -105,5 +105,18 @@
     "pergunta_local": "Onde eu perco para o concorrente no mesmo shopping?",
     "comparacao_local": "A matriz por local põe frente a frente lojas do mesmo shopping.",
     "usuario": "vitrine"
+  },
+  "cores": {
+    "light": [
+      "#2F6FD0",
+      "#D72027",
+      "#169C83"
+    ],
+    "dark": [
+      "#3A78DC",
+      "#DE3B40",
+      "#17A88C"
+    ],
+    "origem": "C&A azul do logo de 1998 (#052E5E, o atual e preto); Renner vermelho do logo (#D72027); Riachuelo verde do logo 2026 (#0C2E2D), clareado para leitura"
   }
 }

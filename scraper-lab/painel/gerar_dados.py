@@ -80,6 +80,7 @@ def main(vertical: str) -> None:
                 "s": sid, "e": a["estrelas"], "t": a["texto"], "m": meses(a["data_estimada"], hoje),
                 "d": a["data_relativa"], "r": 1 if a["resposta_proprietario"] else 0,
                 "g": 1 if "Local Guide" in a["autor_info"] else 0, "f": a["fotos"],
+                "a": a["data_estimada"][:7],
             })
     # O Google usa "Shopping X" como bairro em algumas fichas: herda o bairro
     # de outra loja do mesmo shopping
@@ -92,6 +93,7 @@ def main(vertical: str) -> None:
              "vertical": cfg["id"], "titulo": cfg["titulo"],
              "marcas": [m["nome"] for m in cfg["marcas"]], "temas": cfg["temas"],
              "destaque_tema": cfg.get("destaque_tema"), "destaque_texto": cfg.get("destaque_texto"),
+             "cores": cfg.get("cores"), "periodo_mensal_desde": cfg.get("periodo_mensal_desde"),
              "ordenacao": "mais recentes" if ordens == {"mais recentes"} else "relevancia",
              "lojas": saida_lojas, "avaliacoes": avaliacoes}
     destino = SAIDA / "painel" / cfg["id"]
