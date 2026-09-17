@@ -890,8 +890,37 @@ function Lojas({lojas,revs,amostra,dia}){
   const W=620,H=440;
   const px = v => (v-box.c)/(box.d-box.c)*W;
   const py = v => (box.b-v)/(box.b-box.a)*H;
-  const grupos = {};
-  lojas.forEach(l=>{ (grupos[l.shopping] ||= []).push(l); });
+  // Agrupa por distancia real (cerca de 400 m), nao pelo nome do local:
+  // lojas de redes diferentes no mesmo bairro podem estar longe uma da outra
+  const grupos = [];
+  lojas.forEach(l=>{
+    const g = grupos.find(g=>Math.hypot(g.lat-l.lat, g.lng-l.lng) < 0.0036);
+    if(g){ g.ls.push(l); } else grupos.push({lat:l.lat, lng:l.lng, ls:[l]});
+  });
+  // Rotulos sem sobreposicao: tenta posicoes em volta do ponto e, sem espaco,
+  // afasta o texto com uma linha ate o ponto
+  const nomeCurto = t => t.replace(/^Rua · /,"").replace(/^Loja de rua · /,"");
+  const larg = t => t.length*6.4 + 6, ALT = 15;
+  const caixas = [];
+  const colide = b => b.x<-16||b.x+b.w>W+16||b.y<2||b.y+b.h>H-2|| caixas.some(c=>b.x<c.x+c.w&&b.x+b.w>c.x&&b.y<c.y+c.h&&b.y+b.h>c.y)
+    || grupos.some(g=>{const x=px(g.lng),y=py(g.lat); return x>b.x-9&&x<b.x+b.w+9&&y>b.y-9&&y<b.y+b.h+9;});
+  const rotulos = [...grupos].sort((a,b)=>b.lat-a.lat).map((g,gi)=>{
+    const cx=px(g.lng), cy=py(g.lat);
+    const texto=[...new Set(g.ls.map(l=>nomeCurto(l.shopping)))].join(" / ");
+    const w=larg(texto);
+    const tentativas=[];
+    for(const d of [0,22,44,66]){
+      tentativas.push({x:cx+18+d, y:cy-ALT/2, a:"start"},{x:cx-18-d-w, y:cy-ALT/2, a:"end"},
+        {x:cx-w/2, y:cy-26-d, a:"middle"},{x:cx-w/2, y:cy+14+d, a:"middle"},
+        {x:cx+14+d, y:cy-24-d, a:"start"},{x:cx-14-d-w, y:cy+10+d, a:"end"});
+    }
+    let esc=tentativas.find(t=>!colide({x:t.x,y:t.y,w,h:ALT})) || tentativas[0];
+    caixas.push({x:esc.x,y:esc.y,w,h:ALT});
+    const tx = esc.a==="start"?esc.x:esc.a==="end"?esc.x+w:esc.x+w/2;
+    const ty = esc.y+ALT-4;
+    const ax = Math.min(Math.max(cx, esc.x), esc.x+w), ay = Math.min(Math.max(cy, esc.y), esc.y+ALT);
+    return {id:"g"+gi, ls:g.ls, cx, cy, texto, tx, ty, anchor:esc.a, ax, ay, puxado:Math.hypot(ax-cx, ay-cy)>24};
+  });
   const [hov,setHov] = useState(null);
   const rows = lojas.map(l=>{
     const st = revStats(revs.filter(r=>r.s===l.id));
@@ -905,7 +934,7 @@ function Lojas({lojas,revs,amostra,dia}){
   return html`<div>
     <div class="grid g21">
       <section class="panel">
-        <div class="ph"><div><h2>Onde estão as lojas</h2><p class="sub">Posição real em Goiânia, sem mapa de fundo. Lojas do mesmo local ficam agrupadas.</p></div>
+        <div class="ph"><div><h2>Onde estão as lojas</h2><p class="sub">Posição real das lojas, sem mapa de fundo. Lojas a menos de 400 m umas das outras ficam agrupadas num só ponto. Passe o mouse no ponto para ver a marca.</p></div>
           <div class="legend">${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}</span>`)}</div></div>
         <div class="mapbox tablewrap">
           <svg viewBox=${`-20 -10 ${W+40} ${H+20}`} style=${{width:"100%",minWidth:420,display:"block"}} role="img" aria-label="Mapa esquemático das lojas em Goiânia">
@@ -914,17 +943,15 @@ function Lojas({lojas,revs,amostra,dia}){
             <text class="city" x=${W-8} y=${H-10} text-anchor="end">GOIÂNIA · GO</text>
             <text x="4" y="12">${fmt(box.b,3)}°</text>
             <text x="4" y=${H-4}>${fmt(box.a,3)}°</text>
-            ${Object.entries(grupos).map(([s,ls])=>{
-              const cx = ls.reduce((a,l)=>a+px(l.lng),0)/ls.length, cy = ls.reduce((a,l)=>a+py(l.lat),0)/ls.length;
-              const esquerda = cx > W*0.62;
-              return html`<g key=${s} onMouseEnter=${()=>setHov(s)} onMouseLeave=${()=>setHov(null)} style=${{cursor:"default"}}>
-                <circle cx=${cx} cy=${cy} r="30" fill=${hov===s?"var(--chip)":"transparent"} />
-                ${ls.map((l,i)=>{const ang = (i/ls.length)*Math.PI*2 - Math.PI/2; const r=ls.length>1?11:0; const x=cx+Math.cos(ang)*r, y=cy+Math.sin(ang)*r;
-                  return MI[l.marca]===0 ? html`<circle key=${l.id} cx=${x} cy=${y} r="7" fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"/>`
-                    : MI[l.marca]===1 ? html`<rect key=${l.id} x=${x-6.5} y=${y-6.5} width="13" height="13" rx="2" fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"/>`
-                    : html`<path key=${l.id} d=${`M${x},${y-8} L${x+7.5},${y+6} L${x-7.5},${y+6} Z`} fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"/>`;})}
-                <text class="shop" x=${esquerda?cx-26:cx+26} y=${cy+4} text-anchor=${esquerda?"end":"start"}>${s}</text>
-              </g>`;})}
+            ${rotulos.map(g=>html`<g key=${g.id} onMouseEnter=${()=>setHov(g.id)} onMouseLeave=${()=>setHov(null)} style=${{cursor:"default"}}>
+                <circle cx=${g.cx} cy=${g.cy} r="30" fill=${hov===g.id?"var(--chip)":"transparent"} />
+                ${g.puxado && html`<line x1=${g.cx} y1=${g.cy} x2=${g.ax} y2=${g.ay} stroke="var(--line-2)" stroke-width="1"/>`}
+                ${g.ls.map((l,i)=>{const ang = (i/g.ls.length)*Math.PI*2 - Math.PI/2; const r=g.ls.length>1?11:0; const x=g.cx+Math.cos(ang)*r, y=g.cy+Math.sin(ang)*r;
+                  return MI[l.marca]===0 ? html`<circle key=${l.id} cx=${x} cy=${y} r="7" fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${l.shopping}</title></circle>`
+                    : MI[l.marca]===1 ? html`<rect key=${l.id} x=${x-6.5} y=${y-6.5} width="13" height="13" rx="2" fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${l.shopping}</title></rect>`
+                    : html`<path key=${l.id} d=${`M${x},${y-8} L${x+7.5},${y+6} L${x-7.5},${y+6} Z`} fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${l.shopping}</title></path>`;})}
+                <text class="shop" x=${g.tx} y=${g.ty} text-anchor=${g.anchor} paint-order="stroke" stroke="var(--panel-2)" stroke-width="4" stroke-linejoin="round">${g.texto}</text>
+              </g>`)}
           </svg>
         </div>
       </section>
