@@ -990,7 +990,7 @@ var ABAS = [
       [L("Shopping Norte","Centro Comercial Norte","North Mall"), L("Rua · Centro","Calle · Centro","Street · Downtown"), L("Shopping Sul","Centro Comercial Sur","South Mall")].map(function(loc){ var n = LJ.filter(function(l){ return l.loc === loc; }).length; return barra(loc, n, 3, "var(--d-ink)", function(v){ return v + "/3"; }); }).join("") + '</div></div></div>' +
       '<div class="dp"><h4>' + L("Nota de cada loja, com endereço","Nota de cada tienda, con dirección","Each store’s rating, with address") + '</h4><p class="ds">' + L("Ordene por qualquer coluna no painel real. O horário é o de hoje.","En el panel real puede ordenar por cualquier columna. El horario es el de hoy.","Sort by any column in the real dashboard. Hours shown are today’s.") + '</p><div class="dtab-w"><table class="dtab"><thead><tr><th>' + L("Marca","Marca","Brand") + '</th><th>' + L("Local e endereço","Lugar y dirección","Location and address") + '</th><th>' + L("Nota","Nota","Rating") + '</th><th>' + L("Avaliações","Reseñas","Reviews") + '</th><th>' + L("Hoje","Hoy","Today") + '</th></tr></thead><tbody>' + linhasT + '</tbody></table></div></div>';
   }},
-  {id:"ia", beta:true, tempo:13000, nome:L("Analista IA","Analista IA","AI analyst"), f:function(){
+  {id:"ia", beta:true, tempo:6500, nome:L("Analista IA","Analista IA","AI analyst"), f:function(){
     var sug = [L("Onde a Marca B perde para a Marca A no mesmo local?","¿Dónde pierde la Marca B frente a la Marca A en el mismo lugar?","Where does Brand B lose to Brand A at the same location?"),
                L("Em que dia e horário cada marca precisa de mais gente no caixa?","¿Qué día y a qué hora necesita cada marca más personal en caja?","On which day and hour does each brand need more checkout staff?"),
                L("Resuma as reclamações sobre preço, marca a marca.","Resuma las quejas sobre precio, marca por marca.","Summarize price complaints, brand by brand.")];
@@ -1016,9 +1016,9 @@ var ABAS = [
         n += 3;
         if (n >= texto.length) { clearInterval(passo); alvo.innerHTML = html + fonte; return; }
         alvo.textContent = texto.slice(0, n);
-      }, 22);
+      }, 16);
       limpar.push(function(){ clearInterval(passo); });
-    }, 1300);
+    }, 700);
     limpar.push(function(){ clearTimeout(t0); });
   }},
 ];
@@ -1040,8 +1040,8 @@ function agenda(){
   var barra = main.querySelector(".demo-prog i");
   if (barra && !tocando) barra.classList.remove("corre");
   if (!ativo) return;
-  var resta = barra ? (ABAS[atual].tempo || 7000) * (1 - (barra.getBoundingClientRect().width / barra.parentNode.getBoundingClientRect().width)) : 7000;
-  if (barra && !barra.classList.contains("corre")) { barra.style.animationDuration = (ABAS[atual].tempo || 7000) + "ms"; barra.classList.add("corre"); resta = ABAS[atual].tempo || 7000; }
+  var resta = barra ? (ABAS[atual].tempo || 3500) * (1 - (barra.getBoundingClientRect().width / barra.parentNode.getBoundingClientRect().width)) : 3500;
+  if (barra && !barra.classList.contains("corre")) { barra.style.animationDuration = (ABAS[atual].tempo || 3500) + "ms"; barra.classList.add("corre"); resta = ABAS[atual].tempo || 7000; }
   timer = setTimeout(function(){ mostra((atual + 1) % ABAS.length); }, Math.max(200, resta));
 }
 play.addEventListener("click", function(){ tocando = !tocando; if (tocando) mostra(atual); else agenda(); });
