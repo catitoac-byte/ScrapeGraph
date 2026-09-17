@@ -38,8 +38,13 @@ def shopping(loja: dict) -> str:
 
 
 def bairro(endereco: str) -> str:
-    m = re.search(r"-\s*([^,-]+),\s*Goiânia", endereco)
-    return m.group(1).strip() if m else ""
+    # O trecho antes de ", Cidade - UF": depois do ultimo " - " ou da ultima virgula
+    m = re.search(r"([^,]+),\s*[^,]+?\s+-\s+[A-Z]{2}\b", endereco)
+    if not m:
+        return ""
+    trecho = m.group(1).split(" - ")[-1].strip()
+    trecho = re.sub(r"^(s/?n|\d+[a-z]?)\s+", "", trecho, flags=re.I)
+    return trecho if not re.fullmatch(r"[\d\s/a-z]{0,4}", trecho, flags=re.I) else ""
 
 
 def meses(data_iso: str, hoje: date) -> float | None:
