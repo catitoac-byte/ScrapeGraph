@@ -23,7 +23,8 @@ function volta(req, destino, cookie) {
 export async function POST(req) {
   const form = await req.formData().catch(() => null);
   const usuario = String(form?.get("usuario") || "").trim().toLowerCase();
-  const senha = String(form?.get("senha") || "");
+  // Copiar e colar costuma trazer espaco no fim; a senha gerada nunca tem espaco
+  const senha = String(form?.get("senha") || "").trim();
   const ok =
     usuario === String(process.env.VITRINE_USUARIO || "").toLowerCase() &&
     confere(senha, process.env.VITRINE_SENHA_HASH);
