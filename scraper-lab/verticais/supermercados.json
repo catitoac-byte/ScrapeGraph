@@ -13,7 +13,8 @@
         "Costa Atacadão {cidade}",
         "Costa Atacadão loja {cidade}",
         "Costa atacarejo {cidade}"
-      ]
+      ],
+      "artigo": "o"
     },
     {
       "nome": "Assaí",
@@ -22,7 +23,8 @@
         "Assaí Atacadista {cidade}",
         "Assaí {cidade}",
         "Assaí Atacadista loja {cidade}"
-      ]
+      ],
+      "artigo": "o"
     },
     {
       "nome": "Carrefour",
@@ -31,7 +33,8 @@
         "Carrefour {cidade}",
         "Carrefour Hipermercado {cidade}",
         "Carrefour Bairro {cidade}"
-      ]
+      ],
+      "artigo": "o"
     }
   ],
   "temas": [
@@ -193,7 +196,7 @@
     }
   ],
   "destaque_tema": "divergencia",
-  "destaque_texto": "cliente que vê um preço na prateleira e paga outro no caixa",
+  "destaque_texto": "É o cliente que vê um preço na prateleira e paga outro no caixa.",
   "site": {
     "projeto": "vitrine-atacarejo",
     "dominio": "atacarejo.cassiai.com",
@@ -215,5 +218,6 @@
     ],
     "origem": "Costa vermelho do logo (#CF0A1E); Assai laranja do logo 2024 (#F37021); Carrefour azul do logo do grupo (#254F9B)"
   },
-  "periodo_mensal_desde": "2026-01"
+  "periodo_mensal_desde": "2026-01",
+  "busca_exemplo": "açougue, fila, Pix…"
 }

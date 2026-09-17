@@ -13,7 +13,8 @@
         "C&A {cidade}",
         "C&A Modas {cidade}",
         "loja C&A shopping {cidade}"
-      ]
+      ],
+      "artigo": "a"
     },
     {
       "nome": "Renner",
@@ -22,7 +23,8 @@
         "Lojas Renner {cidade}",
         "Renner {cidade}",
         "Renner shopping {cidade}"
-      ]
+      ],
+      "artigo": "a"
     },
     {
       "nome": "Riachuelo",
@@ -31,7 +33,8 @@
         "Riachuelo {cidade}",
         "Lojas Riachuelo {cidade}",
         "Riachuelo shopping {cidade}"
-      ]
+      ],
+      "artigo": "a"
     }
   ],
   "temas": [
@@ -97,7 +100,7 @@
     }
   ],
   "destaque_tema": "cartao",
-  "destaque_texto": "quase sempre ligado a venda insistente do cartão da loja",
+  "destaque_texto": "Quase sempre ligado à venda insistente do cartão da loja.",
   "site": {
     "projeto": "vitrine-cassiai",
     "dominio": "vitrine.cassiai.com",
@@ -118,5 +121,6 @@
       "#17A88C"
     ],
     "origem": "C&A azul do logo de 1998 (#052E5E, o atual e preto); Renner vermelho do logo (#D72027); Riachuelo verde do logo 2026 (#0C2E2D), clareado para leitura"
-  }
+  },
+  "busca_exemplo": "provador, troca, Pix…"
 }

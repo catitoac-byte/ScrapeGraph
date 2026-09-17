@@ -260,6 +260,9 @@ const D = window.PAINEL;
 // Marcas, temas e textos vem da vertical (verticais/<id>.json via gerar_dados.py)
 const MARCAS = D.marcas || ["C&A","Renner","Riachuelo"];
 const MI = Object.fromEntries(MARCAS.map((m,i)=>[m,i]));
+// "da C&A", "do Assaí": artigo de cada marca vem da vertical
+const nCod = net => { const n=TEMAS.filter(c=>c.net===net).length; return n+(n===1?" código":" códigos"); };
+const de = m => ((D.artigos||{})[m]==="o" ? "do " : "da ") + m;
 const cor = m => `var(--b${MI[m]})`;
 const soft = m => `var(--b${MI[m]}-soft)`;
 const DIAS = D.dias;
@@ -294,6 +297,7 @@ const TODOS = [...NETS, ...TEMAS];
 const TEMA_POR_ID = Object.fromEntries(TODOS.map(t=>[t.id,t]));
 
 const LOJAS = D.lojas;
+const FAIXA_AMOSTRA = (()=>{ const c={}; D.avaliacoes.forEach(r=>{c[r.s]=(c[r.s]||0)+1;}); const v=Object.values(c); if(!v.length) return "de avaliações por loja"; const a=Math.min(...v), b=Math.max(...v); return a===b?`de ${b} avaliações por loja`:`de ${a} a ${b} avaliações por loja`; })();
 const ORDEM_TXT = D.ordenacao === "mais recentes" ? "as mais recentes de cada loja" : "na ordem de relevância do Google";
 const LOJA = Object.fromEntries(LOJAS.map(l=>[l.id,l]));
 const REVS = D.avaliacoes.map((r,i)=>({...r, i, marca:LOJA[r.s].marca, temas:r.t?TODOS.filter(t=>t.re.test(r.t)).map(t=>t.id):[]}));
@@ -596,13 +600,13 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
     const com = dados.filter(d=>d.rep.nota!=null);
     if(com.length>=2){
       const s=[...com].sort((a,b)=>b.rep.neg-a.rep.neg);
-      out.push({k:"t-crit",t:"Atenção",x:`${s[0].m} concentra a maior parcela de notas 1 e 2 ${amostra?"na amostra filtrada":"no Google"} (${pct(s[0].rep.neg,1)}), contra ${pct(s[s.length-1].rep.neg,1)} de ${s[s.length-1].m}.`});
+      out.push({k:"t-crit",t:"Atenção",x:`${s[0].m} concentra a maior parcela de notas 1 e 2 ${amostra?"na amostra filtrada":"no Google"} (${pct(s[0].rep.neg,1)}), contra ${pct(s[s.length-1].rep.neg,1)} ${de(s[s.length-1].m)}.`});
     }
     const dt = D.destaque_tema && TEMA_POR_ID[D.destaque_tema] ? D.destaque_tema : null;
     const cart = dt ? dados.map(d=>({m:d.m,v:d.stT.temas[dt].n,p:d.stT.temas[dt].pct})).sort((a,b)=>b.v-a.v) : [];
-    if(cart.length && cart[0].v>=5) out.push({k:"t-warn",t:"Tema",x:`${TEMA_POR_ID[dt].nome} aparece em ${fmt(cart[0].v)} avaliações da ${cart[0].m} (${pct(cart[0].p,1)} das que têm texto)${D.destaque_texto?", "+D.destaque_texto:""}.`,tema:dt});
+    if(cart.length && cart[0].v>=5) out.push({k:"t-warn",t:"Tema",x:`${TEMA_POR_ID[dt].nome} aparece em ${fmt(cart[0].v)} avaliações ${de(cart[0].m)} (${pct(cart[0].p,1)} das que têm texto).${D.destaque_texto?" "+D.destaque_texto:""}`,tema:dt});
     const fila = TEMA_POR_ID.fila ? dados.map(d=>({m:d.m,neg:d.stN.temas.fila.neg,n:d.stN.temas.fila.n})).filter(x=>x.n>=10).sort((a,b)=>b.neg-a.neg) : [];
-    if(fila.length) out.push({k:"t-warn",t:"Operação",x:`Quando falam de fila e caixa, ${pct(fila[0].neg)} das avaliações da ${fila[0].m} são negativas.`,tema:"fila"});
+    if(fila.length) out.push({k:"t-warn",t:"Operação",x:`Quando falam de fila e caixa, ${pct(fila[0].neg)} das avaliações ${de(fila[0].m)} são negativas.`,tema:"fila"});
     const pk = dados.filter(d=>d.pk).map(d=>`${d.m} ${DIA_LONGO[d.pk.dia]} às ${hh(d.pk.pico)}`);
     if(pk.length) out.push({k:"t-info",t:"Movimento",x:`${dia==="todos"?"Pico da semana":"Pico de "+DIA_LONGO[dia]}: ${pk.join(", ")}.`,tab:"movimento"});
     const resp = dados.filter(d=>d.st.respNeg!=null).sort((a,b)=>b.st.respNeg-a.st.respNeg);
@@ -622,11 +626,11 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
           <div class="bc-big num">${fmt(d.rep.nota,2)}</div>
           <div class="bc-stars"><${Stars} v=${d.rep.nota} size=${15}/><span class="note" style=${{display:"inline-flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>${d.rep.amostra?"nota média da amostra filtrada":"nota média ponderada"} <${InfoTip} label="Como a nota é calculada">
             ${d.rep.amostra ? html`<p><b>Nota da amostra filtrada</b></p>
-            <p>Com filtro de período, estrelas, tema ou busca ligado, a nota é a média das avaliações lidas que passam no filtro: <b class="num">${fmt(d.rep.dtot)}</b> avaliações da ${d.m}.</p>
+            <p>Com filtro de período, estrelas, tema ou busca ligado, a nota é a média das avaliações lidas que passam no filtro: <b class="num">${fmt(d.rep.dtot)}</b> avaliações ${de(d.m)}.</p>
             <p>O total do Google não tem data nem nota individual, por isso não pode ser filtrado. Limpe esses filtros para voltar à nota ponderada de todas as avaliações do Google.</p>
             <p>Média simples das lojas na amostra: <b class="num">${fmt(d.rep.simples,2)}</b>.</p>` : html`
             <p><b>Nota média ponderada</b></p>
-            <p>É a média de todas as avaliações do Google das lojas da ${d.m} no recorte, calculada pela contagem de estrelas (quantas de 5★, 4★, 3★, 2★ e 1★).</p>
+            <p>É a média de todas as avaliações do Google das lojas ${de(d.m)} no recorte, calculada pela contagem de estrelas (quantas de 5★, 4★, 3★, 2★ e 1★).</p>
             <p>Cada avaliação pesa igual. Por isso uma loja com 3.800 avaliações pesa mais que uma com 24, e a nota reflete o que a maioria dos clientes disse.</p>
             <p>Não usamos a nota arredondada que o Google mostra em cada loja (por exemplo 4,3), para não esconder diferenças pequenas entre as marcas.</p>
             <p>Base: <b class="num">${fmt(d.rep.dtot)}</b> avaliações. Média simples das lojas, sem peso: <b class="num">${fmt(d.rep.simples,2)}</b>.</p>`}
@@ -660,8 +664,8 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
     <section class="panel" style=${{marginTop:16}}>
       <div class="ph"><div><h2>Do que os clientes falam</h2><p class="sub">Parcela das avaliações com texto que citam cada net (grupo de códigos). Mostra todos os temas mesmo com filtro de tema ligado. Clique num tema para ler as avaliações.</p></div></div>
       <div class="grid g2" style=${{marginTop:0}}>
-        <${GroupBars} rows=${NETS.slice(0,Math.ceil(NETS.length/2)).map(t=>({id:t.id,nome:t.nome,sub:TEMAS.filter(c=>c.net===t.net).length+" códigos",v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${escala(dados.flatMap(d=>NETS.map(t=>d.stT.temas[t.id].pct)))} onPick=${id=>{setTema(id);setTab("voz");}}/>
-        <${GroupBars} rows=${NETS.slice(Math.ceil(NETS.length/2)).map(t=>({id:t.id,nome:t.nome,sub:TEMAS.filter(c=>c.net===t.net).length+" códigos",v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${escala(dados.flatMap(d=>NETS.map(t=>d.stT.temas[t.id].pct)))} onPick=${id=>{setTema(id);setTab("voz");}}/>
+        <${GroupBars} rows=${NETS.slice(0,Math.ceil(NETS.length/2)).map(t=>({id:t.id,nome:t.nome,sub:nCod(t.net),v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${escala(dados.flatMap(d=>NETS.map(t=>d.stT.temas[t.id].pct)))} onPick=${id=>{setTema(id);setTab("voz");}}/>
+        <${GroupBars} rows=${NETS.slice(Math.ceil(NETS.length/2)).map(t=>({id:t.id,nome:t.nome,sub:nCod(t.net),v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${escala(dados.flatMap(d=>NETS.map(t=>d.stT.temas[t.id].pct)))} onPick=${id=>{setTema(id);setTab("voz");}}/>
       </div>
     </section>
   </div>`;
@@ -833,7 +837,7 @@ function Voz({lojas,revs,revsTemas,revsNeg,estrelas,tema,setTema,busca}){
     <div class="grid g2">
       <section class="panel">
         <div class="ph"><div><h2>Quanto se fala de cada ${nivel==="nets"?"net":"código"}</h2><p class="sub">Parcela das avaliações com texto. ${nivel==="nets"?"Cada net agrupa códigos parecidos; clique para filtrar e depois abra os códigos.":"Códigos"+(netAberta?" da net "+netAberta:" de todas as nets")+". Clique para filtrar as avaliações abaixo."}</p></div></div>
-        <${GroupBars} rows=${lista.map(t=>({id:t.id,nome:t.nome,sub:nivel==="nets"?TEMAS.filter(c=>c.net===t.net).length+" códigos":(netAberta?null:t.net),v:Object.fromEntries(MARCAS.map(m=>[m,st[m].comTexto?st[m].temas[t.id].pct:null]))}))} max=${escala(MARCAS.flatMap(m=>lista.map(t=>st[m].temas[t.id].pct)))} onPick=${pick} picked=${tema}/>
+        <${GroupBars} rows=${lista.map(t=>({id:t.id,nome:t.nome,sub:nivel==="nets"?nCod(t.net):(netAberta?null:t.net),v:Object.fromEntries(MARCAS.map(m=>[m,st[m].comTexto?st[m].temas[t.id].pct:null]))}))} max=${escala(MARCAS.flatMap(m=>lista.map(t=>st[m].temas[t.id].pct)))} onPick=${pick} picked=${tema}/>
       </section>
       <section class="panel">
         <div class="ph"><div><h2>Quando o tema aparece, quanto é reclamação</h2><p class="sub">Das avaliações que citam o tema, quantas deram nota 1 ou 2. Ao lado, o número de citações. Temas com menos de 10 citações ficam sem valor.</p>
@@ -1167,7 +1171,7 @@ function App(){
         <div class="fld"><label for="f-per">Período da avaliação</label>
           <select id="f-per" value=${periodo} onChange=${e=>setPeriodo(e.target.value)}>${PERIODOS.map(p=>html`<option key=${p.id} value=${p.id}>${p.nome}</option>`)}</select></div>
         <div class="fld"><label for="f-busca">Buscar no texto</label>
-          <input id="f-busca" type="search" value=${busca} onInput=${e=>setBusca(e.target.value)} placeholder="provador, troca, Pix…"/></div>
+          <input id="f-busca" type="search" value=${busca} onInput=${e=>setBusca(e.target.value)} placeholder=${D.busca_exemplo||"provador, troca, Pix…"}/></div>
       </div>
       <div class="active" aria-live="polite">
         ${ativos.length ? html`${ativos.map(a=>html`<span class="pill" key=${a.t}>${a.t}<button type="button" aria-label=${"Remover "+a.t} onClick=${a.x}>×</button></span>`)}<button class="linkbtn" onClick=${limpar}>Limpar tudo</button>`
@@ -1191,7 +1195,7 @@ function App(){
 
     <footer class="foot">
       ${pend.length ? html`<div class="callout" style=${{marginBottom:12}}><b>Coleta parcial</b><span>${pend.map(l=>`${l.marca} ${l.shopping}`).join(", ")}: o Google limitou o acesso durante a coleta e as avaliações e o gráfico de movimento dessa loja ficaram de fora. A nota e o total no Google continuam valendo.</span></div>`:null}
-      Lotação por hora é o índice relativo que o Google Maps mostra em “Horários de pico” (100% é a hora mais cheia daquela loja na semana). As avaliações são uma amostra de até 300 por loja, ${ORDEM_TXT}, com datas aproximadas a partir de “há X meses”. Sem filtro de avaliação, nota e distribuição de estrelas usam todas as avaliações do Google; com filtro de período, estrelas, tema ou busca, usam as avaliações lidas que passam no filtro. Lojas de outros municípios ficaram fora do recorte. Nomes de autores não são exibidos.
+      Lotação por hora é o índice relativo que o Google Maps mostra em “Horários de pico” (100% é a hora mais cheia daquela loja na semana). As avaliações são uma amostra ${FAIXA_AMOSTRA}, ${ORDEM_TXT}, com datas aproximadas a partir de “há X meses”. Sem filtro de avaliação, nota e distribuição de estrelas usam todas as avaliações do Google; com filtro de período, estrelas, tema ou busca, usam as avaliações lidas que passam no filtro. Lojas de outros municípios ficaram fora do recorte. Nomes de autores não são exibidos.
     </footer>
   </div>`;
 }

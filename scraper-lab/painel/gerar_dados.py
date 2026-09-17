@@ -93,6 +93,8 @@ def main(vertical: str) -> None:
              "vertical": cfg["id"], "titulo": cfg["titulo"],
              "marcas": [m["nome"] for m in cfg["marcas"]], "temas": cfg["temas"],
              "destaque_tema": cfg.get("destaque_tema"), "destaque_texto": cfg.get("destaque_texto"),
+             "artigos": {m["nome"]: m.get("artigo", "a") for m in cfg["marcas"]},
+             "busca_exemplo": cfg.get("busca_exemplo"),
              "cores": cfg.get("cores"), "periodo_mensal_desde": cfg.get("periodo_mensal_desde"),
              "ordenacao": "mais recentes" if ordens == {"mais recentes"} else "relevancia",
              "lojas": saida_lojas, "avaliacoes": avaliacoes}
