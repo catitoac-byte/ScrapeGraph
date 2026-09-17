@@ -282,6 +282,11 @@ textarea{width:100%;min-height:96px;resize:vertical;border-radius:var(--r-sm);bo
 .evo-pt b{font-size:11.5px;background:var(--panel);padding:0 5px;border-radius:999px}
 .secao{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 14px}
 .secao-t{font-size:24px;font-weight:400;letter-spacing:-.02em}
+.top-dir{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+@media (max-width:760px){.top-dir{align-items:flex-start}}
+.idioma{display:inline-flex;background:var(--panel);border-radius:999px;padding:3px;box-shadow:var(--shadow)}
+.idioma button{border:0;background:transparent;border-radius:999px;height:28px;min-width:38px;font-weight:700;font-size:12px;color:var(--ink-3)}
+.idioma button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .nivel{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end;margin-top:0}
 </style>
 
@@ -296,6 +301,15 @@ textarea{width:100%;min-height:96px;resize:vertical;border-radius:var(--r-sm);bo
 const {useState,useMemo,useEffect,useRef,useCallback} = React;
 const html = htm.bind(React.createElement);
 const D = window.PAINEL;
+
+// Idioma: ?lang= na URL, depois a escolha salva, depois o navegador. Trocar recarrega a pagina.
+const LANG = (()=>{ let v=null; try{ v=new URLSearchParams(location.search).get("lang")||localStorage.getItem("vitrine-idioma"); }catch(e){}
+  v = v || (navigator.language||"pt").slice(0,2).toLowerCase(); return ["pt","es","en"].includes(v)?v:"pt"; })();
+const L3 = (pt,es,en) => LANG==="es"?es:LANG==="en"?en:pt;
+const LOCALE = L3("pt-BR","es-ES","en-US");
+document.documentElement.lang = L3("pt-BR","es","en");
+const TR = k => (D.i18n&&D.i18n[LANG]&&D.i18n[LANG][k]) || D[k];
+const trocarIdioma = l => { try{ localStorage.setItem("vitrine-idioma",l); }catch(e){} const u=new URL(location.href); u.searchParams.delete("lang"); location.replace(u.toString()); };
 
 // Cores reais das marcas (verticais/<id>.json), com os tons do tema escuro.
 // Texto sobre a cor da marca: branco ou tinta escura, pelo contraste.
@@ -316,17 +330,21 @@ const D = window.PAINEL;
 const MARCAS = D.marcas || ["C&A","Renner","Riachuelo"];
 const MI = Object.fromEntries(MARCAS.map((m,i)=>[m,i]));
 // "da C&A", "do Assaí": artigo de cada marca vem da vertical
-const nCod = net => { const n=TEMAS.filter(c=>c.net===net).length; return n+(n===1?" código":" códigos"); };
-const de = m => ((D.artigos||{})[m]==="o" ? "do " : "da ") + m;
+const nCod = net => { const n=TEMAS.filter(c=>c.net===net).length; return n+" "+(n===1?L3("código","código","code"):L3("códigos","códigos","codes")); };
+const de = m => L3(((D.artigos||{})[m]==="o" ? "do " : "da ") + m, "de "+m, "for "+m);
+const netNome = n => (D.nets_i18n&&D.nets_i18n[n]&&D.nets_i18n[n][LANG]) || n;
+const localNome = s => s.replace(/^Rua · /, L3("Rua · ","Calle · ","Street · ")).replace(/^Loja de rua/, L3("Loja de rua","Tienda de calle","Street store"));
 const cor = m => `var(--b${MI[m]})`;
 const soft = m => `var(--b${MI[m]}-soft)`;
 const DIAS = D.dias;
-const DIA_CURTO = {"domingo":"Dom","segunda-feira":"Seg","terca-feira":"Ter","quarta-feira":"Qua","quinta-feira":"Qui","sexta-feira":"Sex","sabado":"Sáb"};
-const DIA_LONGO = {"domingo":"domingo","segunda-feira":"segunda","terca-feira":"terça","quarta-feira":"quarta","quinta-feira":"quinta","sexta-feira":"sexta","sabado":"sábado"};
+const _DK = ["domingo","segunda-feira","terca-feira","quarta-feira","quinta-feira","sexta-feira","sabado"];
+const DIA_CURTO = Object.fromEntries(_DK.map((k,i)=>[k, L3(["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],["Sun","Mon","Tue","Wed","Thu","Fri","Sat"])[i]]));
+const DIA_LONGO = Object.fromEntries(_DK.map((k,i)=>[k, L3(["domingo","segunda","terça","quarta","quinta","sexta","sábado"],["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"])[i]]));
+const cap = t => t ? t[0].toUpperCase()+t.slice(1) : t;
 const HORAS = Array.from({length:18},(_,i)=>i+6);
-const fmt = (n,d=0)=> n==null||isNaN(n) ? "–" : n.toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmt = (n,d=0)=> n==null||isNaN(n) ? "–" : n.toLocaleString(LOCALE,{minimumFractionDigits:d,maximumFractionDigits:d});
 const pct = (n,d=0)=> n==null||isNaN(n) ? "–" : fmt(n,d)+"%";
-const hh = h => String(h).padStart(2,"0")+"h";
+const hh = h => LANG==="en" ? (h===0?"12am":h<12?h+"am":h===12?"12pm":(h-12)+"pm") : String(h).padStart(2,"0")+"h";
 
 const TEMAS_MODA = [
   {id:"atendimento", nome:"Atendimento", re:/atend|vendedor|funcion[aá]ri|educad|grosse|simp[aá]tic|mal educ|gerente|equipe/i},
@@ -342,18 +360,18 @@ const TEMAS_MODA = [
 ];
 // Livro de codigos: codigos (TEMAS) agrupados em nets. Uma net marca a
 // avaliacao que cita qualquer codigo dela.
-const TEMAS = D.temas ? D.temas.map(t=>({id:t.id, nome:t.nome, net:t.net||"Temas", re:new RegExp(t.re,"i")})) : TEMAS_MODA.map(t=>({...t,net:"Temas"}));
+const TEMAS = D.temas ? D.temas.map(t=>({id:t.id, nome:(LANG!=="pt"&&t["nome_"+LANG])||t.nome, net:t.net||"Temas", re:new RegExp(t.re,"i")})) : TEMAS_MODA.map(t=>({...t,net:"Temas"}));
 const NETS = [...new Set(TEMAS.map(t=>t.net))].map(n=>{
   const cods = TEMAS.filter(t=>t.net===n);
-  return {id:"net-"+n.normalize("NFD").replace(/[^\w]+/g,"-").toLowerCase(), nome:n, net:n, ehNet:true, codigos:cods.map(c=>c.id),
+  return {id:"net-"+n.normalize("NFD").replace(/[^\w]+/g,"-").toLowerCase(), nome:netNome(n), net:n, ehNet:true, codigos:cods.map(c=>c.id),
     re:new RegExp(cods.map(c=>"(?:"+c.re.source+")").join("|"),"i")};
 });
 const TODOS = [...NETS, ...TEMAS];
 const TEMA_POR_ID = Object.fromEntries(TODOS.map(t=>[t.id,t]));
 
 const LOJAS = D.lojas;
-const FAIXA_AMOSTRA = (()=>{ const c={}; D.avaliacoes.forEach(r=>{c[r.s]=(c[r.s]||0)+1;}); const v=Object.values(c); if(!v.length) return "de avaliações por loja"; const a=Math.min(...v), b=Math.max(...v); return a===b?`de ${b} avaliações por loja`:`de ${a} a ${b} avaliações por loja`; })();
-const ORDEM_TXT = D.ordenacao === "mais recentes" ? "as mais recentes de cada loja" : "na ordem de relevância do Google";
+const FAIXA_AMOSTRA = (()=>{ const c={}; D.avaliacoes.forEach(r=>{c[r.s]=(c[r.s]||0)+1;}); const v=Object.values(c); if(!v.length) return ""; const a=Math.min(...v), b=Math.max(...v); return a===b?L3(`de ${b} avaliações por loja`,`de ${b} reseñas por tienda`,`of ${b} reviews per store`):L3(`de ${a} a ${b} avaliações por loja`,`de ${a} a ${b} reseñas por tienda`,`of ${a} to ${b} reviews per store`); })();
+const ORDEM_TXT = D.ordenacao === "mais recentes" ? L3("as mais recentes de cada loja","las más recientes de cada tienda","the most recent for each store") : L3("na ordem de relevância do Google","en el orden de relevancia de Google","in Google's relevance order");
 const LOJA = Object.fromEntries(LOJAS.map(l=>[l.id,l]));
 const REVS = D.avaliacoes.map((r,i)=>({...r, i, marca:LOJA[r.s].marca, temas:r.t?TODOS.filter(t=>t.re.test(r.t)).map(t=>t.id):[]}));
 const SHOPPINGS = [...new Set(LOJAS.map(l=>l.shopping))].sort((a,b)=>{
@@ -371,14 +389,15 @@ const repLoja = (l, amostra) => {
 const marcasNoShopping = s => new Set(LOJAS.filter(l=>l.shopping===s).map(l=>l.marca));
 
 const PERIODOS = [
-  {id:"todos", nome:"Todos", ok:()=>true},
-  {id:"12", nome:"Último ano", ok:m=>m!=null&&m<=12.5},
-  {id:"36", nome:"1 a 3 anos", ok:m=>m!=null&&m>12.5&&m<=36.5},
-  {id:"mais", nome:"Mais de 3 anos", ok:m=>m!=null&&m>36.5},
+  {id:"todos", nome:L3("Todos","Todos","All"), ok:()=>true},
+  {id:"12", nome:L3("Último ano","Último año","Last year"), ok:m=>m!=null&&m<=12.5},
+  {id:"36", nome:L3("1 a 3 anos","1 a 3 años","1 to 3 years"), ok:m=>m!=null&&m>12.5&&m<=36.5},
+  {id:"mais", nome:L3("Mais de 3 anos","Más de 3 años","Over 3 years"), ok:m=>m!=null&&m>36.5},
 ];
-const idadeFaixa = m => m==null?"?": m<=12.5?"Último ano": m<=24.5?"1 a 2 anos": m<=36.5?"2 a 3 anos":"Mais de 3 anos";
+const _FX = L3(["Mais de 3 anos","2 a 3 anos","1 a 2 anos","Último ano"],["Más de 3 años","2 a 3 años","1 a 2 años","Último año"],["Over 3 years","2 to 3 years","1 to 2 years","Last year"]);
+const idadeFaixa = m => m==null?"?": m<=12.5?_FX[3]: m<=24.5?_FX[2]: m<=36.5?_FX[1]:_FX[0];
 // Com periodo_mensal_desde, a evolucao vira mes a mes (ex.: janeiro ate o mes da coleta)
-const MESES_ABR = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const MESES_ABR = L3(["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"],["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"],["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]);
 const MENSAL = (()=>{
   if(!D.periodo_mensal_desde) return null;
   const [a0,m0] = D.periodo_mensal_desde.split("-").map(Number);
@@ -387,7 +406,7 @@ const MENSAL = (()=>{
   return out;
 })();
 // do mais antigo para o mais recente, para ler a evolucao da esquerda para a direita
-const FAIXAS = MENSAL ? MENSAL.map(k=>MESES_ABR[+k.slice(5)-1]+"/"+k.slice(2,4)) : ["Mais de 3 anos","2 a 3 anos","1 a 2 anos","Último ano"];
+const FAIXAS = MENSAL ? MENSAL.map(k=>MESES_ABR[+k.slice(5)-1]+"/"+k.slice(2,4)) : _FX;
 const faixaDe = r => MENSAL ? (MENSAL.includes(r.a) ? FAIXAS[MENSAL.indexOf(r.a)] : "?") : idadeFaixa(r.m);
 
 /* ------------------------------------------------------------ agregacoes */
@@ -479,7 +498,7 @@ function Stars({v,size=13}){
       <defs><linearGradient id=${"sg"+i+"-"+Math.round(f*100)}><stop offset=${f} stop-color="var(--warn)"/><stop offset=${f} stop-color="var(--line-2)"/></linearGradient></defs>
       <path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L1.3 7.8l6.1-.7z" fill=${`url(#sg${i}-${Math.round(f*100)})`}/></svg>`);
   }
-  return html`<span class="starrow" role="img" aria-label=${fmt(v,1)+" de 5 estrelas"}>${out}</span>`;
+  return html`<span class="starrow" role="img" aria-label=${fmt(v,1)+L3(" de 5 estrelas"," de 5 estrellas"," out of 5 stars")}>${out}</span>`;
 }
 function Seg({value,onChange,options,label,className=""}){
   return html`<div class=${"seg "+className} role="group" aria-label=${label}>
@@ -499,7 +518,7 @@ function InfoTip({label,children}){
 }
 
 /* grafico de linhas com cruz e dica */
-function LineChart({series,height=260,yMax=100,xs=HORAS,fmtX=hh,fmtV=v=>pct(v),tipTitle=h=>`${hh(h)} às ${hh(h+1)}`,ticks=[0,25,50,75,100],yMin=0,every=3,label="Movimento por hora, uma linha por marca"}){
+function LineChart({series,height=260,yMax=100,xs=HORAS,fmtX=hh,fmtV=v=>pct(v),tipTitle=h=>`${hh(h)} ${L3("às","a","to")} ${hh(h+1)}`,ticks=[0,25,50,75,100],yMin=0,every=3,label=L3("Movimento por hora, uma linha por marca","Afluencia por hora, una línea por marca","Hourly busyness, one line per brand")}){
   const ref = useRef(null);
   const [w,setW] = useState(700);
   const [hover,setHover] = useState(null);
@@ -521,7 +540,7 @@ function LineChart({series,height=260,yMax=100,xs=HORAS,fmtX=hh,fmtV=v=>pct(v),t
   };
   return html`<div class="chartwrap" ref=${ref} onMouseMove=${onMove} onMouseLeave=${()=>setHover(null)}>
     <svg width=${w} height=${height} role="img" aria-label=${label}>
-      ${ticks.map(t=>html`<g key=${t}><line x1=${m.l} x2=${m.l+iw} y1=${y(t)} y2=${y(t)} stroke="var(--line)" stroke-dasharray=${t?"2 4":""}/><text x=${m.l-8} y=${y(t)+3.5} text-anchor="end">${String(t).replace(".",",")}</text></g>`)}
+      ${ticks.map(t=>html`<g key=${t}><line x1=${m.l} x2=${m.l+iw} y1=${y(t)} y2=${y(t)} stroke="var(--line)" stroke-dasharray=${t?"2 4":""}/><text x=${m.l-8} y=${y(t)+3.5} text-anchor="end">${fmt(t,t%1?1:0)}</text></g>`)}
       ${xs.filter((h,i)=>i%every===0).map((h,i,a)=>html`<text key=${h} x=${x(h)} y=${height-8} text-anchor=${a.length>1&&i===a.length-1&&every===1?"end":a.length>1&&i===0&&every===1?"start":"middle"}>${fmtX(h)}</text>`)}
       ${series.map(s=>html`<g key=${s.m}>
         ${(()=>{ const hs=xs.filter(h=>s.pts[h]!=null); if(hs.length<2) return null;
@@ -544,7 +563,7 @@ function LineChart({series,height=260,yMax=100,xs=HORAS,fmtX=hh,fmtV=v=>pct(v),t
     </svg>
     ${hover!=null && html`<div class="tip" style=${{left:Math.min(Math.max(x(hover),90),w-90), top:m.t+4}}>
       <div class="tt">${tipTitle(hover)}</div>
-      ${[...series].sort((a,b)=>(b.pts[hover]??-1)-(a.pts[hover]??-1)).map(s=>html`<div class="tr" key=${s.m}><span><${Swatch} m=${s.m} size=${9}/>${s.m}</span><b class="num">${s.pts[hover]!=null?fmtV(s.pts[hover]):"sem dado"}</b></div>`)}
+      ${[...series].sort((a,b)=>(b.pts[hover]??-1)-(a.pts[hover]??-1)).map(s=>html`<div class="tr" key=${s.m}><span><${Swatch} m=${s.m} size=${9}/>${s.m}</span><b class="num">${s.pts[hover]!=null?fmtV(s.pts[hover]):L3("sem dado","sin dato","no data")}</b></div>`)}
     </div>`}
   </div>`;
 }
@@ -554,7 +573,7 @@ function Heat({lojas,marca,diaSel,onDia}){
   const [tip,setTip] = useState(null);
   const rows = DIAS.map(d=>({d, c:curvaMarca(lojas,marca,d).curva}));
   const has = rows.some(r=>Object.keys(r.c).length);
-  if(!has) return html`<div class="empty">Sem dado de movimento neste recorte</div>`;
+  if(!has) return html`<div class="empty">${L3("Sem dado de movimento neste recorte","Sin datos de afluencia en esta selección","No busyness data for this selection")}</div>`;
   const shade = v => v==null ? "var(--heat-0)" : `color-mix(in oklab, ${cor(marca)} ${Math.round(12+v*0.88)}%, var(--heat-0))`;
   return html`<div style=${{position:"relative"}} onMouseLeave=${()=>setTip(null)}>
     <div class="heat" style=${{gridTemplateColumns:`34px repeat(${HORAS.length},minmax(0,1fr))`}}>
@@ -567,8 +586,8 @@ function Heat({lojas,marca,diaSel,onDia}){
       ${HORAS.map(h=>html`<div key=${h} class="lab" style=${{justifyContent:"center"}}>${h%3===0?String(h).padStart(2,"0"):""}</div>`)}
     </div>
     ${tip && html`<div class="tip" style=${{left:tip.x, top:tip.y-4, minWidth:0}}>
-      <div class="tt">${DIA_LONGO[tip.d]}, ${hh(tip.h)}</div>
-      <div class="tr"><span><${Swatch} m=${marca} size=${9}/>${marca}</span><b class="num">${tip.v!=null?pct(tip.v):"fechada"}</b></div>
+      <div class="tt">${cap(DIA_LONGO[tip.d])}, ${hh(tip.h)}</div>
+      <div class="tr"><span><${Swatch} m=${marca} size=${9}/>${marca}</span><b class="num">${tip.v!=null?pct(tip.v):L3("fechada","cerrada","closed")}</b></div>
     </div>`}
   </div>`;
 }
@@ -581,7 +600,7 @@ function GroupBars({rows,max=100,fmtV=v=>pct(v),onPick,picked,hint}){
         onClick=${onPick?()=>onPick(r.id):null} onKeyDown=${onPick?(e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onPick(r.id);}}):null}>
       <div class="bar-lab">${r.nome}${r.sub && html`<small>${r.sub}</small>`}</div>
       <div class="bars">
-        ${MARCAS.map(m=>{const v=r.v[m]; return html`<div key=${m} class="barline" title=${m+": "+(v==null?"sem dado":fmtV(v))}>
+        ${MARCAS.map(m=>{const v=r.v[m]; return html`<div key=${m} class="barline" title=${m+": "+(v==null?L3("sem dado","sin dato","no data"):fmtV(v))}>
           <div class="track"><div class="bar" style=${{width: v==null?0:`${Math.min(100,Math.max(0,v)/max*100)}%`, background:cor(m)}}></div></div>
           <span class="num" style=${{fontSize:11,color:"var(--ink-2)",textAlign:"right"}}>${v==null?"–":fmtV(v)}</span>
         </div>`})}
@@ -593,7 +612,7 @@ function GroupBars({rows,max=100,fmtV=v=>pct(v),onPick,picked,hint}){
 
 function Evolucao({idade}){
   const todos = idade.flatMap(x=>Object.values(x.pts));
-  if(!todos.length) return html`<div class="empty">Sem avaliações suficientes neste recorte</div>`;
+  if(!todos.length) return html`<div class="empty">${L3("Sem avaliações suficientes neste recorte","No hay suficientes reseñas en esta selección","Not enough reviews for this selection")}</div>`;
   const lo = Math.min(...todos), hi = Math.max(...todos);
   const pad = Math.max(0.15,(hi-lo)*0.15);
   const y0 = lo-pad, y1 = hi+pad;
@@ -604,7 +623,7 @@ function Evolucao({idade}){
     <div class="evo-row evo-head">
       <span></span>
       <div class="evo-cols" style=${{gridTemplateColumns:`repeat(${FAIXAS.length},minmax(0,1fr))`}}>${FAIXAS.map(f=>html`<span key=${f}>${f}</span>`)}</div>
-      <span style=${{textAlign:"right"}}>Variação</span>
+      <span style=${{textAlign:"right"}}>${L3("Variação","Variación","Change")}</span>
     </div>
     ${idade.map(x=>{
       const idx = Object.keys(x.pts).map(Number).sort((a,b)=>a-b);
@@ -622,8 +641,8 @@ function Evolucao({idade}){
           </svg>
           ${FAIXAS.map((f,i)=>{
             const v = x.pts[i];
-            if(v==null) return html`<div key=${f} class="evo-pt" style=${{left:cx(i)+"%",top:H/2-8}} title=${x.n[i]?`${x.n[i]} avaliações, poucas para uma média`:"sem avaliações"}><span class="note">${x.n[i]?"("+x.n[i]+")":"–"}</span></div>`;
-            return html`<div key=${f} class="evo-pt" style=${{left:cx(i)+"%",top:cy(v)-5}} title=${`${x.m}, ${f}: ${fmt(v,2)} em ${x.n[i]} avaliações`}>
+            if(v==null) return html`<div key=${f} class="evo-pt" style=${{left:cx(i)+"%",top:H/2-8}} title=${x.n[i]?L3(`${x.n[i]} avaliações, poucas para uma média`,`${x.n[i]} reseñas, pocas para un promedio`,`${x.n[i]} reviews, too few for an average`):L3("sem avaliações","sin reseñas","no reviews")}><span class="note">${x.n[i]?"("+x.n[i]+")":"–"}</span></div>`;
+            return html`<div key=${f} class="evo-pt" style=${{left:cx(i)+"%",top:cy(v)-5}} title=${`${x.m}, ${f}: ${fmt(v,2)} ${L3("em","en","from")} ${x.n[i]} ${L3("avaliações","reseñas","reviews")}`}>
               <i class=${"sh"+MI[x.m]} style=${{background:cor(x.m),borderRadius:MI[x.m]===0?"50%":MI[x.m]===1?"2px":0}}></i>
               <b class="num">${fmt(v,2)}</b>
             </div>`;
@@ -632,7 +651,7 @@ function Evolucao({idade}){
         <div style=${{textAlign:"right"}}>${delta==null?html`<span class="note">–</span>`:html`<span class=${"tag "+tom} style=${{fontSize:12,letterSpacing:0}}>${delta>0?"▲":delta<0?"▼":"●"} ${fmt(Math.abs(delta),2)}</span>`}</div>
       </div>`;
     })}
-    <p class="note" style=${{margin:"6px 0 0"}}>Amostra por período: ${idade.map(x=>`${x.m} ${FAIXAS.map((f,i)=>x.n[i]).join(" · ")}`).join("  |  ")}</p>
+    <p class="note" style=${{margin:"6px 0 0"}}>${L3("Amostra por período","Muestra por período","Sample per period")}: ${idade.map(x=>`${x.m} ${FAIXAS.map((f,i)=>x.n[i]).join(" · ")}`).join("  |  ")}</p>
   </div>`;
 }
 
@@ -663,69 +682,81 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
     const com = dados.filter(d=>d.rep.nota!=null);
     if(com.length>=2){
       const s=[...com].sort((a,b)=>b.rep.neg-a.rep.neg);
-      out.push({k:"t-crit",t:"Atenção",x:`${s[0].m} concentra a maior parcela de notas 1 e 2 ${amostra?"na amostra filtrada":"no Google"} (${pct(s[0].rep.neg,1)}), contra ${pct(s[s.length-1].rep.neg,1)} ${de(s[s.length-1].m)}.`});
+      out.push({k:"t-crit",t:L3("Atenção","Atención","Watch out"),x:L3(
+        `${s[0].m} concentra a maior parcela de notas 1 e 2 ${amostra?"na amostra filtrada":"no Google"} (${pct(s[0].rep.neg,1)}), contra ${pct(s[s.length-1].rep.neg,1)} ${de(s[s.length-1].m)}.`,
+        `${s[0].m} concentra la mayor proporción de notas 1 y 2 ${amostra?"en la muestra filtrada":"en Google"} (${pct(s[0].rep.neg,1)}), frente a ${pct(s[s.length-1].rep.neg,1)} ${de(s[s.length-1].m)}.`,
+        `${s[0].m} has the largest share of 1 and 2 star ratings ${amostra?"in the filtered sample":"on Google"} (${pct(s[0].rep.neg,1)}), versus ${pct(s[s.length-1].rep.neg,1)} for ${s[s.length-1].m}.`)});
     }
     const dt = D.destaque_tema && TEMA_POR_ID[D.destaque_tema] ? D.destaque_tema : null;
     const cart = dt ? dados.map(d=>({m:d.m,v:d.stT.temas[dt].n,p:d.stT.temas[dt].pct})).sort((a,b)=>b.v-a.v) : [];
-    if(cart.length && cart[0].v>=5) out.push({k:"t-warn",t:"Tema",x:`${TEMA_POR_ID[dt].nome} aparece em ${fmt(cart[0].v)} avaliações ${de(cart[0].m)} (${pct(cart[0].p,1)} das que têm texto).${D.destaque_texto?" "+D.destaque_texto:""}`,tema:dt});
+    if(cart.length && cart[0].v>=5) out.push({k:"t-warn",t:L3("Tema","Tema","Topic"),x:L3(
+        `${TEMA_POR_ID[dt].nome} aparece em ${fmt(cart[0].v)} avaliações ${de(cart[0].m)} (${pct(cart[0].p,1)} das que têm texto).`,
+        `${TEMA_POR_ID[dt].nome} aparece en ${fmt(cart[0].v)} reseñas ${de(cart[0].m)} (${pct(cart[0].p,1)} de las que tienen texto).`,
+        `${TEMA_POR_ID[dt].nome} shows up in ${fmt(cart[0].v)} reviews for ${cart[0].m} (${pct(cart[0].p,1)} of those with text).`)+(TR("destaque_texto")?" "+TR("destaque_texto"):""),tema:dt});
     const fila = TEMA_POR_ID.fila ? dados.map(d=>({m:d.m,neg:d.stN.temas.fila.neg,n:d.stN.temas.fila.n})).filter(x=>x.n>=10).sort((a,b)=>b.neg-a.neg) : [];
-    if(fila.length) out.push({k:"t-warn",t:"Operação",x:`Quando falam de fila e caixa, ${pct(fila[0].neg)} das avaliações ${de(fila[0].m)} são negativas.`,tema:"fila"});
-    const pk = dados.filter(d=>d.pk).map(d=>`${d.m} ${DIA_LONGO[d.pk.dia]} às ${hh(d.pk.pico)}`);
-    if(pk.length) out.push({k:"t-info",t:"Movimento",x:`${dia==="todos"?"Pico da semana":"Pico de "+DIA_LONGO[dia]}: ${pk.join(", ")}.`,tab:"movimento"});
+    if(fila.length) out.push({k:"t-warn",t:L3("Operação","Operación","Operations"),x:L3(
+        `Quando falam de fila e caixa, ${pct(fila[0].neg)} das avaliações ${de(fila[0].m)} são negativas.`,
+        `Cuando hablan de filas y caja, ${pct(fila[0].neg)} de las reseñas ${de(fila[0].m)} son negativas.`,
+        `When people mention queues and checkout, ${pct(fila[0].neg)} of reviews for ${fila[0].m} are negative.`),tema:"fila"});
+    const pk = dados.filter(d=>d.pk).map(d=>`${d.m} ${DIA_LONGO[d.pk.dia]} ${L3("às","a las","at")} ${hh(d.pk.pico)}`);
+    if(pk.length) out.push({k:"t-info",t:L3("Movimento","Afluencia","Busyness"),x:`${dia==="todos"?L3("Pico da semana","Pico de la semana","Weekly peak"):L3("Pico de ","Pico del ","Peak on ")+DIA_LONGO[dia]}: ${pk.join(", ")}.`,tab:"movimento"});
     const resp = dados.filter(d=>d.st.respNeg!=null).sort((a,b)=>b.st.respNeg-a.st.respNeg);
-    if(resp.length>=2) out.push({k:"t-good",t:"Relacionamento",x:`${resp[0].m} responde ${pct(resp[0].st.respNeg)} das avaliações negativas da amostra. ${resp[resp.length-1].m} responde ${pct(resp[resp.length-1].st.respNeg)}.`});
+    if(resp.length>=2) out.push({k:"t-good",t:L3("Relacionamento","Relación","Engagement"),x:L3(
+        `${resp[0].m} responde ${pct(resp[0].st.respNeg)} das avaliações negativas da amostra. ${resp[resp.length-1].m} responde ${pct(resp[resp.length-1].st.respNeg)}.`,
+        `${resp[0].m} responde ${pct(resp[0].st.respNeg)} de las reseñas negativas de la muestra. ${resp[resp.length-1].m} responde ${pct(resp[resp.length-1].st.respNeg)}.`,
+        `${resp[0].m} replies to ${pct(resp[0].st.respNeg)} of negative reviews in the sample. ${resp[resp.length-1].m} replies to ${pct(resp[resp.length-1].st.respNeg)}.`)});
     return out;
   },[lojas,revs,revsTemas,revsNeg,amostra,dia]);
 
   return html`<div>
     <div class="grid g3">
-      ${dados.map(d=>html`<article class="brandcard" key=${d.m} aria-label=${"Resumo "+d.m}>
+      ${dados.map(d=>html`<article class="brandcard" key=${d.m} aria-label=${L3("Resumo ","Resumen ","Summary ")+d.m}>
         <div class="bc-head">
           <div class="bc-name"><${Swatch} m=${d.m} size=${14}/>${d.m}</div>
-          <div class="bc-stores">${d.rep.lojas} ${d.rep.lojas===1?"loja":"lojas"}</div>
+          <div class="bc-stores">${d.rep.lojas} ${d.rep.lojas===1?L3("loja","tienda","store"):L3("lojas","tiendas","stores")}</div>
         </div>
-        ${d.rep.lojas===0 ? html`<div class="empty">Sem loja neste recorte</div>` : html`
+        ${d.rep.lojas===0 ? html`<div class="empty">${L3("Sem loja neste recorte","Sin tiendas en esta selección","No stores in this selection")}</div>` : html`
         <div class="bc-hero">
           <div class="bc-big num">${fmt(d.rep.nota,2)}</div>
-          <div class="bc-stars"><${Stars} v=${d.rep.nota} size=${15}/><span class="note" style=${{display:"inline-flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>${d.rep.amostra?"nota média da amostra filtrada":"nota média ponderada"} <${InfoTip} label="Como a nota é calculada">
-            ${d.rep.amostra ? html`<p><b>Nota da amostra filtrada</b></p>
-            <p>Com filtro de período, estrelas ou tema ligado, a nota é a média das avaliações lidas que passam no filtro: <b class="num">${fmt(d.rep.dtot)}</b> avaliações ${de(d.m)}.</p>
-            <p>O total do Google não tem data nem nota individual, por isso não pode ser filtrado. Limpe esses filtros para voltar à nota ponderada de todas as avaliações do Google.</p>
-            <p>Média simples das lojas na amostra: <b class="num">${fmt(d.rep.simples,2)}</b>.</p>` : html`
-            <p><b>Nota média ponderada</b></p>
-            <p>É a média de todas as avaliações do Google das lojas ${de(d.m)} no recorte, calculada pela contagem de estrelas (quantas de 5★, 4★, 3★, 2★ e 1★).</p>
-            <p>Cada avaliação pesa igual. Por isso uma loja com 3.800 avaliações pesa mais que uma com 24, e a nota reflete o que a maioria dos clientes disse.</p>
-            <p>Não usamos a nota arredondada que o Google mostra em cada loja (por exemplo 4,3), para não esconder diferenças pequenas entre as marcas.</p>
-            <p>Base: <b class="num">${fmt(d.rep.dtot)}</b> avaliações. Média simples das lojas, sem peso: <b class="num">${fmt(d.rep.simples,2)}</b>.</p>`}
-          </${InfoTip}>${rkNota.best===d.m?html`<span class="rank r-best">melhor</span>`:rkNota.worst===d.m?html`<span class="rank r-worst">menor</span>`:null}</span></div>
+          <div class="bc-stars"><${Stars} v=${d.rep.nota} size=${15}/><span class="note" style=${{display:"inline-flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>${d.rep.amostra?L3("nota média da amostra filtrada","nota media de la muestra filtrada","average of the filtered sample"):L3("nota média ponderada","nota media ponderada","weighted average rating")} <${InfoTip} label=${L3("Como a nota é calculada","Cómo se calcula la nota","How the rating is calculated")}>
+            ${d.rep.amostra ? html`<p><b>${L3("Nota da amostra filtrada","Nota de la muestra filtrada","Filtered sample rating")}</b></p>
+            <p>${L3("Com filtro de período, estrelas ou tema ligado, a nota é a média das avaliações lidas que passam no filtro:","Con un filtro de período, estrellas o tema activo, la nota es el promedio de las reseñas leídas que pasan el filtro:","With a period, star or topic filter on, the rating is the average of the collected reviews that pass the filter:")} <b class="num">${fmt(d.rep.dtot)}</b> ${L3("avaliações","reseñas","reviews")}.</p>
+            <p>${L3("O total do Google não tem data nem nota individual, por isso não pode ser filtrado. Limpe esses filtros para voltar à nota ponderada de todas as avaliações do Google.","El total de Google no trae fecha ni nota individual, por eso no se puede filtrar. Quite esos filtros para volver a la nota ponderada de todas las reseñas de Google.","Google's totals have no date or per-review rating, so they cannot be filtered. Clear these filters to return to the weighted rating of all Google reviews.")}</p>
+            <p>${L3("Média simples das lojas na amostra:","Promedio simple de las tiendas en la muestra:","Simple average across stores in the sample:")} <b class="num">${fmt(d.rep.simples,2)}</b>.</p>` : html`
+            <p><b>${L3("Nota média ponderada","Nota media ponderada","Weighted average rating")}</b></p>
+            <p>${L3(`É a média de todas as avaliações do Google das lojas ${de(d.m)} no recorte, calculada pela contagem de estrelas (quantas de 5★, 4★, 3★, 2★ e 1★).`,`Es el promedio de todas las reseñas de Google de las tiendas ${de(d.m)} en la selección, calculado por el conteo de estrellas (cuántas de 5★, 4★, 3★, 2★ y 1★).`,`It is the average of all Google reviews for ${d.m} stores in the selection, computed from the star counts (how many 5★, 4★, 3★, 2★ and 1★).`)}</p>
+            <p>${L3("Cada avaliação pesa igual. Por isso uma loja com 3.800 avaliações pesa mais que uma com 24, e a nota reflete o que a maioria dos clientes disse.","Cada reseña pesa lo mismo. Por eso una tienda con 3.800 reseñas pesa más que una con 24, y la nota refleja lo que dijo la mayoría de los clientes.","Every review counts the same, so a store with 3,800 reviews weighs more than one with 24, and the rating reflects what most shoppers said.")}</p>
+            <p>${L3("Não usamos a nota arredondada que o Google mostra em cada loja (por exemplo 4,3), para não esconder diferenças pequenas entre as marcas.","No usamos la nota redondeada que Google muestra en cada tienda (por ejemplo 4,3), para no ocultar diferencias pequeñas entre las marcas.","We do not use the rounded rating Google shows per store (for example 4.3), so small gaps between brands stay visible.")}</p>
+            <p>${L3("Base:","Base:","Base:")} <b class="num">${fmt(d.rep.dtot)}</b> ${L3("avaliações. Média simples das lojas, sem peso:","reseñas. Promedio simple de las tiendas, sin ponderar:","reviews. Unweighted average across stores:")} <b class="num">${fmt(d.rep.simples,2)}</b>.</p>`}
+          </${InfoTip}>${rkNota.best===d.m?html`<span class="rank r-best">${L3("melhor","mejor","best")}</span>`:rkNota.worst===d.m?html`<span class="rank r-worst">${L3("menor","menor","lowest")}</span>`:null}</span></div>
         </div>
         <dl class="kv">
-          <div><dt>${d.rep.amostra?"Avaliações no filtro":"Avaliações no Google"}</dt><dd class="num">${fmt(d.rep.tot)}</dd></div>
-          <div><dt>Notas 1 e 2</dt><dd class="num">${pct(d.rep.neg,1)}${rkNeg.best===d.m?html`<span class="rank r-best">menor</span>`:rkNeg.worst===d.m?html`<span class="rank r-worst">maior</span>`:null}</dd></div>
-          <div><dt>${dia==="todos"?"Pico da semana":"Pico do dia"}</dt><dd>${d.pk?html`<span>${DIA_CURTO[d.pk.dia]} ${hh(d.pk.pico)}</span> <span class="num note">${pct(d.pk.valor)}</span>`:"–"}</dd></div>
-          <div><dt>Responde a loja</dt><dd class="num">${pct(d.st.resp)}${rkResp.best===d.m?html`<span class="rank r-best">mais</span>`:null}</dd></div>
-          <div><dt>${d.rep.amostra?"Total no Google":"Avaliações lidas"}</dt><dd class="num">${fmt(d.rep.amostra?reputacao(lojas,d.m).tot:d.st.n)}</dd></div>
-          <div><dt>Tema mais crítico</dt><dd>${d.piorTema?html`<button class="linkbtn" style=${{padding:0,fontSize:14,fontWeight:600,color:"var(--ink)"}} onClick=${()=>{setTema(d.piorTema.t.id);setTab("voz");}}>${d.piorTema.t.nome}</button> <span class="num note">${pct(d.piorTema.neg)} neg.</span>`:"–"}</dd></div>
+          <div><dt>${d.rep.amostra?L3("Avaliações no filtro","Reseñas en el filtro","Reviews in filter"):L3("Avaliações no Google","Reseñas en Google","Google reviews")}</dt><dd class="num">${fmt(d.rep.tot)}</dd></div>
+          <div><dt>${L3("Notas 1 e 2","Notas 1 y 2","1 and 2 stars")}</dt><dd class="num">${pct(d.rep.neg,1)}${rkNeg.best===d.m?html`<span class="rank r-best">${L3("menor","menor","lowest")}</span>`:rkNeg.worst===d.m?html`<span class="rank r-worst">${L3("maior","mayor","highest")}</span>`:null}</dd></div>
+          <div><dt>${dia==="todos"?L3("Pico da semana","Pico de la semana","Weekly peak"):L3("Pico do dia","Pico del día","Daily peak")}</dt><dd>${d.pk?html`<span>${DIA_CURTO[d.pk.dia]} ${hh(d.pk.pico)}</span> <span class="num note">${pct(d.pk.valor)}</span>`:"–"}</dd></div>
+          <div><dt>${L3("Responde a loja","Respuesta de la tienda","Store replies")}</dt><dd class="num">${pct(d.st.resp)}${rkResp.best===d.m?html`<span class="rank r-best">${L3("mais","más","most")}</span>`:null}</dd></div>
+          <div><dt>${d.rep.amostra?L3("Total no Google","Total en Google","Google total"):L3("Avaliações lidas","Reseñas leídas","Reviews read")}</dt><dd class="num">${fmt(d.rep.amostra?reputacao(lojas,d.m).tot:d.st.n)}</dd></div>
+          <div><dt>${L3("Tema mais crítico","Tema más crítico","Most critical topic")}</dt><dd>${d.piorTema?html`<button class="linkbtn" style=${{padding:0,fontSize:14,fontWeight:600,color:"var(--ink)"}} onClick=${()=>{setTema(d.piorTema.t.id);setTab("voz");}}>${d.piorTema.t.nome}</button> <span class="num note">${pct(d.piorTema.neg)} ${L3("neg.","neg.","neg.")}</span>`:"–"}</dd></div>
         </dl>`}
       </article>`)}
     </div>
 
     <div class="grid g21">
       <section class="panel">
-        <div class="ph"><div><h2>${dia==="todos"?"Movimento médio da semana":"Movimento de "+DIA_LONGO[dia]}</h2><p class="sub">Percentual de lotação por hora no Google, média das lojas abertas. O ponto marca o pico de cada marca.</p></div>
-          <button class="linkbtn" onClick=${()=>setTab("movimento")}>Abrir movimento</button></div>
+        <div class="ph"><div><h2>${dia==="todos"?L3("Movimento médio da semana","Afluencia media de la semana","Average weekly busyness"):L3("Movimento de ","Afluencia del ","Busyness on ")+DIA_LONGO[dia]}</h2><p class="sub">${L3("Percentual de lotação por hora no Google, média das lojas abertas. O ponto marca o pico de cada marca.","Porcentaje de afluencia por hora en Google, promedio de las tiendas abiertas. El punto marca el pico de cada marca.","Google's hourly busyness percentage, averaged across open stores. The dot marks each brand's peak.")}</p></div>
+          <button class="linkbtn" onClick=${()=>setTab("movimento")}>${L3("Abrir movimento","Ver afluencia","Open busyness")}</button></div>
         <${LineChart} series=${MARCAS.map(m=>({m,pts:curvaMarca(lojas,m,dia).curva}))}/>
       </section>
       <section class="panel">
-        <div class="ph"><div><h2>Leitura rápida</h2><p class="sub">Gerada a partir do recorte atual.</p></div></div>
+        <div class="ph"><div><h2>${L3("Leitura rápida","Lectura rápida","Quick read")}</h2><p class="sub">${L3("Gerada a partir do recorte atual.","Generada a partir de la selección actual.","Generated from the current selection.")}</p></div></div>
         <ul class="insights">
-          ${insights.map((it,i)=>html`<li key=${i}><span class=${"tag "+it.k}>${it.t}</span><span>${it.x}${it.tema&&html` <button class="linkbtn" onClick=${()=>{setTema(it.tema);setTab("voz");}}>ver avaliações</button>`}</span></li>`)}
+          ${insights.map((it,i)=>html`<li key=${i}><span class=${"tag "+it.k}>${it.t}</span><span>${it.x}${it.tema&&html` <button class="linkbtn" onClick=${()=>{setTema(it.tema);setTab("voz");}}>${L3("ver avaliações","ver reseñas","see reviews")}</button>`}</span></li>`)}
         </ul>
       </section>
     </div>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Do que os clientes falam</h2><p class="sub">Parcela das avaliações com texto que citam cada net (grupo de códigos). Mostra todos os temas mesmo com filtro de tema ligado. Clique num tema para ler as avaliações.</p></div></div>
+      <div class="ph"><div><h2>${L3("Do que os clientes falam","De qué hablan los clientes","What shoppers talk about")}</h2><p class="sub">${L3("Parcela das avaliações com texto que citam cada net (grupo de códigos). Mostra todos os temas mesmo com filtro de tema ligado. Clique num tema para ler as avaliações.","Proporción de reseñas con texto que citan cada net (grupo de códigos). Muestra todos los temas aunque haya un filtro de tema activo. Haga clic en un tema para leer las reseñas.","Share of reviews with text that mention each net (a group of codes). All topics stay visible even with a topic filter on. Click a topic to read the reviews.")}</p></div></div>
       <div class="grid g2" style=${{marginTop:0}}>
         <${GroupBars} rows=${NETS.slice(0,Math.ceil(NETS.length/2)).map(t=>({id:t.id,nome:t.nome,sub:nCod(t.net),v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${escala(dados.flatMap(d=>NETS.map(t=>d.stT.temas[t.id].pct)))} onPick=${id=>{setTema(id);setTab("voz");}}/>
         <${GroupBars} rows=${NETS.slice(Math.ceil(NETS.length/2)).map(t=>({id:t.id,nome:t.nome,sub:nCod(t.net),v:Object.fromEntries(dados.map(d=>[d.m,d.rep.lojas?d.stT.temas[t.id].pct:null]))}))} max=${escala(dados.flatMap(d=>NETS.map(t=>d.stT.temas[t.id].pct)))} onPick=${id=>{setTema(id);setTab("voz");}}/>
@@ -740,51 +771,51 @@ function Movimento({lojas,dia,setDia}){
   return html`<div>
     <section class="panel" style=${{marginTop:14}}>
       <div class="ph">
-        <div><h2>${dia==="todos"?"Curva média da semana":"Curva de "+DIA_LONGO[dia]}</h2><p class="sub">Passe o mouse para comparar as três marcas na mesma hora. Horas com menos da metade das lojas abertas ficam de fora da média.</p></div>
-        <div class="legend">${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}<span class="num note">${curvaMarca(lojas,m,dia).lojas||0} lojas</span></span>`)}</div>
+        <div><h2>${dia==="todos"?L3("Curva média da semana","Curva media de la semana","Average weekly curve"):L3("Curva de ","Curva del ","Curve for ")+DIA_LONGO[dia]}</h2><p class="sub">${L3("Passe o mouse para comparar as três marcas na mesma hora. Horas com menos da metade das lojas abertas ficam de fora da média.","Pase el mouse para comparar las tres marcas a la misma hora. Las horas con menos de la mitad de las tiendas abiertas quedan fuera del promedio.","Hover to compare the three brands at the same hour. Hours with fewer than half the stores open are left out of the average.")}</p></div>
+        <div class="legend">${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}<span class="num note">${curvaMarca(lojas,m,dia).lojas||0} ${L3("lojas","tiendas","stores")}</span></span>`)}</div>
       </div>
       <${LineChart} series=${MARCAS.map(m=>({m,pts:curvaMarca(lojas,m,dia).curva}))} height=${300}/>
     </section>
 
     <div class="grid g3">
       ${MARCAS.map(m=>html`<section class="panel" key=${m}>
-        <div class="ph"><div><h2 style=${{display:"flex",alignItems:"center",gap:8}}><${Swatch} m=${m}/>${m}</h2><p class="sub">Dia × hora. Clique no dia para filtrar.</p></div>
-          ${semana[m] && html`<div style=${{textAlign:"right"}}><div class="flabel">Pico da semana</div><div style=${{fontWeight:700}}>${DIA_CURTO[semana[m].dia]} ${hh(semana[m].pico)} <span class="num note">${pct(semana[m].valor)}</span></div></div>`}
+        <div class="ph"><div><h2 style=${{display:"flex",alignItems:"center",gap:8}}><${Swatch} m=${m}/>${m}</h2><p class="sub">${L3("Dia × hora. Clique no dia para filtrar.","Día × hora. Haga clic en el día para filtrar.","Day × hour. Click a day to filter.")}</p></div>
+          ${semana[m] && html`<div style=${{textAlign:"right"}}><div class="flabel">${L3("Pico da semana","Pico de la semana","Weekly peak")}</div><div style=${{fontWeight:700}}>${DIA_CURTO[semana[m].dia]} ${hh(semana[m].pico)} <span class="num note">${pct(semana[m].valor)}</span></div></div>`}
         </div>
         <${Heat} lojas=${lojas} marca=${m} diaSel=${dia} onDia=${setDia}/>
       </section>`)}
     </div>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Horas mais cheias e pico de cada dia</h2><p class="sub">Para cada marca: a hora de pico com o percentual de lotação, as três horas mais cheias e a hora mais vazia enquanto a loja está aberta.</p></div></div>
+      <div class="ph"><div><h2>${L3("Horas mais cheias e pico de cada dia","Horas más concurridas y pico de cada día","Busiest hours and daily peak")}</h2><p class="sub">${L3("Para cada marca: a hora de pico com o percentual de lotação, as três horas mais cheias e a hora mais vazia enquanto a loja está aberta.","Para cada marca: la hora pico con el porcentaje de afluencia, las tres horas más concurridas y la hora más tranquila mientras la tienda está abierta.","For each brand: the peak hour with its busyness, the three busiest hours and the quietest hour while the store is open.")}</p></div></div>
       <div class="tablewrap"><table>
-        <thead><tr><th>Dia</th>${MARCAS.map(m=>html`<th key=${m} colSpan="3"><${Brand} m=${m}/></th>`)}</tr>
-          <tr><th></th>${MARCAS.map(m=>html`<${React.Fragment} key=${m}><th>Pico</th><th>3 mais cheias</th><th>Mais vazia</th></${React.Fragment}>`)}</tr></thead>
+        <thead><tr><th>${L3("Dia","Día","Day")}</th>${MARCAS.map(m=>html`<th key=${m} colSpan="3"><${Brand} m=${m}/></th>`)}</tr>
+          <tr><th></th>${MARCAS.map(m=>html`<${React.Fragment} key=${m}><th>${L3("Pico","Pico","Peak")}</th><th>${L3("3 mais cheias","3 más concurridas","3 busiest")}</th><th>${L3("Mais vazia","Más tranquila","Quietest")}</th></${React.Fragment}>`)}</tr></thead>
         <tbody>${tabela.map(row=>{
           const vals = MARCAS.map(m=>row.r[m]?.valor??-1); const mx=Math.max(...vals);
           return html`<tr key=${row.d} style=${{background: dia===row.d?"var(--panel-2)":null}}>
-            <td><button class="linkbtn" style=${{padding:0,fontSize:13,fontWeight:700,color:"var(--ink)",textDecoration:dia===row.d?"underline":"none"}} onClick=${()=>setDia(dia===row.d?"todos":row.d)}>${DIA_LONGO[row.d]}</button></td>
+            <td><button class="linkbtn" style=${{padding:0,fontSize:13,fontWeight:700,color:"var(--ink)",textDecoration:dia===row.d?"underline":"none"}} onClick=${()=>setDia(dia===row.d?"todos":row.d)}>${cap(DIA_LONGO[row.d])}</button></td>
             ${MARCAS.map(m=>{const r=row.r[m]; return html`<${React.Fragment} key=${m}>
-              <td class="num" style=${{whiteSpace:"nowrap"}}>${r?html`<b>${hh(r.pico)}</b> ${r.valor===mx?html`<span class="maxpk" style=${{background:cor(m),color:`var(--b${MI[m]}-ink,#fff)`}} title="Maior pico do dia entre as marcas">${pct(r.valor)}</span>`:html`<span style=${{color:"var(--ink-2)"}}>${pct(r.valor)}</span>`}`:html`<span class="note">fechada</span>`}</td>
+              <td class="num" style=${{whiteSpace:"nowrap"}}>${r?html`<b>${hh(r.pico)}</b> ${r.valor===mx?html`<span class="maxpk" style=${{background:cor(m),color:`var(--b${MI[m]}-ink,#fff)`}} title=${L3("Maior pico do dia entre as marcas","Mayor pico del día entre las marcas","Highest peak of the day among the brands")}>${pct(r.valor)}</span>`:html`<span style=${{color:"var(--ink-2)"}}>${pct(r.valor)}</span>`}`:html`<span class="note">${L3("fechada","cerrada","closed")}</span>`}</td>
               <td class="num note" style=${{whiteSpace:"nowrap"}}>${r?r.top.map(hh).join(" · "):""}</td>
               <td class="num note">${r?hh(r.vazia):""}</td>
             </${React.Fragment}>`;})}
           </tr>`;})}</tbody>
       </table></div>
-      <p class="note" style=${{marginTop:8,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>O percentual com fundo na cor da marca mostra quem tem o maior pico do dia entre as três. Exemplo: <span class="maxpk" style=${{background:cor(MARCAS[0]),color:"var(--b0-ink,#fff)"}}>80%</span> seria a ${MARCAS[0]} liderando aquele dia.</p>
+      <p class="note" style=${{marginTop:8,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>${L3("O percentual com fundo na cor da marca mostra quem tem o maior pico do dia entre as três. Exemplo:","El porcentaje con fondo del color de la marca indica quién tiene el mayor pico del día entre las tres. Ejemplo:","A percentage on the brand's color marks who has the highest peak of the day among the three. Example:")} <span class="maxpk" style=${{background:cor(MARCAS[0]),color:"var(--b0-ink,#fff)"}}>80%</span> ${L3(`seria a ${MARCAS[0]} liderando aquele dia.`,`sería ${MARCAS[0]} liderando ese día.`,`would be ${MARCAS[0]} leading that day.`)}</p>
     </section>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Pico por loja</h2><p class="sub">${dia==="todos"?"Pico da semana de cada loja.":"Pico de "+DIA_LONGO[dia]+" em cada loja."} Lojas do mesmo local ficam lado a lado.</p></div></div>
+      <div class="ph"><div><h2>${L3("Pico por loja","Pico por tienda","Peak by store")}</h2><p class="sub">${dia==="todos"?L3("Pico da semana de cada loja.","Pico de la semana de cada tienda.","Weekly peak for each store."):L3("Pico de "+DIA_LONGO[dia]+" em cada loja.","Pico del "+DIA_LONGO[dia]+" en cada tienda.","Peak on "+DIA_LONGO[dia]+" for each store.")} ${L3("Lojas do mesmo local ficam lado a lado.","Las tiendas del mismo lugar aparecen juntas.","Stores in the same location sit side by side.")}</p></div></div>
       <div class="tablewrap"><table>
-        <thead><tr><th>Local</th><th>Marca</th><th class="r">Pico</th><th>Horário</th><th>3 mais cheias</th><th class="r">Média aberta</th></tr></thead>
+        <thead><tr><th>${L3("Local","Lugar","Location")}</th><th>${L3("Marca","Marca","Brand")}</th><th class="r">${L3("Pico","Pico","Peak")}</th><th>${L3("Horário","Horario","When")}</th><th>${L3("3 mais cheias","3 más concurridas","3 busiest")}</th><th class="r">${L3("Média aberta","Promedio abierto","Open-hours average")}</th></tr></thead>
         <tbody>${[...lojas].sort((a,b)=>a.shopping.localeCompare(b.shopping)||MI[a.marca]-MI[b.marca]).map(l=>{
           const dias = dia==="todos"?DIAS:[dia];
           let best=null;
           dias.forEach(d=>{const hs=Object.entries(l.pico[d]||{}).filter(([h,v])=>v>0); if(!hs.length) return; const ord=hs.sort((a,b)=>b[1]-a[1]); if(!best||ord[0][1]>best.v) best={d,h:+ord[0][0],v:ord[0][1],top:ord.slice(0,3).map(x=>+x[0]),media:hs.reduce((s,x)=>s+x[1],0)/hs.length};});
-          return html`<tr key=${l.id}><td>${l.shopping}</td><td><${Brand} m=${l.marca}/></td>
-            <td class="r num">${best?html`<b>${pct(best.v)}</b>`:html`<span class="note">sem dado</span>`}</td>
-            <td>${best?`${DIA_LONGO[best.d]}, ${hh(best.h)}`:""}</td>
+          return html`<tr key=${l.id}><td>${localNome(l.shopping)}</td><td><${Brand} m=${l.marca}/></td>
+            <td class="r num">${best?html`<b>${pct(best.v)}</b>`:html`<span class="note">${L3("sem dado","sin dato","no data")}</span>`}</td>
+            <td>${best?`${cap(DIA_LONGO[best.d])}, ${hh(best.h)}`:""}</td>
             <td class="num note">${best?best.top.map(hh).join(" · "):""}</td>
             <td class="r num">${best?pct(best.media):""}</td></tr>`;})}</tbody>
       </table></div>
@@ -805,14 +836,14 @@ function Reputacao({lojas,revs,revsNeg,amostra,estrelas,setEstrelas}){
   const starCol = {5:"#2f9e5b",4:"#7cbf6b",3:"#c9b458",2:"#e08a4e",1:"#d4513f"};
   return html`<div>
     <section class="panel" style=${{marginTop:14}}>
-      <div class="ph"><div><h2>${amostra?"Distribuição das estrelas na amostra filtrada":"Distribuição das estrelas no Google"}</h2><p class="sub">${amostra?"Avaliações lidas que passam nos filtros, de 5 a 1 estrela.":"Todas as avaliações do Google das lojas no recorte, de 5 a 1 estrela."}</p></div>
+      <div class="ph"><div><h2>${amostra?L3("Distribuição das estrelas na amostra filtrada","Distribución de estrellas en la muestra filtrada","Star distribution in the filtered sample"):L3("Distribuição das estrelas no Google","Distribución de estrellas en Google","Google star distribution")}</h2><p class="sub">${amostra?L3("Avaliações lidas que passam nos filtros, de 5 a 1 estrela.","Reseñas leídas que pasan los filtros, de 5 a 1 estrella.","Collected reviews that pass the filters, from 5 to 1 star."):L3("Todas as avaliações do Google das lojas no recorte, de 5 a 1 estrela.","Todas las reseñas de Google de las tiendas en la selección, de 5 a 1 estrella.","All Google reviews for stores in the selection, from 5 to 1 star.")}</p></div>
         <div class="legend">${[5,4,3,2,1].map(k=>html`<span key=${k} class="note" style=${{display:"inline-flex",alignItems:"center",gap:5}}><span class="sw" style=${{background:starCol[k],borderRadius:3}}></span>${k}★</span>`)}</div></div>
       <div style=${{display:"grid",gap:12}}>
         ${reps.map(r=>html`<div key=${r.m} style=${{display:"grid",gridTemplateColumns:"minmax(96px,130px) minmax(0,1fr) 70px",gap:12,alignItems:"center"}}>
           <${Brand} m=${r.m}/>
-          ${r.dtot?html`<div class="stack" role="img" aria-label=${r.m+": "+[5,4,3,2,1].map(k=>k+" estrelas "+pct(r.dist[k]/r.dtot*100)).join(", ")}>
+          ${r.dtot?html`<div class="stack" role="img" aria-label=${r.m+": "+[5,4,3,2,1].map(k=>k+L3(" estrelas "," estrellas "," stars ")+pct(r.dist[k]/r.dtot*100)).join(", ")}>
             ${[5,4,3,2,1].map(k=>{const p=r.dist[k]/r.dtot*100; return html`<div key=${k} title=${`${k}★: ${fmt(r.dist[k])} (${pct(p,1)})`} style=${{width:p+"%",background:starCol[k]}}>${p>=6?pct(p):""}</div>`;})}
-          </div>`:html`<span class="note">sem loja</span>`}
+          </div>`:html`<span class="note">${L3("sem loja","sin tienda","no store")}</span>`}
           <span class="num" style=${{textAlign:"right",fontWeight:700}}>${fmt(r.nota,2)}</span>
         </div>`)}
       </div>
@@ -820,47 +851,55 @@ function Reputacao({lojas,revs,revsNeg,amostra,estrelas,setEstrelas}){
 
     <div class=${MENSAL?"grid":"grid g2"}>
       <section class="panel">
-        <div class="ph"><div><h2>Nota de cada loja, local a local</h2><p class="sub">Compara as marcas dentro do mesmo local, onde o público é o mesmo. Cada célula é uma loja: nota, barra de 3 a 5 na mesma régua para todas e total de avaliações. “▲ melhor” marca a maior nota do local. ${amostra?"Com filtro de avaliação ligado, os números saem da amostra filtrada.":"Sem filtro de avaliação, os números são o total do Google."}</p></div></div>
+        <div class="ph"><div><h2>${L3("Nota de cada loja, local a local","Nota de cada tienda, lugar por lugar","Rating by store, location by location")}</h2><p class="sub">${L3("Compara as marcas dentro do mesmo local, onde o público é o mesmo. Cada célula é uma loja: nota, barra de 3 a 5 na mesma régua para todas e total de avaliações. “▲ melhor” marca a maior nota do local.","Compara las marcas dentro del mismo lugar, donde el público es el mismo. Cada celda es una tienda: nota, barra de 3 a 5 con la misma escala para todas y total de reseñas. “▲ mejor” marca la nota más alta del lugar.","Compares brands within the same location, where the audience is the same. Each cell is a store: rating, a 3 to 5 bar on a shared scale and total reviews. “▲ best” marks the top rating at that location.")} ${amostra?L3("Com filtro de avaliação ligado, os números saem da amostra filtrada.","Con un filtro de reseñas activo, los números salen de la muestra filtrada.","With a review filter on, numbers come from the filtered sample."):L3("Sem filtro de avaliação, os números são o total do Google.","Sin filtro de reseñas, los números son el total de Google.","Without review filters, numbers are Google's totals.")}</p></div></div>
         <div class="tablewrap"><table class="matrix">
-          <thead><tr><th>Local</th>${MARCAS.map(m=>html`<th key=${m}><${Brand} m=${m}/></th>`)}</tr></thead>
+          <thead><tr><th>${L3("Local","Lugar","Location")}</th>${MARCAS.map(m=>html`<th key=${m}><${Brand} m=${m}/></th>`)}</tr></thead>
           <tbody>${shoppings.map(sh=>{
             const cel = Object.fromEntries(MARCAS.map(m=>{const l=lojas.find(x=>x.shopping===sh&&x.marca===m); return [m,l?{l,...repLoja(l,amostra)}:null];}));
             const vals = MARCAS.map(m=>cel[m]?.nota).filter(v=>v!=null);
             const top = vals.length>1 ? Math.max(...vals) : null;
             return html`<tr key=${sh}>
-              <td style=${{fontWeight:600,minWidth:150}}>${sh}<div class="note" style=${{fontWeight:400}}>${vals.length===3?"três marcas":vals.length+(vals.length===1?" marca":" marcas")}</div></td>
-              ${MARCAS.map(m=>{const c=cel[m]; if(!c) return html`<td key=${m}><span class="note">Sem loja</span></td>`;
-                if(c.nota==null) return html`<td key=${m}><span class="note">Sem avaliações no filtro</span></td>`;
+              <td style=${{fontWeight:600,minWidth:150}}>${localNome(sh)}<div class="note" style=${{fontWeight:400}}>${vals.length===3?L3("três marcas","tres marcas","three brands"):vals.length+" "+(vals.length===1?L3("marca","marca","brand"):L3("marcas","marcas","brands"))}</div></td>
+              ${MARCAS.map(m=>{const c=cel[m]; if(!c) return html`<td key=${m}><span class="note">${L3("Sem loja","Sin tienda","No store")}</span></td>`;
+                if(c.nota==null) return html`<td key=${m}><span class="note">${L3("Sem avaliações no filtro","Sin reseñas en el filtro","No reviews in filter")}</span></td>`;
                 return html`<td key=${m}><div class="mcell">
-                  <div class="v"><b class="num">${fmt(c.nota,2)}</b>${top!=null&&c.nota===top?html`<span class="top" style=${{background:cor(m),color:`var(--b${MI[m]}-ink,#fff)`}} title="Maior nota deste local">▲ melhor</span>`:null}</div>
+                  <div class="v"><b class="num">${fmt(c.nota,2)}</b>${top!=null&&c.nota===top?html`<span class="top" style=${{background:cor(m),color:`var(--b${MI[m]}-ink,#fff)`}} title=${L3("Maior nota deste local","Nota más alta de este lugar","Top rating at this location")}>▲ ${L3("melhor","mejor","best")}</span>`:null}</div>
                   <div class="mtrack"><div style=${{width:Math.max(0,(c.nota-3)/2*100)+"%",background:cor(m)}}></div></div>
-                  <span class="note num">${fmt(c.total)} avaliações${amostra?" no filtro":""}</span>
+                  <span class="note num">${fmt(c.total)} ${L3("avaliações","reseñas","reviews")}${amostra?L3(" no filtro"," en el filtro"," in filter"):""}</span>
                 </div></td>`;})}
             </tr>`;})}</tbody>
         </table></div>
       </section>
       <section class="panel">
-        <div class="ph"><div><h2>${MENSAL?"Nota média mês a mês":"Nota média por período da avaliação"}</h2><p class="sub">${MENSAL?`De ${FAIXAS[0]} até ${FAIXAS[FAIXAS.length-1]}, só com as avaliações coletadas nesse intervalo. O mês vem da idade que o Google informa (“há 3 meses”), então tem precisão aproximada de um mês. A variação compara o mês mais recente com o primeiro. Meses com menos de 10 avaliações mostram só a contagem entre parênteses. O filtro de estrelas não se aplica aqui.`:"Da esquerda (mais antigo) para a direita (mais recente). A variação compara o último ano com o período mais antigo. Períodos com menos de 10 avaliações na amostra aparecem como “poucas”."}</p></div></div>
+        <div class="ph"><div><h2>${MENSAL?L3("Nota média mês a mês","Nota media mes a mes","Average rating by month"):L3("Nota média por período da avaliação","Nota media por período de la reseña","Average rating by review period")}</h2><p class="sub">${MENSAL?L3(`De ${FAIXAS[0]} até ${FAIXAS[FAIXAS.length-1]}, só com as avaliações coletadas nesse intervalo. O mês vem da idade que o Google informa (“há 3 meses”), então tem precisão aproximada de um mês. A variação compara o mês mais recente com o primeiro. Meses com menos de 10 avaliações mostram só a contagem entre parênteses. O filtro de estrelas não se aplica aqui.`,`De ${FAIXAS[0]} a ${FAIXAS[FAIXAS.length-1]}, solo con las reseñas recogidas en ese intervalo. El mes sale de la antigüedad que informa Google (“hace 3 meses”), así que tiene una precisión aproximada de un mes. La variación compara el mes más reciente con el primero. Los meses con menos de 10 reseñas muestran solo el conteo entre paréntesis. El filtro de estrellas no se aplica aquí.`,`From ${FAIXAS[0]} to ${FAIXAS[FAIXAS.length-1]}, using only reviews collected in that window. The month comes from the age Google shows (“3 months ago”), so it is accurate to roughly a month. The change compares the latest month with the first. Months with fewer than 10 reviews show only the count in brackets. The star filter does not apply here.`):L3("Da esquerda (mais antigo) para a direita (mais recente). A variação compara o último ano com o período mais antigo. Períodos com menos de 10 avaliações na amostra aparecem como “poucas”.","De izquierda (más antiguo) a derecha (más reciente). La variación compara el último año con el período más antiguo. Los períodos con menos de 10 reseñas muestran solo el conteo.","From left (oldest) to right (most recent). The change compares the last year with the oldest period. Periods with fewer than 10 reviews show only the count.")}</p></div></div>
         <${Evolucao} idade=${idade}/>
       </section>
     </div>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Como cada marca responde, estrela por estrela</h2><p class="sub">Percentual de avaliações lidas que receberam resposta da loja, separado pela nota que o cliente deu. Abaixo de cada nota, quantas avaliações sustentam o percentual (${MARCAS.join(" · ")}). Clique numa nota para filtrar o painel por ela.${estrelas.length?" Este bloco mostra todas as notas mesmo com o filtro de estrelas ligado.":""}</p></div></div>
+      <div class="ph"><div><h2>${L3("Como cada marca responde, estrela por estrela","Cómo responde cada marca, estrella por estrella","How each brand replies, star by star")}</h2><p class="sub">${L3("Percentual de avaliações lidas que receberam resposta da loja, separado pela nota que o cliente deu. Abaixo de cada nota, quantas avaliações sustentam o percentual","Porcentaje de reseñas leídas que recibieron respuesta de la tienda, separado por la nota que dio el cliente. Debajo de cada nota, cuántas reseñas sostienen el porcentaje","Share of collected reviews that got a reply from the store, split by the rating the shopper gave. Under each rating, how many reviews back the percentage")} (${MARCAS.join(" · ")}). ${L3("Clique numa nota para filtrar o painel por ela.","Haga clic en una nota para filtrar el panel.","Click a rating to filter the dashboard by it.")}${estrelas.length?L3(" Este bloco mostra todas as notas mesmo com o filtro de estrelas ligado."," Este bloque muestra todas las notas aunque el filtro de estrellas esté activo."," This block shows every rating even with the star filter on."):""}</p></div></div>
       <${GroupBars} rows=${[
-        {id:"todas",nome:"Todas as notas",sub:MARCAS.map(m=>fmt(revsNeg.filter(r=>r.marca===m).length)).join(" · ")+" avaliações",
+        {id:"todas",nome:L3("Todas as notas","Todas las notas","All ratings"),sub:MARCAS.map(m=>fmt(revsNeg.filter(r=>r.marca===m).length)).join(" · ")+" "+L3("avaliações","reseñas","reviews"),
           v:Object.fromEntries(MARCAS.map(m=>[m,revStats(revsNeg.filter(r=>r.marca===m)).resp]))},
         ...[1,2,3,4,5].map(k=>{ const por=Object.fromEntries(MARCAS.map(m=>[m,revsNeg.filter(r=>r.marca===m&&r.e===k)]));
-          return {id:"e"+k, nome:"★".repeat(k)+"☆".repeat(5-k)+`  ${k} estrela${k>1?"s":""}`,
-            sub:MARCAS.map(m=>fmt(por[m].length)).join(" · ")+" avaliações",
+          return {id:"e"+k, nome:"★".repeat(k)+"☆".repeat(5-k)+`  ${k} `+(k>1?L3("estrelas","estrellas","stars"):L3("estrela","estrella","star")),
+            sub:MARCAS.map(m=>fmt(por[m].length)).join(" · ")+" "+L3("avaliações","reseñas","reviews"),
             v:Object.fromEntries(MARCAS.map(m=>[m,por[m].length>=5?revStats(por[m]).resp:null]))}; }),
       ]} max=${100} picked=${estrelas.length===1?"e"+estrelas[0]:""}
         onPick=${id=>{ if(id==="todas"){ setEstrelas([]); return; } const k=+id.slice(1); setEstrelas(estrelas.length===1&&estrelas[0]===k?[]:[k]); }}
-        hint="Notas com menos de 5 avaliações de uma marca ficam sem percentual."/>
+        hint=${L3("Notas com menos de 5 avaliações de uma marca ficam sem percentual.","Las notas con menos de 5 reseñas de una marca quedan sin porcentaje.","Ratings with fewer than 5 reviews for a brand show no percentage.")}/>
     </section>
   </div>`;
 }
 
+const relData = r => {
+  if(LANG==="pt" || r.m==null) return r.d;
+  const m = Math.round(r.m);
+  if(r.m < 1) return L3("","hace menos de un mes","less than a month ago");
+  if(m < 12) return L3("", m===1?"hace 1 mes":`hace ${m} meses`, m===1?"1 month ago":`${m} months ago`);
+  const a = Math.round(r.m/12);
+  return L3("", a===1?"hace 1 año":`hace ${a} años`, a===1?"1 year ago":`${a} years ago`);
+};
 function highlight(text, termo, tema){
   const res = [];
   if(termo) res.push(new RegExp(termo.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"));
@@ -891,64 +930,65 @@ function Voz({lojas,revs,revsTemas,revsNeg,estrelas,tema,setTema,busca}){
   const ord = {piores:(a,b)=>a.e-b.e||a.m-b.m, melhores:(a,b)=>b.e-a.e||a.m-b.m, recentes:(a,b)=>(a.m??99)-(b.m??99), longas:(a,b)=>b.t.length-a.t.length};
   return html`<div>
     <div class="nivel">
-      <div class="fld"><span class="flabel">Livro de códigos</span>
-        <${Seg} value=${nivel} onChange=${v=>{setNivel(v); if(v==="nets") setNetAberta("");}} label="Nível do livro de códigos" options=${[{id:"nets",nome:`Nets (${NETS.length})`},{id:"codigos",nome:`Códigos (${TEMAS.length})`}]}/></div>
+      <div class="fld"><span class="flabel">${L3("Livro de códigos","Libro de códigos","Codebook")}</span>
+        <${Seg} value=${nivel} onChange=${v=>{setNivel(v); if(v==="nets") setNetAberta("");}} label=${L3("Nível do livro de códigos","Nivel del libro de códigos","Codebook level")} options=${[{id:"nets",nome:`Nets (${NETS.length})`},{id:"codigos",nome:`${L3("Códigos","Códigos","Codes")} (${TEMAS.length})`}]}/></div>
       ${nivel==="codigos" && html`<div class="fld"><label for="f-net">Net</label>
-        <select id="f-net" value=${netAberta} onChange=${e=>setNetAberta(e.target.value)}><option value="">Todas as nets</option>${NETS.map(n=>html`<option key=${n.id} value=${n.net}>${n.nome}</option>`)}</select></div>`}
-      ${nivel==="nets" && netAberta && html`<button class="linkbtn" onClick=${()=>setNivel("codigos")}>Abrir os códigos de ${netAberta}</button>`}
+        <select id="f-net" value=${netAberta} onChange=${e=>setNetAberta(e.target.value)}><option value="">${L3("Todas as nets","Todas las nets","All nets")}</option>${NETS.map(n=>html`<option key=${n.id} value=${n.net}>${n.nome}</option>`)}</select></div>`}
+      ${nivel==="nets" && netAberta && html`<button class="linkbtn" onClick=${()=>setNivel("codigos")}>${L3("Abrir os códigos de ","Abrir los códigos de ","Open the codes in ")}${netNome(netAberta)}</button>`}
     </div>
     <div class="grid g2">
       <section class="panel">
-        <div class="ph"><div><h2>Quanto se fala de cada ${nivel==="nets"?"net":"código"}</h2><p class="sub">Parcela das avaliações com texto. ${nivel==="nets"?"Cada net agrupa códigos parecidos; clique para filtrar e depois abra os códigos.":"Códigos"+(netAberta?" da net "+netAberta:" de todas as nets")+". Clique para filtrar as avaliações abaixo."}</p></div></div>
-        <${GroupBars} rows=${lista.map(t=>({id:t.id,nome:t.nome,sub:nivel==="nets"?nCod(t.net):(netAberta?null:t.net),v:Object.fromEntries(MARCAS.map(m=>[m,st[m].comTexto?st[m].temas[t.id].pct:null]))}))} max=${escala(MARCAS.flatMap(m=>lista.map(t=>st[m].temas[t.id].pct)))} onPick=${pick} picked=${tema}/>
+        <div class="ph"><div><h2>${nivel==="nets"?L3("Quanto se fala de cada net","Cuánto se habla de cada net","How often each net comes up"):L3("Quanto se fala de cada código","Cuánto se habla de cada código","How often each code comes up")}</h2><p class="sub">${L3("Parcela das avaliações com texto.","Proporción de reseñas con texto.","Share of reviews with text.")} ${nivel==="nets"?L3("Cada net agrupa códigos parecidos; clique para filtrar e depois abra os códigos.","Cada net agrupa códigos parecidos; haga clic para filtrar y luego abra los códigos.","Each net groups similar codes; click to filter, then open its codes."):(netAberta?L3("Códigos da net ","Códigos de la net ","Codes in ")+netNome(netAberta):L3("Códigos de todas as nets","Códigos de todas las nets","Codes across all nets"))+". "+L3("Clique para filtrar as avaliações abaixo.","Haga clic para filtrar las reseñas de abajo.","Click to filter the reviews below.")}</p></div></div>
+        <${GroupBars} rows=${lista.map(t=>({id:t.id,nome:t.nome,sub:nivel==="nets"?nCod(t.net):(netAberta?null:netNome(t.net)),v:Object.fromEntries(MARCAS.map(m=>[m,st[m].comTexto?st[m].temas[t.id].pct:null]))}))} max=${escala(MARCAS.flatMap(m=>lista.map(t=>st[m].temas[t.id].pct)))} onPick=${pick} picked=${tema}/>
       </section>
       <section class="panel">
-        <div class="ph"><div><h2>Quando o tema aparece, quanto é reclamação</h2><p class="sub">Das avaliações que citam o tema, quantas deram nota 1 ou 2. Ao lado, o número de citações. Temas com menos de 10 citações ficam sem valor.</p>
-          ${estrelas.length?html`<p class="sub" style=${{color:"var(--warn)",fontWeight:600}}>Este gráfico ignora o filtro de estrelas, que deixaria tudo em 0% ou 100%.</p>`:null}</div></div>
-        <${GroupBars} rows=${lista.map(t=>({id:t.id,nome:t.nome,sub:MARCAS.map(m=>stNeg[m].temas[t.id].n).join(" · ")+" citações",v:Object.fromEntries(MARCAS.map(m=>[m,stNeg[m].temas[t.id].n>=10?stNeg[m].temas[t.id].neg:null]))}))} max=${100} onPick=${pick} picked=${tema}/>
+        <div class="ph"><div><h2>${L3("Quando o tema aparece, quanto é reclamação","Cuando aparece el tema, cuánto es queja","When a topic comes up, how much is complaint")}</h2><p class="sub">${L3("Das avaliações que citam o tema, quantas deram nota 1 ou 2. Ao lado, o número de citações. Temas com menos de 10 citações ficam sem valor.","De las reseñas que citan el tema, cuántas dieron nota 1 o 2. Al lado, el número de menciones. Los temas con menos de 10 menciones quedan sin valor.","Of the reviews that mention the topic, how many gave 1 or 2 stars. Next to it, the number of mentions. Topics with fewer than 10 mentions show no value.")}</p>
+          ${estrelas.length?html`<p class="sub" style=${{color:"var(--warn)",fontWeight:600}}>${L3("Este gráfico ignora o filtro de estrelas, que deixaria tudo em 0% ou 100%.","Este gráfico ignora el filtro de estrellas, que dejaría todo en 0% o 100%.","This chart ignores the star filter, which would push everything to 0% or 100%.")}</p>`:null}</div></div>
+        <${GroupBars} rows=${lista.map(t=>({id:t.id,nome:t.nome,sub:MARCAS.map(m=>stNeg[m].temas[t.id].n).join(" · ")+" "+L3("citações","menciones","mentions"),v:Object.fromEntries(MARCAS.map(m=>[m,stNeg[m].temas[t.id].n>=10?stNeg[m].temas[t.id].neg:null]))}))} max=${100} onPick=${pick} picked=${tema}/>
       </section>
     </div>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Tópicos que o Google destaca</h2><p class="sub">Termos que o próprio Google extrai de todas as avaliações das lojas do recorte. Muda com o filtro de locais; os filtros de avaliação não se aplicam aqui.</p></div></div>
+      <div class="ph"><div><h2>${L3("Tópicos que o Google destaca","Temas que destaca Google","Topics Google highlights")}</h2><p class="sub">${L3("Termos que o próprio Google extrai de todas as avaliações das lojas do recorte. Muda com o filtro de locais; os filtros de avaliação não se aplicam aqui.","Términos que Google extrae de todas las reseñas de las tiendas de la selección, en el idioma original. Cambia con el filtro de lugares; los filtros de reseñas no se aplican aquí.","Terms Google itself extracts from all reviews of the selected stores, in the original language. They change with the location filter; review filters do not apply here.")}</p></div></div>
       <div class="grid g3" style=${{marginTop:0}}>
         ${topicos.map(t=>html`<div key=${t.m}>
           <div style=${{marginBottom:8}}><${Brand} m=${t.m}/></div>
           <div style=${{display:"flex",flexWrap:"wrap",gap:6}}>
-            ${t.lista.length?t.lista.map(([k,v])=>html`<span key=${k} class="minitag" style=${{background:soft(t.m),color:"var(--ink)",fontSize:12,padding:"3px 8px"}}>${k} <b class="num">${v}</b></span>`):html`<span class="note">Sem tópicos</span>`}
+            ${t.lista.length?t.lista.map(([k,v])=>html`<span key=${k} class="minitag" style=${{background:soft(t.m),color:"var(--ink)",fontSize:12,padding:"3px 8px"}}>${k} <b class="num">${v}</b></span>`):html`<span class="note">${L3("Sem tópicos","Sin temas","No topics")}</span>`}
           </div>
         </div>`)}
       </div>
     </section>
 
     <div class="ph" style=${{marginTop:22,alignItems:"end"}}>
-      <div><h2>Avaliações lado a lado</h2><p class="sub">${fmt(comTexto.length)} avaliações com texto no recorte${tema?`, tema ${TEMA_POR_ID[tema].nome}`:""}${busca?`, busca “${busca}”`:""}.</p></div>
-      <div class="fld"><span class="flabel">Ordenar</span>
-        <${Seg} value=${ordem} onChange=${setOrdem} label="Ordenar avaliações" options=${[{id:"piores",nome:"Piores"},{id:"melhores",nome:"Melhores"},{id:"recentes",nome:"Recentes"},{id:"longas",nome:"Mais longas"}]}/></div>
+      <div><h2>${L3("Avaliações lado a lado","Reseñas lado a lado","Reviews side by side")}</h2><p class="sub">${fmt(comTexto.length)} ${L3("avaliações com texto no recorte","reseñas con texto en la selección","reviews with text in the selection")}${tema?`, ${L3("tema","tema","topic")} ${TEMA_POR_ID[tema].nome}`:""}.${LANG!=="pt"?" "+L3("","Las reseñas se muestran en el idioma original.","Reviews are shown in their original language."):""}</p></div>
+      <div class="fld"><span class="flabel">${L3("Ordenar","Ordenar","Sort")}</span>
+        <${Seg} value=${ordem} onChange=${setOrdem} label=${L3("Ordenar avaliações","Ordenar reseñas","Sort reviews")} options=${[{id:"piores",nome:L3("Piores","Peores","Worst")},{id:"melhores",nome:L3("Melhores","Mejores","Best")},{id:"recentes",nome:L3("Recentes","Recientes","Newest")},{id:"longas",nome:L3("Mais longas","Más largas","Longest")}]}/></div>
     </div>
     <div class="revcols">
       ${MARCAS.map(m=>{
         const lista = comTexto.filter(r=>r.marca===m).sort(ord[ordem]);
         return html`<div class="revcol" key=${m}>
-          <div class="revhead"><${Brand} m=${m}/><span class="num note">${fmt(lista.length)} avaliações · média ${fmt(lista.length?lista.reduce((s,r)=>s+r.e,0)/lista.length:null,1)}</span></div>
-          ${lista.length===0 && html`<div class="rev"><p class="note">Nenhuma avaliação neste recorte.</p></div>`}
+          <div class="revhead"><${Brand} m=${m}/><span class="num note">${fmt(lista.length)} ${L3("avaliações","reseñas","reviews")} · ${L3("média","media","avg")} ${fmt(lista.length?lista.reduce((s,r)=>s+r.e,0)/lista.length:null,1)}</span></div>
+          ${lista.length===0 && html`<div class="rev"><p class="note">${L3("Nenhuma avaliação neste recorte.","Ninguna reseña en esta selección.","No reviews in this selection.")}</p></div>`}
           ${lista.slice(0,limite).map(r=>{const l=LOJA[r.s]; return html`<article class="rev" key=${r.i}>
-            <div class="revmeta"><${Stars} v=${r.e} size=${12}/><span>${r.d}</span><span>·</span><span>${l.shopping}</span></div>
+            <div class="revmeta"><${Stars} v=${r.e} size=${12}/><span>${relData(r)}</span><span>·</span><span>${localNome(l.shopping)}</span></div>
             <p>${highlight(r.t,busca,tema)}</p>
             <div class="revmeta">
               ${r.temas.map(t=>html`<button key=${t} class="minitag" style=${{border:0}} onClick=${()=>setTema(t)}>${TEMA_POR_ID[t].nome}</button>`)}
-              ${r.r?html`<span class="badge" style=${{background:"var(--good-bg)",color:"var(--good)"}}>loja respondeu</span>`:null}
+              ${r.r?html`<span class="badge" style=${{background:"var(--good-bg)",color:"var(--good)"}}>${L3("loja respondeu","la tienda respondió","store replied")}</span>`:null}
               ${r.g?html`<span class="badge t-info">Local Guide</span>`:null}
-              ${r.f?html`<span class="note">${r.f} foto${r.f>1?"s":""}</span>`:null}
+              ${r.f?html`<span class="note">${r.f} ${r.f>1?L3("fotos","fotos","photos"):L3("foto","foto","photo")}</span>`:null}
             </div>
           </article>`;})}
-          ${lista.length>limite && html`<button class="more" onClick=${()=>setLimite(limite+12)}>Mostrar mais ${Math.min(12,lista.length-limite)} de ${fmt(lista.length-limite)}</button>`}
+          ${lista.length>limite && html`<button class="more" onClick=${()=>setLimite(limite+12)}>${L3("Mostrar mais","Mostrar","Show")} ${Math.min(12,lista.length-limite)} ${L3("de","más de","more of")} ${fmt(lista.length-limite)}</button>`}
         </div>`;
       })}
     </div>
   </div>`;
 }
 
+const horaTxt = h => LANG==="pt" ? h : h.replace(/ a /g,L3(""," a "," to ")).replace(/^Fechado$/i,L3("","Cerrado","Closed")).replace(/(Aberto|Atendimento) 24 horas/i,L3("","Abierto 24 horas","Open 24 hours"));
 function Lojas({lojas,revs,amostra,dia}){
   const [sort,setSort] = useState({k:"shopping",dir:1});
   const hoje = DIAS[new Date().getDay()];
@@ -966,7 +1006,7 @@ function Lojas({lojas,revs,amostra,dia}){
   });
   // Rotulos sem sobreposicao: tenta posicoes em volta do ponto e, sem espaco,
   // afasta o texto com uma linha ate o ponto
-  const nomeCurto = t => t.replace(/^Rua · /,"").replace(/^Loja de rua · /,"");
+  const nomeCurto = t => t.replace(/^Rua · /,"").replace(/^Loja de rua · /,"").replace(/^Loja de rua$/, L3("Loja de rua","Tienda de calle","Street store"));
   const larg = t => t.length*6.4 + 6, ALT = 15;
   const caixas = [];
   const colide = b => b.x<-16||b.x+b.w>W+16||b.y<2||b.y+b.h>H-2|| caixas.some(c=>b.x<c.x+c.w&&b.x+b.w>c.x&&b.y<c.y+c.h&&b.y+b.h>c.y)
@@ -993,7 +1033,7 @@ function Lojas({lojas,revs,amostra,dia}){
     const st = revStats(revs.filter(r=>r.s===l.id));
     const rp = repLoja(l, amostra);
     let best=null; (dia==="todos"?DIAS:[dia]).forEach(d=>Object.entries(l.pico[d]||{}).forEach(([h,v])=>{ if(v>0&&(!best||v>best.v)) best={d,h:+h,v}; }));
-    return {...l, notaF:rp.nota, totalF:rp.total, neg:rp.neg, best, resp:st.resp, hoje:l.horario[hoje]||l.horario[hoje.replace("terca","terça").replace("sabado","sábado")]||"–"};
+    return {...l, notaF:rp.nota, totalF:rp.total, neg:rp.neg, best, resp:st.resp, hoje:horaTxt(l.horario[hoje]||l.horario[hoje.replace("terca","terça").replace("sabado","sábado")]||"–")};
   });
   const keyf = {shopping:r=>r.shopping+MI[r.marca], marca:r=>MI[r.marca], nota:r=>r.notaF??0, total:r=>r.totalF??0, neg:r=>r.neg??0, pico:r=>r.best?.v??0, resp:r=>r.resp??0};
   rows.sort((a,b)=>{const x=keyf[sort.k](a),y=keyf[sort.k](b); return (x>y?1:x<y?-1:0)*sort.dir;});
@@ -1001,40 +1041,40 @@ function Lojas({lojas,revs,amostra,dia}){
   return html`<div>
     <div class="grid g21">
       <section class="panel">
-        <div class="ph"><div><h2>Onde estão as lojas</h2><p class="sub">Posição real das lojas, sem mapa de fundo. Lojas a menos de 400 m umas das outras ficam agrupadas num só ponto. Passe o mouse no ponto para ver a marca.</p></div>
+        <div class="ph"><div><h2>${L3("Onde estão as lojas","Dónde están las tiendas","Where the stores are")}</h2><p class="sub">${L3("Posição real das lojas, sem mapa de fundo. Lojas a menos de 400 m umas das outras ficam agrupadas num só ponto. Passe o mouse no ponto para ver a marca.","Posición real de las tiendas, sin mapa de fondo. Las tiendas a menos de 400 m entre sí se agrupan en un solo punto. Pase el mouse por el punto para ver la marca.","Real store positions, without a base map. Stores less than 400 m apart are grouped into one point. Hover a point to see the brand.")}</p></div>
           <div class="legend">${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}</span>`)}</div></div>
         <div class="mapbox tablewrap">
-          <svg viewBox=${`-20 -10 ${W+40} ${H+20}`} style=${{width:"100%",minWidth:420,display:"block"}} role="img" aria-label="Mapa esquemático das lojas em Goiânia">
+          <svg viewBox=${`-20 -10 ${W+40} ${H+20}`} style=${{width:"100%",minWidth:420,display:"block"}} role="img" aria-label=${L3("Mapa esquemático das lojas","Mapa esquemático de las tiendas","Schematic store map")}>
             ${Array.from({length:9},(_,i)=>html`<line key=${"v"+i} x1=${i*W/8} x2=${i*W/8} y1="0" y2=${H} stroke="var(--line)" />`)}
             ${Array.from({length:7},(_,i)=>html`<line key=${"h"+i} y1=${i*H/6} y2=${i*H/6} x1="0" x2=${W} stroke="var(--line)" />`)}
-            <text class="city" x=${W-8} y=${H-10} text-anchor="end">GOIÂNIA · GO</text>
+            <text class="city" x=${W-8} y=${H-10} text-anchor="end">${D.cidade.toUpperCase().replace(", "," · ")}</text>
             <text x="4" y="12">${fmt(box.b,3)}°</text>
             <text x="4" y=${H-4}>${fmt(box.a,3)}°</text>
             ${rotulos.map(g=>html`<g key=${g.id} onMouseEnter=${()=>setHov(g.id)} onMouseLeave=${()=>setHov(null)} style=${{cursor:"default"}}>
                 <circle cx=${g.cx} cy=${g.cy} r="30" fill=${hov===g.id?"var(--chip)":"transparent"} />
                 ${g.puxado && html`<line x1=${g.cx} y1=${g.cy} x2=${g.ax} y2=${g.ay} stroke="var(--line-2)" stroke-width="1"/>`}
                 ${g.ls.map((l,i)=>{const ang = (i/g.ls.length)*Math.PI*2 - Math.PI/2; const r=g.ls.length>1?11:0; const x=g.cx+Math.cos(ang)*r, y=g.cy+Math.sin(ang)*r;
-                  return MI[l.marca]===0 ? html`<circle key=${l.id} cx=${x} cy=${y} r="7" fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${l.shopping}</title></circle>`
-                    : MI[l.marca]===1 ? html`<rect key=${l.id} x=${x-6.5} y=${y-6.5} width="13" height="13" rx="2" fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${l.shopping}</title></rect>`
-                    : html`<path key=${l.id} d=${`M${x},${y-8} L${x+7.5},${y+6} L${x-7.5},${y+6} Z`} fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${l.shopping}</title></path>`;})}
+                  return MI[l.marca]===0 ? html`<circle key=${l.id} cx=${x} cy=${y} r="7" fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${localNome(l.shopping)}</title></circle>`
+                    : MI[l.marca]===1 ? html`<rect key=${l.id} x=${x-6.5} y=${y-6.5} width="13" height="13" rx="2" fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${localNome(l.shopping)}</title></rect>`
+                    : html`<path key=${l.id} d=${`M${x},${y-8} L${x+7.5},${y+6} L${x-7.5},${y+6} Z`} fill=${cor(l.marca)} stroke="var(--panel)" stroke-width="2"><title>${l.marca} · ${localNome(l.shopping)}</title></path>`;})}
                 <text class="shop" x=${g.tx} y=${g.ty} text-anchor=${g.anchor} paint-order="stroke" stroke="var(--panel-2)" stroke-width="4" stroke-linejoin="round">${g.texto}</text>
               </g>`)}
           </svg>
         </div>
       </section>
       <section class="panel">
-        <div class="ph"><div><h2>Presença por local</h2><p class="sub">Onde as três marcas disputam o mesmo público.</p></div></div>
-        <table><thead><tr><th>Local</th>${MARCAS.map(m=>html`<th key=${m} style=${{textAlign:"center"}}><${Swatch} m=${m}/></th>`)}</tr></thead>
-          <tbody>${SHOPPINGS.map(s=>{const ms=new Set(lojas.filter(l=>l.shopping===s).map(l=>l.marca)); if(!ms.size) return null; return html`<tr key=${s}><td style=${{fontWeight:ms.size===3?700:400}}>${s}</td>${MARCAS.map(m=>html`<td key=${m} style=${{textAlign:"center"}}>${ms.has(m)?html`<${Swatch} m=${m} size=${10}/>`:html`<span class="note">·</span>`}</td>`)}</tr>`;})}</tbody></table>
+        <div class="ph"><div><h2>${L3("Presença por local","Presencia por lugar","Presence by location")}</h2><p class="sub">${L3("Onde as três marcas disputam o mesmo público.","Dónde las tres marcas compiten por el mismo público.","Where the three brands compete for the same shoppers.")}</p></div></div>
+        <table><thead><tr><th>${L3("Local","Lugar","Location")}</th>${MARCAS.map(m=>html`<th key=${m} style=${{textAlign:"center"}}><${Swatch} m=${m}/></th>`)}</tr></thead>
+          <tbody>${SHOPPINGS.map(s=>{const ms=new Set(lojas.filter(l=>l.shopping===s).map(l=>l.marca)); if(!ms.size) return null; return html`<tr key=${s}><td style=${{fontWeight:ms.size===3?700:400}}>${localNome(s)}</td>${MARCAS.map(m=>html`<td key=${m} style=${{textAlign:"center"}}>${ms.has(m)?html`<${Swatch} m=${m} size=${10}/>`:html`<span class="note">·</span>`}</td>`)}</tr>`;})}</tbody></table>
       </section>
     </div>
 
     <section class="panel" style=${{marginTop:16}}>
-      <div class="ph"><div><h2>Todas as lojas</h2><p class="sub">Clique no cabeçalho para ordenar. Horário de hoje (${DIA_LONGO[hoje]}). ${amostra?"Nota, avaliações, notas 1 e 2 e resposta saem da amostra filtrada.":"Nota, avaliações e notas 1 e 2 são o total do Google; resposta vem das avaliações lidas."}</p></div></div>
+      <div class="ph"><div><h2>${L3("Todas as lojas","Todas las tiendas","All stores")}</h2><p class="sub">${L3("Clique no cabeçalho para ordenar. Horário de hoje","Haga clic en el encabezado para ordenar. Horario de hoy","Click a header to sort. Today's hours")} (${DIA_LONGO[hoje]}). ${amostra?L3("Nota, avaliações, notas 1 e 2 e resposta saem da amostra filtrada.","Nota, reseñas, notas 1 y 2 y respuesta salen de la muestra filtrada.","Rating, reviews, 1 and 2 stars and replies come from the filtered sample."):L3("Nota, avaliações e notas 1 e 2 são o total do Google; resposta vem das avaliações lidas.","Nota, reseñas y notas 1 y 2 son el total de Google; la respuesta sale de las reseñas leídas.","Rating, reviews and 1 and 2 stars are Google's totals; replies come from the collected reviews.")}</p></div></div>
       <div class="tablewrap"><table>
-        <thead><tr><${H_} k="shopping">Local</${H_}><${H_} k="marca">Marca</${H_}><${H_} k="nota" r>Nota</${H_}><${H_} k="total" r>Avaliações</${H_}><${H_} k="neg" r>Notas 1 e 2</${H_}><${H_} k="pico" r>${dia==="todos"?"Pico máx.":"Pico "+DIA_CURTO[dia]}</${H_}><th>Quando</th><th>Hoje</th><${H_} k="resp" r>Responde</${H_}><th>Telefone</th><th>Endereço</th></tr></thead>
+        <thead><tr><${H_} k="shopping">${L3("Local","Lugar","Location")}</${H_}><${H_} k="marca">${L3("Marca","Marca","Brand")}</${H_}><${H_} k="nota" r>${L3("Nota","Nota","Rating")}</${H_}><${H_} k="total" r>${L3("Avaliações","Reseñas","Reviews")}</${H_}><${H_} k="neg" r>${L3("Notas 1 e 2","Notas 1 y 2","1 and 2 stars")}</${H_}><${H_} k="pico" r>${dia==="todos"?L3("Pico máx.","Pico máx.","Max peak"):L3("Pico ","Pico ","Peak ")+DIA_CURTO[dia]}</${H_}><th>${L3("Quando","Cuándo","When")}</th><th>${L3("Hoje","Hoy","Today")}</th><${H_} k="resp" r>${L3("Responde","Responde","Replies")}</${H_}><th>${L3("Telefone","Teléfono","Phone")}</th><th>${L3("Endereço","Dirección","Address")}</th></tr></thead>
         <tbody>${rows.map(r=>html`<tr key=${r.id}>
-          <td style=${{fontWeight:600}}>${r.shopping}${r.pendente?html` <span class="badge" style=${{background:"var(--warn-bg)",color:"var(--warn)"}} title=${r.pendente}>coleta parcial</span>`:null}</td>
+          <td style=${{fontWeight:600}}>${localNome(r.shopping)}${r.pendente?html` <span class="badge" style=${{background:"var(--warn-bg)",color:"var(--warn)"}} title=${r.pendente}>${L3("coleta parcial","recolección parcial","partial collection")}</span>`:null}</td>
           <td><${Brand} m=${r.marca}/></td>
           <td class="r num"><b>${fmt(r.notaF,2)}</b></td>
           <td class="r num">${fmt(r.totalF)}</td>
@@ -1083,10 +1123,10 @@ function contexto(lojas,revs,filtrosTxt,amostra){
     const neg = rs.filter(r=>r.e<=2).slice(0,25), pos = rs.filter(r=>r.e>=4).slice(0,12), mid = rs.filter(r=>r.e===3).slice(0,5);
     [...neg,...mid,...pos].forEach(r=>trechos.push(`[${m} · ${LOJA[r.s].shopping} · ${r.e}★ · ${r.d}] ${r.t.slice(0,320)}`));
   });
-  return `DADOS DO PAINEL (coleta ${D.coleta}, ${D.cidade}, fonte: fichas públicas do Google Maps)
+  return `DADOS DO PAINEL (coleta ${D.coleta}, ${D.cidade}, fonte: fichas públicas do Google Maps; as avaliações estão no idioma original)
 Filtros ativos: ${filtrosTxt}
 ${amostra?"Nota, avaliações e notas 1 e 2 abaixo saem da amostra filtrada, não do total do Google.":"Nota, avaliações e notas 1 e 2 abaixo são o total do Google."}
-Lotação é o percentual de movimento que o Google mostra por hora. As avaliações são uma amostra de até 300 por loja, ${ORDEM_TXT}.
+Lotação é o percentual de movimento que o Google mostra por hora. As avaliações são uma amostra ${FAIXA_AMOSTRA}, ${ORDEM_TXT}.
 
 RESUMO POR MARCA (JSON):
 ${JSON.stringify(marcas)}
@@ -1106,18 +1146,32 @@ function Analista({lojas,revs,filtrosTxt,amostra}){
   const [erro,setErro] = useState("");
   const ctl = useRef(null);
   useEffect(()=>{ let vivo=true; (async()=>{ const s = window.claude ? await window.claude.use("sample") : null; if(vivo) setSample(s); })(); return ()=>{vivo=false}; },[]);
-  const SUG = [
+  const temaD = (TEMA_POR_ID[D.destaque_tema]||TEMAS[1]).nome.toLowerCase();
+  const SUG = L3([
     "Qual marca tem a operação de loja mais problemática e por quê?",
     `Compare as três marcas no local onde a disputa é mais direta: movimento, nota e reclamações.`,
     "Em que dia e horário cada marca precisa de mais gente no caixa?",
-    `Resuma as reclamações sobre ${(TEMA_POR_ID[D.destaque_tema]||TEMAS[1]).nome.toLowerCase()}, marca a marca.`,
-    `Quais três ações a ${MARCAS[0]} deveria priorizar frente a ${MARCAS.slice(1).join(" e ")}?`,
-  ];
+    `Resuma as reclamações sobre ${temaD}, marca a marca.`,
+    `Quais três ações ${de(MARCAS[0]).replace(/^d/,"")} deveria priorizar frente a ${MARCAS.slice(1).join(" e ")}?`,
+  ],[
+    "¿Qué marca tiene la operación de tienda más problemática y por qué?",
+    "Compare las tres marcas en el lugar donde la competencia es más directa: afluencia, nota y quejas.",
+    "¿Qué día y a qué hora necesita cada marca más personal en caja?",
+    `Resuma las quejas sobre ${temaD}, marca por marca.`,
+    `¿Qué tres acciones debería priorizar ${MARCAS[0]} frente a ${MARCAS.slice(1).join(" y ")}?`,
+  ],[
+    "Which brand has the most troubled store operation, and why?",
+    "Compare the three brands where competition is most direct: busyness, rating and complaints.",
+    "On which day and hour does each brand need more checkout staff?",
+    `Summarize complaints about ${temaD}, brand by brand.`,
+    `Which three actions should ${MARCAS[0]} prioritize against ${MARCAS.slice(1).join(" and ")}?`,
+  ]);
   const perguntar = async (pergunta) => {
     if(!sample || !pergunta.trim()) return;
     ctl.current?.abort(); ctl.current = new AbortController();
     setEstado("pensando"); setResp(""); setErro("");
-    const prompt = `Você é analista de inteligência de varejo. Responda em português do Brasil, de forma direta, comparando SEMPRE as três marcas (${MARCAS.join(", ")}) quando fizer sentido. Use só os dados abaixo, cite números, e diga quando a amostra for pequena. Formato: um parágrafo curto de resposta, depois tópicos com "- " e negrito com **. Nunca use travessão nem hífen para separar ideias; use ponto ou vírgula.
+    const idiomaResp = L3("português do Brasil","español","English");
+    const prompt = `Você é analista de inteligência de varejo. Responda em ${idiomaResp}, de forma direta, comparando SEMPRE as três marcas (${MARCAS.join(", ")}) quando fizer sentido. Use só os dados abaixo, cite números, e diga quando a amostra for pequena. Formato: um parágrafo curto de resposta, depois tópicos com "- " e negrito com **. Nunca use travessão nem hífen para separar ideias; use ponto ou vírgula.
 
 ${contexto(lojas,revs,filtrosTxt,amostra)}
 
@@ -1127,27 +1181,27 @@ PERGUNTA: ${pergunta}`;
       setResp(text); setEstado("pronto");
     }catch(e){
       setResp(e.text||""); setEstado("pronto");
-      const msg = {not_granted:"O acesso à IA não foi liberado nesta visualização.", rate_limited:"Muitas perguntas seguidas. Espere um minuto e pergunte de novo.", cancelled:""}[e.code];
-      setErro(msg ?? "Não foi possível responder agora. Tente de novo em instantes.");
+      const msg = {not_granted:L3("O acesso à IA não foi liberado nesta visualização.","El acceso a la IA no fue habilitado en esta vista.","AI access was not granted in this view."), rate_limited:L3("Muitas perguntas seguidas. Espere um minuto e pergunte de novo.","Demasiadas preguntas seguidas. Espere un minuto y vuelva a preguntar.","Too many questions in a row. Wait a minute and ask again."), cancelled:""}[e.code];
+      setErro(msg ?? L3("Não foi possível responder agora. Tente de novo em instantes.","No fue posible responder ahora. Intente de nuevo en unos instantes.","Could not answer right now. Try again shortly."));
       if(e.code==="not_granted") setSample(null);
     }
   };
-  if(sample===null) return html`<section class="panel" style=${{marginTop:14}}><h2>Analista <span class="beta">Beta</span></h2><div class="callout" style=${{marginTop:10}}><b>Em construção</b><span>O analista com IA ainda não está disponível nesta versão. Os demais painéis estão completos e usam os mesmos filtros.</span></div></section>`;
+  if(sample===null) return html`<section class="panel" style=${{marginTop:14}}><h2>${L3("Analista","Analista","Analyst")} <span class="beta">Beta</span></h2><div class="callout" style=${{marginTop:10}}><b>${L3("Em construção","En construcción","Coming soon")}</b><span>${L3("O analista com IA ainda não está disponível nesta versão. Os demais painéis estão completos e usam os mesmos filtros.","El analista con IA aún no está disponible en esta versión. Los demás paneles están completos y usan los mismos filtros.","The AI analyst is not available in this version yet. All other panels are complete and use the same filters.")}</span></div></section>`;
   return html`<section class="panel" style=${{marginTop:14}}>
-    <div class="callout" style=${{marginTop:0,marginBottom:14}}><b>Beta</b><span>Recurso em construção. As respostas são geradas por IA a partir dos dados do painel e podem ter imprecisões. Confira os números nas outras abas antes de usar.</span></div>
-    <div class="ph"><div><h2 style=${{display:"flex",alignItems:"center",gap:8}}>Pergunte ao painel <span class="beta">Beta</span></h2><p class="sub">O analista lê os números e trechos de avaliações do recorte atual (${filtrosTxt}) e responde comparando as três marcas. Cada pergunta usa a sua conta do Claude.</p></div></div>
+    <div class="callout" style=${{marginTop:0,marginBottom:14}}><b>Beta</b><span>${L3("Recurso em construção. As respostas são geradas por IA a partir dos dados do painel e podem ter imprecisões. Confira os números nas outras abas antes de usar.","Función en construcción. Las respuestas las genera una IA a partir de los datos del panel y pueden tener imprecisiones. Verifique los números en las otras pestañas antes de usarlos.","Work in progress. Answers are AI-generated from the dashboard data and may be inaccurate. Check the numbers in the other tabs before relying on them.")}</span></div>
+    <div class="ph"><div><h2 style=${{display:"flex",alignItems:"center",gap:8}}>${L3("Pergunte ao painel","Pregunte al panel","Ask the dashboard")} <span class="beta">Beta</span></h2><p class="sub">${L3("O analista lê os números e trechos de avaliações do recorte atual","El analista lee los números y fragmentos de reseñas de la selección actual","The analyst reads the numbers and review excerpts in the current selection")} (${filtrosTxt}) ${L3("e responde comparando as três marcas. Cada pergunta usa a sua conta do Claude.","y responde comparando las tres marcas. Cada pregunta usa su cuenta de Claude.","and answers comparing the three brands. Each question uses your Claude account.")}</p></div></div>
     <div class="ask">
       <div class="sugg">${SUG.map(s=>html`<button key=${s} onClick=${()=>{setQ(s);perguntar(s);}} disabled=${!sample||estado!=="pronto"}>${s}</button>`)}</div>
-      <label class="flabel" for="pergunta">Sua pergunta</label>
-      <textarea id="pergunta" value=${q} onInput=${e=>setQ(e.target.value)} placeholder=${`Ex.: onde a ${MARCAS[2]} perde para a ${MARCAS[1]} no mesmo local?`}
+      <label class="flabel" for="pergunta">${L3("Sua pergunta","Su pregunta","Your question")}</label>
+      <textarea id="pergunta" value=${q} onInput=${e=>setQ(e.target.value)} placeholder=${L3(`Ex.: onde ${de(MARCAS[2]).replace(/^d/,"")} perde para ${de(MARCAS[1]).replace(/^d/,"")} no mesmo local?`,`Ej.: ¿dónde pierde ${MARCAS[2]} frente a ${MARCAS[1]} en el mismo lugar?`,`E.g.: where does ${MARCAS[2]} lose to ${MARCAS[1]} at the same location?`)}
         onKeyDown=${e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)) perguntar(q);}}></textarea>
       <div style=${{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
-        <button class="primary" onClick=${()=>perguntar(q)} disabled=${!sample||estado!=="pronto"||!q.trim()}>${sample===undefined?"Conectando…":"Analisar"}</button>
-        ${estado!=="pronto" && html`<button class="ghost" onClick=${()=>ctl.current?.abort()}>Parar</button>`}
-        <span class="note">⌘ + Enter envia</span>
+        <button class="primary" onClick=${()=>perguntar(q)} disabled=${!sample||estado!=="pronto"||!q.trim()}>${sample===undefined?L3("Conectando…","Conectando…","Connecting…"):L3("Analisar","Analizar","Analyze")}</button>
+        ${estado!=="pronto" && html`<button class="ghost" onClick=${()=>ctl.current?.abort()}>${L3("Parar","Detener","Stop")}</button>`}
+        <span class="note">${L3("⌘ + Enter envia","⌘ + Enter envía","⌘ + Enter sends")}</span>
       </div>
-      ${estado==="pensando" && html`<div class="thinking"><i></i><i></i><i></i> Lendo os dados…</div>`}
-      ${erro && html`<div class="callout"><b>Aviso</b><span>${erro}</span></div>`}
+      ${estado==="pensando" && html`<div class="thinking"><i></i><i></i><i></i> ${L3("Lendo os dados…","Leyendo los datos…","Reading the data…")}</div>`}
+      ${erro && html`<div class="callout"><b>${L3("Aviso","Aviso","Note")}</b><span>${erro}</span></div>`}
       ${resp && html`<div class="answer">${renderMd(resp)}</div>`}
     </div>
   </section>`;
@@ -1198,32 +1252,32 @@ function App(){
   const amostra = filtroAval ? revs : null;
 
   const ativos = [];
-  if(dia!=="todos") ativos.push({t:"Dia: "+DIA_LONGO[dia], x:()=>setDia("todos")});
-  if(shop!=="todos") ativos.push({t:shop==="tres"?"Locais com as três marcas":"Local: "+shop, x:()=>setShop("todos")});
-  if(estrelas.length) ativos.push({t:"Estrelas: "+[...estrelas].sort().join(", "), x:()=>setEstrelas([])});
-  if(periodo!=="todos") ativos.push({t:"Período: "+per.nome, x:()=>setPeriodo("todos")});
-  if(tema) ativos.push({t:"Tema: "+TEMA_POR_ID[tema].nome, x:()=>setTema("")});
-  if(buscaDeb) ativos.push({t:`Busca: “${buscaDeb}”`, x:()=>setBusca("")});
-  const filtrosTxt = ativos.length ? ativos.map(a=>a.t).join("; ") : "nenhum, Goiânia inteira";
+  if(dia!=="todos") ativos.push({t:L3("Dia: ","Día: ","Day: ")+DIA_LONGO[dia], x:()=>setDia("todos")});
+  if(shop!=="todos") ativos.push({t:shop==="tres"?L3("Locais com as três marcas","Lugares con las tres marcas","Locations with all three brands"):L3("Local: ","Lugar: ","Location: ")+localNome(shop), x:()=>setShop("todos")});
+  if(estrelas.length) ativos.push({t:L3("Estrelas: ","Estrellas: ","Stars: ")+[...estrelas].sort().join(", "), x:()=>setEstrelas([])});
+  if(periodo!=="todos") ativos.push({t:L3("Período: ","Período: ","Period: ")+per.nome, x:()=>setPeriodo("todos")});
+  if(tema) ativos.push({t:L3("Tema: ","Tema: ","Topic: ")+TEMA_POR_ID[tema].nome, x:()=>setTema("")});
+  if(buscaDeb) ativos.push({t:`${L3("Busca","Búsqueda","Search")}: “${buscaDeb}”`, x:()=>setBusca("")});
+  const filtrosTxt = ativos.length ? ativos.map(a=>a.t).join("; ") : L3("nenhum, cidade inteira","ninguno, toda la ciudad","none, whole city");
   const limpar = ()=>{setDia("todos");setShop("todos");setEstrelas([]);setPeriodo("todos");setTema("");setBusca("");};
   const pend = LOJAS.filter(l=>l.pendente);
   const escopo = (()=>{
     const partes = [];
-    if(filtroAval && (tab==="movimento")) partes.push("Movimento vem do Google hora a hora e não depende das avaliações. Nesta aba valem só Dia e Locais.");
-    if(dia!=="todos" && (tab==="reputacao"||tab==="voz"||tab==="ia")) partes.push("Avaliações não têm dia da semana, então o filtro de dia não muda esta aba. Ele vale para Panorama (pico), Movimento e Lojas.");
-    if(filtroAval && (tab==="panorama"||tab==="reputacao"||tab==="lojas")) partes.push("Com filtro de período, estrelas ou tema ligado, nota, avaliações e estrelas passam a ser calculadas sobre as avaliações lidas que passam no filtro, não sobre o total do Google.");
+    if(filtroAval && (tab==="movimento")) partes.push(L3("Movimento vem do Google hora a hora e não depende das avaliações. Nesta aba valem só Dia e Locais.","La afluencia viene de Google hora por hora y no depende de las reseñas. En esta pestaña solo aplican Día y Lugares.","Busyness comes from Google hour by hour and does not depend on reviews. Only Day and Locations apply here."));
+    if(dia!=="todos" && (tab==="reputacao"||tab==="voz"||tab==="ia")) partes.push(L3("Avaliações não têm dia da semana, então o filtro de dia não muda esta aba. Ele vale para Visão geral (pico), Movimento e Lojas.","Las reseñas no tienen día de la semana, así que el filtro de día no cambia esta pestaña. Aplica en Visión general (pico), Afluencia y Tiendas.","Reviews have no weekday, so the day filter does not change this tab. It applies to Overview (peak), Busyness and Stores."));
+    if(filtroAval && (tab==="panorama"||tab==="reputacao"||tab==="lojas")) partes.push(L3("Com filtro de período, estrelas ou tema ligado, nota, avaliações e estrelas passam a ser calculadas sobre as avaliações lidas que passam no filtro, não sobre o total do Google.","Con un filtro de período, estrellas o tema activo, la nota, las reseñas y las estrellas se calculan sobre las reseñas leídas que pasan el filtro, no sobre el total de Google.","With a period, star or topic filter on, rating, reviews and stars are computed from the collected reviews that pass the filter, not from Google's totals."));
     return partes.join(" ");
   })();
 
-  const TABS = [{id:"panorama",nome:"Panorama"},{id:"movimento",nome:"Movimento"},{id:"reputacao",nome:"Reputação"},{id:"voz",nome:"Voz do cliente"},{id:"lojas",nome:"Lojas"},{id:"ia",nome:"Analista IA",beta:true}];
+  const TABS = [{id:"panorama",nome:L3("Visão geral","Visión general","Overview")},{id:"movimento",nome:L3("Movimento","Afluencia","Busyness")},{id:"reputacao",nome:L3("Reputação","Reputación","Reputation")},{id:"voz",nome:L3("Voz do cliente","Voz del cliente","Voice of the customer")},{id:"lojas",nome:L3("Lojas","Tiendas","Stores")},{id:"ia",nome:L3("Analista IA","Analista IA","AI analyst"),beta:true}];
 
   return html`<div class="app">
-    <aside class="rail" aria-label="Navegação">
+    <aside class="rail" aria-label=${L3("Navegação","Navegación","Navigation")}>
       <div class="rail-in">
-        <a class="mark-logo" href="https://cassiai.com" target="_blank" rel="noopener" title="Cassi.ai: abrir o site">
+        <a class="mark-logo" href="https://cassiai.com" target="_blank" rel="noopener" title=${L3("Cassi.ai: abrir o site","Cassi.ai: abrir el sitio","Cassi.ai: open the website")}>
           <img src="/cassi-wordmark-reversed.svg" alt="Cassi.ai" onError=${e=>{e.currentTarget.replaceWith(Object.assign(document.createElement("span"),{textContent:"cassi.ai",className:"mark-txt"}));}}/>
         </a>
-        <nav class="tabs" role="tablist" aria-label="Seções" aria-orientation="vertical">
+        <nav class="tabs" role="tablist" aria-label=${L3("Seções","Secciones","Sections")} aria-orientation="vertical">
           ${TABS.map(t=>html`<button key=${t.id} role="tab" id=${"tab-"+t.id} aria-selected=${tab===t.id} aria-label=${t.nome} onClick=${()=>setTab(t.id)}>
             ${ICONES[t.id]}${t.beta?html`<span class="dot-beta" aria-hidden="true"></span>`:null}<span class="tip-nav">${t.nome}${t.beta?" · beta":""}</span></button>`)}
         </nav>
@@ -1232,36 +1286,39 @@ function App(){
   <div class="wrap">
     <header class="top">
       <div class="brandmark">
-        <span class="eyebrow">Inteligência de varejo · ${D.cidade}</span>
-        <h1>${D.titulo || "C&A, Renner e Riachuelo, loja a loja"}</h1>
-        <div class="meta"><span>Coleta <b>${new Date(D.coleta+"T12:00").toLocaleDateString("pt-BR",{day:"2-digit",month:"short",year:"numeric"})}</b></span><span><b>${LOJAS.length}</b> lojas</span><span><b>${fmt(REVS.length)}</b> avaliações lidas</span><span>Fonte: Google Maps</span></div>
+        <span class="eyebrow">${L3("Inteligência de varejo","Inteligencia de retail","Retail intelligence")} · ${D.cidade}</span>
+        <h1>${TR("titulo") || "C&A, Renner e Riachuelo, loja a loja"}</h1>
+        <div class="meta"><span>${L3("Coleta","Recolección","Collected")} <b>${new Date(D.coleta+"T12:00").toLocaleDateString(LOCALE,{day:"2-digit",month:"short",year:"numeric"})}</b></span><span><b>${LOJAS.length}</b> ${L3("lojas","tiendas","stores")}</span><span><b>${fmt(REVS.length)}</b> ${L3("avaliações lidas","reseñas leídas","reviews read")}</span><span>${L3("Fonte","Fuente","Source")}: Google Maps</span></div>
       </div>
-      <div class="legend" aria-label="Legenda das marcas">${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}</span>`)}</div>
+      <div class="top-dir">
+        <div class="idioma" role="group" aria-label=${L3("Idioma","Idioma","Language")}>${["pt","es","en"].map(l=>html`<button key=${l} type="button" aria-pressed=${LANG===l} onClick=${()=>{ if(l!==LANG) trocarIdioma(l); }}>${l.toUpperCase()}</button>`)}</div>
+        <div class="legend" aria-label=${L3("Legenda das marcas","Leyenda de marcas","Brand legend")}>${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}</span>`)}</div>
+      </div>
     </header>
 
     <div class="filters">
       <div class="frow">
-        <label class="chipsel" for="f-dia"><span>Dia</span>
+        <label class="chipsel" for="f-dia"><span>${L3("Dia","Día","Day")}</span>
           <select id="f-dia" value=${dia} onChange=${e=>setDia(e.target.value)}>
-            <option value="todos">Semana inteira</option>
-            ${DIAS.map(d=>html`<option key=${d} value=${d}>${DIA_LONGO[d][0].toUpperCase()+DIA_LONGO[d].slice(1)}</option>`)}
+            <option value="todos">${L3("Semana inteira","Toda la semana","Whole week")}</option>
+            ${DIAS.map(d=>html`<option key=${d} value=${d}>${cap(DIA_LONGO[d])}</option>`)}
           </select></label>
-        <label class="chipsel" for="f-shop"><span>Locais</span>
+        <label class="chipsel" for="f-shop"><span>${L3("Locais","Lugares","Locations")}</span>
           <select id="f-shop" value=${shop} onChange=${e=>setShop(e.target.value)}>
-            <option value="todos">Todos</option>
-            <option value="tres">Com as três marcas</option>
-            ${SHOPPINGS.map(s=>html`<option key=${s} value=${s}>${s.replace(/^Rua · /,"")} (${[...marcasNoShopping(s)].length}/3)</option>`)}
+            <option value="todos">${L3("Todos","Todos","All")}</option>
+            <option value="tres">${L3("Com as três marcas","Con las tres marcas","With all three brands")}</option>
+            ${SHOPPINGS.map(s=>html`<option key=${s} value=${s}>${localNome(s)} (${[...marcasNoShopping(s)].length}/3)</option>`)}
           </select></label>
-        <label class="chipsel" for="f-tema"><span>Tema</span>
-          <select id="f-tema" value=${tema} onChange=${e=>setTema(e.target.value)}><option value="">Todos</option>${NETS.map(n=>html`<optgroup key=${n.id} label=${n.nome}><option value=${n.id}>${n.nome} (net inteira)</option>${TEMAS.filter(t=>t.net===n.net).map(t=>html`<option key=${t.id} value=${t.id}>${t.nome}</option>`)}</optgroup>`)}</select></label>
-        <label class="chipsel" for="f-per"><span>Período</span>
+        <label class="chipsel" for="f-tema"><span>${L3("Tema","Tema","Topic")}</span>
+          <select id="f-tema" value=${tema} onChange=${e=>setTema(e.target.value)}><option value="">${L3("Todos","Todos","All")}</option>${NETS.map(n=>html`<optgroup key=${n.id} label=${n.nome}><option value=${n.id}>${n.nome} (${L3("net inteira","net completa","whole net")})</option>${TEMAS.filter(t=>t.net===n.net).map(t=>html`<option key=${t.id} value=${t.id}>${t.nome}</option>`)}</optgroup>`)}</select></label>
+        <label class="chipsel" for="f-per"><span>${L3("Período","Período","Period")}</span>
           <select id="f-per" value=${periodo} onChange=${e=>setPeriodo(e.target.value)}>${PERIODOS.map(p=>html`<option key=${p.id} value=${p.id}>${p.nome}</option>`)}</select></label>
-        <div class="chipsel estrelas" role="group" aria-label="Estrelas"><span>Estrelas</span>
+        <div class="chipsel estrelas" role="group" aria-label=${L3("Estrelas","Estrellas","Stars")}><span>${L3("Estrelas","Estrellas","Stars")}</span>
           ${[1,2,3,4,5].map(k=>html`<button key=${k} type="button" aria-pressed=${estrelas.includes(k)} onClick=${()=>setEstrelas(estrelas.includes(k)?estrelas.filter(x=>x!==k):[...estrelas,k])}>${k}★</button>`)}</div>
-        ${ativos.length ? html`<button class="limpar" type="button" onClick=${limpar}>Limpar ${ativos.length}</button>` : null}
+        ${ativos.length ? html`<button class="limpar" type="button" onClick=${limpar}>${L3("Limpar","Limpiar","Clear")} ${ativos.length}</button>` : null}
       </div>
-      ${ativos.length ? html`<div class="active" aria-live="polite">${ativos.map(a=>html`<span class="pill" key=${a.t}>${a.t}<button type="button" aria-label=${"Remover "+a.t} onClick=${a.x}>×</button></span>`)}</div>` : null}
-      ${escopo && html`<div class="escopo"><span class="tag t-info">Como os filtros agem aqui</span><span>${escopo}</span></div>`}
+      ${ativos.length ? html`<div class="active" aria-live="polite">${ativos.map(a=>html`<span class="pill" key=${a.t}>${a.t}<button type="button" aria-label=${L3("Remover ","Quitar ","Remove ")+a.t} onClick=${a.x}>×</button></span>`)}</div>` : null}
+      ${escopo && html`<div class="escopo"><span class="tag t-info">${L3("Como os filtros agem aqui","Cómo actúan los filtros aquí","How filters work here")}</span><span>${escopo}</span></div>`}
     </div>
 
     <main role="tabpanel" aria-labelledby=${"tab-"+tab}>
@@ -1275,8 +1332,10 @@ function App(){
     </main>
 
     <footer class="foot">
-      ${pend.length ? html`<div class="callout" style=${{marginBottom:12}}><b>Coleta parcial</b><span>${pend.map(l=>`${l.marca} ${l.shopping}`).join(", ")}: o Google limitou o acesso durante a coleta e as avaliações e o gráfico de movimento dessa loja ficaram de fora. A nota e o total no Google continuam valendo.</span></div>`:null}
-      Lotação por hora é o índice relativo que o Google Maps mostra em “Horários de pico” (100% é a hora mais cheia daquela loja na semana). As avaliações são uma amostra ${FAIXA_AMOSTRA}, ${ORDEM_TXT}, com datas aproximadas a partir de “há X meses”. Sem filtro de avaliação, nota e distribuição de estrelas usam todas as avaliações do Google; com filtro de período, estrelas ou tema, usam as avaliações lidas que passam no filtro. Lojas de outros municípios ficaram fora do recorte. Nomes de autores não são exibidos.
+      ${pend.length ? html`<div class="callout" style=${{marginBottom:12}}><b>${L3("Coleta parcial","Recolección parcial","Partial collection")}</b><span>${pend.map(l=>`${l.marca} ${localNome(l.shopping)}`).join(", ")}: ${L3("o Google limitou o acesso durante a coleta e as avaliações e o gráfico de movimento dessa loja ficaram de fora. A nota e o total no Google continuam valendo.","Google limitó el acceso durante la recolección y las reseñas y el gráfico de afluencia de esa tienda quedaron fuera. La nota y el total de Google siguen siendo válidos.","Google limited access during collection, so that store's reviews and busyness chart are missing. Its Google rating and total still apply.")}</span></div>`:null}
+      ${L3(`Lotação por hora é o índice relativo que o Google Maps mostra em “Horários de pico” (100% é a hora mais cheia daquela loja na semana). As avaliações são uma amostra ${FAIXA_AMOSTRA}, ${ORDEM_TXT}, com datas aproximadas a partir de “há X meses”. Sem filtro de avaliação, nota e distribuição de estrelas usam todas as avaliações do Google; com filtro de período, estrelas ou tema, usam as avaliações lidas que passam no filtro. Lojas de outros municípios ficaram fora do recorte. Nomes de autores não são exibidos.`,
+      `La afluencia por hora es el índice relativo que Google Maps muestra en “Horas punta” (100% es la hora más concurrida de esa tienda en la semana). Las reseñas son una muestra ${FAIXA_AMOSTRA}, ${ORDEM_TXT}, con fechas aproximadas a partir de “hace X meses”, y se muestran en el idioma original. Sin filtros de reseñas, la nota y la distribución de estrellas usan todas las reseñas de Google; con filtro de período, estrellas o tema, usan las reseñas leídas que pasan el filtro. Las tiendas de otros municipios quedaron fuera. No se muestran nombres de autores.`,
+      `Hourly busyness is the relative index Google Maps shows under “Popular times” (100% is that store's busiest hour of the week). Reviews are a sample ${FAIXA_AMOSTRA}, ${ORDEM_TXT}, with dates approximated from “X months ago”, and are shown in their original language. Without review filters, rating and star distribution use all Google reviews; with a period, star or topic filter, they use the collected reviews that pass the filter. Stores in other municipalities are excluded. Reviewer names are never shown.`)}
     </footer>
   </div>
   </div>`;

@@ -95,7 +95,8 @@ def main(vertical: str) -> None:
              "destaque_tema": cfg.get("destaque_tema"), "destaque_texto": cfg.get("destaque_texto"),
              "artigos": {m["nome"]: m.get("artigo", "a") for m in cfg["marcas"]},
              "busca_exemplo": cfg.get("busca_exemplo"),
-             "cores": cfg.get("cores"), "periodo_mensal_desde": cfg.get("periodo_mensal_desde"),
+             "cores": cfg.get("cores"),
+             "i18n": cfg.get("i18n"), "nets_i18n": cfg.get("nets_i18n"), "periodo_mensal_desde": cfg.get("periodo_mensal_desde"),
              "ordenacao": "mais recentes" if ordens == {"mais recentes"} else "relevancia",
              "lojas": saida_lojas, "avaliacoes": avaliacoes}
     destino = SAIDA / "painel" / cfg["id"]

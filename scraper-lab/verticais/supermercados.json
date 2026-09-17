@@ -42,157 +42,209 @@
       "net": "Atendimento",
       "id": "cordialidade",
       "nome": "Cordialidade da equipe",
-      "re": "atendiment|atendente|educad|educa[çc][ãa]o|grosse|\\bgross[ao]s?\\b|simp[aá]tic|cordial|respeit|cara (feia|amarrada)|m[áa] vontade|descaso|despreparad|profissiona|ger[eê]n(te|cia)|trat(a|am|aram|ou|ando)\\b|sorriso|pregui[çc]a|frieza|constrang|solícit|dispostos a ajudar|n[ãa]o (resolve|sabem resolver)"
+      "re": "atendiment|atendente|educad|educa[çc][ãa]o|grosse|\\bgross[ao]s?\\b|simp[aá]tic|cordial|respeit|cara (feia|amarrada)|m[áa] vontade|descaso|despreparad|profissiona|ger[eê]n(te|cia)|trat(a|am|aram|ou|ando)\\b|sorriso|pregui[çc]a|frieza|constrang|solícit|dispostos a ajudar|n[ãa]o (resolve|sabem resolver)",
+      "nome_es": "Cordialidad del equipo",
+      "nome_en": "Staff friendliness"
     },
     {
       "net": "Atendimento",
       "id": "equipe",
       "nome": "Equipe disponível na loja",
-      "re": "poucos (funcion|atendentes|operadores|repositores)|falta de (funcion|atendentes)|sem funcion[aá]rio|ningu[ée]m (para|pra) (atender|ajudar)|n[ãa]o (tem|tinha) (quem|ningu[ée]m)|supervisor|pouqu[íi]ssimo pessoal|pessoas suficientes|falta de pessoas|contratar"
+      "re": "poucos (funcion|atendentes|operadores|repositores)|falta de (funcion|atendentes)|sem funcion[aá]rio|ningu[ée]m (para|pra) (atender|ajudar)|n[ãa]o (tem|tinha) (quem|ningu[ée]m)|supervisor|pouqu[íi]ssimo pessoal|pessoas suficientes|falta de pessoas|contratar",
+      "nome_es": "Personal disponible",
+      "nome_en": "Staff availability"
     },
     {
       "net": "Atendimento",
       "id": "seguranca",
       "nome": "Segurança e abordagem",
-      "re": "seguran[çc]as?\\b|fiscal|revist|abordag"
+      "re": "seguran[çc]as?\\b|fiscal|revist|abordag",
+      "nome_es": "Seguridad y abordaje",
+      "nome_en": "Security staff"
     },
     {
       "net": "Caixa e fila",
       "id": "fila",
       "nome": "Fila e espera",
-      "re": "\\bfilas?\\b|demor|esper(a|ei|ar|ando)\\b|lentid|\\blent[oa]s?\\b|r[áa]pido para passar"
+      "re": "\\bfilas?\\b|demor|esper(a|ei|ar|ando)\\b|lentid|\\blent[oa]s?\\b|r[áa]pido para passar",
+      "nome_es": "Filas y espera",
+      "nome_en": "Queues and waiting"
     },
     {
       "net": "Caixa e fila",
       "id": "caixas",
       "nome": "Caixas abertos",
-      "re": "poucos (caixas|atendentes|operadores)|caixas? fechad(os|o)s? (e|,)|caixas fechados\\.|operadores de caixa|postos de trabalho dos caixas|s[óo] (um|dois|1|2) caixas?\\b(?! de auto)|caixas? (funcionando|atendendo|abertos?)\\b|caixas? (r[áa]pid[oa] )?(sempre )?fechad|n[ãa]o (tem|ter) caixa|falta de caixa|falta de pessoas nos caixas|caixa fechar|apenas (um|1) caixa|quantidade de caixas|colocar caixas|caixas? para atender"
+      "re": "poucos (caixas|atendentes|operadores)|caixas? fechad(os|o)s? (e|,)|caixas fechados\\.|operadores de caixa|postos de trabalho dos caixas|s[óo] (um|dois|1|2) caixas?\\b(?! de auto)|caixas? (funcionando|atendendo|abertos?)\\b|caixas? (r[áa]pid[oa] )?(sempre )?fechad|n[ãa]o (tem|ter) caixa|falta de caixa|falta de pessoas nos caixas|caixa fechar|apenas (um|1) caixa|quantidade de caixas|colocar caixas|caixas? para atender",
+      "nome_es": "Cajas abiertas",
+      "nome_en": "Open checkouts"
     },
     {
       "net": "Caixa e fila",
       "id": "self",
       "nome": "Autoatendimento",
-      "re": "self.?check|auto.?atendimento"
+      "re": "self.?check|auto.?atendimento",
+      "nome_es": "Autoservicio en caja",
+      "nome_en": "Self-checkout"
     },
     {
       "net": "Preço",
       "id": "preco_bom",
       "nome": "Preço competitivo",
-      "re": "pre[çc]os? ([ée] |s[ãa]o |muito )?(bons?|bom|boa|boas|[óo]tim[oa]s?|competitivos?|compat[íi]veis|justos?|razo[áa]ve|acess[íi]ve|baixos?)|bons? pre[çc]os?|valores? (s[ãa]o )?(bons|baixos)|\\bbarat[oa]s?\\b|barat[íi]ssim|econom|em conta|custo.?benef|rivaliz"
+      "re": "pre[çc]os? ([ée] |s[ãa]o |muito )?(bons?|bom|boa|boas|[óo]tim[oa]s?|competitivos?|compat[íi]veis|justos?|razo[áa]ve|acess[íi]ve|baixos?)|bons? pre[çc]os?|valores? (s[ãa]o )?(bons|baixos)|\\bbarat[oa]s?\\b|barat[íi]ssim|econom|em conta|custo.?benef|rivaliz",
+      "nome_es": "Precio competitivo",
+      "nome_en": "Competitive prices"
     },
     {
       "net": "Preço",
       "id": "preco_alto",
       "nome": "Preço alto",
-      "re": "\\bcaros?\\b|car[íi]ssim|caro demais|pre[çc]os? (mais |um pouco |muito )?(alto|salgad)|mais car[oa]\\b|n[ãa]o s[ãa]o os melhores|acima da m[ée]dia|falso barato"
+      "re": "\\bcaros?\\b|car[íi]ssim|caro demais|pre[çc]os? (mais |um pouco |muito )?(alto|salgad)|mais car[oa]\\b|n[ãa]o s[ãa]o os melhores|acima da m[ée]dia|falso barato",
+      "nome_es": "Precio alto",
+      "nome_en": "High prices"
     },
     {
       "net": "Preço",
       "id": "promocao",
       "nome": "Promoção e ofertas",
-      "re": "\\bpromo|ofertas?\\b|desconto|encarte"
+      "re": "\\bpromo|ofertas?\\b|desconto|encarte",
+      "nome_es": "Promociones y ofertas",
+      "nome_en": "Promotions and deals"
     },
     {
       "net": "Preço",
       "id": "divergencia",
       "nome": "Preço da gôndola diferente no caixa",
-      "re": "etiqueta|diverg|pre[çc]os? (errado|diferente)|valor (maior|diferente)|outro valor|n[ãa]o tinha pre[çc]o|sem pre[çc]o|dobro do valor|um dia t[áa]|cobr(ou|aram|ado|ada) (a mais|diferente|errado)|anunciado|g[ôo]ndola[^.]{0,60}caixa|diferentes do valor|sempre apresentando diferen"
+      "re": "etiqueta|diverg|pre[çc]os? (errado|diferente)|valor (maior|diferente)|outro valor|n[ãa]o tinha pre[çc]o|sem pre[çc]o|dobro do valor|um dia t[áa]|cobr(ou|aram|ado|ada) (a mais|diferente|errado)|anunciado|g[ôo]ndola[^.]{0,60}caixa|diferentes do valor|sempre apresentando diferen",
+      "nome_es": "Precio de góndola distinto en caja",
+      "nome_en": "Shelf price differs at checkout"
     },
     {
       "net": "Preço",
       "id": "atacado",
       "nome": "Regra de preço de atacado",
-      "re": "pre[çc]o de atacado|quantidade m[íi]nima|a partir de \\d+ unidades|\\bleve \\d"
+      "re": "pre[çc]o de atacado|quantidade m[íi]nima|a partir de \\d+ unidades|\\bleve \\d",
+      "nome_es": "Regla de precio mayorista",
+      "nome_en": "Wholesale pricing rules"
     },
     {
       "net": "Sortimento",
       "id": "variedade",
       "nome": "Variedade e marcas",
-      "re": "variedad|op[çc][õo]es|\\bmix\\b|marcas|diversidade|tem de tudo|tem tudo|completo|sortimento"
+      "re": "variedad|op[çc][õo]es|\\bmix\\b|marcas|diversidade|tem de tudo|tem tudo|completo|sortimento",
+      "nome_es": "Variedad y marcas",
+      "nome_en": "Assortment and brands"
     },
     {
       "net": "Sortimento",
       "id": "falta",
       "nome": "Falta de produto",
-      "re": "falta de (produto|mercadoria|reposi|estoque)|faltando|n[ãa]o (tinha|encontr\\w*|acho|achei) (o )?(produto|item|itens|o que)|n[ãa]o havia chegado|estoque\\b|reposi[çc]|prateleiras? vazia|g[ôo]ndolas? vazia|\\bvazio\\b|ruptura|nunca sabe se vai ter|retirar itens do pedido|nunca tem\\b|abastecid"
+      "re": "falta de (produto|mercadoria|reposi|estoque)|faltando|n[ãa]o (tinha|encontr\\w*|acho|achei) (o )?(produto|item|itens|o que)|n[ãa]o havia chegado|estoque\\b|reposi[çc]|prateleiras? vazia|g[ôo]ndolas? vazia|\\bvazio\\b|ruptura|nunca sabe se vai ter|retirar itens do pedido|nunca tem\\b|abastecid",
+      "nome_es": "Falta de producto",
+      "nome_en": "Out of stock"
     },
     {
       "net": "Perecíveis",
       "id": "hortifruti",
       "nome": "Hortifrúti",
-      "re": "hortifr|ortif|frutas?\\b|verduras?\\b|legumes?\\b|sacol[ãa]o|tomatinho"
+      "re": "hortifr|ortif|frutas?\\b|verduras?\\b|legumes?\\b|sacol[ãa]o|tomatinho",
+      "nome_es": "Frutas y verduras",
+      "nome_en": "Fresh produce"
     },
     {
       "net": "Perecíveis",
       "id": "acougue",
       "nome": "Açougue, padaria e frios",
-      "re": "a[çc]ougue|carnes?\\b|padaria|\\bp[ãa]es?\\b|p[ãa]o sovado|frios|peixaria|rotisseria|f[íi]gado|lactic|latic"
+      "re": "a[çc]ougue|carnes?\\b|padaria|\\bp[ãa]es?\\b|p[ãa]o sovado|frios|peixaria|rotisseria|f[íi]gado|lactic|latic",
+      "nome_es": "Carnicería, panadería y fiambres",
+      "nome_en": "Butcher, bakery and deli"
     },
     {
       "net": "Perecíveis",
       "id": "validade",
       "nome": "Validade e qualidade",
-      "re": "vencid|validade|estragad|podre|mofad|azed|qualidade (dos produtos|ótima|boa)|qualidade ótim|produtos [óo]timos"
+      "re": "vencid|validade|estragad|podre|mofad|azed|qualidade (dos produtos|ótima|boa)|qualidade ótim|produtos [óo]timos",
+      "nome_es": "Vencimiento y calidad",
+      "nome_en": "Expiry and quality"
     },
     {
       "net": "Pagamento",
       "id": "cartao_loja",
       "nome": "Cartão da loja",
-      "re": "passa[ií]|cart[ãa]o (da loja|pr[óo]prio|do assa|do costa|carrefour|do carrefour|atacad)|carrefour pass|fatura|cobran[çc]a indevida"
+      "re": "passa[ií]|cart[ãa]o (da loja|pr[óo]prio|do assa|do costa|carrefour|do carrefour|atacad)|carrefour pass|fatura|cobran[çc]a indevida",
+      "nome_es": "Tarjeta de la tienda",
+      "nome_en": "Store card"
     },
     {
       "net": "Pagamento",
       "id": "meios",
       "nome": "Meios de pagamento",
-      "re": "\\bpix\\b|d[ée]bito|cr[ée]dito|pagamento|parcel|maquininha"
+      "re": "\\bpix\\b|d[ée]bito|cr[ée]dito|pagamento|parcel|maquininha",
+      "nome_es": "Medios de pago",
+      "nome_en": "Payment methods"
     },
     {
       "net": "Pagamento",
       "id": "vale",
       "nome": "Vale-alimentação",
-      "re": "vale.?(alimenta|refei)|\\bticket\\b|sodexo|alelo|\\bvr\\b"
+      "re": "vale.?(alimenta|refei)|\\bticket\\b|sodexo|alelo|\\bvr\\b",
+      "nome_es": "Vales de alimentación",
+      "nome_en": "Meal vouchers"
     },
     {
       "net": "Loja e estrutura",
       "id": "limpeza",
       "nome": "Limpeza e organização",
-      "re": "organizad|desorganiz|bem organiz|bagun|\\blimp[ao]s?\\b|limpeza (d|do|da)\\b|falta de cuidado com a limpeza|sujeira|\\bsuj[ao]s?\\b|arrumad|desarrum|cheiro|fedor|odor|moscas?\\b|baratinhas|higiene"
+      "re": "organizad|desorganiz|bem organiz|bagun|\\blimp[ao]s?\\b|limpeza (d|do|da)\\b|falta de cuidado com a limpeza|sujeira|\\bsuj[ao]s?\\b|arrumad|desarrum|cheiro|fedor|odor|moscas?\\b|baratinhas|higiene",
+      "nome_es": "Limpieza y orden",
+      "nome_en": "Cleanliness and tidiness"
     },
     {
       "net": "Loja e estrutura",
       "id": "conforto",
       "nome": "Conforto e lotação",
-      "re": "ar.?condicionado|refrigera[çc][ãa]o do ambiente|climatiz|calor\\b|ru[íi]do|\\bsom (ambiente|alto)|barulh|bebedouro|banheiro|corredor|local apertado|muito cheio|bem cheio|ambiente (é )?(bom|agrad)|\\bamplo\\b|espa[çc]os[ao]|muito espa[çc]o|fica(r)? cheio"
+      "re": "ar.?condicionado|refrigera[çc][ãa]o do ambiente|climatiz|calor\\b|ru[íi]do|\\bsom (ambiente|alto)|barulh|bebedouro|banheiro|corredor|local apertado|muito cheio|bem cheio|ambiente (é )?(bom|agrad)|\\bamplo\\b|espa[çc]os[ao]|muito espa[çc]o|fica(r)? cheio",
+      "nome_es": "Confort y aglomeración",
+      "nome_en": "Comfort and crowding"
     },
     {
       "net": "Loja e estrutura",
       "id": "carrinho",
       "nome": "Carrinhos e cestas",
-      "re": "carrinhos?\\b|cestinhas?\\b|cestas?\\b"
+      "re": "carrinhos?\\b|cestinhas?\\b|cestas?\\b",
+      "nome_es": "Carritos y canastas",
+      "nome_en": "Carts and baskets"
     },
     {
       "net": "Acesso",
       "id": "estacionamento",
       "nome": "Estacionamento",
-      "re": "estacionamento|\\bvagas?\\b"
+      "re": "estacionamento|\\bvagas?\\b",
+      "nome_es": "Estacionamiento",
+      "nome_en": "Parking"
     },
     {
       "net": "Acesso",
       "id": "localizacao",
       "nome": "Localização e horário",
-      "re": "localiza[çc]|bem localizad|f[áa]cil acesso|perto de casa|\\b24 ?h|hor[áa]rio de funcionamento|abre (cedo|tarde)|fecha (cedo|tarde)"
+      "re": "localiza[çc]|bem localizad|f[áa]cil acesso|perto de casa|\\b24 ?h|hor[áa]rio de funcionamento|abre (cedo|tarde)|fecha (cedo|tarde)",
+      "nome_es": "Ubicación y horario",
+      "nome_en": "Location and hours"
     },
     {
       "net": "Avaliação geral",
       "id": "elogio",
       "nome": "Elogio geral",
-      "re": "recomendo|super indico|\\bindico\\b|^\\W*(muito bom|[óo]tim[oa]|excelente)\\W*(supermercado|mercado|lugar|loja|atacad\\w*)?\\W*(\\.\\.+\\w.*)?$|lugar (excelente|[óo]timo)|[óo]timo lugar|melhor (atacad|lugar|hipermercado)|sempre compro|^\\W*amo\\b|maravilhoso|gostei|\\bamei\\b|\\bamo\\b|tudo de bom|excelente|escelente|vale a pena|muito bom\\b"
+      "re": "recomendo|super indico|\\bindico\\b|^\\W*(muito bom|[óo]tim[oa]|excelente)\\W*(supermercado|mercado|lugar|loja|atacad\\w*)?\\W*(\\.\\.+\\w.*)?$|lugar (excelente|[óo]timo)|[óo]timo lugar|melhor (atacad|lugar|hipermercado)|sempre compro|^\\W*amo\\b|maravilhoso|gostei|\\bamei\\b|\\bamo\\b|tudo de bom|excelente|escelente|vale a pena|muito bom\\b",
+      "nome_es": "Elogio general",
+      "nome_en": "General praise"
     },
     {
       "net": "Canais digitais",
       "id": "entrega",
       "nome": "Entrega, retirada e compra online",
-      "re": "entreg|delivery|frete|retirad|pedido|aplicativo|\\bapp\\b|compra online|ifood|site\\b"
+      "re": "entreg|delivery|frete|retirad|pedido|aplicativo|\\bapp\\b|compra online|ifood|site\\b",
+      "nome_es": "Entrega, retiro y compra online",
+      "nome_en": "Delivery, pickup and online orders"
     }
   ],
   "destaque_tema": "divergencia",
@@ -219,5 +271,65 @@
     "origem": "Costa vermelho do logo (#CF0A1E); Assai laranja do logo 2024 (#F37021); Carrefour azul do logo do grupo (#254F9B)"
   },
   "periodo_mensal_desde": "2026-01",
-  "busca_exemplo": "açougue, fila, Pix…"
+  "busca_exemplo": "açougue, fila, Pix…",
+  "i18n": {
+    "es": {
+      "titulo": "Costa Atacadão, Assaí y Carrefour, tienda por tienda",
+      "destaque_texto": "Es el cliente que ve un precio en la góndola y paga otro en la caja.",
+      "rotulo_piloto": "cadenas mayoristas",
+      "temas_lista": "atención, filas, precio, diferencia entre góndola y caja, falta de producto, frutas y verduras, carnicería y estacionamiento",
+      "pergunta_local": "¿En qué barrio la competencia atiende mejor que mi tienda?",
+      "comparacao_local": "La matriz por lugar separa tiendas de centro comercial y de calle, barrio por barrio."
+    },
+    "en": {
+      "titulo": "Costa Atacadão, Assaí and Carrefour, store by store",
+      "destaque_texto": "It is the shopper who sees one price on the shelf and pays another at checkout.",
+      "rotulo_piloto": "wholesale chains",
+      "temas_lista": "service, queues, price, shelf versus checkout price gaps, out of stock items, produce, butcher counter and parking",
+      "pergunta_local": "In which neighborhood does the competition serve customers better than my store?",
+      "comparacao_local": "The location matrix separates mall and street stores, neighborhood by neighborhood."
+    }
+  },
+  "nets_i18n": {
+    "Atendimento": {
+      "es": "Atención",
+      "en": "Service"
+    },
+    "Caixa e fila": {
+      "es": "Caja y filas",
+      "en": "Checkout and queues"
+    },
+    "Preço": {
+      "es": "Precio",
+      "en": "Price"
+    },
+    "Sortimento": {
+      "es": "Surtido",
+      "en": "Assortment"
+    },
+    "Perecíveis": {
+      "es": "Perecederos",
+      "en": "Fresh food"
+    },
+    "Pagamento": {
+      "es": "Pago",
+      "en": "Payment"
+    },
+    "Loja e estrutura": {
+      "es": "Tienda e instalaciones",
+      "en": "Store and facilities"
+    },
+    "Acesso": {
+      "es": "Acceso",
+      "en": "Access"
+    },
+    "Avaliação geral": {
+      "es": "Evaluación general",
+      "en": "Overall rating"
+    },
+    "Canais digitais": {
+      "es": "Canales digitales",
+      "en": "Digital channels"
+    }
+  }
 }

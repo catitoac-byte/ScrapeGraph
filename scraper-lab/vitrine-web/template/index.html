@@ -150,6 +150,11 @@ blockquote{margin:28px 0 0;font-size:clamp(20px,2vw,26px);font-weight:300;font-s
 .assina .cred{border-top:1px solid rgba(255,255,255,.14);padding-top:16px;font-size:14px;color:#94A3B8}
 footer{padding-block:40px 48px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;color:var(--ink-3);font-size:14px}
 footer img{height:20px;display:block}
+.nav-dir{display:flex;align-items:center;gap:12px}
+.idioma{display:inline-flex;border:1px solid var(--line-2);border-radius:.75rem;padding:3px;background:var(--paper)}
+.idioma button{border:0;background:transparent;border-radius:.55rem;height:36px;min-width:40px;font-family:var(--f-display);font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--ink-3);cursor:pointer}
+.idioma button[aria-pressed="true"]{background:var(--blue);color:#F8FAFC}
+@media (max-width:520px){.nav-dir .btn{display:none}}
 </style>
 </head>
 <body>
@@ -159,206 +164,451 @@ footer img{height:20px;display:block}
       <a href="https://cassiai.com" target="_blank" rel="noopener" title="Cassi.ai: abrir o site"><img src="/cassi-wordmark.svg" alt="Cassi.ai" width="78" height="26"></a>
       <a class="prod" href="/">Vitrine</a>
     </div>
-    <a class="btn ghost" href="#entrar">Entrar</a>
+    <div class="nav-dir">
+        <div class="idioma" role="group" aria-label="Idioma"><button type="button" data-l="pt">PT</button><button type="button" data-l="es">ES</button><button type="button" data-l="en">EN</button></div>
+        <a class="btn ghost" href="#entrar" data-t="t0">Entrar</a>
+      </div>
   </header>
 
   <main>
     <div class="hero">
       <div>
-        <span class="label">Inteligência de lojas físicas</span>
-        <h1>Cada loja da sua rede e do concorrente, <span class="out">lida</span> hora a hora.</h1>
-        <p class="lede">Movimento por hora, reputação e o que os clientes escrevem, loja a loja, com a concorrência sempre lado a lado. Tudo a partir de dados públicos, com método de pesquisa por trás de cada número.</p>
+        <span class="label" data-t="t1">Inteligência de lojas físicas</span>
+        <h1 data-t="t2">Cada loja da sua rede e do concorrente, <span class="out">lida</span> hora a hora.</h1>
+        <p class="lede" data-t="t3">Movimento por hora, reputação e o que os clientes escrevem, loja a loja, com a concorrência sempre lado a lado. Tudo a partir de dados públicos, com método de pesquisa por trás de cada número.</p>
         <div class="acts">
-          <a class="btn" href="#metodo">Ver o método</a>
-          <a class="btn ghost" href="mailto:cassiano@cassiai.com?subject=Vitrine%20%C2%B7%20quero%20conhecer">Pedir acesso</a>
+          <a class="btn" href="#metodo" data-t="t4">Ver o método</a>
+          <a class="btn ghost" href="mailto:cassiano@cassiai.com?subject=Vitrine%20%C2%B7%20quero%20conhecer" data-t="t5">Pedir acesso</a>
         </div>
       </div>
 
       <aside class="login" id="entrar" aria-labelledby="login-t">
-        <h2 id="login-t">Acesse o painel</h2>
-        <p class="sub">Área restrita a clientes com projeto ativo.</p>
-        <div class="msg err" id="m-erro" role="alert">Usuário ou senha não conferem. Confira e tente de novo.</div>
-        <div class="msg info" id="m-entrar" role="status">Entre com seu usuário para abrir o painel.</div>
+        <h2 id="login-t" data-t="t6">Acesse o painel</h2>
+        <p class="sub" data-t="t7">Área restrita a clientes com projeto ativo.</p>
+        <div class="msg err" id="m-erro" role="alert" data-t="t8">Usuário ou senha não conferem. Confira e tente de novo.</div>
+        <div class="msg info" id="m-entrar" role="status" data-t="t9">Entre com seu usuário para abrir o painel.</div>
         <form method="post" action="/api/login">
-          <label for="usuario">Usuário
+          <label for="usuario"><span data-t="f1">Usuário</span>
             <input id="usuario" name="usuario" autocomplete="username" required autocapitalize="none" spellcheck="false">
           </label>
-          <label for="senha">Senha
+          <label for="senha"><span data-t="f2">Senha</span>
             <input id="senha" name="senha" type="password" autocomplete="current-password" required>
           </label>
-          <button class="btn" type="submit">Entrar no painel</button>
+          <button class="btn" type="submit" data-t="t10">Entrar no painel</button>
         </form>
-        <p class="foot">Sem acesso ainda? Escreva para <a href="mailto:cassiano@cassiai.com">cassiano@cassiai.com</a>.</p>
+        <p class="foot" data-t="t11">Sem acesso ainda? Escreva para <a href="mailto:cassiano@cassiai.com">cassiano@cassiai.com</a>.</p>
       </aside>
     </div>
 
     <div class="ficha" aria-label="Números do projeto piloto">
-      <div><span class="tech">Piloto · uma capital · {{ROTULO_PILOTO}}</span></div>
-      <div><b>{{N_LOJAS}}</b><span class="tech">lojas acompanhadas</span></div>
-      <div><b>{{N_MARCAS}}</b><span class="tech">redes comparadas</span></div>
-      <div><b>{{N_AVALIACOES}}</b><span class="tech">avaliações lidas</span></div>
-      <div><b>{{N_LEITURAS}}</b><span class="tech">leituras de movimento por hora</span></div>
-      <div><b>{{N_TEMAS}}</b><span class="tech">temas de reclamação e elogio</span></div>
+      <div><span class="tech" data-t="t12">Piloto · uma capital · {{ROTULO_PILOTO}}</span></div>
+      <div><b>{{N_LOJAS}}</b><span class="tech" data-t="t13">lojas acompanhadas</span></div>
+      <div><b>{{N_MARCAS}}</b><span class="tech" data-t="t14">redes comparadas</span></div>
+      <div><b>{{N_AVALIACOES}}</b><span class="tech" data-t="t15">avaliações lidas</span></div>
+      <div><b>{{N_LEITURAS}}</b><span class="tech" data-t="t16">leituras de movimento por hora</span></div>
+      <div><b>{{N_TEMAS}}</b><span class="tech" data-t="t17">temas de reclamação e elogio</span></div>
     </div>
 
     <section aria-labelledby="t-trabalho">
       <div class="sec-head">
-        <div><span class="label">O trabalho</span><h2 id="t-trabalho">Saber como cada loja física está indo. E como está o vizinho de corredor.</h2></div>
-        <p>Toda rede faz essa pergunta. A resposta costuma chegar tarde, em arquivos diferentes, e a comparação com a concorrência fica na impressão de quem visitou a loja.</p>
+        <div><span class="label" data-t="t18">O trabalho</span><h2 id="t-trabalho" data-t="t19">Saber como cada loja física está indo. E como está o vizinho de corredor.</h2></div>
+        <p data-t="t20">Toda rede faz essa pergunta. A resposta costuma chegar tarde, em arquivos diferentes, e a comparação com a concorrência fica na impressão de quem visitou a loja.</p>
       </div>
       <div class="caso">
         <div>
-          <span class="carimbo">Assunto</span>
-          <h3>Desempenho de loja física</h3>
-          <p>Fluxo ao longo do dia, nota no Google, o que os clientes elogiam e reclamam, e como tudo isso se compara com a concorrência na mesma praça.</p>
+          <span class="carimbo" data-t="t21">Assunto</span>
+          <h3 data-t="t22">Desempenho de loja física</h3>
+          <p data-t="t23">Fluxo ao longo do dia, nota no Google, o que os clientes elogiam e reclamam, e como tudo isso se compara com a concorrência na mesma praça.</p>
         </div>
         <div>
-          <span class="carimbo">Como é feito hoje</span>
-          <h3>Visita, planilha e leitura manual</h3>
-          <p>Ainda se faz com visita de campo, cliente oculto e avaliações lidas uma a uma. Cada praça manda um arquivo, e alguém consolida tudo numa planilha no fim do mês.</p>
+          <span class="carimbo" data-t="t24">Como é feito hoje</span>
+          <h3 data-t="t25">Visita, planilha e leitura manual</h3>
+          <p data-t="t26">Ainda se faz com visita de campo, cliente oculto e avaliações lidas uma a uma. Cada praça manda um arquivo, e alguém consolida tudo numa planilha no fim do mês.</p>
         </div>
         <div>
-          <span class="carimbo">A dor</span>
-          <h3>O dado chega velho e sem régua</h3>
-          <p>A reclamação sobre fila no caixa aparece no relatório semanas depois de virar nota 1. O pico de sábado é conhecido de ouvido. E ninguém consegue dizer, com número, onde a loja perde para a do lado.</p>
+          <span class="carimbo" data-t="t27">A dor</span>
+          <h3 data-t="t28">O dado chega velho e sem régua</h3>
+          <p data-t="t29">A reclamação sobre fila no caixa aparece no relatório semanas depois de virar nota 1. O pico de sábado é conhecido de ouvido. E ninguém consegue dizer, com número, onde a loja perde para a do lado.</p>
         </div>
         <div class="onde">
-          <span class="carimbo">Onde a Cassi.ai entra</span>
-          <h3>Um painel lido com método</h3>
-          <p>A Vitrine lê as fichas públicas das lojas, converte gráfico e texto em número, classifica o que os clientes escrevem e entrega tudo num painel com as marcas lado a lado.</p>
+          <span class="carimbo" data-t="t30">Onde a Cassi.ai entra</span>
+          <h3 data-t="t31">Um painel lido com método</h3>
+          <p data-t="t32">A Vitrine lê as fichas públicas das lojas, converte gráfico e texto em número, classifica o que os clientes escrevem e entrega tudo num painel com as marcas lado a lado.</p>
         </div>
       </div>
-      <blockquote>Primeiro a lista de decisões. Depois a lista de gráficos. Cada bloco do painel existe porque responde a uma pergunta de operação.</blockquote>
+      <blockquote data-t="t33">Primeiro a lista de decisões. Depois a lista de gráficos. Cada bloco do painel existe porque responde a uma pergunta de operação.</blockquote>
     </section>
 
     <section aria-labelledby="t-perguntas">
       <div class="sec-head">
-        <div><span class="label">O que o painel responde</span><h2 id="t-perguntas">Perguntas de operação, com a concorrência na mesma tela.</h2></div>
-        <p>Todos os filtros valem para todos os blocos: dia da semana, local, estrelas, tema e período da avaliação. E cada gráfico mostra sempre as marcas comparadas.</p>
+        <div><span class="label" data-t="t34">O que o painel responde</span><h2 id="t-perguntas" data-t="t35">Perguntas de operação, com a concorrência na mesma tela.</h2></div>
+        <p data-t="t36">Todos os filtros valem para todos os blocos: dia da semana, local, estrelas, tema e período da avaliação. E cada gráfico mostra sempre as marcas comparadas.</p>
       </div>
       <div class="perguntas">
         <div class="pg">
-          <q>Em que dia e horário eu preciso de mais gente no caixa?</q>
-          <span class="mod">Movimento <small>7 dias × 18 horas</small></span>
-          <p>Lotação por hora de cada loja, a hora de pico de cada dia, as três horas mais cheias e a mais vazia. Mapa de calor por marca e curva comparada hora a hora.</p>
+          <q data-t="t37">Em que dia e horário eu preciso de mais gente no caixa?</q>
+          <span class="mod" data-t="t38">Movimento <small>7 dias × 18 horas</small></span>
+          <p data-t="t39">Lotação por hora de cada loja, a hora de pico de cada dia, as três horas mais cheias e a mais vazia. Mapa de calor por marca e curva comparada hora a hora.</p>
         </div>
         <div class="pg">
-          <q>Minha nota está caindo ou é impressão?</q>
-          <span class="mod">Reputação <small>por período</small></span>
-          <p>Nota ponderada de cada marca, distribuição das estrelas, evolução do período mais antigo ao mais recente e quanto cada rede responde às avaliações negativas.</p>
+          <q data-t="t40">Minha nota está caindo ou é impressão?</q>
+          <span class="mod" data-t="t41">Reputação <small>por período</small></span>
+          <p data-t="t42">Nota ponderada de cada marca, distribuição das estrelas, evolução do período mais antigo ao mais recente e quanto cada rede responde às avaliações negativas.</p>
         </div>
         <div class="pg">
-          <q>Do que os clientes reclamam, e em qual loja?</q>
-          <span class="mod">Voz do cliente <small>{{N_TEMAS}} temas</small></span>
-          <p>Quanto se fala de {{TEMAS_LISTA}}. Quando o tema aparece, quanto disso é reclamação. E as avaliações lado a lado, com os termos destacados.</p>
+          <q data-t="t43">Do que os clientes reclamam, e em qual loja?</q>
+          <span class="mod" data-t="t44">Voz do cliente <small>{{N_TEMAS}} temas</small></span>
+          <p data-t="t45">Quanto se fala de {{TEMAS_LISTA}}. Quando o tema aparece, quanto disso é reclamação. E as avaliações lado a lado, com os termos destacados.</p>
         </div>
         <div class="pg">
-          <q>{{PERGUNTA_LOCAL}}</q>
-          <span class="mod">Lojas e locais <small>matriz por local</small></span>
-          <p>Nota de cada loja, local a local, com a vencedora marcada. Presença das marcas por local, mapa das lojas, horário do dia e contatos.</p>
+          <q data-t="t46">{{PERGUNTA_LOCAL}}</q>
+          <span class="mod" data-t="t47">Lojas e locais <small>matriz por local</small></span>
+          <p data-t="t48">Nota de cada loja, local a local, com a vencedora marcada. Presença das marcas por local, mapa das lojas, horário do dia e contatos.</p>
         </div>
         <div class="pg">
-          <q>E se eu quiser perguntar do meu jeito?</q>
-          <span class="mod">Analista com IA <span class="beta">beta</span></span>
-          <p>Uma pergunta em texto livre, respondida só com os números e trechos do recorte filtrado. A resposta compara as marcas e avisa quando a amostra é pequena.</p>
+          <q data-t="t49">E se eu quiser perguntar do meu jeito?</q>
+          <span class="mod" data-t="t50">Analista com IA <span class="beta">beta</span></span>
+          <p data-t="t51">Uma pergunta em texto livre, respondida só com os números e trechos do recorte filtrado. A resposta compara as marcas e avisa quando a amostra é pequena.</p>
         </div>
       </div>
     </section>
 
     <section id="metodo" aria-labelledby="t-metodo">
       <div class="sec-head">
-        <div><span class="label">Metodologia</span><h2 id="t-metodo">Seis etapas entre a ficha pública e o número no painel.</h2></div>
-        <p>A coleta roda sem modelo de linguagem, com regras explícitas e verificáveis. A IA entra só no fim, para conversar com os dados que já foram conferidos.</p>
+        <div><span class="label" data-t="t52">Metodologia</span><h2 id="t-metodo" data-t="t53">Seis etapas entre a ficha pública e o número no painel.</h2></div>
+        <p data-t="t54">A coleta roda sem modelo de linguagem, com regras explícitas e verificáveis. A IA entra só no fim, para conversar com os dados que já foram conferidos.</p>
       </div>
       <div class="rota">
         <div class="dobra">
           <span class="n">01</span>
-          <h3>Descoberta</h3>
-          <p>Buscas por marca e cidade com várias formulações, para nenhuma loja ficar de fora.</p>
-          <span class="tech">cada loja identificada pelo código único da ficha, sem duplicar</span>
+          <h3 data-t="t55">Descoberta</h3>
+          <p data-t="t56">Buscas por marca e cidade com várias formulações, para nenhuma loja ficar de fora.</p>
+          <span class="tech" data-t="t57">cada loja identificada pelo código único da ficha, sem duplicar</span>
         </div>
         <div class="dobra">
           <span class="n">02</span>
-          <h3>Leitura estruturada</h3>
-          <p>Endereço, horários, telefone, estrelas, tópicos e o gráfico de horários de pico. O gráfico vira número: percentual de lotação por hora e por dia.</p>
-          <span class="tech">o valor publicado com cada barra é lido direto, sem interpretar imagem</span>
+          <h3 data-t="t58">Leitura estruturada</h3>
+          <p data-t="t59">Endereço, horários, telefone, estrelas, tópicos e o gráfico de horários de pico. O gráfico vira número: percentual de lotação por hora e por dia.</p>
+          <span class="tech" data-t="t60">o valor publicado com cada barra é lido direto, sem interpretar imagem</span>
         </div>
         <div class="dobra">
           <span class="n">03</span>
-          <h3>Validação</h3>
-          <p>Município conferido pelo CEP, porque a ficha às vezes rotula a cidade vizinha. Loja fora do recorte sai antes de gastar coleta.</p>
-          <span class="tech">limite de acesso da fonte: a coleta pausa e a loja fica marcada como parcial</span>
+          <h3 data-t="t61">Validação</h3>
+          <p data-t="t62">Município conferido pelo CEP, porque a ficha às vezes rotula a cidade vizinha. Loja fora do recorte sai antes de gastar coleta.</p>
+          <span class="tech" data-t="t63">limite de acesso da fonte: a coleta pausa e a loja fica marcada como parcial</span>
         </div>
         <div class="dobra">
           <span class="n">04</span>
-          <h3>Padronização</h3>
-          <p>Nota da marca calculada pela contagem de estrelas de todas as avaliações, sem o arredondamento da ficha. Cada loja pesa pelo volume que tem.</p>
-          <span class="tech">média de movimento só nas horas com metade das lojas abertas</span>
+          <h3 data-t="t64">Padronização</h3>
+          <p data-t="t65">Nota da marca calculada pela contagem de estrelas de todas as avaliações, sem o arredondamento da ficha. Cada loja pesa pelo volume que tem.</p>
+          <span class="tech" data-t="t66">média de movimento só nas horas com metade das lojas abertas</span>
         </div>
         <div class="dobra">
           <span class="n">05</span>
-          <h3>Classificação de texto</h3>
-          <p>Cada avaliação com texto recebe um ou mais temas. O painel mostra quantas citações sustentam cada percentual.</p>
-          <span class="tech">tema com menos de 10 citações fica sem percentual</span>
+          <h3 data-t="t67">Classificação de texto</h3>
+          <p data-t="t68">Cada avaliação com texto recebe um ou mais temas. O painel mostra quantas citações sustentam cada percentual.</p>
+          <span class="tech" data-t="t69">tema com menos de 10 citações fica sem percentual</span>
         </div>
         <div class="dobra">
           <span class="n">06</span>
-          <h3>Comparação e análise</h3>
-          <p>Filtros recalculam tudo com as marcas lado a lado. O analista com IA recebe apenas o recorte que está na tela.</p>
-          <span class="tech">empate não vira ranking · amostra sempre visível</span>
+          <h3 data-t="t70">Comparação e análise</h3>
+          <p data-t="t71">Filtros recalculam tudo com as marcas lado a lado. O analista com IA recebe apenas o recorte que está na tela.</p>
+          <span class="tech" data-t="t72">empate não vira ranking · amostra sempre visível</span>
         </div>
       </div>
-      <p class="nota-rota">Sobre a etapa 06. O analista trabalha com <b>recuperação a partir dos próprios dados</b>: antes de responder, ele recebe os números e os trechos de avaliação que passam nos filtros escolhidos, e responde só com isso. Assim a resposta pode ser conferida contra o painel, e não depende do que um modelo genérico acha que sabe sobre a sua rede.</p>
+      <p class="nota-rota" data-t="t73">Sobre a etapa 06. O analista trabalha com <b>recuperação a partir dos próprios dados</b>: antes de responder, ele recebe os números e os trechos de avaliação que passam nos filtros escolhidos, e responde só com isso. Assim a resposta pode ser conferida contra o painel, e não depende do que um modelo genérico acha que sabe sobre a sua rede.</p>
     </section>
 
     <section aria-labelledby="t-principios">
       <div class="sec-head">
-        <div><span class="label">Princípios</span><h2 id="t-principios">O que o painel nunca faz.</h2></div>
-        <p>Regras de pesquisa aplicadas a dados públicos. Elas aparecem na tela, junto com o número, para quem lê saber de onde ele veio.</p>
+        <div><span class="label" data-t="t74">Princípios</span><h2 id="t-principios" data-t="t75">O que o painel nunca faz.</h2></div>
+        <p data-t="t76">Regras de pesquisa aplicadas a dados públicos. Elas aparecem na tela, junto com o número, para quem lê saber de onde ele veio.</p>
       </div>
       <div class="principios">
-        <div class="pr"><span class="tech">Amostra</span><p><b>Nunca esconde a base.</b> Cada percentual mostra quantas avaliações ou lojas o sustentam, e o painel avisa quando um filtro troca o total da fonte pela amostra lida.</p></div>
-        <div class="pr"><span class="tech">Privacidade</span><p><b>Nunca exibe nome de quem avaliou.</b> O texto da avaliação serve à análise. A identidade de quem escreveu fica fora da coleta publicada.</p></div>
-        <div class="pr"><span class="tech">Comparação</span><p><b>Nunca compara lojas de públicos diferentes sem avisar.</b> {{COMPARACAO_LOCAL}}</p></div>
-        <div class="pr"><span class="tech">Fonte</span><p><b>Nunca contorna limite de acesso.</b> Quando a fonte restringe a leitura, a coleta para, a loja é marcada como parcial e volta depois.</p></div>
-        <div class="pr"><span class="tech">Ranking</span><p><b>Nunca inventa vencedor.</b> Selo de melhor e pior só aparece quando há diferença real entre as marcas.</p></div>
-        <div class="pr"><span class="tech">Datas</span><p><b>Nunca apresenta data aproximada como exata.</b> O período vem da idade que a própria avaliação informa, e o painel diz isso.</p></div>
+        <div class="pr"><span class="tech" data-t="t77">Amostra</span><p data-t="t78"><b>Nunca esconde a base.</b> Cada percentual mostra quantas avaliações ou lojas o sustentam, e o painel avisa quando um filtro troca o total da fonte pela amostra lida.</p></div>
+        <div class="pr"><span class="tech" data-t="t79">Privacidade</span><p data-t="t80"><b>Nunca exibe nome de quem avaliou.</b> O texto da avaliação serve à análise. A identidade de quem escreveu fica fora da coleta publicada.</p></div>
+        <div class="pr"><span class="tech" data-t="t81">Comparação</span><p data-t="t82"><b>Nunca compara lojas de públicos diferentes sem avisar.</b> {{COMPARACAO_LOCAL}}</p></div>
+        <div class="pr"><span class="tech" data-t="t83">Fonte</span><p data-t="t84"><b>Nunca contorna limite de acesso.</b> Quando a fonte restringe a leitura, a coleta para, a loja é marcada como parcial e volta depois.</p></div>
+        <div class="pr"><span class="tech">Ranking</span><p data-t="t85"><b>Nunca inventa vencedor.</b> Selo de melhor e pior só aparece quando há diferença real entre as marcas.</p></div>
+        <div class="pr"><span class="tech" data-t="t86">Datas</span><p data-t="t87"><b>Nunca apresenta data aproximada como exata.</b> O período vem da idade que a própria avaliação informa, e o painel diz isso.</p></div>
       </div>
     </section>
 
     <section aria-labelledby="t-quem">
       <div class="sec-head">
-        <div><span class="label">Para quem</span><h2 id="t-quem">Quem decide sobre loja física com dado de fora da própria casa.</h2></div>
-        <p>A mesma coleta serve a outras redes, outros setores e outras cidades. O desenho do painel parte das decisões de cada time.</p>
+        <div><span class="label" data-t="t88">Para quem</span><h2 id="t-quem" data-t="t89">Quem decide sobre loja física com dado de fora da própria casa.</h2></div>
+        <p data-t="t90">A mesma coleta serve a outras redes, outros setores e outras cidades. O desenho do painel parte das decisões de cada time.</p>
       </div>
       <div class="quem">
-        <span>Redes de varejo e franquias</span>
-        <span>Shopping centers</span>
-        <span>Times de expansão e novos pontos</span>
-        <span>Operações e escala de equipe</span>
-        <span>Trade e inteligência de mercado</span>
-        <span>Institutos de pesquisa e consultorias</span>
+        <span data-t="t91">Redes de varejo e franquias</span>
+        <span data-t="t92">Shopping centers</span>
+        <span data-t="t93">Times de expansão e novos pontos</span>
+        <span data-t="t94">Operações e escala de equipe</span>
+        <span data-t="t95">Trade e inteligência de mercado</span>
+        <span data-t="t96">Institutos de pesquisa e consultorias</span>
       </div>
     </section>
 
     <div class="assina">
       <div>
-        <h2>Loja física deixa rastro público todos os dias. <em>Quem lê esse rastro com método decide antes.</em></h2>
-        <p>Se a sua rede ainda consolida visita de campo em planilha, vale medir quantos dias separam a primeira reclamação no Google do plano de ação na loja.</p>
+        <h2 data-t="t97">Loja física deixa rastro público todos os dias. <em>Quem lê esse rastro com método decide antes.</em></h2>
+        <p data-t="t98">Se a sua rede ainda consolida visita de campo em planilha, vale medir quantos dias separam a primeira reclamação no Google do plano de ação na loja.</p>
       </div>
       <div class="cta">
-        <p>Produtos disponíveis via SaaS por crédito, por projeto ou compra da plataforma. Fale com a gente, temos formato que cabe no seu orçamento.</p>
-        <a class="btn" href="mailto:cassiano@cassiai.com?subject=Vitrine%20%C2%B7%20quero%20conhecer">Falar com a Cassi.ai</a>
-        <p class="cred">A Cassi.ai é uma empresa de engenharia de software especializada nas dores de pesquisa, inovação e insights. Vinte anos em pesquisa de mercado, ex-ESOMAR Brasil, com palestras no IIEX, na ESOMAR e na ABEP.</p>
+        <p data-t="t99">Produtos disponíveis via SaaS por crédito, por projeto ou compra da plataforma. Fale com a gente, temos formato que cabe no seu orçamento.</p>
+        <a class="btn" href="mailto:cassiano@cassiai.com?subject=Vitrine%20%C2%B7%20quero%20conhecer" data-t="t100">Falar com a Cassi.ai</a>
+        <p class="cred" data-t="t101">A Cassi.ai é uma empresa de engenharia de software especializada nas dores de pesquisa, inovação e insights. Vinte anos em pesquisa de mercado, ex-ESOMAR Brasil, com palestras no IIEX, na ESOMAR e na ABEP.</p>
       </div>
     </div>
   </main>
 
   <footer>
     <img src="/cassi-wordmark.svg" alt="Cassi.ai" width="60" height="20">
-    <span>Vitrine é um produto <a href="https://cassiai.com">Cassi.ai</a>. Dados de fichas públicas, coletados com data e método registrados.</span>
+    <span data-t="t102">Vitrine é um produto <a href="https://cassiai.com">Cassi.ai</a>. Dados de fichas públicas, coletados com data e método registrados.</span>
   </footer>
 </div>
+<script>
+(function(){
+var DIC = {
+"es": {
+"t0": "Entrar",
+"t1": "Inteligencia de tiendas físicas",
+"t2": "Cada tienda de su cadena y de la competencia, <span class=\"out\">leída</span> hora por hora.",
+"t3": "Afluencia por hora, reputación y lo que escriben los clientes, tienda por tienda, con la competencia siempre al lado. Todo a partir de datos públicos, con método de investigación detrás de cada número.",
+"t4": "Ver el método",
+"t5": "Solicitar acceso",
+"t6": "Acceda al panel",
+"t7": "Área restringida a clientes con proyecto activo.",
+"t8": "El usuario o la contraseña no coinciden. Revíselos e intente de nuevo.",
+"t9": "Inicie sesión con su usuario para abrir el panel.",
+"t10": "Entrar al panel",
+"t11": "¿Aún sin acceso? Escriba a <a href=\"mailto:cassiano@cassiai.com\">cassiano@cassiai.com</a>.",
+"t12": "Piloto · una capital · {{ROTULO_PILOTO_ES}}",
+"t13": "tiendas monitoreadas",
+"t14": "cadenas comparadas",
+"t15": "reseñas leídas",
+"t16": "lecturas de afluencia por hora",
+"t17": "temas de queja y elogio",
+"t18": "El trabajo",
+"t19": "Saber cómo le va a cada tienda física. Y cómo le va al vecino de pasillo.",
+"t20": "Toda cadena se hace esa pregunta. La respuesta suele llegar tarde, en archivos distintos, y la comparación con la competencia queda en la impresión de quien visitó la tienda.",
+"t21": "Tema",
+"t22": "Desempeño de tienda física",
+"t23": "Flujo a lo largo del día, nota en Google, lo que los clientes elogian y critican, y cómo se compara todo eso con la competencia en la misma plaza.",
+"t24": "Cómo se hace hoy",
+"t25": "Visita, planilla y lectura manual",
+"t26": "Todavía se hace con visitas de campo, cliente incógnito y reseñas leídas una por una. Cada plaza envía un archivo y alguien lo consolida todo en una planilla a fin de mes.",
+"t27": "El problema",
+"t28": "El dato llega viejo y sin vara de medir",
+"t29": "La queja por la fila en la caja aparece en el informe semanas después de convertirse en una nota 1. El pico del sábado se conoce de oídas. Y nadie puede decir, con números, dónde pierde la tienda frente a la de al lado.",
+"t30": "Dónde entra Cassi.ai",
+"t31": "Un panel leído con método",
+"t32": "Vitrine lee las fichas públicas de las tiendas, convierte gráficos y textos en números, clasifica lo que escriben los clientes y lo entrega todo en un panel con las marcas lado a lado.",
+"t33": "Primero la lista de decisiones. Después la lista de gráficos. Cada bloque del panel existe porque responde a una pregunta de operación.",
+"t34": "Lo que responde el panel",
+"t35": "Preguntas de operación, con la competencia en la misma pantalla.",
+"t36": "Todos los filtros aplican a todos los bloques: día de la semana, lugar, estrellas, tema y período de la reseña. Y cada gráfico muestra siempre las marcas comparadas.",
+"t37": "¿Qué día y a qué hora necesito más personal en caja?",
+"t38": "Afluencia <small>7 días × 18 horas</small>",
+"t39": "Afluencia por hora de cada tienda, la hora pico de cada día, las tres horas más llenas y la más vacía. Mapa de calor por marca y curva comparada hora por hora.",
+"t40": "¿Mi nota está bajando o es solo una impresión?",
+"t41": "Reputación <small>por período</small>",
+"t42": "Nota ponderada de cada marca, distribución de estrellas, evolución del período más antiguo al más reciente y cuánto responde cada cadena a las reseñas negativas.",
+"t43": "¿De qué se quejan los clientes, y en qué tienda?",
+"t44": "Voz del cliente <small>{{N_TEMAS}} temas</small>",
+"t45": "Cuánto se habla de {{TEMAS_LISTA_ES}}. Cuando el tema aparece, cuánto de eso es queja. Y las reseñas lado a lado, con los términos resaltados.",
+"t46": "{{PERGUNTA_LOCAL_ES}}",
+"t47": "Tiendas y lugares <small>matriz por lugar</small>",
+"t48": "Nota de cada tienda, lugar por lugar, con la ganadora marcada. Presencia de las marcas por lugar, mapa de tiendas, horario del día y contactos.",
+"t49": "¿Y si quiero preguntar a mi manera?",
+"t50": "Analista con IA <span class=\"beta\">beta</span>",
+"t51": "Una pregunta en texto libre, respondida solo con los números y fragmentos de la selección filtrada. La respuesta compara las marcas y avisa cuando la muestra es pequeña.",
+"t52": "Metodología",
+"t53": "Seis etapas entre la ficha pública y el número en el panel.",
+"t54": "La recolección funciona sin modelo de lenguaje, con reglas explícitas y verificables. La IA entra solo al final, para conversar con datos ya verificados.",
+"t55": "Descubrimiento",
+"t56": "Búsquedas por marca y ciudad con varias formulaciones, para que ninguna tienda quede fuera.",
+"t57": "cada tienda identificada por el código único de la ficha, sin duplicados",
+"t58": "Lectura estructurada",
+"t59": "Dirección, horarios, teléfono, estrellas, temas y el gráfico de horas punta. El gráfico se convierte en número: porcentaje de afluencia por hora y por día.",
+"t60": "el valor publicado con cada barra se lee directamente, sin interpretar imágenes",
+"t61": "Validación",
+"t62": "Municipio verificado por el código postal, porque la ficha a veces indica la ciudad vecina. Una tienda fuera del alcance sale antes de gastar recolección.",
+"t63": "límite de acceso de la fuente: la recolección se pausa y la tienda queda marcada como parcial",
+"t64": "Estandarización",
+"t65": "Nota de la marca calculada con el conteo de estrellas de todas las reseñas, sin el redondeo de la ficha. Cada tienda pesa según su volumen.",
+"t66": "promedio de afluencia solo en horas con la mitad de las tiendas abiertas",
+"t67": "Clasificación de texto",
+"t68": "Cada reseña con texto recibe uno o más temas. El panel muestra cuántas menciones sostienen cada porcentaje.",
+"t69": "un tema con menos de 10 menciones queda sin porcentaje",
+"t70": "Comparación y análisis",
+"t71": "Los filtros recalculan todo con las marcas lado a lado. El analista con IA recibe solo la selección que está en pantalla.",
+"t72": "un empate no se convierte en ranking · muestra siempre visible",
+"t73": "Sobre la etapa 06. El analista trabaja con <b>recuperación a partir de los propios datos</b>: antes de responder recibe los números y los fragmentos de reseñas que pasan los filtros elegidos, y responde solo con eso. Así la respuesta se puede verificar contra el panel y no depende de lo que un modelo genérico cree saber sobre su cadena.",
+"t74": "Principios",
+"t75": "Lo que el panel nunca hace.",
+"t76": "Reglas de investigación aplicadas a datos públicos. Aparecen en pantalla junto al número, para que quien lee sepa de dónde viene.",
+"t77": "Muestra",
+"t78": "<b>Nunca oculta la base.</b> Cada porcentaje muestra cuántas reseñas o tiendas lo sostienen, y el panel avisa cuando un filtro cambia el total de la fuente por la muestra leída.",
+"t79": "Privacidad",
+"t80": "<b>Nunca muestra el nombre de quien reseñó.</b> El texto de la reseña sirve al análisis. La identidad de quien escribió queda fuera de la recolección publicada.",
+"t81": "Comparación",
+"t82": "<b>Nunca compara tiendas de públicos distintos sin avisar.</b> {{COMPARACAO_LOCAL_ES}}",
+"t83": "Fuente",
+"t84": "<b>Nunca elude límites de acceso.</b> Cuando la fuente restringe la lectura, la recolección se detiene, la tienda se marca como parcial y se retoma después.",
+"t85": "<b>Nunca inventa ganadores.</b> El sello de mejor y peor solo aparece cuando hay una diferencia real entre las marcas.",
+"t86": "Fechas",
+"t87": "<b>Nunca presenta una fecha aproximada como exacta.</b> El período viene de la antigüedad que informa la propia reseña, y el panel lo indica.",
+"t88": "Para quién",
+"t89": "Quienes deciden sobre tiendas físicas con datos de fuera de su propia empresa.",
+"t90": "La misma recolección sirve para otras cadenas, otros sectores y otras ciudades. El diseño del panel parte de las decisiones de cada equipo.",
+"t91": "Cadenas de retail y franquicias",
+"t92": "Centros comerciales",
+"t93": "Equipos de expansión y nuevos locales",
+"t94": "Operaciones y turnos de personal",
+"t95": "Trade e inteligencia de mercado",
+"t96": "Institutos de investigación y consultoras",
+"t97": "Las tiendas físicas dejan rastro público todos los días. <em>Quien lee ese rastro con método decide antes.</em>",
+"t98": "Si su cadena todavía consolida visitas de campo en planillas, vale la pena medir cuántos días separan la primera queja en Google del plan de acción en la tienda.",
+"t99": "Productos disponibles vía SaaS por crédito, por proyecto o compra de la plataforma. Hable con nosotros, tenemos un formato que se ajusta a su presupuesto.",
+"t100": "Hablar con Cassi.ai",
+"t101": "Cassi.ai es una empresa de ingeniería de software especializada en los desafíos de investigación, innovación e insights. Veinte años en investigación de mercados, ex ESOMAR Brasil, con charlas en IIEX, ESOMAR y ABEP.",
+"t102": "Vitrine es un producto de <a href=\"https://cassiai.com\">Cassi.ai</a>. Datos de fichas públicas, recolectados con fecha y método registrados.",
+"f1": "Usuario",
+"f2": "Contraseña"
+},
+"en": {
+"t0": "Sign in",
+"t1": "Physical store intelligence",
+"t2": "Every store in your chain and your competitor’s, <span class=\"out\">read</span> hour by hour.",
+"t3": "Hourly busyness, reputation and what customers write, store by store, with the competition always side by side. All from public data, with research method behind every number.",
+"t4": "See the method",
+"t5": "Request access",
+"t6": "Open the dashboard",
+"t7": "Restricted to clients with an active project.",
+"t8": "Username or password don’t match. Check them and try again.",
+"t9": "Sign in with your username to open the dashboard.",
+"t10": "Open dashboard",
+"t11": "No access yet? Write to <a href=\"mailto:cassiano@cassiai.com\">cassiano@cassiai.com</a>.",
+"t12": "Pilot · one state capital · {{ROTULO_PILOTO_EN}}",
+"t13": "stores tracked",
+"t14": "chains compared",
+"t15": "reviews read",
+"t16": "hourly busyness readings",
+"t17": "complaint and praise topics",
+"t18": "The job",
+"t19": "Know how each physical store is doing. And how the store next door is doing.",
+"t20": "Every chain asks this. The answer tends to arrive late, in scattered files, and the comparison with competitors rests on the impression of whoever visited the store.",
+"t21": "Subject",
+"t22": "Physical store performance",
+"t23": "Traffic through the day, Google rating, what customers praise and complain about, and how it all compares with competitors in the same market.",
+"t24": "How it is done today",
+"t25": "Visits, spreadsheets and manual reading",
+"t26": "It still relies on field visits, mystery shoppers and reviews read one by one. Each market sends a file, and someone merges everything into a spreadsheet at month end.",
+"t27": "The pain",
+"t28": "Data arrives stale and without a common yardstick",
+"t29": "The checkout queue complaint reaches the report weeks after it became a 1-star review. Saturday’s peak is known by hearsay. And nobody can say, with numbers, where the store loses to the one next door.",
+"t30": "Where Cassi.ai comes in",
+"t31": "A dashboard read with method",
+"t32": "Vitrine reads public store listings, turns charts and text into numbers, classifies what customers write and delivers it all in one dashboard with the brands side by side.",
+"t33": "Decisions first. Charts second. Every block in the dashboard exists because it answers an operational question.",
+"t34": "What the dashboard answers",
+"t35": "Operational questions, with the competition on the same screen.",
+"t36": "Every filter applies to every block: weekday, location, stars, topic and review period. And every chart always shows the brands compared.",
+"t37": "On which day and hour do I need more checkout staff?",
+"t38": "Busyness <small>7 days × 18 hours</small>",
+"t39": "Hourly busyness for each store, each day’s peak hour, the three busiest hours and the quietest one. Heatmap by brand and an hour-by-hour comparison curve.",
+"t40": "Is my rating really dropping?",
+"t41": "Reputation <small>by period</small>",
+"t42": "Weighted rating per brand, star distribution, trend from the oldest period to the latest, and how often each chain replies to negative reviews.",
+"t43": "What do customers complain about, and at which store?",
+"t44": "Voice of the customer <small>{{N_TEMAS}} topics</small>",
+"t45": "How much people talk about {{TEMAS_LISTA_EN}}. When a topic comes up, how much of it is a complaint. And the reviews side by side, with key terms highlighted.",
+"t46": "{{PERGUNTA_LOCAL_EN}}",
+"t47": "Stores and locations <small>location matrix</small>",
+"t48": "Each store’s rating, location by location, with the winner marked. Brand presence by location, store map, today’s hours and contacts.",
+"t49": "What if I want to ask in my own words?",
+"t50": "AI analyst <span class=\"beta\">beta</span>",
+"t51": "A free-text question, answered only with the numbers and excerpts in the filtered selection. The answer compares the brands and flags small samples.",
+"t52": "Methodology",
+"t53": "Six steps between the public listing and the number on the dashboard.",
+"t54": "Collection runs without a language model, on explicit and verifiable rules. AI only comes in at the end, to converse with data that has already been checked.",
+"t55": "Discovery",
+"t56": "Searches by brand and city with several phrasings, so no store is left out.",
+"t57": "each store identified by its listing’s unique code, no duplicates",
+"t58": "Structured reading",
+"t59": "Address, hours, phone, stars, topics and the popular times chart. The chart becomes a number: busyness percentage by hour and day.",
+"t60": "the value published with each bar is read directly, with no image interpretation",
+"t61": "Validation",
+"t62": "Municipality checked against the postal code, since listings sometimes name the neighboring city. Out-of-scope stores are dropped before any collection is spent.",
+"t63": "source access limit: collection pauses and the store is marked partial",
+"t64": "Standardization",
+"t65": "Brand rating computed from the star counts of all reviews, without the listing’s rounding. Each store is weighted by its volume.",
+"t66": "average busyness only for hours when half the stores are open",
+"t67": "Text classification",
+"t68": "Every review with text gets one or more topics. The dashboard shows how many mentions back each percentage.",
+"t69": "topics with fewer than 10 mentions get no percentage",
+"t70": "Comparison and analysis",
+"t71": "Filters recompute everything with the brands side by side. The AI analyst receives only the selection on screen.",
+"t72": "ties never become rankings · sample always visible",
+"t73": "About step 06. The analyst works with <b>retrieval from your own data</b>: before answering, it receives the numbers and review excerpts that pass the chosen filters, and answers using only those. So every answer can be checked against the dashboard and never depends on what a generic model thinks it knows about your chain.",
+"t74": "Principles",
+"t75": "What the dashboard never does.",
+"t76": "Research rules applied to public data. They appear on screen next to each number, so readers know where it came from.",
+"t77": "Sample",
+"t78": "<b>Never hides the base.</b> Every percentage shows how many reviews or stores back it, and the dashboard warns when a filter swaps the source total for the collected sample.",
+"t79": "Privacy",
+"t80": "<b>Never shows reviewer names.</b> The review text serves the analysis. The writer’s identity stays out of the published data.",
+"t81": "Comparison",
+"t82": "<b>Never compares stores with different audiences without saying so.</b> {{COMPARACAO_LOCAL_EN}}",
+"t83": "Source",
+"t84": "<b>Never works around access limits.</b> When the source restricts reading, collection stops, the store is marked partial and resumes later.",
+"t85": "<b>Never invents a winner.</b> Best and worst badges only appear when there is a real gap between brands.",
+"t86": "Dates",
+"t87": "<b>Never presents an approximate date as exact.</b> The period comes from the age the review itself reports, and the dashboard says so.",
+"t88": "Who it is for",
+"t89": "People who make physical store decisions with data from outside their own company.",
+"t90": "The same collection works for other chains, other sectors and other cities. The dashboard design starts from each team’s decisions.",
+"t91": "Retail chains and franchises",
+"t92": "Shopping malls",
+"t93": "Expansion and site selection teams",
+"t94": "Operations and staff scheduling",
+"t95": "Trade marketing and market intelligence",
+"t96": "Research agencies and consultancies",
+"t97": "Physical stores leave a public trail every day. <em>Those who read it with method decide first.</em>",
+"t98": "If your chain still merges field visits in spreadsheets, it is worth measuring how many days pass between the first Google complaint and the in-store action plan.",
+"t99": "Products available as SaaS on credits, per project, or as a platform purchase. Talk to us, we have a format that fits your budget.",
+"t100": "Talk to Cassi.ai",
+"t101": "Cassi.ai is a software engineering company focused on the pain points of research, innovation and insights. Twenty years in market research, former ESOMAR Brazil, with talks at IIEX, ESOMAR and ABEP.",
+"t102": "Vitrine is a <a href=\"https://cassiai.com\">Cassi.ai</a> product. Data from public listings, collected with date and method on record.",
+"f1": "Username",
+"f2": "Password"
+}
+};
+var META = {"es": {"title": "Vitrine · Cassi.ai", "desc": "Inteligencia de tiendas físicas a partir de datos públicos: afluencia por hora, reputación y voz del cliente, tienda por tienda, con la competencia lado a lado.", "nome": "Números del proyecto piloto", "cassi": "Cassi.ai: abrir el sitio", "lang": "Idioma", "assunto": "Vitrine%20%C2%B7%20quiero%20conocerla"}, "en": {"title": "Vitrine · Cassi.ai", "desc": "Physical store intelligence from public data: hourly busyness, reputation and voice of the customer, store by store, with competitors side by side.", "nome": "Pilot project figures", "cassi": "Cassi.ai: open the website", "lang": "Language", "assunto": "Vitrine%20%C2%B7%20I%20want%20to%20learn%20more"}};
+var l = null;
+try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
+l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
+if (["pt","es","en"].indexOf(l) < 0) l = "pt";
+document.querySelectorAll(".idioma button").forEach(function(b){
+  b.setAttribute("aria-pressed", String(b.getAttribute("data-l") === l));
+  b.addEventListener("click", function(){
+    try { localStorage.setItem("vitrine-idioma", b.getAttribute("data-l")); } catch (e) {}
+    var u = new URL(location.href); u.searchParams.delete("lang"); location.replace(u.toString());
+  });
+});
+if (l === "pt") return;
+document.documentElement.lang = l;
+var d = DIC[l], m = META[l];
+document.querySelectorAll("[data-t]").forEach(function(e){ var v = d[e.getAttribute("data-t")]; if (v) e.innerHTML = v; });
+document.querySelector('meta[name="description"]').setAttribute("content", m.desc);
+document.querySelector(".ficha").setAttribute("aria-label", m.nome);
+if (l === "en") document.querySelectorAll(".ficha b").forEach(function(b){ b.textContent = b.textContent.replace(/\./g, ","); });
+document.querySelector(".idioma").setAttribute("aria-label", m.lang);
+document.querySelectorAll('a[title^="Cassi.ai"]').forEach(function(a){ a.title = m.cassi; });
+document.querySelectorAll('a[href*="subject=Vitrine"]').forEach(function(a){ a.href = a.href.replace(/subject=.*$/, "subject=" + m.assunto); });
+})();
+</script>
 <script>
 (function(){
   var q = new URLSearchParams(location.search);

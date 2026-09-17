@@ -42,61 +42,81 @@
       "net": "Atendimento",
       "id": "atendimento",
       "nome": "Atendimento",
-      "re": "atendiment|atendente|(bem|mal) atendid|funcion[aá]ri|vendedor|colaborador|educad|grosse|simp[aá]tic|gerente|equipe|tratad[ao]|respeit|descaso|ignor|despreparad|\\bcontato\\b|n[ãa]o (me |ti |te |nos )?ajud|atende(m)? (as |a )?liga|\\bgross[ao]s?\\b|atencios|solicit"
+      "re": "atendiment|atendente|(bem|mal) atendid|funcion[aá]ri|vendedor|colaborador|educad|grosse|simp[aá]tic|gerente|equipe|tratad[ao]|respeit|descaso|ignor|despreparad|\\bcontato\\b|n[ãa]o (me |ti |te |nos )?ajud|atende(m)? (as |a )?liga|\\bgross[ao]s?\\b|atencios|solicit",
+      "nome_es": "Atención",
+      "nome_en": "Service"
     },
     {
       "net": "Loja e operação",
       "id": "fila",
       "nome": "Fila e caixa",
-      "re": "\\bfila|caixas?\\b(?! d.? ?spam)|\\bcxs?\\b|demor|esper[ae]i|lentid|self.?check"
+      "re": "\\bfila|caixas?\\b(?! d.? ?spam)|\\bcxs?\\b|demor|esper[ae]i|lentid|self.?check",
+      "nome_es": "Filas y caja",
+      "nome_en": "Queues and checkout"
     },
     {
       "net": "Loja e operação",
       "id": "provador",
       "nome": "Provador",
-      "re": "provador"
+      "re": "provador",
+      "nome_es": "Probador",
+      "nome_en": "Fitting room"
     },
     {
       "net": "Loja e operação",
       "id": "organizacao",
       "nome": "Organização e limpeza",
-      "re": "organiz|bagun|limp[ae]|suj[ao]|arrumad|desarrum"
+      "re": "organiz|bagun|limp[ae]|suj[ao]|arrumad|desarrum",
+      "nome_es": "Orden y limpieza",
+      "nome_en": "Tidiness and cleanliness"
     },
     {
       "net": "Loja e operação",
       "id": "estrutura",
       "nome": "Espaço e conforto",
-      "re": "ar.?condicionado|climatiz|quente|banheiro|estacionamento|acessibilidade|elevador|escada|sof[áa]|ambiente|espa[çc]os[ao]|loja (ampla|grande)|\\bampl[ao]\\b|instala[çc]|aconcheg|loja (feia|bonita|linda)|reforma"
+      "re": "ar.?condicionado|climatiz|quente|banheiro|estacionamento|acessibilidade|elevador|escada|sof[áa]|ambiente|espa[çc]os[ao]|loja (ampla|grande)|\\bampl[ao]\\b|instala[çc]|aconcheg|loja (feia|bonita|linda)|reforma",
+      "nome_es": "Espacio y confort",
+      "nome_en": "Space and comfort"
     },
     {
       "net": "Preço",
       "id": "preco",
       "nome": "Preço e promoção",
-      "re": "pre[çc]o|barat|\\bcar[oa]s?\\b|careir|\\bvalores\\b|custo.?benef|promo|oferta|desconto|liquida"
+      "re": "pre[çc]o|barat|\\bcar[oa]s?\\b|careir|\\bvalores\\b|custo.?benef|promo|oferta|desconto|liquida",
+      "nome_es": "Precio y promociones",
+      "nome_en": "Price and promotions"
     },
     {
       "net": "Produto",
       "id": "produto",
       "nome": "Variedade e produto",
-      "re": "variedad|op[çc][õo]es|modelo|cole[çc]|qualidade|tecido|estilo|jeans|cal[çc]ados|t[êe]nis|perfum|novidades|tem de tudo|complet[ao]|encolh|(bo[an]s|lind[ao]s|bonit[ao]s|feio?s?|[óo]tim[ao]s|excelentes|descolad[ao]s|medianos|fracos?) (roupas|produtos?|pe[çc]as|itens)|(roupas|produtos?|pe[çc]as|itens) (bo[an]s|lind[ao]s|bonit[ao]s|feio?s?|de qualidade|descolad[ao]s|medianos|fracos?|variados|mais bem feitas)|ponta de estoque|estoque deficiente"
+      "re": "variedad|op[çc][õo]es|modelo|cole[çc]|qualidade|tecido|estilo|jeans|cal[çc]ados|t[êe]nis|perfum|novidades|tem de tudo|complet[ao]|encolh|(bo[an]s|lind[ao]s|bonit[ao]s|feio?s?|[óo]tim[ao]s|excelentes|descolad[ao]s|medianos|fracos?) (roupas|produtos?|pe[çc]as|itens)|(roupas|produtos?|pe[çc]as|itens) (bo[an]s|lind[ao]s|bonit[ao]s|feio?s?|de qualidade|descolad[ao]s|medianos|fracos?|variados|mais bem feitas)|ponta de estoque|estoque deficiente",
+      "nome_es": "Variedad y producto",
+      "nome_en": "Assortment and product"
     },
     {
       "net": "Produto",
       "id": "tamanho",
       "nome": "Tamanhos",
-      "re": "numera[çc]|plus size|\\bgg\\b|\\bxg\\b|acima do peso|meu tamanho|tamanhos? (grande|pequen|maior|menor|\\d)|\\b(3[4-9]|4[0-9]|5[0-4]) ?(a|-|ao) ?(3[6-9]|4[0-9]|5[0-6])\\b"
+      "re": "numera[çc]|plus size|\\bgg\\b|\\bxg\\b|acima do peso|meu tamanho|tamanhos? (grande|pequen|maior|menor|\\d)|\\b(3[4-9]|4[0-9]|5[0-4]) ?(a|-|ao) ?(3[6-9]|4[0-9]|5[0-6])\\b",
+      "nome_es": "Tallas",
+      "nome_en": "Sizes"
     },
     {
       "net": "Crédito e cobrança",
       "id": "cartao",
       "nome": "Cartão e crédito",
-      "re": "cart(ão|ao|ões|oes) (da loja|deles|dela|pr[óo]prio|renner|riachuelo|c&a)|cart(ões|oes) oferecid|fazer o cart|fiz o cart|cr[eé]dito|crediário|juros|\\bpay\\b|fatura|cobran|empr[eé]stimo|seguro do cart|parcel"
+      "re": "cart(ão|ao|ões|oes) (da loja|deles|dela|pr[óo]prio|renner|riachuelo|c&a)|cart(ões|oes) oferecid|fazer o cart|fiz o cart|cr[eé]dito|crediário|juros|\\bpay\\b|fatura|cobran|empr[eé]stimo|seguro do cart|parcel",
+      "nome_es": "Tarjeta y crédito",
+      "nome_en": "Store card and credit"
     },
     {
       "net": "Pós-venda",
       "id": "troca",
       "nome": "Troca e devolução",
-      "re": "\\btroca|trocar|devolu|reembols|estorno|garantia"
+      "re": "\\btroca|trocar|devolu|reembols|estorno|garantia",
+      "nome_es": "Cambios y devoluciones",
+      "nome_en": "Exchanges and returns"
     }
   ],
   "destaque_tema": "cartao",
@@ -122,5 +142,49 @@
     ],
     "origem": "C&A azul do logo de 1998 (#052E5E, o atual e preto); Renner vermelho do logo (#D72027); Riachuelo verde do logo 2026 (#0C2E2D), clareado para leitura"
   },
-  "busca_exemplo": "provador, troca, Pix…"
+  "busca_exemplo": "provador, troca, Pix…",
+  "i18n": {
+    "es": {
+      "titulo": "C&A, Renner y Riachuelo, tienda por tienda",
+      "destaque_texto": "Casi siempre ligado a la venta insistente de la tarjeta de la tienda.",
+      "rotulo_piloto": "cadenas de moda",
+      "temas_lista": "atención, filas, crédito, precio, producto, cambios y probadores",
+      "pergunta_local": "¿Dónde pierdo frente a la competencia en el mismo centro comercial?",
+      "comparacao_local": "La matriz por lugar enfrenta tiendas del mismo centro comercial."
+    },
+    "en": {
+      "titulo": "C&A, Renner and Riachuelo, store by store",
+      "destaque_texto": "Almost always tied to pushy sales of the store credit card.",
+      "rotulo_piloto": "fashion chains",
+      "temas_lista": "service, queues, credit, price, product, exchanges and fitting rooms",
+      "pergunta_local": "Where do I lose to the competitor in the same mall?",
+      "comparacao_local": "The location matrix puts stores in the same mall side by side."
+    }
+  },
+  "nets_i18n": {
+    "Atendimento": {
+      "es": "Atención",
+      "en": "Service"
+    },
+    "Loja e operação": {
+      "es": "Tienda y operación",
+      "en": "Store and operations"
+    },
+    "Preço": {
+      "es": "Precio",
+      "en": "Price"
+    },
+    "Produto": {
+      "es": "Producto",
+      "en": "Product"
+    },
+    "Crédito e cobrança": {
+      "es": "Crédito y cobranza",
+      "en": "Credit and billing"
+    },
+    "Pós-venda": {
+      "es": "Posventa",
+      "en": "After-sales"
+    }
+  }
 }

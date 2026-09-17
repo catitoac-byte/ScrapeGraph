@@ -38,9 +38,18 @@ BARRA = """<style>
 <script>
 (function(){
   var b = document.getElementById("vg-tema");
+  var l = null;
+  try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
+  l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
+  var T = {pt: ["Tema escuro", "Tema claro", "Sair", "Cassi.ai: abrir o site"],
+           es: ["Tema oscuro", "Tema claro", "Salir", "Cassi.ai: abrir el sitio"],
+           en: ["Dark theme", "Light theme", "Sign out", "Cassi.ai: open the website"]}[l] || null;
+  T = T || ["Tema escuro", "Tema claro", "Sair", "Cassi.ai: abrir o site"];
+  document.querySelector(".vg-bar .l a.sair").textContent = T[2];
+  document.querySelector(".vg-bar .marca").title = T[3];
   function pinta(){
     var escuro = document.documentElement.getAttribute("data-theme") === "dark";
-    b.textContent = escuro ? "Tema claro" : "Tema escuro";
+    b.textContent = escuro ? T[1] : T[0];
     b.setAttribute("aria-pressed", String(escuro));
   }
   b.addEventListener("click", function(){
@@ -124,8 +133,15 @@ def pagina(cfg: dict, dados: dict | None) -> str:
         "{{PERGUNTA_LOCAL}}": site["pergunta_local"],
         "{{COMPARACAO_LOCAL}}": site["comparacao_local"],
     }
+    # Versoes em espanhol e ingles, trocadas no navegador pela escolha de idioma
+    em_coleta = {"ES": " · recolección en curso", "EN": " · collection in progress"}
+    for sufixo in ("ES", "EN"):
+        tr = cfg["i18n"][sufixo.lower()]
+        trocas[f"{{{{ROTULO_PILOTO_{sufixo}}}}}"] = tr["rotulo_piloto"] + ("" if dados else em_coleta[sufixo])
+        for chave in ("temas_lista", "pergunta_local", "comparacao_local"):
+            trocas[f"{{{{{chave.upper()}_{sufixo}}}}}"] = tr[chave]
     s = (MODELO / "template" / "index.html").read_text(encoding="utf-8")
-    for k, v in trocas.items():
+    for k, v in sorted(trocas.items(), key=lambda kv: -len(kv[0])):
         s = s.replace(k, v)
     assert "{{" not in s, "campo do modelo sem valor"
     return s
