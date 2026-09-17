@@ -23,15 +23,17 @@ DADOS = LAB / "dados" / "saida" / "lojas_google" / "painel"
 SITES = LAB / "sites"
 
 BARRA = """<style>
-.vg-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 24px;background:#0F172A;color:#E2E8F0;font:500 13px/1.2 "Figtree",system-ui,sans-serif}
-.vg-bar a{color:#E2E8F0;text-decoration:none}
-.vg-bar img{height:18px;display:block;filter:invert(1) brightness(2)}
-.vg-bar .l{display:flex;align-items:center;gap:12px}
-.vg-bar .sair{border:1px solid rgba(226,232,240,.35);border-radius:8px;padding:6px 12px;background:none;color:#E2E8F0;font:inherit;cursor:pointer}
-.vg-bar .sair:hover{border-color:#E2E8F0}
-@media (max-width:640px){.vg-bar{padding-inline:16px}}
+.vg-bar{position:fixed;top:14px;right:18px;z-index:60;display:flex;align-items:center;gap:6px;padding:5px;border-radius:999px;background:var(--glass,rgba(255,255,255,.8));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow,0 8px 24px -16px rgba(0,0,0,.3));font:600 12.5px/1 "Instrument Sans",system-ui,sans-serif;color:var(--ink,#0F1318)}
+.vg-bar a{color:inherit;text-decoration:none}
+.vg-bar .l{display:flex;align-items:center;gap:6px}
+.vg-bar .marca{display:flex;align-items:center;gap:8px;padding:0 8px 0 6px}
+.vg-bar .marca img{height:15px;display:block}
+.vg-bar .sair{border:0;border-radius:999px;padding:8px 12px;background:var(--chip,#EEF0F3);color:inherit;font:inherit;cursor:pointer}
+.vg-bar .sair:hover{background:var(--accent,#D9F26A);color:var(--accent-ink,#0F1318)}
+:root[data-theme="dark"] .vg-bar .marca img{filter:invert(1) brightness(1.6)}
+@media (max-width:760px){.vg-bar{top:8px;right:8px}.vg-bar .marca{display:none}}
 </style>
-<div class="vg-bar"><span class="l"><a href="/"><img src="/cassi-wordmark.svg" alt="Cassi.ai"></a><span>Vitrine · painel do cliente</span></span>
+<div class="vg-bar"><a class="marca" href="/" title="Vitrine · Cassi.ai"><img src="/cassi-wordmark.svg" alt="Cassi.ai"></a>
 <span class="l"><button type="button" class="sair" id="vg-tema" aria-pressed="false">Tema escuro</button><a class="sair" href="/api/sair">Sair</a></span></div>
 <script>
 (function(){
@@ -78,6 +80,10 @@ p{{color:#475569;margin:0 0 12px}} a{{color:#2563EB}}</style></head>
 <p>Assim que os dados forem conferidos, este endereço passa a mostrar o painel completo.</p>
 <p><a href="/api/sair">Sair</a></p></main></body></html>
 """
+
+
+def lista_pt(itens: list[str]) -> str:
+    return itens[0] if len(itens) == 1 else ", ".join(itens[:-1]) + " e " + itens[-1]
 
 
 def milhar(n: int) -> str:
@@ -146,7 +152,7 @@ def main(vertical: str) -> None:
         shutil.copy(data_js, pub / "painel" / "data.js")
     else:
         (pub / "painel" / "index.html").write_text(EM_COLETA.format(nome=cfg["nome_pagina"],
-            marcas=", ".join(m["nome"] for m in cfg["marcas"]), cidade=cfg["cidade"]), encoding="utf-8")
+            marcas=lista_pt([m["nome"] for m in cfg["marcas"]]), cidade=cfg["cidade"]), encoding="utf-8")
     print("ok:", destino)
 
 
