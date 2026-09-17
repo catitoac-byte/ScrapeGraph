@@ -9,7 +9,7 @@
 <link rel="icon" href="/cassi-wordmark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@200;300;400;500;600&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Courier+Prime:wght@400;700&display=swap">
 <style>
 /* Design system cassiai.com: fundo #F8FAFC, tinta #0F172A, azul #2563EB,
    Syne nos titulos, Instrument Sans no corpo. Courier para etiqueta tecnica. */
@@ -28,7 +28,7 @@
 html{background:var(--bg);scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-weight:300;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:var(--f-display);font-weight:800;letter-spacing:-.025em;margin:0;text-wrap:balance}
+h1,h2,h3{font-family:var(--f-display);font-weight:800;letter-spacing:-.025em;margin:0;text-wrap:balance;overflow-wrap:break-word}
 p{margin:0}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
@@ -119,7 +119,7 @@ blockquote{margin:28px 0 0;font-size:clamp(20px,2vw,26px);font-weight:300;font-s
 .dobra:nth-child(-n+3){border-bottom:1px solid var(--line)}
 @media (max-width:900px){.dobra:nth-child(-n+3){border-bottom:0}.dobra{border-bottom:1px solid var(--line)}}
 .dobra .n{font-family:var(--f-display);font-weight:800;font-size:40px;letter-spacing:-.04em;line-height:1;color:var(--blue)}
-.dobra h3{font-size:20px;line-height:1.15;overflow-wrap:break-word;hyphens:auto}
+.dobra h3{font-size:20px;line-height:1.15;overflow-wrap:break-word}
 .dobra p{font-size:15.5px;color:var(--ink-2);overflow-wrap:break-word}
 .dobra .tech{border-top:1px dashed var(--line-2);padding-top:10px;font-size:12.5px;overflow-wrap:anywhere}
 .nota-rota{margin-top:26px;color:var(--ink-2);max-width:78ch;font-size:16px}
@@ -155,6 +155,58 @@ footer img{height:20px;display:block}
 .idioma button{border:0;background:transparent;border-radius:.55rem;height:36px;min-width:40px;font-family:var(--f-display);font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--ink-3);cursor:pointer}
 .idioma button[aria-pressed="true"]{background:var(--blue);color:#F8FAFC}
 @media (max-width:520px){.nav-dir .btn{display:none}}
+
+/* exemplo do painel com dados ilustrativos, no estilo do produto */
+.demo{--d-bg:#ECEEF1;--d-panel:#FFFFFF;--d-sunk:#E6E9ED;--d-ink:#0F1318;--d-ink2:#4A525C;--d-ink3:#6B737D;--d-rail:#0F1318;--d-lime:#D9F26A;
+  --b0:#2F6FD0;--b1:#E0613A;--b2:#169C83;
+  display:grid;grid-template-columns:76px minmax(0,1fr);gap:0;background:var(--d-bg);border-radius:28px;padding:12px;color:var(--d-ink);font-family:"Outfit","Instrument Sans",system-ui,sans-serif;box-shadow:0 40px 80px -50px rgba(15,23,42,.45);margin-top:8px}
+.demo-rail{background:var(--d-rail);border-radius:22px;padding:14px 8px;display:flex;flex-direction:column;gap:6px;align-items:center;position:relative}
+.demo-logo{width:44px;aspect-ratio:200/67;background:var(--d-lime);-webkit-mask:url(/cassi-wordmark-reversed.svg) center/contain no-repeat;mask:url(/cassi-wordmark-reversed.svg) center/contain no-repeat;margin:4px 0 12px}
+.demo-tabs{position:relative;display:flex;flex-direction:column;gap:6px}
+.demo-tabs button{position:relative;z-index:1;width:48px;height:48px;border:0;border-radius:16px;background:transparent;color:#9AA3AE;display:grid;place-items:center;cursor:pointer;transition:color .25s}
+.demo-tabs button:hover{color:#fff}
+.demo-tabs button[aria-selected="true"]{color:var(--d-ink)}
+.demo-tabs svg{width:21px;height:21px}
+.demo-gota{position:absolute;left:0;top:0;width:48px;height:48px;border-radius:16px;background:var(--d-lime);transition:transform .55s cubic-bezier(.5,1.5,.45,1)}
+.demo-main{padding:14px 18px 18px;min-width:0}
+.demo-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.demo-t{display:inline-block;background:var(--d-lime);border-radius:999px;padding:5px 16px 6px;font-size:20px;font-weight:500;letter-spacing:-.01em;animation:demo-bolha .6s cubic-bezier(.4,1.6,.45,1) both}
+@keyframes demo-bolha{0%{transform:translateX(-20px) scale(.6,.8);opacity:0}60%{transform:scale(1.05,.95);opacity:1}100%{transform:none}}
+.demo-leg{display:flex;gap:6px;flex-wrap:wrap}
+.demo-leg span{display:inline-flex;align-items:center;gap:7px;background:var(--d-panel);border-radius:999px;padding:5px 12px 5px 9px;font:600 12.5px "Instrument Sans",sans-serif}
+.demo-leg i{width:10px;height:10px;display:inline-block}
+.demo-ilus{font:400 11.5px "Courier Prime",monospace;color:var(--d-ink3);background:var(--d-panel);border-radius:999px;padding:4px 10px}
+.demo-body{display:grid;gap:12px;animation:demo-entra .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes demo-entra{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.demo-g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.demo-g2{display:grid;grid-template-columns:1.5fr 1fr;gap:12px}
+.dp{background:var(--d-panel);border-radius:22px;padding:16px 18px;min-width:0}
+.dp h4{margin:0 0 2px;font:500 15px "Outfit",sans-serif}
+.dp .ds{margin:0 0 10px;font:400 12px/1.4 "Instrument Sans",sans-serif;color:var(--d-ink3)}
+.dnum{font-weight:200;font-size:52px;line-height:1;letter-spacing:-.03em}
+.dmini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.dmini div{background:var(--d-sunk);border-radius:12px;padding:8px 10px;font:500 11px "Instrument Sans",sans-serif;color:var(--d-ink3)}
+.dmini b{display:block;font:500 16px "Outfit",sans-serif;color:var(--d-ink)}
+.dbrand{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font:600 13px "Instrument Sans",sans-serif}
+.dbrand span{display:inline-flex;align-items:center;gap:7px}
+.dtag{font-size:10.5px;border-radius:999px;padding:2px 8px;background:#E8F7D0;color:#2F5D0A}
+.dtag.neg{background:#FDE7E2;color:#9B2C12}
+.dsvg{width:100%;height:auto;display:block;overflow:visible}
+.dsvg text{font:500 10.5px "Instrument Sans",sans-serif;fill:var(--d-ink3)}
+.dline{stroke-dasharray:1;stroke-dashoffset:1;animation:demo-desenha 1.2s cubic-bezier(.5,0,.2,1) forwards}
+@keyframes demo-desenha{to{stroke-dashoffset:0}}
+.dbars{display:grid;gap:9px}
+.dbar{display:grid;grid-template-columns:118px minmax(0,1fr) 44px;align-items:center;gap:10px;font:500 12px "Instrument Sans",sans-serif}
+.dtrack{height:10px;border-radius:999px;background:var(--d-sunk);overflow:hidden}
+.dtrack i{display:block;height:100%;border-radius:999px;transform-origin:left;animation:demo-cresce .8s cubic-bezier(.2,.8,.2,1) both}
+@keyframes demo-cresce{from{transform:scaleX(0)}to{transform:none}}
+.dbar b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.dstack{display:flex;height:14px;border-radius:999px;overflow:hidden;gap:2px}
+.dstack i{display:block;height:100%}
+.dheat{display:grid;grid-template-columns:34px repeat(14,minmax(0,1fr));gap:3px;font:500 10px "Instrument Sans",sans-serif;color:var(--d-ink3)}
+.dheat i{aspect-ratio:1;border-radius:4px;display:block}
+@media (max-width:860px){.demo{grid-template-columns:minmax(0,1fr)}.demo-rail{flex-direction:row;justify-content:center;padding:8px}.demo-logo{display:none}.demo-tabs{flex-direction:row}.demo-g3,.demo-g2{grid-template-columns:minmax(0,1fr)}.dbar{grid-template-columns:96px minmax(0,1fr) 40px}}
+@media (prefers-reduced-motion:reduce){.demo *{animation:none!important;transition:none!important}.dline{stroke-dashoffset:0}}
 </style>
 </head>
 <body>
@@ -237,6 +289,17 @@ footer img{height:20px;display:block}
         </div>
       </div>
       <blockquote data-t="t33">Primeiro a lista de decisões. Depois a lista de gráficos. Cada bloco do painel existe porque responde a uma pergunta de operação.</blockquote>
+    </section>
+
+    <section id="exemplos" aria-labelledby="t-exemplos">
+      <div class="sec-head">
+        <div><span class="label" data-t="x1">Veja por dentro</span><h2 id="t-exemplos" data-t="x2">O painel, aba por aba, com dados ilustrativos.</h2></div>
+        <p data-t="x3">Marcas e números abaixo são exemplos. No projeto, cada gráfico mostra as suas lojas e as da concorrência, com os filtros de dia, local, estrelas, tema e período.</p>
+      </div>
+      <div class="demo" id="demo">
+        <div class="demo-rail"><span class="demo-logo" role="img" aria-label="Cassi.ai"></span><div class="demo-tabs" role="tablist" aria-label="Exemplos" id="demo-tabs"><span class="demo-gota" id="demo-gota" aria-hidden="true"></span></div></div>
+        <div class="demo-main" role="tabpanel" id="demo-main" aria-live="polite"></div>
+      </div>
     </section>
 
     <section aria-labelledby="t-perguntas">
@@ -475,7 +538,10 @@ var DIC = {
 "t101": "Cassi.ai es una empresa de ingeniería de software especializada en los desafíos de investigación, innovación e insights. Veinte años en investigación de mercados, ex ESOMAR Brasil, con charlas en IIEX, ESOMAR y ABEP.",
 "t102": "Rival Pulse es un producto de <a href=\"https://cassiai.com\">Cassi.ai</a>. Datos de fichas públicas, recolectados con fecha y método registrados.",
 "f1": "Usuario",
-"f2": "Contraseña"
+"f2": "Contraseña",
+"x1": "Véalo por dentro",
+"x2": "El panel, pestaña por pestaña, con datos ilustrativos.",
+"x3": "Las marcas y los números de abajo son ejemplos. En el proyecto, cada gráfico muestra sus tiendas y las de la competencia, con los filtros de día, lugar, estrellas, tema y período."
 },
 "en": {
 "t0": "Sign in",
@@ -582,7 +648,10 @@ var DIC = {
 "t101": "Cassi.ai is a software engineering company focused on the pain points of research, innovation and insights. Twenty years in market research, former ESOMAR Brazil, with talks at IIEX, ESOMAR and ABEP.",
 "t102": "Rival Pulse is a <a href=\"https://cassiai.com\">Cassi.ai</a> product. Data from public listings, collected with date and method on record.",
 "f1": "Username",
-"f2": "Password"
+"f2": "Password",
+"x1": "Take a look inside",
+"x2": "The dashboard, tab by tab, with illustrative data.",
+"x3": "Brands and numbers below are examples. In a project, every chart shows your stores and your competitors’, with filters for day, location, stars, topic and period."
 }
 };
 var META = {"es": {"title": "Rival Pulse · Cassi.ai", "desc": "Inteligencia de tiendas físicas a partir de datos públicos: afluencia por hora, reputación y voz del cliente, tienda por tienda, con la competencia lado a lado.", "nome": "Números del proyecto piloto", "cassi": "Cassi.ai: abrir el sitio", "lang": "Idioma", "assunto": "Rival%20Pulse%20%C2%B7%20quiero%20conocerla"}, "en": {"title": "Rival Pulse · Cassi.ai", "desc": "Physical store intelligence from public data: hourly busyness, reputation and voice of the customer, store by store, with competitors side by side.", "nome": "Pilot project figures", "cassi": "Cassi.ai: open the website", "lang": "Language", "assunto": "Rival%20Pulse%20%C2%B7%20I%20want%20to%20learn%20more"}};
@@ -607,6 +676,135 @@ if (l === "en") document.querySelectorAll(".ficha b").forEach(function(b){ b.tex
 document.querySelector(".idioma").setAttribute("aria-label", m.lang);
 document.querySelectorAll('a[title^="Cassi.ai"]').forEach(function(a){ a.title = m.cassi; });
 document.querySelectorAll('a[href*="subject=Rival"]').forEach(function(a){ a.href = a.href.replace(/subject=.*$/, "subject=" + m.assunto); });
+})();
+</script>
+<script>
+(function(){
+var l = null;
+try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
+l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
+if (["pt","es","en"].indexOf(l) < 0) l = "pt";
+var L = function(pt, es, en){ return l === "es" ? es : l === "en" ? en : pt; };
+var loc = {pt:"pt-BR",es:"es-ES",en:"en-US"}[l];
+var nf = function(v, d){ return v.toLocaleString(loc, {minimumFractionDigits:d||0, maximumFractionDigits:d||0}); };
+var M = [L("Marca A","Marca A","Brand A"), L("Marca B","Marca B","Brand B"), L("Marca C","Marca C","Brand C")];
+var COR = ["var(--b0)","var(--b1)","var(--b2)"];
+var FORMA = ["border-radius:50%","border-radius:3px","clip-path:polygon(50% 0,100% 100%,0 100%)"];
+var sw = function(i, t){ return '<i style="display:inline-block;flex:none;width:' + (t || 10) + 'px;height:' + (t || 10) + 'px;margin-right:' + (t ? 6 : 0) + 'px;background:' + COR[i] + ';' + FORMA[i] + '"></i>'; };
+var ICO = {
+  geral:'<path d="M3.5 3.5h7v7h-7zM13.5 3.5h7v4.5h-7zM13.5 11h7v9.5h-7zM3.5 13.5h7v7h-7z"/>',
+  mov:'<path d="M3 13h3.5l2.5-7 4 13 2.8-8H21"/>',
+  rep:'<path d="M12 3.6l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6L12 16.2 6.9 19l1.1-5.6-4.2-3.9 5.7-.7z"/>',
+  voz:'<path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8.5A1.5 1.5 0 0 1 19 17H10l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 5 5.5z"/>'
+};
+// Dados ilustrativos (nao sao de nenhuma rede real)
+var HORAS = [8,9,10,11,12,13,14,15,16,17,18,19,20,21];
+var CURVA = [
+  [18,30,44,55,63,60,58,62,70,78,82,74,55,34],
+  [12,22,38,52,66,70,64,60,63,69,72,66,48,28],
+  [25,38,50,58,61,57,55,57,61,66,70,68,60,42]
+];
+var NOTA = [4.31, 4.08, 4.46], TOTAL = [18420, 22960, 9870], NEG = [9.4, 13.1, 6.8], RESP = [41, 12, 67];
+var ESTRELAS = [[5.8,3.6,7.1,17.4,66.1],[8.7,4.4,8.9,19.2,58.8],[4.2,2.6,6.3,15.9,71.0]];
+var MESES = L(["jan","fev","mar","abr","mai","jun","jul","ago"],["ene","feb","mar","abr","may","jun","jul","ago"],["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"]);
+var MENSAL = [[4.22,4.25,4.30,4.28,4.33,4.35,4.31,4.36],[4.20,4.16,4.12,4.10,4.05,4.02,4.07,4.03],[4.38,4.40,4.43,4.47,4.45,4.49,4.48,4.50]];
+var TEMAS = [
+  {n:L("Atendimento","Atención","Service"), v:[34,41,29]},
+  {n:L("Fila e caixa","Filas y caja","Queues and checkout"), v:[18,31,12]},
+  {n:L("Preço","Precio","Price"), v:[27,22,24]},
+  {n:L("Falta de produto","Falta de producto","Out of stock"), v:[9,16,7]},
+  {n:L("Limpeza","Limpieza","Cleanliness"), v:[11,8,14]}
+];
+var RECL = [
+  {n:L("Fila e caixa","Filas y caja","Queues and checkout"), v:[62,78,49]},
+  {n:L("Atendimento","Atención","Service"), v:[38,52,27]},
+  {n:L("Preço","Precio","Price"), v:[31,36,22]}
+];
+var hh = function(h){ return l === "en" ? ((h % 12) || 12) + (h < 12 ? "am" : "pm") : h + "h"; };
+var DIAS = L(["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]);
+var FATOR = [0.72,0.68,0.7,0.74,0.8,0.93,1];
+
+function linhas(series, eixoY, fmtY, xs, fmtX, h){
+  var W = 640, H = h || 230, ml = 34, mr = 12, mt = 12, mb = 26;
+  var iw = W - ml - mr, ih = H - mt - mb;
+  var x = function(i){ return ml + i / (xs.length - 1) * iw; };
+  var y = function(v){ return mt + ih - (v - eixoY[0]) / (eixoY[eixoY.length - 1] - eixoY[0]) * ih; };
+  var o = '<svg class="dsvg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + L("Gráfico de linhas ilustrativo","Gráfico de líneas ilustrativo","Illustrative line chart") + '">';
+  eixoY.forEach(function(t){ o += '<line x1="' + ml + '" x2="' + (W - mr) + '" y1="' + y(t) + '" y2="' + y(t) + '" stroke="#DADDE2" stroke-dasharray="2 4"/><text x="' + (ml - 8) + '" y="' + (y(t) + 3.5) + '" text-anchor="end">' + fmtY(t) + '</text>'; });
+  xs.forEach(function(v, i){ if (i % 2 === 0 || xs.length < 10) o += '<text x="' + x(i) + '" y="' + (H - 6) + '" text-anchor="middle">' + fmtX(v) + '</text>'; });
+  series.forEach(function(s, k){
+    var d = s.map(function(v, i){ return (i ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1); }).join("");
+    var pi = s.indexOf(Math.max.apply(null, s));
+    o += '<path d="' + d + '" fill="none" stroke="' + COR[k] + '" stroke-opacity=".14" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>' +
+         '<path class="dline" pathLength="1" d="' + d + '" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>' +
+         '<path class="dline" pathLength="1" d="' + d + '" fill="none" stroke="' + COR[k] + '" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+         '<circle cx="' + x(pi) + '" cy="' + y(s[pi]) + '" r="11" fill="' + COR[k] + '" opacity=".16"/><circle cx="' + x(pi) + '" cy="' + y(s[pi]) + '" r="6.5" fill="' + COR[k] + '" stroke="#fff" stroke-width="3"/>';
+  });
+  return o + '</svg>';
+}
+function barra(nome, v, max, cor, fmt){
+  return '<div class="dbar"><span>' + nome + '</span><span class="dtrack"><i style="width:' + (v / max * 100) + '%;background:' + cor + '"></i></span><b>' + fmt(v) + '</b></div>';
+}
+var pct = function(v){ return nf(v, 0) + "%"; };
+var ABAS = [
+  {id:"geral", nome:L("Visão geral","Visión general","Overview"), f:function(){
+    var cards = M.map(function(m, i){
+      var melhor = NOTA[i] === Math.max.apply(null, NOTA), pior = NOTA[i] === Math.min.apply(null, NOTA);
+      return '<div class="dp"><div class="dbrand"><span>' + sw(i) + m + '</span>' + (melhor ? '<span class="dtag">' + L("melhor nota","mejor nota","top rating") + '</span>' : pior ? '<span class="dtag neg">' + L("menor nota","menor nota","lowest rating") + '</span>' : '') + '</div>' +
+        '<div class="dnum">' + nf(NOTA[i], 2) + '</div><div class="ds" style="margin:6px 0 0">' + L("nota média ponderada","nota media ponderada","weighted average rating") + '</div>' +
+        '<div class="dmini"><div>' + L("Avaliações no Google","Reseñas en Google","Google reviews") + '<b>' + nf(TOTAL[i]) + '</b></div><div>' + L("Notas 1 e 2","Notas 1 y 2","1 and 2 stars") + '<b>' + nf(NEG[i], 1) + '%</b></div>' +
+        '<div>' + L("Pico da semana","Pico de la semana","Weekly peak") + '<b>' + DIAS[6] + ' ' + hh(HORAS[CURVA[i].indexOf(Math.max.apply(null, CURVA[i]))]) + '</b></div><div>' + L("Responde a loja","Responde la tienda","Store replies") + '<b>' + RESP[i] + '%</b></div></div></div>';
+    }).join("");
+    return '<div class="demo-g3">' + cards + '</div><div class="dp"><h4>' + L("Movimento médio da semana","Afluencia media de la semana","Average weekly busyness") + '</h4><p class="ds">' + L("Lotação por hora, média das lojas abertas. O ponto marca o pico.","Afluencia por hora, promedio de las tiendas abiertas. El punto marca el pico.","Hourly busyness, average of open stores. The dot marks the peak.") + '</p>' + linhas(CURVA, [0,25,50,75,100], pct, HORAS, hh, 210) + '</div>';
+  }},
+  {id:"mov", nome:L("Movimento","Afluencia","Busyness"), f:function(){
+    var heat = '<div class="dheat"><span></span>' + HORAS.map(function(h, i){ return '<span style="text-align:center">' + (i % 3 === 0 ? hh(h) : "") + '</span>'; }).join("");
+    DIAS.forEach(function(d, di){
+      heat += '<span>' + d + '</span>' + CURVA[0].map(function(v){ var a = Math.min(1, v * FATOR[di] / 85); return '<i style="background:color-mix(in oklab, var(--b0) ' + Math.round(12 + a * 88) + '%, #EEF0F3)"></i>'; }).join("");
+    });
+    heat += '</div>';
+    return '<div class="dp"><h4>' + L("Curva média da semana","Curva media de la semana","Average weekly curve") + '</h4><p class="ds">' + L("Passe o mouse no painel real para comparar as marcas na mesma hora.","En el panel real, pase el mouse para comparar las marcas a la misma hora.","In the real dashboard, hover to compare brands at the same hour.") + '</p>' + linhas(CURVA, [0,25,50,75,100], pct, HORAS, hh, 230) + '</div>' +
+      '<div class="demo-g2"><div class="dp"><h4>' + sw(0, 10) + M[0] + ' · ' + L("dia × hora","día × hora","day × hour") + '</h4><p class="ds">' + L("Quanto mais escuro, mais cheio.","Cuanto más oscuro, más lleno.","Darker means busier.") + '</p>' + heat + '</div>' +
+      '<div class="dp"><h4>' + L("Pico de cada marca","Pico de cada marca","Each brand’s peak") + '</h4><p class="ds">' + L("Sábado, hora mais cheia e lotação.","Sábado, hora más concurrida y afluencia.","Saturday, busiest hour and busyness.") + '</p><div class="dbars">' +
+      M.map(function(m, i){ var mx = Math.max.apply(null, CURVA[i]); return barra(m + ' · ' + hh(HORAS[CURVA[i].indexOf(mx)]), mx, 100, COR[i], pct); }).join("") + '</div></div></div>';
+  }},
+  {id:"rep", nome:L("Reputação","Reputación","Reputation"), f:function(){
+    var tons = ["#C8412B","#E58A4E","#C9CED6","#8FC6A9","#2F9B6C"];
+    var dist = M.map(function(m, i){
+      return '<div style="display:grid;gap:6px"><div class="dbrand" style="margin:0"><span>' + sw(i) + m + '</span><span style="font-weight:500;color:var(--d-ink3)">' + nf(ESTRELAS[i][4], 0) + '% ' + L("de 5 estrelas","de 5 estrellas","5 stars") + '</span></div><div class="dstack">' +
+        ESTRELAS[i].map(function(v, k){ return '<i title="' + (k + 1) + '★ ' + nf(v, 1) + '%" style="width:' + v + '%;background:' + tons[k] + '"></i>'; }).join("") + '</div></div>';
+    }).join("");
+    var leg = '<div class="demo-leg" style="margin-top:12px">' + tons.map(function(c, k){ return '<span><i style="background:' + c + ';border-radius:3px"></i>' + (k + 1) + '★</span>'; }).join("") + '</div>';
+    return '<div class="demo-g2"><div class="dp"><h4>' + L("Nota média mês a mês","Nota media mes a mes","Monthly average rating") + '</h4><p class="ds">' + L("Evolução da nota das avaliações lidas.","Evolución de la nota de las reseñas leídas.","Rating trend in the collected reviews.") + '</p>' + linhas(MENSAL, [3.9,4.1,4.3,4.5], function(v){ return nf(v, 1); }, MESES, function(v){ return v; }, 230) + '</div>' +
+      '<div class="dp"><h4>' + L("Como as estrelas se distribuem","Cómo se distribuyen las estrellas","How stars are distributed") + '</h4><p class="ds">' + L("Da nota 1 à nota 5, por marca.","De la nota 1 a la 5, por marca.","From 1 to 5 stars, by brand.") + '</p><div style="display:grid;gap:14px">' + dist + '</div>' + leg + '</div></div>' +
+      '<div class="dp"><h4>' + L("Quanto cada marca responde às notas 1 e 2","Cuánto responde cada marca a las notas 1 y 2","How often each brand replies to 1 and 2 star reviews") + '</h4><p class="ds">' + L("Percentual de avaliações negativas com resposta da loja.","Porcentaje de reseñas negativas con respuesta de la tienda.","Share of negative reviews with a store reply.") + '</p><div class="dbars">' + M.map(function(m, i){ return barra(m, RESP[i], 100, COR[i], pct); }).join("") + '</div></div>';
+  }},
+  {id:"voz", nome:L("Voz do cliente","Voz del cliente","Voice of the customer"), f:function(){
+    var bloco = function(lista, max){ return lista.map(function(t){ return '<div style="display:grid;gap:5px;margin-bottom:10px"><b style="font:600 12.5px Instrument Sans,sans-serif">' + t.n + '</b>' + t.v.map(function(v, i){ return barra('<span style="display:inline-flex;align-items:center">' + sw(i, 9) + M[i] + '</span>', v, max, COR[i], pct); }).join("") + '</div>'; }).join(""); };
+    return '<div class="demo-g2"><div class="dp"><h4>' + L("Quanto se fala de cada tema","Cuánto se habla de cada tema","How much each topic comes up") + '</h4><p class="ds">' + L("Parcela das avaliações com texto que citam o tema.","Proporción de reseñas con texto que mencionan el tema.","Share of text reviews that mention the topic.") + '</p>' + bloco(TEMAS.slice(0, 3), 50) + '</div>' +
+      '<div class="dp"><h4>' + L("Quando o tema aparece, quanto é reclamação","Cuando el tema aparece, cuánto es queja","When a topic comes up, how much is a complaint") + '</h4><p class="ds">' + L("Menções com nota 1 ou 2.","Menciones con nota 1 o 2.","Mentions with 1 or 2 stars.") + '</p>' + bloco(RECL, 100) + '</div></div>';
+  }}
+];
+var tabs = document.getElementById("demo-tabs"), main = document.getElementById("demo-main"), gota = document.getElementById("demo-gota");
+if (!tabs) return;
+var atual = 0;
+function mostra(i, foco){
+  atual = i;
+  [].forEach.call(tabs.querySelectorAll("button"), function(b, k){ b.setAttribute("aria-selected", String(k === i)); b.tabIndex = k === i ? 0 : -1; if (k === i && foco) b.focus(); });
+  var b = tabs.querySelectorAll("button")[i];
+  gota.style.transform = "translate(" + b.offsetLeft + "px," + b.offsetTop + "px)";
+  main.innerHTML = '<div class="demo-top"><span class="demo-t">' + ABAS[i].nome + '</span><div class="demo-leg">' + M.map(function(m, k){ return '<span>' + sw(k) + m + '</span>'; }).join("") + '<span class="demo-ilus">' + L("dados ilustrativos","datos ilustrativos","illustrative data") + '</span></div></div><div class="demo-body">' + ABAS[i].f() + '</div>';
+}
+ABAS.forEach(function(a, i){
+  var b = document.createElement("button");
+  b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-label", a.nome); b.title = a.nome;
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICO[a.id] + '</svg>';
+  b.addEventListener("click", function(){ mostra(i); });
+  b.addEventListener("keydown", function(e){ var d = {ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key]; if (d) { e.preventDefault(); mostra((atual + d + ABAS.length) % ABAS.length, true); } });
+  tabs.appendChild(b);
+});
+mostra(0);
+addEventListener("resize", function(){ mostra(atual); });
 })();
 </script>
 <script>
