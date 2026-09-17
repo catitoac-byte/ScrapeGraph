@@ -108,7 +108,9 @@ document.getElementById("copiar").onclick = function () {{
 
 
 def montar_loja(marca: str, arquivos: list[dict]) -> Loja:
-    ficha = next((a for a in arquivos if a["horarios_pico"] or a["distribuicao_estrelas"]), arquivos[0])
+    # O arquivo da aba de avaliacoes tambem traz estrelas, mas nunca o pico:
+    # a ficha e o arquivo com mais dias de pico preenchidos
+    ficha = max(arquivos, key=lambda a: sum(1 for v in a["horarios_pico"].values() if v))
     base = max(arquivos, key=lambda a: len(a["endereco"]))
     loja = Loja(marca=marca, nome=_limpar(base["nome"]), url=base["url"])
     loja.place_id = base["place_id"] or _chave(base["url"])
