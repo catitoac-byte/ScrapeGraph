@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rival Pulse · Cassi.ai</title>
-<meta name="description" content="Inteligência de lojas físicas a partir de dados públicos: movimento por hora, reputação e voz do cliente, loja a loja, com a concorrência lado a lado.">
+<meta name="description" content="Inteligência competitiva de lojas físicas a partir de dados públicos: movimento por hora, reputação e voz do cliente, loja a loja, com a concorrência lado a lado.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="/cassi-wordmark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,9 +49,12 @@ a{color:inherit}
 @media (prefers-reduced-motion:reduce){.btn,.btn:hover{transition:none;transform:none}}
 
 /* abertura */
-.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:56px;align-items:center;padding-block:40px 56px}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:56px;align-items:center;padding-block:28px 36px}
+.capa-demo{padding-block:0 48px}
+.capa-nota{margin-top:12px;font-family:var(--f-tech);font-size:13px;color:var(--ink-3);text-align:center}
 @media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr);gap:36px;padding-block:20px 40px}}
-.hero h1{font-size:clamp(38px,4.8vw,62px);line-height:1;margin-top:18px}
+.hero h1{font-size:clamp(34px,3.9vw,54px);line-height:1.02;margin-top:18px}
+@media (max-width:520px){.hero h1{font-size:28px}.brand .prod{white-space:nowrap;font-size:12px;padding-left:10px}.brand{gap:10px}}
 .hero h1 .out{-webkit-text-stroke:1.5px var(--blue);-webkit-text-fill-color:transparent;color:transparent}
 .hero .lede{font-size:clamp(18px,1.6vw,21px);color:var(--ink-2);max-width:56ch;margin-top:24px}
 .hero .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
@@ -294,9 +297,9 @@ footer img{height:20px;display:block}
   <main>
     <div class="hero">
       <div>
-        <span class="label" data-t="t1">Inteligência de lojas físicas</span>
-        <h1 data-t="t2">Cada loja da sua rede e do concorrente, <span class="out">lida</span> hora a hora.</h1>
-        <p class="lede" data-t="t3">Movimento por hora, reputação e o que os clientes escrevem, loja a loja, com a concorrência sempre lado a lado. Tudo a partir de dados públicos, com método de pesquisa por trás de cada número.</p>
+        <span class="label" data-t="t1">Inteligência competitiva de lojas físicas</span>
+        <h1 data-t="t2">Monitore suas lojas e as dos seus concorrentes, <span class="out">lado a lado</span>.</h1>
+        <p class="lede" data-t="t3">A partir de dados públicos, com método de pesquisa por trás de cada número: movimento por hora, reputação e o que os clientes escrevem, loja a loja.</p>
         <div class="acts">
           <a class="btn" href="#metodo" data-t="t4">Ver o método</a>
           <a class="btn ghost" href="mailto:cassiano@cassiai.com?subject=Rival%20Pulse%20%C2%B7%20quero%20conhecer" data-t="t5">Pedir acesso</a>
@@ -321,6 +324,13 @@ footer img{height:20px;display:block}
       </aside>
     </div>
 
+    <div class="capa-demo" id="exemplos">
+      <div class="demo" id="demo">
+        <div class="demo-rail"><span class="demo-logo" role="img" aria-label="Cassi.ai"></span><div class="demo-tabs" role="tablist" aria-label="Exemplos" id="demo-tabs"><span class="demo-gota" id="demo-gota" aria-hidden="true"></span></div><button type="button" class="demo-play" id="demo-play"></button></div>
+        <div class="demo-main" role="tabpanel" id="demo-main" aria-live="off"></div>
+      </div>
+      <p class="capa-nota" data-t="x3">Dados ilustrativos. Os exemplos passam sozinhos: pare o mouse em cima para ler com calma.</p>
+    </div>
     <div class="ficha" aria-label="Números do projeto piloto">
       <div><span class="tech" data-t="t12">Piloto · uma capital · {{ROTULO_PILOTO}}</span></div>
       <div><b>{{N_LOJAS}}</b><span class="tech" data-t="t13">lojas acompanhadas</span></div>
@@ -358,17 +368,6 @@ footer img{height:20px;display:block}
         </div>
       </div>
       <blockquote data-t="t33">Primeiro a lista de decisões. Depois a lista de gráficos. Cada bloco do painel existe porque responde a uma pergunta de operação.</blockquote>
-    </section>
-
-    <section id="exemplos" aria-labelledby="t-exemplos">
-      <div class="sec-head">
-        <div><span class="label" data-t="x1">Veja por dentro</span><h2 id="t-exemplos" data-t="x2">O painel, aba por aba, com dados ilustrativos.</h2></div>
-        <p data-t="x3">Os exemplos passam sozinhos: pare o mouse em cima para ler com calma. Marcas e números são ilustrativos. No projeto, cada gráfico mostra as suas lojas e as da concorrência, com os filtros de dia, local, estrelas, tema e período.</p>
-      </div>
-      <div class="demo" id="demo">
-        <div class="demo-rail"><span class="demo-logo" role="img" aria-label="Cassi.ai"></span><div class="demo-tabs" role="tablist" aria-label="Exemplos" id="demo-tabs"><span class="demo-gota" id="demo-gota" aria-hidden="true"></span></div><button type="button" class="demo-play" id="demo-play"></button></div>
-        <div class="demo-main" role="tabpanel" id="demo-main" aria-live="polite"></div>
-      </div>
     </section>
 
     <section aria-labelledby="t-perguntas">
@@ -530,9 +529,9 @@ footer img{height:20px;display:block}
 var DIC = {
 "es": {
 "t0": "Entrar",
-"t1": "Inteligencia de tiendas físicas",
-"t2": "Cada tienda de su cadena y de la competencia, <span class=\"out\">leída</span> hora por hora.",
-"t3": "Afluencia por hora, reputación y lo que escriben los clientes, tienda por tienda, con la competencia siempre al lado. Todo a partir de datos públicos, con método de investigación detrás de cada número.",
+"t1": "Inteligencia competitiva de tiendas físicas",
+"t2": "Monitoree sus tiendas y las de sus competidores, <span class=\"out\">lado a lado</span>.",
+"t3": "A partir de datos públicos, con método de investigación detrás de cada número: afluencia por hora, reputación y lo que escriben los clientes, tienda por tienda.",
 "t4": "Ver el método",
 "t5": "Solicitar acceso",
 "t6": "Acceda al panel",
@@ -634,9 +633,7 @@ var DIC = {
 "t102": "Rival Pulse es un producto de <a href=\"https://cassiai.com\">Cassi.ai</a>. Datos de fichas públicas, recolectados con fecha y método registrados.",
 "f1": "Usuario",
 "f2": "Contraseña",
-"x1": "Véalo por dentro",
-"x2": "El panel, pestaña por pestaña, con datos ilustrativos.",
-"x3": "Los ejemplos avanzan solos: pase el mouse por encima para leer con calma. Las marcas y los números son ilustrativos. En el proyecto, cada gráfico muestra sus tiendas y las de la competencia, con los filtros de día, lugar, estrellas, tema y período.",
+"x3": "Datos ilustrativos. Los ejemplos avanzan solos: pase el mouse por encima para leer con calma.",
 "vp": "Piloto activo",
 "vn0": "Moda y vestuario",
 "ve0": "probadores, cambios, crédito de la tienda",
@@ -678,9 +675,9 @@ var DIC = {
 },
 "en": {
 "t0": "Sign in",
-"t1": "Physical store intelligence",
-"t2": "Every store in your chain and your competitor’s, <span class=\"out\">read</span> hour by hour.",
-"t3": "Hourly busyness, reputation and what customers write, store by store, with the competition always side by side. All from public data, with research method behind every number.",
+"t1": "Competitive intelligence for physical stores",
+"t2": "Monitor your stores and your competitors’, <span class=\"out\">side by side</span>.",
+"t3": "Built from public data, with research method behind every number: hourly busyness, reputation and what customers write, store by store.",
 "t4": "See the method",
 "t5": "Request access",
 "t6": "Open the dashboard",
@@ -782,9 +779,7 @@ var DIC = {
 "t102": "Rival Pulse is a <a href=\"https://cassiai.com\">Cassi.ai</a> product. Data from public listings, collected with date and method on record.",
 "f1": "Username",
 "f2": "Password",
-"x1": "Take a look inside",
-"x2": "The dashboard, tab by tab, with illustrative data.",
-"x3": "The examples play on their own: hover to read at your pace. Brands and numbers are illustrative. In a project, every chart shows your stores and your competitors’, with filters for day, location, stars, topic and period.",
+"x3": "Illustrative data. The examples play on their own: hover to read at your pace.",
 "vp": "Live pilot",
 "vn0": "Fashion and apparel",
 "ve0": "fitting rooms, exchanges, store credit",
@@ -825,7 +820,7 @@ var DIC = {
 "vd": "Collection, topics and dashboard adapt to the sector. Fashion and wholesale already run as pilots. For any other vertical, a project starts from the list of brands and cities and the topics that matter to that client."
 }
 };
-var META = {"es": {"title": "Rival Pulse · Cassi.ai", "desc": "Inteligencia de tiendas físicas a partir de datos públicos: afluencia por hora, reputación y voz del cliente, tienda por tienda, con la competencia lado a lado.", "nome": "Números del proyecto piloto", "cassi": "Cassi.ai: abrir el sitio", "lang": "Idioma", "assunto": "Rival%20Pulse%20%C2%B7%20quiero%20conocerla"}, "en": {"title": "Rival Pulse · Cassi.ai", "desc": "Physical store intelligence from public data: hourly busyness, reputation and voice of the customer, store by store, with competitors side by side.", "nome": "Pilot project figures", "cassi": "Cassi.ai: open the website", "lang": "Language", "assunto": "Rival%20Pulse%20%C2%B7%20I%20want%20to%20learn%20more"}};
+var META = {"es": {"title": "Rival Pulse · Cassi.ai", "desc": "Inteligencia competitiva de tiendas físicas a partir de datos públicos: afluencia por hora, reputación y voz del cliente, tienda por tienda, con la competencia lado a lado.", "nome": "Números del proyecto piloto", "cassi": "Cassi.ai: abrir el sitio", "lang": "Idioma", "assunto": "Rival%20Pulse%20%C2%B7%20quiero%20conocerla"}, "en": {"title": "Rival Pulse · Cassi.ai", "desc": "Competitive intelligence for physical stores from public data: hourly busyness, reputation and voice of the customer, store by store, with competitors side by side.", "nome": "Pilot project figures", "cassi": "Cassi.ai: open the website", "lang": "Language", "assunto": "Rival%20Pulse%20%C2%B7%20I%20want%20to%20learn%20more"}};
 var l = null;
 try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
 l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
