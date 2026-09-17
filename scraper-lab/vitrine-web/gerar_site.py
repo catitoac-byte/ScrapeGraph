@@ -22,46 +22,7 @@ PAINEL = LAB / "painel" / "index.html"
 DADOS = LAB / "dados" / "saida" / "lojas_google" / "painel"
 SITES = LAB / "sites"
 
-BARRA = """<style>
-.vg-bar{position:fixed;top:14px;right:18px;z-index:60;display:flex;align-items:center;gap:6px;padding:5px;border-radius:999px;background:var(--glass,rgba(255,255,255,.8));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow,0 8px 24px -16px rgba(0,0,0,.3));font:600 12.5px/1 "Instrument Sans",system-ui,sans-serif;color:var(--ink,#0F1318)}
-.vg-bar a{color:inherit;text-decoration:none}
-.vg-bar .l{display:flex;align-items:center;gap:6px}
-.vg-bar .marca{display:flex;align-items:center;gap:8px;padding:0 8px 0 6px}
-.vg-bar .marca img{height:15px;display:block}
-.vg-bar .sair{border:0;border-radius:999px;padding:8px 12px;background:var(--chip,#EEF0F3);color:inherit;font:inherit;cursor:pointer}
-.vg-bar .sair:hover{background:var(--accent,#D9F26A);color:var(--accent-ink,#0F1318)}
-:root[data-theme="dark"] .vg-bar .marca img{filter:invert(1) brightness(1.6)}
-@media (max-width:760px){.vg-bar{top:8px;right:8px}}
-</style>
-<div class="vg-bar"><a class="marca" href="https://cassiai.com" target="_blank" rel="noopener" title="Cassi.ai: abrir o site"><img src="/cassi-wordmark.svg" alt="Cassi.ai"></a>
-<span class="l"><button type="button" class="sair" id="vg-tema" aria-pressed="false">Tema escuro</button><a class="sair" href="/api/sair">Sair</a></span></div>
-<script>
-(function(){
-  var b = document.getElementById("vg-tema");
-  var l = null;
-  try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
-  l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
-  var T = {pt: ["Tema escuro", "Tema claro", "Sair", "Cassi.ai: abrir o site"],
-           es: ["Tema oscuro", "Tema claro", "Salir", "Cassi.ai: abrir el sitio"],
-           en: ["Dark theme", "Light theme", "Sign out", "Cassi.ai: open the website"]}[l] || null;
-  T = T || ["Tema escuro", "Tema claro", "Sair", "Cassi.ai: abrir o site"];
-  document.querySelector(".vg-bar .l a.sair").textContent = T[2];
-  document.querySelector(".vg-bar .marca").title = T[3];
-  function pinta(){
-    var escuro = document.documentElement.getAttribute("data-theme") === "dark";
-    b.textContent = escuro ? T[1] : T[0];
-    b.setAttribute("aria-pressed", String(escuro));
-  }
-  b.addEventListener("click", function(){
-    var novo = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", novo);
-    try { localStorage.setItem("vitrine-tema", novo); } catch (e) {}
-    pinta();
-  });
-  pinta();
-})();
-</script>
-"""
+# Idioma, tema e sair ficam no trilho lateral do proprio painel.
 
 # Roda no head, antes da primeira pintura: claro por padrao, escuro so se o
 # usuario escolheu. Sem isso o painel seguia o tema do sistema operacional.
@@ -110,7 +71,7 @@ def painel(cfg: dict) -> str:
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
         "<meta name=\"robots\" content=\"noindex, nofollow\">\n"
         "<link rel=\"icon\" href=\"/cassi-wordmark.svg\">\n"
-        f"{TEMA_INICIAL}{head}\n{resto[:corte]}\n</head>\n<body>\n{BARRA}\n{resto[corte:]}\n</body>\n</html>\n"
+        f"{TEMA_INICIAL}{head}\n{resto[:corte]}\n</head>\n<body>\n{resto[corte:]}\n</body>\n</html>\n"
     )
     return doc.replace('<script src="data.js"></script>', '<script src="/painel/data.js"></script>')
 
