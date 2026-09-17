@@ -1,6 +1,6 @@
 {
   "id": "supermercados",
-  "titulo": "Costa Atacadão, Assaí e Bretas, loja a loja",
+  "titulo": "Costa Atacadão, Assaí e Carrefour, loja a loja",
   "nome_pagina": "Vitrine Atacarejo Goiânia",
   "rotulo_piloto": "redes de atacarejo",
   "cidade": "Goiânia, GO",
@@ -25,12 +25,12 @@
       ]
     },
     {
-      "nome": "Bretas",
-      "padrao": "\\bbretas\\b",
+      "nome": "Carrefour",
+      "padrao": "^(?!galeria).*\\bcarrefour\\b",
       "consultas": [
-        "Bretas Atacarejo {cidade}",
-        "Bretas supermercado {cidade}",
-        "Bretas {cidade}"
+        "Carrefour {cidade}",
+        "Carrefour Hipermercado {cidade}",
+        "Carrefour Bairro {cidade}"
       ]
     }
   ],
@@ -135,7 +135,7 @@
       "net": "Pagamento",
       "id": "cartao_loja",
       "nome": "Cartão da loja",
-      "re": "passa[ií]|cart[ãa]o (da loja|pr[óo]prio|do assa|do bretas|do costa)"
+      "re": "passa[ií]|cart[ãa]o (da loja|pr[óo]prio|do assa|do costa|carrefour|do carrefour|atacad)|carrefour pass"
     },
     {
       "net": "Pagamento",
