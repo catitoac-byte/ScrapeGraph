@@ -205,6 +205,18 @@ footer img{height:20px;display:block}
 .dstack i{display:block;height:100%}
 .dheat{display:grid;grid-template-columns:34px repeat(14,minmax(0,1fr));gap:3px;font:500 10px "Instrument Sans",sans-serif;color:var(--d-ink3)}
 .dheat i{aspect-ratio:1;border-radius:4px;display:block}
+
+.dmapa{position:relative;border-radius:16px;overflow:hidden;background:#E9EEF3;aspect-ratio:16/10}
+.dmapa svg{position:absolute;inset:0;width:100%;height:100%}
+.dmapa .rot{font:600 10.5px "Instrument Sans",sans-serif;fill:var(--d-ink)}
+.dtab{width:100%;border-collapse:collapse;font:400 12.5px "Instrument Sans",sans-serif}
+.dtab th{text-align:left;font-weight:600;font-size:11px;color:var(--d-ink3);padding:6px 8px;border-bottom:1px solid #E3E6EA;white-space:nowrap}
+.dtab td{padding:8px;border-bottom:1px solid #EEF0F3;vertical-align:top}
+.dtab td.n{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.dtab .end{color:var(--d-ink2);font-size:11.5px}
+.dtab .win{display:inline-block;font-size:10px;font-weight:700;background:var(--d-lime);border-radius:999px;padding:1px 7px;margin-left:4px}
+.dtab-w{overflow-x:auto}
+.dstore{display:inline-flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}
 .demo-rail .demo-play{margin-top:auto;width:40px;height:40px;border:0;border-radius:14px;background:rgba(255,255,255,.07);color:#C7CDD4;display:grid;place-items:center;cursor:pointer}
 .demo-play:hover{background:rgba(255,255,255,.14);color:#fff}
 .demo-play svg{width:16px;height:16px}
@@ -236,8 +248,34 @@ footer img{height:20px;display:block}
 .sug span{background:var(--d-sunk);border-radius:14px;padding:9px 12px;font:500 12.5px/1.4 "Instrument Sans",sans-serif}
 .sug .ctx{background:transparent;border:1px dashed #C9CED6;color:var(--d-ink3);font-weight:400}
 @media (max-width:860px){.chat{grid-template-columns:minmax(0,1fr)}.demo-rail .demo-play{margin-top:0}}
-@media (max-width:860px){.demo{grid-template-columns:minmax(0,1fr)}.demo-rail{flex-direction:row;justify-content:center;padding:8px}.demo-logo{display:none}.demo-tabs{flex-direction:row}.demo-g3,.demo-g2{grid-template-columns:minmax(0,1fr)}.dbar{grid-template-columns:96px minmax(0,1fr) 40px}}
+@media (max-width:860px){.demo{grid-template-columns:minmax(0,1fr)}.demo-rail{flex-direction:row;justify-content:center;padding:8px}.demo-logo{display:none}.demo-tabs{flex-direction:row;gap:2px}.demo-tabs button,.demo-gota{width:40px;height:40px;border-radius:13px}.demo-rail .demo-play{width:36px;height:36px;margin-left:4px}.demo-g3,.demo-g2{grid-template-columns:minmax(0,1fr)}.dbar{grid-template-columns:96px minmax(0,1fr) 40px}}
 @media (prefers-reduced-motion:reduce){.demo *{animation:none!important;transition:none!important}.dline{stroke-dashoffset:0}}
+
+/* verticais */
+.verticais{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:1000px){.verticais{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.verticais{grid-template-columns:minmax(0,1fr)}}
+.vt{position:relative;display:grid;align-content:start;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px 20px 22px;transition:transform .35s cubic-bezier(.3,1.4,.5,1),box-shadow .35s,border-color .35s}
+.vt svg{width:30px;height:30px;color:var(--blue);transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.vt h3{font-size:18px;line-height:1.15}
+.vt .tech{font-size:12.5px;line-height:1.45}
+.vt:hover{transform:translateY(-5px);border-color:rgba(37,99,235,.35);box-shadow:0 22px 40px -28px rgba(29,37,133,.45)}
+.vt:hover svg{transform:scale(1.12) rotate(-6deg)}
+.vt.piloto{background:var(--blue-softer);border-color:rgba(37,99,235,.25)}
+.vt-tag{position:absolute;top:16px;right:16px;font-family:var(--f-tech);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:var(--blue);color:#F8FAFC;border-radius:999px;padding:3px 9px}
+.vt.sua{border-style:dashed;border-color:var(--line-2);background:transparent}
+.vt.sua svg{color:var(--ink-3)}
+/* o trabalho: movimento ao passar o mouse */
+.caso>div{position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.3,1.4,.5,1),box-shadow .4s,background .4s}
+.caso>div::before{content:"";position:absolute;left:0;top:0;height:3px;width:100%;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.6,0,.2,1)}
+.caso>div h3{transition:transform .4s cubic-bezier(.3,1.4,.5,1),color .3s}
+.caso .carimbo{transition:background .3s,color .3s,border-color .3s}
+.caso>div:hover{transform:translateY(-8px);z-index:1;background:var(--paper);box-shadow:0 30px 50px -30px rgba(29,37,133,.45);border-radius:6px}
+.caso>div:hover::before{transform:scaleX(1)}
+.caso>div:hover h3{transform:translateX(4px);color:var(--blue)}
+.caso>div:hover .carimbo{background:var(--blue);border-color:var(--blue);color:#F8FAFC}
+.caso .onde:hover{background:var(--blue-soft)}
+@media (prefers-reduced-motion:reduce){.vt,.vt svg,.caso>div,.caso>div::before,.caso>div h3{transition:none}.vt:hover,.caso>div:hover{transform:none}.vt:hover svg{transform:none}.caso>div:hover h3{transform:none}}
 </style>
 </head>
 <body>
@@ -428,6 +466,32 @@ footer img{height:20px;display:block}
       </div>
     </section>
 
+    <section id="verticais" aria-labelledby="t-verticais">
+      <div class="sec-head">
+        <div><span class="label" data-t="vl">Verticais</span><h2 id="t-verticais" data-t="vh">Habilitado para qualquer vertical com loja física.</h2></div>
+        <p data-t="vd">Coleta, temas e painel se ajustam ao setor. Moda e atacarejo já rodam como piloto. Para as demais, o projeto começa pela lista de marcas e cidades e pelos temas que importam para aquele cliente.</p>
+      </div>
+      <div class="verticais">
+          <div class="vt piloto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3l3 2 3-2 5 3-2 4-2-1v12H8V9L6 10 4 6z"/></svg><span class="vt-tag" data-t="vp">Piloto ativo</span><h3 data-t="vn0">Moda e vestuário</h3><p class="tech" data-t="ve0">provador, trocas, crédito da loja</p></div>
+          <div class="vt piloto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 10.5h10.8L20 7H6.2"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span class="vt-tag" data-t="vp">Piloto ativo</span><h3 data-t="vn1">Atacarejo e supermercados</h3><p class="tech" data-t="ve1">fila no caixa, preço na gôndola, hortifrúti</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg><h3 data-t="vn2">Farmácias e drogarias</h3><p class="tech" data-t="ve2">falta de remédio, balcão, horário estendido</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2.5 4-2.5 7H17v11"/></svg><h3 data-t="vn3">Restaurantes e fast food</h3><p class="tech" data-t="ve3">tempo de espera, pedido errado, drive-thru</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM16 10h1.5a2.5 2.5 0 0 1 0 5H16M8 3v3M12 3v3"/></svg><h3 data-t="vn4">Cafeterias e padarias</h3><p class="tech" data-t="ve4">pico da manhã, fila, frescor</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12"/></svg><h3 data-t="vn5">Academias</h3><p class="tech" data-t="ve5">lotação por horário, aparelhos, limpeza</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-5 9 5M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg><h3 data-t="vn6">Bancos e agências</h3><p class="tech" data-t="ve6">espera, atendimento, caixa eletrônico</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16v-4l2-5h12l2 5v4zM4 16v2M20 16v2"/><circle cx="8" cy="13.5" r="1"/><circle cx="16" cy="13.5" r="1"/></svg><h3 data-t="vn7">Concessionárias e oficinas</h3><p class="tech" data-t="ve7">prazo do serviço, orçamento, pós-venda</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M4 21h12M7 8h6M15 10h2a2 2 0 0 1 2 2v5a1.5 1.5 0 0 0 3 0V9l-3-3"/></svg><h3 data-t="vn8">Postos e conveniência</h3><p class="tech" data-t="ve8">preço, loja de conveniência, banheiro</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v5a4 4 0 0 0 8 0V3M12 12v3a4 4 0 0 0 8 0v-2"/><circle cx="20" cy="11" r="2"/></svg><h3 data-t="vn9">Clínicas e laboratórios</h3><p class="tech" data-t="ve9">espera, agendamento, entrega de resultado</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V11l7-5 7 5v10M9 21v-6h6v6"/></svg><h3 data-t="vn10">Materiais de construção</h3><p class="tech" data-t="ve10">estoque, entrega, orientação técnica</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><h3 data-t="vn11">Eletro e tecnologia</h3><p class="tech" data-t="ve11">garantia, montagem, pós-compra</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="9" r="1.8"/><circle cx="11" cy="6" r="1.8"/><circle cx="15" cy="6" r="1.8"/><circle cx="18" cy="10" r="1.8"/><path d="M8 17c0-3 2-5 4.5-5s4.5 2 4.5 5c0 2-2 3-4.5 3S8 19 8 17z"/></svg><h3 data-t="vn12">Pet shops e veterinárias</h3><p class="tech" data-t="ve12">banho e tosa, agenda, cuidado</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg><h3 data-t="vn13">Shopping centers</h3><p class="tech" data-t="ve13">fluxo por dia, estacionamento, mix de lojas</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19V6M3 14h18v5M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="2"/></svg><h3 data-t="vn14">Hotéis</h3><p class="tech" data-t="ve14">check-in, limpeza, café da manhã</p></div>
+          <div class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><h3 data-t="vn15">Lojas de operadoras</h3><p class="tech" data-t="ve15">fila, troca de aparelho, portabilidade</p></div>
+          <div class="vt sua"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><h3 data-t="vsn">A sua vertical</h3><p class="tech" data-t="vse">outro setor com loja física? montamos marcas, cidades e temas com o seu time</p></div>
+      </div>
+    </section>
+
     <section aria-labelledby="t-quem">
       <div class="sec-head">
         <div><span class="label" data-t="t88">Para quem</span><h2 id="t-quem" data-t="t89">Quem decide sobre loja física com dado de fora da própria casa.</h2></div>
@@ -572,7 +636,45 @@ var DIC = {
 "f2": "Contraseña",
 "x1": "Véalo por dentro",
 "x2": "El panel, pestaña por pestaña, con datos ilustrativos.",
-"x3": "Los ejemplos avanzan solos: pase el mouse por encima para leer con calma. Las marcas y los números son ilustrativos. En el proyecto, cada gráfico muestra sus tiendas y las de la competencia, con los filtros de día, lugar, estrellas, tema y período."
+"x3": "Los ejemplos avanzan solos: pase el mouse por encima para leer con calma. Las marcas y los números son ilustrativos. En el proyecto, cada gráfico muestra sus tiendas y las de la competencia, con los filtros de día, lugar, estrellas, tema y período.",
+"vp": "Piloto activo",
+"vn0": "Moda y vestuario",
+"ve0": "probadores, cambios, crédito de la tienda",
+"vn1": "Mayoristas y supermercados",
+"ve1": "filas en caja, precio en góndola, frutas y verduras",
+"vn2": "Farmacias y droguerías",
+"ve2": "falta de medicamentos, mostrador, horario extendido",
+"vn3": "Restaurantes y comida rápida",
+"ve3": "tiempo de espera, pedido equivocado, autoservicio",
+"vn4": "Cafeterías y panaderías",
+"ve4": "pico de la mañana, filas, frescura",
+"vn5": "Gimnasios",
+"ve5": "afluencia por horario, máquinas, limpieza",
+"vn6": "Bancos y sucursales",
+"ve6": "espera, atención, cajero automático",
+"vn7": "Concesionarios y talleres",
+"ve7": "plazo del servicio, presupuesto, posventa",
+"vn8": "Estaciones y tiendas de conveniencia",
+"ve8": "precio, tienda de conveniencia, baños",
+"vn9": "Clínicas y laboratorios",
+"ve9": "espera, turnos, entrega de resultados",
+"vn10": "Materiales de construcción",
+"ve10": "stock, entrega, asesoría técnica",
+"vn11": "Electro y tecnología",
+"ve11": "garantía, instalación, posventa",
+"vn12": "Tiendas de mascotas y veterinarias",
+"ve12": "baño y peluquería, turnos, cuidado",
+"vn13": "Centros comerciales",
+"ve13": "flujo por día, estacionamiento, mix de tiendas",
+"vn14": "Hoteles",
+"ve14": "check-in, limpieza, desayuno",
+"vn15": "Tiendas de operadoras",
+"ve15": "filas, cambio de equipo, portabilidad",
+"vsn": "Su vertical",
+"vse": "¿otro sector con tiendas físicas? armamos marcas, ciudades y temas con su equipo",
+"vl": "Verticales",
+"vh": "Preparado para cualquier vertical con tiendas físicas.",
+"vd": "La recolección, los temas y el panel se ajustan al sector. Moda y mayoristas ya funcionan como piloto. Para las demás, el proyecto empieza con la lista de marcas y ciudades y con los temas que importan para ese cliente."
 },
 "en": {
 "t0": "Sign in",
@@ -682,7 +784,45 @@ var DIC = {
 "f2": "Password",
 "x1": "Take a look inside",
 "x2": "The dashboard, tab by tab, with illustrative data.",
-"x3": "The examples play on their own: hover to read at your pace. Brands and numbers are illustrative. In a project, every chart shows your stores and your competitors’, with filters for day, location, stars, topic and period."
+"x3": "The examples play on their own: hover to read at your pace. Brands and numbers are illustrative. In a project, every chart shows your stores and your competitors’, with filters for day, location, stars, topic and period.",
+"vp": "Live pilot",
+"vn0": "Fashion and apparel",
+"ve0": "fitting rooms, exchanges, store credit",
+"vn1": "Wholesale clubs and supermarkets",
+"ve1": "checkout queues, shelf prices, produce",
+"vn2": "Pharmacies and drugstores",
+"ve2": "out of stock drugs, counter service, late hours",
+"vn3": "Restaurants and fast food",
+"ve3": "wait times, wrong orders, drive-thru",
+"vn4": "Coffee shops and bakeries",
+"ve4": "morning rush, queues, freshness",
+"vn5": "Gyms",
+"ve5": "busyness by hour, equipment, cleanliness",
+"vn6": "Banks and branches",
+"ve6": "waiting, service, ATMs",
+"vn7": "Car dealers and repair shops",
+"ve7": "service time, quotes, after-sales",
+"vn8": "Gas stations and convenience",
+"ve8": "price, convenience store, restrooms",
+"vn9": "Clinics and labs",
+"ve9": "waiting, scheduling, test results",
+"vn10": "Home improvement",
+"ve10": "stock, delivery, technical advice",
+"vn11": "Electronics and appliances",
+"ve11": "warranty, installation, after purchase",
+"vn12": "Pet stores and vets",
+"ve12": "grooming, scheduling, care",
+"vn13": "Shopping malls",
+"ve13": "daily traffic, parking, tenant mix",
+"vn14": "Hotels",
+"ve14": "check-in, cleanliness, breakfast",
+"vn15": "Carrier stores",
+"ve15": "queues, device swaps, number porting",
+"vsn": "Your vertical",
+"vse": "another sector with physical stores? we set up brands, cities and topics with your team",
+"vl": "Verticals",
+"vh": "Ready for any vertical with physical stores.",
+"vd": "Collection, topics and dashboard adapt to the sector. Fashion and wholesale already run as pilots. For any other vertical, a project starts from the list of brands and cities and the topics that matter to that client."
 }
 };
 var META = {"es": {"title": "Rival Pulse · Cassi.ai", "desc": "Inteligencia de tiendas físicas a partir de datos públicos: afluencia por hora, reputación y voz del cliente, tienda por tienda, con la competencia lado a lado.", "nome": "Números del proyecto piloto", "cassi": "Cassi.ai: abrir el sitio", "lang": "Idioma", "assunto": "Rival%20Pulse%20%C2%B7%20quiero%20conocerla"}, "en": {"title": "Rival Pulse · Cassi.ai", "desc": "Physical store intelligence from public data: hourly busyness, reputation and voice of the customer, store by store, with competitors side by side.", "nome": "Pilot project figures", "cassi": "Cassi.ai: open the website", "lang": "Language", "assunto": "Rival%20Pulse%20%C2%B7%20I%20want%20to%20learn%20more"}};
@@ -726,6 +866,7 @@ var ICO = {
   geral:'<path d="M3.5 3.5h7v7h-7zM13.5 3.5h7v4.5h-7zM13.5 11h7v9.5h-7zM3.5 13.5h7v7h-7z"/>',
   mov:'<path d="M3 13h3.5l2.5-7 4 13 2.8-8H21"/>',
   rep:'<path d="M12 3.6l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6L12 16.2 6.9 19l1.1-5.6-4.2-3.9 5.7-.7z"/>',
+  lojas:'<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>',
   ia:'<path d="M12 3.5l1.6 4.4 4.4 1.6-4.4 1.6L12 15.5l-1.6-4.4L6 9.5l4.4-1.6z"/><path d="M18.5 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
   voz:'<path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8.5A1.5 1.5 0 0 1 19 17H10l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 5 5.5z"/>'
 };
@@ -816,6 +957,44 @@ var ABAS = [
     return '<div class="demo-g2"><div class="dp"><h4>' + L("Quanto se fala de cada tema","Cuánto se habla de cada tema","How much each topic comes up") + '</h4><p class="ds">' + L("Parcela das avaliações com texto que citam o tema.","Proporción de reseñas con texto que mencionan el tema.","Share of text reviews that mention the topic.") + '</p>' + bloco(TEMAS.slice(0, 3), 50) + '</div>' +
       '<div class="dp"><h4>' + L("Quando o tema aparece, quanto é reclamação","Cuando el tema aparece, cuánto es queja","When a topic comes up, how much is a complaint") + '</h4><p class="ds">' + L("Menções com nota 1 ou 2.","Menciones con nota 1 o 2.","Mentions with 1 or 2 stars.") + '</p>' + bloco(RECL, 100) + '</div></div>';
   }},
+  {id:"lojas", nome:L("Lojas","Tiendas","Stores"), f:function(){
+    var LJ = [
+      {m:0, loc:L("Shopping Norte","Centro Comercial Norte","North Mall"), end:L("Av. das Palmeiras, 1200 · Jardim Norte","Av. de las Palmeras, 1200 · Jardín Norte","1200 Palm Ave · North Garden"), n:4.4, t:3210, h:L("10h às 22h","10 a 22 h","10am to 10pm"), x:30, y:28},
+      {m:1, loc:L("Shopping Norte","Centro Comercial Norte","North Mall"), end:L("Av. das Palmeiras, 1200 · Jardim Norte","Av. de las Palmeras, 1200 · Jardín Norte","1200 Palm Ave · North Garden"), n:4.1, t:4020, h:L("10h às 22h","10 a 22 h","10am to 10pm"), x:30, y:28},
+      {m:2, loc:L("Shopping Norte","Centro Comercial Norte","North Mall"), end:L("Av. das Palmeiras, 1200 · Jardim Norte","Av. de las Palmeras, 1200 · Jardín Norte","1200 Palm Ave · North Garden"), n:4.6, t:1880, h:L("10h às 22h","10 a 22 h","10am to 10pm"), x:30, y:28},
+      {m:0, loc:L("Rua · Centro","Calle · Centro","Street · Downtown"), end:L("Rua do Comércio, 85 · Centro","Calle del Comercio, 85 · Centro","85 Commerce St · Downtown"), n:4.2, t:2650, h:L("8h às 19h","8 a 19 h","8am to 7pm"), x:55, y:52},
+      {m:1, loc:L("Rua · Centro","Calle · Centro","Street · Downtown"), end:L("Praça da Matriz, 40 · Centro","Plaza Mayor, 40 · Centro","40 Main Square · Downtown"), n:3.9, t:5110, h:L("8h às 20h","8 a 20 h","8am to 8pm"), x:55, y:52},
+      {m:2, loc:L("Shopping Sul","Centro Comercial Sur","South Mall"), end:L("Rod. dos Lagos, km 4 · Setor Sul","Ruta de los Lagos, km 4 · Sector Sur","Lakes Hwy, km 4 · South District"), n:4.5, t:2240, h:L("10h às 22h","10 a 22 h","10am to 10pm"), x:70, y:78}
+    ];
+    var mapa = '<svg viewBox="0 0 100 62.5" preserveAspectRatio="none" aria-hidden="true">' +
+      '<path d="M0 20 Q30 26 50 18 T100 24" stroke="#fff" stroke-width="2.4" fill="none"/><path d="M42 0 Q48 30 44 62.5" stroke="#fff" stroke-width="2.4" fill="none"/><path d="M0 48 Q40 40 100 52" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M70 0 L78 62.5" stroke="#fff" stroke-width="1.2" fill="none"/>' +
+      '<ellipse cx="86" cy="12" rx="10" ry="6" fill="#D6E6F3"/><rect x="8" y="34" width="16" height="10" rx="3" fill="#DDEBDD"/></svg>' +
+      '<svg viewBox="0 0 400 250" aria-label="' + L("Mapa ilustrativo das lojas","Mapa ilustrativo de las tiendas","Illustrative store map") + '">';
+    var grupos = {};
+    LJ.forEach(function(l){ var k = l.x + "," + l.y; (grupos[k] = grupos[k] || []).push(l); });
+    Object.keys(grupos).forEach(function(k){
+      var g = grupos[k], cx = g[0].x * 4, cy = g[0].y * 2.5;
+      g.forEach(function(l, j){
+        var dx = (j - (g.length - 1) / 2) * 16;
+        var x = cx + dx, y = cy, c = COR[l.m];
+        mapa += l.m === 0 ? '<circle cx="' + x + '" cy="' + y + '" r="7" fill="' + c + '" stroke="#fff" stroke-width="2.5"/>'
+          : l.m === 1 ? '<rect x="' + (x - 6.5) + '" y="' + (y - 6.5) + '" width="13" height="13" rx="2.5" fill="' + c + '" stroke="#fff" stroke-width="2.5"/>'
+          : '<path d="M' + x + ',' + (y - 8) + ' L' + (x + 7.5) + ',' + (y + 6) + ' L' + (x - 7.5) + ',' + (y + 6) + 'Z" fill="' + c + '" stroke="#fff" stroke-width="2.5"/>';
+      });
+      var w = g[0].loc.length * 6.1 + 16;
+      mapa += '<rect x="' + (cx - w / 2) + '" y="' + (cy + 12) + '" width="' + w + '" height="18" rx="9" fill="#fff"/><text class="rot" x="' + cx + '" y="' + (cy + 24.5) + '" text-anchor="middle">' + g[0].loc + '</text>';
+    });
+    mapa += '</svg>';
+    var melhor = {};
+    LJ.forEach(function(l){ if (!melhor[l.loc] || l.n > melhor[l.loc].n) melhor[l.loc] = l; });
+    var linhasT = LJ.map(function(l){
+      return '<tr><td><span class="dstore">' + sw(l.m) + M[l.m] + '</span></td><td>' + l.loc + '<div class="end">' + l.end + '</div></td><td class="n">' + nf(l.n, 1) + (melhor[l.loc] === l && LJ.filter(function(o){ return o.loc === l.loc; }).length > 1 ? '<span class="win">' + L("melhor","mejor","best") + '</span>' : '') + '</td><td class="n">' + nf(l.t) + '</td><td class="n" style="font-weight:400">' + l.h + '</td></tr>';
+    }).join("");
+    return '<div class="demo-g2"><div class="dp"><h4>' + L("Onde estão as lojas","Dónde están las tiendas","Where the stores are") + '</h4><p class="ds">' + L("Lojas próximas se agrupam e os nomes não se cruzam.","Las tiendas cercanas se agrupan y los nombres no se cruzan.","Nearby stores are grouped and labels never overlap.") + '</p><div class="dmapa">' + mapa + '</div></div>' +
+      '<div class="dp"><h4>' + L("Presença por local","Presencia por lugar","Presence by location") + '</h4><p class="ds">' + L("Quantas marcas disputam cada ponto.","Cuántas marcas compiten en cada punto.","How many brands compete at each spot.") + '</p><div class="dbars">' +
+      [L("Shopping Norte","Centro Comercial Norte","North Mall"), L("Rua · Centro","Calle · Centro","Street · Downtown"), L("Shopping Sul","Centro Comercial Sur","South Mall")].map(function(loc){ var n = LJ.filter(function(l){ return l.loc === loc; }).length; return barra(loc, n, 3, "var(--d-ink)", function(v){ return v + "/3"; }); }).join("") + '</div></div></div>' +
+      '<div class="dp"><h4>' + L("Nota de cada loja, com endereço","Nota de cada tienda, con dirección","Each store’s rating, with address") + '</h4><p class="ds">' + L("Ordene por qualquer coluna no painel real. O horário é o de hoje.","En el panel real puede ordenar por cualquier columna. El horario es el de hoy.","Sort by any column in the real dashboard. Hours shown are today’s.") + '</p><div class="dtab-w"><table class="dtab"><thead><tr><th>' + L("Marca","Marca","Brand") + '</th><th>' + L("Local e endereço","Lugar y dirección","Location and address") + '</th><th>' + L("Nota","Nota","Rating") + '</th><th>' + L("Avaliações","Reseñas","Reviews") + '</th><th>' + L("Hoje","Hoy","Today") + '</th></tr></thead><tbody>' + linhasT + '</tbody></table></div></div>';
+  }},
   {id:"ia", beta:true, tempo:13000, nome:L("Analista IA","Analista IA","AI analyst"), f:function(){
     var sug = [L("Onde a Marca B perde para a Marca A no mesmo local?","¿Dónde pierde la Marca B frente a la Marca A en el mismo lugar?","Where does Brand B lose to Brand A at the same location?"),
                L("Em que dia e horário cada marca precisa de mais gente no caixa?","¿Qué día y a qué hora necesita cada marca más personal en caja?","On which day and hour does each brand need more checkout staff?"),
@@ -883,6 +1062,7 @@ function mostra(i, foco){
   [].forEach.call(tabs.querySelectorAll("button"), function(b, k){ b.setAttribute("aria-selected", String(k === i)); b.tabIndex = k === i ? 0 : -1; if (k === i && foco) b.focus(); });
   var b = tabs.querySelectorAll("button")[i];
   gota.style.transform = "translate(" + b.offsetLeft + "px," + b.offsetTop + "px)";
+  gota.style.width = b.offsetWidth + "px"; gota.style.height = b.offsetHeight + "px";
   main.innerHTML = '<div class="demo-prog" aria-hidden="true"><i></i></div><div class="demo-top"><span class="demo-t">' + ABAS[i].nome + (ABAS[i].beta ? '<span class="demo-beta">Beta</span>' : '') + '</span><div class="demo-leg">' + M.map(function(m, k){ return '<span>' + sw(k) + m + '</span>'; }).join("") + '<span class="demo-ilus">' + L("dados ilustrativos","datos ilustrativos","illustrative data") + '</span></div></div><div class="demo-body">' + ABAS[i].f() + '</div>';
   if (ABAS[i].depois) ABAS[i].depois();
   agenda();
@@ -896,7 +1076,7 @@ ABAS.forEach(function(a, i){
   tabs.appendChild(b);
 });
 mostra(0);
-addEventListener("resize", function(){ var b = tabs.querySelectorAll("button")[atual]; gota.style.transform = "translate(" + b.offsetLeft + "px," + b.offsetTop + "px)"; });
+addEventListener("resize", function(){ var b = tabs.querySelectorAll("button")[atual]; gota.style.transform = "translate(" + b.offsetLeft + "px," + b.offsetTop + "px)"; gota.style.width = b.offsetWidth + "px"; gota.style.height = b.offsetHeight + "px"; });
 })();
 </script>
 <script>
