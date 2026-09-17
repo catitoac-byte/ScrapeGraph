@@ -43,8 +43,17 @@ def favorito() -> str:
 def pagina(vertical: str) -> Path:
     cfg = json.loads((VERTICAIS / f"{vertical}.json").read_text(encoding="utf-8"))
     estado = carregar(SAIDA / f"{cfg['saida']}_estado.json")
+    # Rodizio entre as marcas, para as primeiras lojas ja permitirem comparar
+    por_marca: dict[str, list[dict]] = {}
+    for item in estado["fila"]:
+        por_marca.setdefault(item["marca"], []).append(item)
+    ordem = []
+    while any(por_marca.values()):
+        for m in [x["nome"] for x in cfg["marcas"]]:
+            if por_marca.get(m):
+                ordem.append(por_marca[m].pop(0))
     linhas = []
-    for i, item in enumerate(estado["fila"], 1):
+    for i, item in enumerate(ordem, 1):
         nome = unquote(item["url"].split("/place/")[1].split("/")[0]).replace("+", " ")
         linhas.append(
             f'<tr><td class="n">{i}</td><td>{html.escape(item["marca"])}</td>'
