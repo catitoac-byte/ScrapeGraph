@@ -1,13 +1,19 @@
 """
-Monta o site de uma vertical a partir do modelo em vitrine-web/.
+Monta o site unico do Rival Pulse com todas as verticais piloto.
 
-    uv run python vitrine-web/gerar_site.py moda
-    uv run python vitrine-web/gerar_site.py supermercados
+    uv run python vitrine-web/gerar_site.py
+    uv run python vitrine-web/gerar_site.py --redirecionamentos
 
-Saida em scraper-lab/sites/<vertical>/ (fora do git: carrega dados coletados):
-api/, middleware.js, package.json, vercel.json e public/ com a pagina comercial
-preenchida com os numeros da vertical e o painel protegido em public/painel/.
-Depois: cd sites/<vertical> && vercel deploy --prod --yes --scope cassiai
+Saida em scraper-lab/sites/rivalpulse/ (fora do git: carrega dados coletados):
+api/, middleware.js, package.json, vercel.json e public/ com
+  /              pagina comercial com os numeros somados das verticais
+  /painel        escolha de vertical (so mostra as que o usuario pode abrir)
+  /v/<id>/       painel de cada vertical, com o data.js ao lado
+O acesso de cada usuario sai de RIVAL_USUARIOS (ver usuarios.py).
+Depois: cd sites/rivalpulse && vercel deploy --prod --yes --scope cassiai
+
+Com --redirecionamentos, monta tambem sites/redir-<id>/, que mandam os
+enderecos antigos de cada vertical para o dominio novo.
 """
 
 import json
@@ -21,8 +27,7 @@ VERTICAIS = LAB / "verticais"
 PAINEL = LAB / "painel" / "index.html"
 DADOS = LAB / "dados" / "saida" / "lojas_google" / "painel"
 SITES = LAB / "sites"
-
-# Idioma, tema e sair ficam no trilho lateral do proprio painel.
+PRODUTO = json.loads((MODELO / "produto.json").read_text(encoding="utf-8"))
 
 # Roda no head, antes da primeira pintura: claro por padrao, escuro so se o
 # usuario escolheu. Sem isso o painel seguia o tema do sistema operacional.
@@ -36,28 +41,31 @@ TEMA_INICIAL = """<script>
 """
 
 
-EM_COLETA = """<!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow"><title>{nome}</title><link rel="icon" href="/cassi-wordmark.svg">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:wght@300;400;500&display=swap">
-<style>body{{margin:0;min-height:100vh;display:grid;place-items:center;background:#F8FAFC;color:#0F172A;font:300 17px/1.6 "Instrument Sans",system-ui,sans-serif;padding-inline:20px}}
-main{{max-width:560px;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:1rem;padding:36px}}
-h1{{font:800 30px/1.1 "Syne",sans-serif;letter-spacing:-.025em;margin:14px 0 12px}}
-.l{{font:700 12px "Syne",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#2563EB}}
-p{{color:#475569;margin:0 0 12px}} a{{color:#2563EB}}</style></head>
-<body><main><span class="l">{cidade}</span><h1>Coleta em andamento</h1>
-<p>O painel de {marcas} está sendo montado. A varredura das fichas públicas roda com pausas para respeitar os limites da fonte.</p>
-<p>Assim que os dados forem conferidos, este endereço passa a mostrar o painel completo.</p>
-<p><a href="/api/sair">Sair</a></p></main></body></html>
-"""
-
-
-def lista_pt(itens: list[str]) -> str:
-    return itens[0] if len(itens) == 1 else ", ".join(itens[:-1]) + " e " + itens[-1]
+def lista(itens: list[str], e: str = "e") -> str:
+    return itens[0] if len(itens) == 1 else ", ".join(itens[:-1]) + f" {e} " + itens[-1]
 
 
 def milhar(n: int) -> str:
     return f"{n:,}".replace(",", ".")
+
+
+def carregar_verticais() -> list[tuple[dict, dict]]:
+    """Verticais com painel gerado, na ordem do nome do arquivo."""
+    out = []
+    for arq in sorted(VERTICAIS.glob("*.json")):
+        cfg = json.loads(arq.read_text(encoding="utf-8"))
+        data_js = DADOS / cfg["id"] / "data.js"
+        if not data_js.exists():
+            print(f"sem dados, fica de fora: {cfg['id']}")
+            continue
+        texto = data_js.read_text(encoding="utf-8")
+        out.append((cfg, json.loads(texto[texto.index("=") + 1:].rstrip().rstrip(";"))))
+    return out
+
+
+def nome_vertical(cfg: dict, idioma: str) -> str:
+    r = cfg["rotulo_piloto"] if idioma == "pt" else cfg["i18n"][idioma]["rotulo_piloto"]
+    return r[0].upper() + r[1:]
 
 
 def painel(cfg: dict) -> str:
@@ -65,7 +73,7 @@ def painel(cfg: dict) -> str:
     fim_titulo = corpo.index("</title>") + len("</title>")
     resto = corpo[fim_titulo:]
     corte = resto.index('<div id="app"></div>')
-    head = f"<title>{cfg['nome_pagina']}</title>"
+    head = f"<title>{PRODUTO['nome']} · {nome_vertical(cfg, 'pt')} · {cfg['cidade'].split(',')[0]}</title>"
     doc = (
         "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
@@ -73,66 +81,104 @@ def painel(cfg: dict) -> str:
         "<link rel=\"icon\" href=\"/cassi-wordmark.svg\">\n"
         f"{TEMA_INICIAL}{head}\n{resto[:corte]}\n</head>\n<body>\n{resto[corte:]}\n</body>\n</html>\n"
     )
-    return doc.replace('<script src="data.js"></script>', '<script src="/painel/data.js"></script>')
+    return doc.replace('<script src="data.js"></script>', f'<script src="/v/{cfg["id"]}/data.js"></script>')
 
 
-def pagina(cfg: dict, dados: dict | None) -> str:
-    site = cfg["site"]
-    if dados:
-        leituras = sum(1 for l in dados["lojas"] for d in l["pico"].values() for v in d.values() if v is not None)
-        n_lojas, n_aval, n_leit = milhar(len(dados["lojas"])), milhar(len(dados["avaliacoes"])), milhar(leituras)
-    else:
-        n_lojas = n_aval = n_leit = "…"
+def pagina(verticais: list[tuple[dict, dict]]) -> str:
+    lojas = sum(len(d["lojas"]) for _, d in verticais)
+    aval = sum(len(d["avaliacoes"]) for _, d in verticais)
+    leituras = sum(1 for _, d in verticais for l in d["lojas"] for dia in l["pico"].values() for v in dia.values() if v is not None)
+    marcas = sum(len(c["marcas"]) for c, _ in verticais)
+    temas = len({t["id"] for c, _ in verticais for t in c["temas"]})
+    conectivo = {"pt": "e", "es": "y", "en": "and"}
     trocas = {
-        "{{ROTULO_PILOTO}}": cfg["rotulo_piloto"] + ("" if dados else " · coleta em andamento"),
-        "{{N_LOJAS}}": n_lojas,
-        "{{N_MARCAS}}": milhar(len(cfg["marcas"])),
-        "{{N_AVALIACOES}}": n_aval,
-        "{{N_LEITURAS}}": n_leit,
-        "{{N_TEMAS}}": milhar(len(cfg["temas"])),
-        "{{TEMAS_LISTA}}": site["temas_lista"],
-        "{{PERGUNTA_LOCAL}}": site["pergunta_local"],
-        "{{COMPARACAO_LOCAL}}": site["comparacao_local"],
+        "{{N_LOJAS}}": milhar(lojas),
+        "{{N_MARCAS}}": milhar(marcas),
+        "{{N_AVALIACOES}}": milhar(aval),
+        "{{N_LEITURAS}}": milhar(leituras),
+        "{{N_TEMAS}}": milhar(temas),
     }
-    # Versoes em espanhol e ingles, trocadas no navegador pela escolha de idioma
-    em_coleta = {"ES": " · recolección en curso", "EN": " · collection in progress"}
-    for sufixo in ("ES", "EN"):
-        tr = cfg["i18n"][sufixo.lower()]
-        trocas[f"{{{{ROTULO_PILOTO_{sufixo}}}}}"] = tr["rotulo_piloto"] + ("" if dados else em_coleta[sufixo])
-        for chave in ("temas_lista", "pergunta_local", "comparacao_local"):
-            trocas[f"{{{{{chave.upper()}_{sufixo}}}}}"] = tr[chave]
+    for idioma, sufixo in (("pt", ""), ("es", "_ES"), ("en", "_EN")):
+        rotulos = [c["rotulo_piloto"] if idioma == "pt" else c["i18n"][idioma]["rotulo_piloto"] for c, _ in verticais]
+        trocas[f"{{{{ROTULO_PILOTO{sufixo}}}}}"] = lista(rotulos, conectivo[idioma])
+        for chave, valor in PRODUTO["textos"][idioma].items():
+            trocas[f"{{{{{chave.upper()}{sufixo}}}}}"] = valor
     s = (MODELO / "template" / "index.html").read_text(encoding="utf-8")
+    # as chaves com sufixo trocam antes das sem sufixo
     for k, v in sorted(trocas.items(), key=lambda kv: -len(kv[0])):
         s = s.replace(k, v)
     assert "{{" not in s, "campo do modelo sem valor"
     return s
 
 
-def main(vertical: str) -> None:
-    cfg = json.loads((VERTICAIS / f"{vertical}.json").read_text(encoding="utf-8"))
-    data_js = DADOS / cfg["id"] / "data.js"
-    dados = None
-    if data_js.exists():
-        texto = data_js.read_text(encoding="utf-8")
-        dados = json.loads(texto[texto.index("=") + 1:].rstrip().rstrip(";"))
+def escolha(verticais: list[tuple[dict, dict]]) -> str:
+    cartoes = []
+    for cfg, d in verticais:
+        cartoes.append({
+            "id": cfg["id"],
+            "nome": {i: nome_vertical(cfg, i) for i in ("pt", "es", "en")},
+            "titulo": {"pt": cfg["titulo"], "es": cfg["i18n"]["es"]["titulo"], "en": cfg["i18n"]["en"]["titulo"]},
+            "cidade": cfg["cidade"],
+            "marcas": [m["nome"] for m in cfg["marcas"]],
+            "cores": cfg.get("cores", {}).get("light") or [],
+            "lojas": len(d["lojas"]),
+            "avaliacoes": len(d["avaliacoes"]),
+            "coleta": d.get("coleta", ""),
+        })
+    s = (MODELO / "template" / "painel.html").read_text(encoding="utf-8")
+    s = s.replace("<head>\n", "<head>\n" + TEMA_INICIAL, 1)
+    return s.replace("__VERTICAIS__", json.dumps(cartoes, ensure_ascii=False))
 
-    destino = SITES / cfg["id"]
+
+def montar() -> None:
+    verticais = carregar_verticais()
+    assert verticais, "nenhuma vertical com dados"
+    destino = SITES / PRODUTO["projeto"]
     pub = destino / "public"
-    (pub / "painel").mkdir(parents=True, exist_ok=True)
+    if pub.exists():
+        shutil.rmtree(pub)
+    (pub / "painel").mkdir(parents=True)
     for nome in ("middleware.js", "package.json", "package-lock.json", "vercel.json"):
         shutil.copy(MODELO / nome, destino / nome)
-    shutil.copytree(MODELO / "api", destino / "api", dirs_exist_ok=True)
+    if (destino / "api").exists():
+        shutil.rmtree(destino / "api")
+    shutil.copytree(MODELO / "api", destino / "api")
     for logo in ("cassi-wordmark.svg", "cassi-wordmark-reversed.svg"):
         shutil.copy(MODELO / "template" / logo, pub / logo)
-    (pub / "index.html").write_text(pagina(cfg, dados), encoding="utf-8")
-    if dados:
-        (pub / "painel" / "index.html").write_text(painel(cfg), encoding="utf-8")
-        shutil.copy(data_js, pub / "painel" / "data.js")
-    else:
-        (pub / "painel" / "index.html").write_text(EM_COLETA.format(nome=cfg["nome_pagina"],
-            marcas=lista_pt([m["nome"] for m in cfg["marcas"]]), cidade=cfg["cidade"]), encoding="utf-8")
-    print("ok:", destino)
+    (pub / "index.html").write_text(pagina(verticais), encoding="utf-8")
+    (pub / "painel" / "index.html").write_text(escolha(verticais), encoding="utf-8")
+    for cfg, _ in verticais:
+        alvo = pub / "v" / cfg["id"]
+        alvo.mkdir(parents=True)
+        (alvo / "index.html").write_text(painel(cfg), encoding="utf-8")
+        shutil.copy(DADOS / cfg["id"] / "data.js", alvo / "data.js")
+    print("ok:", destino, "·", ", ".join(c["id"] for c, _ in verticais))
+
+
+def redirecionamentos() -> None:
+    """Enderecos antigos (um projeto Vercel por vertical) passam a apontar para o dominio novo."""
+    novo = f"https://{PRODUTO['dominio']}"
+    for vertical in PRODUTO["dominios_antigos"]:
+        destino = SITES / f"redir-{vertical}"
+        (destino / "public").mkdir(parents=True, exist_ok=True)
+        antigo = SITES / vertical / ".vercel"
+        if antigo.exists() and not (destino / ".vercel").exists():
+            shutil.copytree(antigo, destino / ".vercel")
+        (destino / "public" / "index.html").write_text(f'<meta http-equiv="refresh" content="0;url={novo}/">', encoding="utf-8")
+        conf = {
+            "$schema": "https://openapi.vercel.sh/vercel.json",
+            "framework": None, "buildCommand": "", "outputDirectory": "public",
+            "redirects": [
+                {"source": "/painel(/.*)?", "destination": f"{novo}/v/{vertical}", "permanent": True},
+                {"source": "/", "destination": f"{novo}/", "permanent": True},
+                {"source": "/(.*)", "destination": f"{novo}/$1", "permanent": True},
+            ],
+        }
+        (destino / "vercel.json").write_text(json.dumps(conf, indent=2) + "\n", encoding="utf-8")
+        print("ok:", destino)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "moda")
+    montar()
+    if "--redirecionamentos" in sys.argv:
+        redirecionamentos()

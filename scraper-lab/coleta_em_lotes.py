@@ -89,10 +89,11 @@ def status(cfg: dict, estado: dict) -> None:
 def publicar(cfg: dict) -> None:
     py = [sys.executable]
     subprocess.run(py + [str(LAB / "painel" / "gerar_dados.py"), cfg["id"]], check=True)
-    subprocess.run(py + [str(LAB / "vitrine-web" / "gerar_site.py"), cfg["id"]], check=True)
+    subprocess.run(py + [str(LAB / "vitrine-web" / "gerar_site.py")], check=True)
+    produto = json.loads((LAB / "vitrine-web" / "produto.json").read_text(encoding="utf-8"))
     subprocess.run(["vercel", "deploy", "--prod", "--yes", "--scope", "cassiai"],
-                   cwd=LAB / "sites" / cfg["id"], check=True, stdout=subprocess.DEVNULL)
-    print(f"publicado: https://{cfg['site']['dominio']}")
+                   cwd=LAB / "sites" / produto["projeto"], check=True, stdout=subprocess.DEVNULL)
+    print(f"publicado: https://{produto['dominio']}/v/{cfg['id']}")
 
 
 def main() -> int:

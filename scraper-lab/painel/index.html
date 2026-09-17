@@ -1,10 +1,10 @@
-<title>Vitrine Goiânia</title>
+<title>Rival Pulse</title>
 <meta name="description" content="C&A, Renner e Riachuelo comparadas loja a loja em Goiânia: movimento por hora, reputação e voz do cliente no Google.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
-/* Vitrine 2: trilho lateral, superficies macias, numeros grandes e finos.
+/* Rival Pulse: trilho lateral, superficies macias, numeros grandes e finos.
    Acento lima so para interface; as cores de marca ficam para os dados. */
 :root{
   color-scheme:light;
@@ -1332,6 +1332,11 @@ function App(){
   const txtModo = modo==="dark" ? L3("Tema claro","Tema claro","Light theme") : L3("Tema escuro","Tema oscuro","Dark theme");
   const Idioma = () => html`<div class="idioma" role="group" aria-label=${L3("Idioma","Idioma","Language")}><${Gota}/>${["pt","es","en"].map(l=>html`<button key=${l} type="button" aria-pressed=${LANG===l} onClick=${()=>{ if(l!==LANG) trocarIdioma(l); }}>${l.toUpperCase()}</button>`)}</div>`;
   const BtnModo = () => html`<button type="button" class="rail-btn" onClick=${trocarModo} aria-label=${txtModo}>${modo==="dark"?ICO_SOL:ICO_LUA}<span class="rot">${txtModo}</span><span class="tip-nav">${txtModo}</span></button>`;
+  const [nVerticais,setNVerticais] = useState(0);
+  useEffect(()=>{ fetch("/api/eu",{credentials:"same-origin"}).then(r=>r.ok?r.json():null).then(eu=>{ if(eu&&eu.ok) setNVerticais(eu.verticais.includes("*")?99:eu.verticais.length); }).catch(()=>{}); },[]);
+  const ICO_GRADE = html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>`;
+  const txtVert = L3("Trocar vertical","Cambiar vertical","Switch vertical");
+  const BtnVerticais = () => nVerticais>1 ? html`<a class="rail-btn" href="/painel" aria-label=${txtVert}>${ICO_GRADE}<span class="rot">${txtVert}</span><span class="tip-nav">${txtVert}</span></a>` : null;
   const BtnSair = () => html`<a class="rail-btn" href="/api/sair" aria-label=${L3("Sair","Salir","Sign out")}>${ICO_SAIR}<span class="rot">${L3("Sair","Salir","Sign out")}</span><span class="tip-nav">${L3("Sair","Salir","Sign out")}</span></a>`;
   const alternarTrilho = () => setAberto(v=>{ try{ localStorage.setItem("vitrine-trilho", v?"0":"1"); }catch(e){} return !v; });
   const [dia,setDia] = useState("todos");
@@ -1400,6 +1405,7 @@ function App(){
             ${ICONES[t.id]}${t.beta?html`<span class="dot-beta" aria-hidden="true"></span>`:null}<span class="rot">${t.nome}${t.beta?html` <span class="beta">Beta</span>`:null}</span><span class="tip-nav">${t.nome}${t.beta?" · beta":""}</span></button>`)}
         </nav>
         <div class="rail-pe">
+          <${BtnVerticais}/>
           <${Idioma}/>
           <${BtnModo}/>
           <${BtnSair}/>
@@ -1417,7 +1423,7 @@ function App(){
         <div class="meta"><span>${L3("Coleta","Recolección","Collected")} <b>${new Date(D.coleta+"T12:00").toLocaleDateString(LOCALE,{day:"2-digit",month:"short",year:"numeric"})}</b></span><span><b>${LOJAS.length}</b> ${L3("lojas","tiendas","stores")}</span><span><b>${fmt(REVS.length)}</b> ${L3("avaliações lidas","reseñas leídas","reviews read")}</span><span>${L3("Fonte","Fuente","Source")}: Google Maps</span></div>
       </div>
       <div class="top-dir">
-        <div class="ctl-movel"><${Idioma}/><${BtnModo}/><${BtnSair}/></div>
+        <div class="ctl-movel"><${BtnVerticais}/><${Idioma}/><${BtnModo}/><${BtnSair}/></div>
         <div class="legend" aria-label=${L3("Legenda das marcas","Leyenda de marcas","Brand legend")}>${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}</span>`)}</div>
       </div>
     </header>

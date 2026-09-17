@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Rival Pulse · Cassi.ai</title>
+<link rel="icon" href="/cassi-wordmark.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#ECEEF1; --panel:#FFFFFF; --sunk:#E6E9ED; --ink:#0F1318; --ink-2:#4A525C; --ink-3:#6B737D;
+  --line:rgba(15,19,24,.08); --accent:#D9F26A; --accent-ink:#0F1318; --rail:#0F1318;
+  --shadow:0 1px 0 rgba(15,19,24,.04), 0 16px 36px -24px rgba(15,19,24,.35);
+  --f-display:"Outfit","Avenir Next",system-ui,sans-serif;
+  --f-body:"Instrument Sans","Helvetica Neue",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0B0D10; --panel:#15181D; --sunk:#101318; --ink:#EEF1F4; --ink-2:#B3BAC3; --ink-3:#8B94A0;
+  --line:rgba(255,255,255,.08); --rail:#15181D;
+  --shadow:0 1px 0 rgba(0,0,0,.35), 0 16px 36px -22px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);-webkit-font-smoothing:antialiased;padding-inline:20px}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 64px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--rail);border-radius:24px;padding:14px 16px 14px 22px}
+.logo{display:flex;align-items:center;gap:14px;color:#fff;text-decoration:none}
+.logo i{display:block;width:78px;aspect-ratio:200/67;background:var(--accent);-webkit-mask:url(/cassi-wordmark-reversed.svg) center/contain no-repeat;mask:url(/cassi-wordmark-reversed.svg) center/contain no-repeat}
+.logo b{font:500 13px var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:#C7CDD4;padding-left:14px;border-left:1px solid rgba(255,255,255,.14)}
+.acoes{display:flex;gap:6px;align-items:center}
+.acoes a,.acoes button{height:36px;border:0;border-radius:12px;padding:0 14px;background:rgba(255,255,255,.07);color:#C7CDD4;font:600 13px var(--f-body);text-decoration:none;display:inline-flex;align-items:center;cursor:pointer}
+.acoes a:hover,.acoes button:hover{background:rgba(255,255,255,.14);color:#fff}
+.acoes button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+h1{font:300 clamp(30px,4vw,44px)/1.05 var(--f-display);letter-spacing:-.02em;margin:36px 0 8px;text-wrap:balance}
+.sub{color:var(--ink-2);margin:0 0 26px;max-width:60ch}
+.aviso{background:var(--panel);border-radius:16px;padding:12px 16px;margin-bottom:18px;box-shadow:var(--shadow);border-left:4px solid #E0A33A}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.cartao{display:flex;flex-direction:column;gap:14px;background:var(--panel);border-radius:26px;padding:22px;box-shadow:var(--shadow);text-decoration:none;color:inherit;transition:transform .25s cubic-bezier(.3,1.4,.5,1),box-shadow .25s}
+.cartao:hover{transform:translateY(-4px)}
+.cartao:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.tag{align-self:flex-start;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:4px 12px;font:600 12px var(--f-body)}
+.cartao h2{font:400 24px/1.15 var(--f-display);letter-spacing:-.01em;margin:0}
+.marcas{display:flex;flex-wrap:wrap;gap:6px}
+.marcas span{display:inline-flex;align-items:center;gap:7px;background:var(--sunk);border-radius:999px;padding:4px 11px 4px 9px;font-weight:600;font-size:13px}
+.marcas i{width:10px;height:10px;border-radius:50%}
+.nums{display:flex;gap:22px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.nums b{display:block;font:300 28px/1 var(--f-display);letter-spacing:-.02em}
+.nums small{color:var(--ink-3);font-size:12px}
+.abrir{font-weight:700;font-size:13.5px}
+.vazio{background:var(--panel);border-radius:22px;padding:28px;box-shadow:var(--shadow)}
+.vazio a{color:inherit}
+@media (prefers-reduced-motion:reduce){.cartao{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="https://cassiai.com" target="_blank" rel="noopener"><i role="img" aria-label="Cassi.ai"></i><b>Rival Pulse</b></a>
+    <div class="acoes">
+      <span id="idiomas" role="group" aria-label="Idioma" style="display:inline-flex;gap:4px"></span>
+      <a href="/api/sair" id="sair">Sair</a>
+    </div>
+  </header>
+  <main>
+    <h1 id="t">Suas verticais</h1>
+    <p class="sub" id="s">Escolha o painel que quer abrir. Cada um compara as marcas de um setor, loja a loja.</p>
+    <div class="aviso" id="sem" hidden></div>
+    <div class="grade" id="grade" aria-live="polite"></div>
+  </main>
+</div>
+<script>
+(function(){
+var VERTICAIS = __VERTICAIS__;
+var l = null;
+try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
+l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
+if (["pt","es","en"].indexOf(l) < 0) l = "pt";
+document.documentElement.lang = {pt:"pt-BR",es:"es",en:"en"}[l];
+var T = {
+  pt: {t:"Suas verticais", s:"Escolha o painel que quer abrir. Cada um compara as marcas de um setor, loja a loja.", lojas:"lojas", aval:"avaliações lidas", abrir:"Abrir painel →", sair:"Sair", sem:"Esta vertical não faz parte do seu acesso. Abra uma das verticais abaixo.", vazio:"Seu usuário ainda não tem vertical liberada. Escreva para <a href=\"mailto:cassiano@cassiai.com\">cassiano@cassiai.com</a>.", piloto:"Piloto"},
+  es: {t:"Sus verticales", s:"Elija el panel que quiere abrir. Cada uno compara las marcas de un sector, tienda por tienda.", lojas:"tiendas", aval:"reseñas leídas", abrir:"Abrir panel →", sair:"Salir", sem:"Esta vertical no forma parte de su acceso. Abra una de las verticales de abajo.", vazio:"Su usuario aún no tiene verticales habilitadas. Escriba a <a href=\"mailto:cassiano@cassiai.com\">cassiano@cassiai.com</a>.", piloto:"Piloto"},
+  en: {t:"Your verticals", s:"Choose the dashboard to open. Each one compares the brands in a sector, store by store.", lojas:"stores", aval:"reviews read", abrir:"Open dashboard →", sair:"Sign out", sem:"This vertical is not part of your access. Open one of the verticals below.", vazio:"Your user has no vertical enabled yet. Write to <a href=\"mailto:cassiano@cassiai.com\">cassiano@cassiai.com</a>.", piloto:"Pilot"}
+}[l];
+var num = function(n){ return n.toLocaleString({pt:"pt-BR",es:"es-ES",en:"en-US"}[l]); };
+var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); };
+document.getElementById("t").textContent = T.t;
+document.getElementById("s").textContent = T.s;
+document.getElementById("sair").textContent = T.sair;
+var box = document.getElementById("idiomas");
+["pt","es","en"].forEach(function(x){
+  var b = document.createElement("button");
+  b.type = "button"; b.textContent = x.toUpperCase(); b.setAttribute("aria-pressed", String(x === l));
+  b.onclick = function(){ try { localStorage.setItem("vitrine-idioma", x); } catch (e) {} var u = new URL(location.href); u.searchParams.delete("lang"); location.replace(u.toString()); };
+  box.appendChild(b);
+});
+var q = new URLSearchParams(location.search);
+fetch("/api/eu", {credentials:"same-origin"}).then(function(r){ return r.json(); }).then(function(eu){
+  if (!eu.ok) { location.replace("/?entrar=1#entrar"); return; }
+  var livres = VERTICAIS.filter(function(v){ return eu.verticais.indexOf("*") >= 0 || eu.verticais.indexOf(v.id) >= 0; });
+  if (livres.length === 1 && !q.get("sem")) { location.replace("/v/" + livres[0].id); return; }
+  if (q.get("sem")) { var a = document.getElementById("sem"); a.textContent = T.sem; a.hidden = false; }
+  var g = document.getElementById("grade");
+  if (!livres.length) { g.outerHTML = '<div class="vazio">' + T.vazio + '</div>'; return; }
+  g.innerHTML = livres.map(function(v){
+    return '<a class="cartao" href="/v/' + esc(v.id) + '">' +
+      '<span class="tag">' + T.piloto + ' · ' + esc(v.cidade) + '</span>' +
+      '<div><h2>' + esc(v.nome[l]) + '</h2><p class="sub" style="margin:6px 0 0">' + esc(v.titulo[l]) + '</p></div>' +
+      '<div class="marcas">' + v.marcas.map(function(m, i){ return '<span><i style="background:' + esc(v.cores[i] || "#888") + '"></i>' + esc(m) + '</span>'; }).join("") + '</div>' +
+      '<div class="nums"><div><b>' + num(v.lojas) + '</b><small>' + T.lojas + '</small></div><div><b>' + num(v.avaliacoes) + '</b><small>' + T.aval + '</small></div></div>' +
+      '<span class="abrir">' + T.abrir + '</span></a>';
+  }).join("");
+}).catch(function(){ location.replace("/?entrar=1#entrar"); });
+})();
+</script>
+</body>
+</html>

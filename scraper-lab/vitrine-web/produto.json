@@ -1,0 +1,23 @@
+{
+  "nome": "Rival Pulse",
+  "projeto": "rivalpulse",
+  "dominio": "rivalpulse.cassiai.com",
+  "dominios_antigos": {"moda": "vitrine.cassiai.com", "supermercados": "atacarejo.cassiai.com"},
+  "textos": {
+    "pt": {
+      "temas_lista": "atendimento, fila, preço, produto, trocas, falta de item e estrutura da loja",
+      "pergunta_local": "Onde eu perco para o concorrente no mesmo bairro ou shopping?",
+      "comparacao_local": "A matriz por local põe frente a frente lojas do mesmo shopping ou do mesmo bairro."
+    },
+    "es": {
+      "temas_lista": "atención, filas, precio, producto, cambios, falta de productos y estructura de la tienda",
+      "pergunta_local": "¿Dónde pierdo frente a la competencia en el mismo barrio o centro comercial?",
+      "comparacao_local": "La matriz por lugar enfrenta tiendas del mismo centro comercial o del mismo barrio."
+    },
+    "en": {
+      "temas_lista": "service, queues, price, product, exchanges, out of stock items and store layout",
+      "pergunta_local": "Where do I lose to the competitor in the same neighborhood or mall?",
+      "comparacao_local": "The location matrix puts stores in the same mall or neighborhood side by side."
+    }
+  }
+}

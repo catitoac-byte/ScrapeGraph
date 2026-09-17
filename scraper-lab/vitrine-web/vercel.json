@@ -8,28 +8,62 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     },
     {
-      "source": "/((?!painel|api).*)",
+      "source": "/((?!painel|v/|api).*)",
       "headers": [
-        { "key": "Content-Security-Policy", "value": "frame-ancestors 'self' https://cassiai.com https://www.cassiai.com" }
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' https://cassiai.com https://www.cassiai.com"
+        }
       ]
     },
     {
-      "source": "/(painel|api)(.*)",
+      "source": "/(painel|v|api)(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Content-Security-Policy", "value": "frame-ancestors 'none'" }
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'none'"
+        }
       ]
     },
     {
       "source": "/painel/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "private, no-store" },
-        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/v/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
       ]
     }
   ]
