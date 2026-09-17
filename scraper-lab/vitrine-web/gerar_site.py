@@ -17,9 +17,12 @@ enderecos antigos de cada vertical para o dominio novo.
 """
 
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
+
+import seo
 
 MODELO = Path(__file__).resolve().parent
 LAB = MODELO.parent
@@ -84,7 +87,8 @@ def painel(cfg: dict) -> str:
     return doc.replace('<script src="data.js"></script>', f'<script src="/v/{cfg["id"]}/data.js"></script>')
 
 
-def pagina(verticais: list[tuple[dict, dict]]) -> str:
+def trocas_de_texto(verticais: list[tuple[dict, dict]]) -> dict:
+    """Numeros somados das verticais e os rotulos em cada idioma."""
     lojas = sum(len(d["lojas"]) for _, d in verticais)
     aval = sum(len(d["avaliacoes"]) for _, d in verticais)
     leituras = sum(1 for _, d in verticais for l in d["lojas"] for dia in l["pico"].values() for v in dia.values() if v is not None)
@@ -103,11 +107,67 @@ def pagina(verticais: list[tuple[dict, dict]]) -> str:
         trocas[f"{{{{ROTULO_PILOTO{sufixo}}}}}"] = lista(rotulos, conectivo[idioma])
         for chave, valor in PRODUTO["textos"][idioma].items():
             trocas[f"{{{{{chave.upper()}{sufixo}}}}}"] = valor
-    s = (MODELO / "template" / "index.html").read_text(encoding="utf-8")
-    # as chaves com sufixo trocam antes das sem sufixo
+    return trocas
+
+
+def aplicar(texto: str, trocas: dict) -> str:
+    """As chaves com sufixo de idioma trocam antes das sem sufixo."""
     for k, v in sorted(trocas.items(), key=lambda kv: -len(kv[0])):
-        s = s.replace(k, v)
-    assert "{{" not in s, "campo do modelo sem valor"
+        texto = texto.replace(k, v)
+    return texto
+
+
+# Um elemento com data-t pode conter outras tags dentro, então o fechamento
+# certo é achado contando abertura e fechamento da mesma tag.
+ABRE = re.compile(r'<(\w+)([^>]*\sdata-t="([^"]+)"[^>]*)>')
+
+
+def traduzir(html: str, dic: dict) -> str:
+    """Aplica o dicionário no HTML, como o navegador faria em tempo de leitura.
+
+    A página passa a existir traduzida no próprio arquivo: é o que buscador e
+    motor de resposta leem, porque nenhum dos dois executa a troca em JS.
+    """
+    saida = []
+    pos = 0
+    while True:
+        m = ABRE.search(html, pos)
+        if not m:
+            saida.append(html[pos:])
+            return "".join(saida)
+        tag, chave = m.group(1), m.group(3)
+        fim_abertura = m.end()
+        nivel = 1
+        i = fim_abertura
+        while nivel:
+            prox = re.compile(f"</?{tag}\\b", re.I).search(html, i)
+            assert prox, f"tag {tag} sem fechamento"
+            nivel += -1 if html[prox.start() + 1] == "/" else 1
+            i = prox.end()
+        fim_conteudo = html.rindex(f"</{tag}", fim_abertura, i)
+        novo = dic.get(chave)
+        saida.append(html[pos:fim_abertura])
+        saida.append(novo if novo else html[fim_abertura:fim_conteudo])
+        pos = fim_conteudo
+    
+
+def dicionarios(modelo: str) -> dict:
+    """Os dicionários de es e en que o próprio modelo carrega."""
+    bruto = re.search(r"var DIC = (\{.*?\n\});", modelo, re.S).group(1)
+    return json.loads(bruto)
+
+
+def pagina(modelo: str, idioma: str, trocas: dict, dic: dict) -> str:
+    """Página comercial de um idioma, com SEO, perguntas e dados estruturados."""
+    s = modelo
+    if idioma != "pt":
+        s = traduzir(s, dic[idioma])
+        s = s.replace('<html lang="pt-BR" data-idioma="pt">', f'<html lang="{seo.HTML_LANG[idioma]}" data-idioma="{idioma}">', 1)
+    s = s.replace("{{FAQ}}", seo.faq_html(idioma), 1)
+    s = s.replace("{{JSONLD}}", seo.jsonld(idioma, trocas), 1)
+    s = aplicar(s, seo.cabeca(idioma))
+    s = aplicar(s, trocas)
+    assert "{{" not in s, f"campo do modelo sem valor em {idioma}"
     return s
 
 
@@ -143,9 +203,20 @@ def montar() -> None:
     if (destino / "api").exists():
         shutil.rmtree(destino / "api")
     shutil.copytree(MODELO / "api", destino / "api")
-    for logo in ("cassi-wordmark.svg", "cassi-wordmark-reversed.svg", "favicon.png"):
+    for logo in ("cassi-wordmark.svg", "cassi-wordmark-reversed.svg", "favicon.png", "og.png"):
         shutil.copy(MODELO / "template" / logo, pub / logo)
-    (pub / "index.html").write_text(pagina(verticais), encoding="utf-8")
+    modelo = (MODELO / "template" / "index.html").read_text(encoding="utf-8")
+    trocas = trocas_de_texto(verticais)
+    dic = dicionarios(modelo)
+    coleta = max((d.get("coleta", "") for _, d in verticais), default="")[:10]
+    for idioma in seo.IDIOMAS:
+        destino_idioma = pub if idioma == "pt" else pub / idioma
+        destino_idioma.mkdir(parents=True, exist_ok=True)
+        (destino_idioma / "index.html").write_text(pagina(modelo, idioma, trocas, dic), encoding="utf-8")
+        (destino_idioma / "index.md").write_text(aplicar(seo.markdown(idioma), trocas), encoding="utf-8")
+    (pub / "robots.txt").write_text(seo.robots(), encoding="utf-8")
+    (pub / "sitemap.xml").write_text(seo.sitemap(coleta or "2026-09-17"), encoding="utf-8")
+    (pub / "llms.txt").write_text(seo.llms(), encoding="utf-8")
     (pub / "painel" / "index.html").write_text(escolha(verticais), encoding="utf-8")
     for cfg, _ in verticais:
         alvo = pub / "v" / cfg["id"]

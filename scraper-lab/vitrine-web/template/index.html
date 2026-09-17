@@ -1,11 +1,32 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-idioma="pt">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rival Pulse · Cassi.ai</title>
-<meta name="description" content="Inteligência competitiva de lojas físicas a partir de dados públicos: movimento por hora, reputação e voz do cliente, loja a loja, com a concorrência lado a lado.">
-<meta name="robots" content="noindex">
+<title>{{SEO_TITULO}}</title>
+<meta name="description" content="{{SEO_DESCRICAO}}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="{{SEO_CANONICO}}">
+<link rel="alternate" type="text/markdown" href="{{SEO_MARKDOWN}}">
+<link rel="alternate" hreflang="pt-BR" href="https://rivalpulse.cassiai.com/">
+<link rel="alternate" hreflang="es" href="https://rivalpulse.cassiai.com/es/">
+<link rel="alternate" hreflang="en" href="https://rivalpulse.cassiai.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://rivalpulse.cassiai.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rival Pulse">
+<meta property="og:locale" content="{{SEO_LOCALE}}">
+<meta property="og:url" content="{{SEO_CANONICO}}">
+<meta property="og:title" content="{{SEO_TITULO}}">
+<meta property="og:description" content="{{SEO_DESCRICAO}}">
+<meta property="og:image" content="https://rivalpulse.cassiai.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rival Pulse">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{SEO_CANONICO}}">
+<meta name="twitter:title" content="{{SEO_TITULO}}">
+<meta name="twitter:description" content="{{SEO_DESCRICAO}}">
+<meta name="twitter:image" content="https://rivalpulse.cassiai.com/og.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +57,16 @@ a{color:inherit}
 @media (max-width:600px){.wrap{padding-inline:18px}}
 .tech{font-family:var(--f-tech);font-size:13px;letter-spacing:.02em;color:var(--ink-3)}
 .label{font-family:var(--f-display);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+
+/* perguntas e respostas */
+.faq{display:grid;gap:10px;margin-top:8px}
+.fq{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px}
+.fq summary{cursor:pointer;list-style:none;display:flex;align-items:flex-start;gap:12px}
+.fq summary::-webkit-details-marker{display:none}
+.fq summary::after{content:"+";margin-left:auto;font-family:var(--f-display);font-weight:700;color:var(--blue);font-size:20px;line-height:1}
+.fq[open] summary::after{content:"–"}
+.fq h3{font-size:18px;margin:0;font-weight:700}
+.fq p{margin-top:12px;color:var(--ink-2);max-width:70ch}
 
 /* topo */
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:22px}
@@ -312,7 +343,7 @@ dialog.contato[open]{animation:ct-abre .4s cubic-bezier(.3,1.3,.5,1)}
       <a class="prod" href="/">Rival Pulse</a>
     </div>
     <div class="nav-dir">
-        <div class="idioma" role="group" aria-label="Idioma"><button type="button" data-l="pt">PT</button><button type="button" data-l="es">ES</button><button type="button" data-l="en">EN</button></div>
+        <div class="idioma" role="group" aria-label="Idioma"><button type="button" data-l="pt" data-u="/">PT</button><button type="button" data-l="es" data-u="/es/">ES</button><button type="button" data-l="en" data-u="/en/">EN</button></div>
         <a class="btn ghost" href="#entrar" data-t="t0">Entrar</a>
       </div>
   </header>
@@ -521,6 +552,8 @@ dialog.contato[open]{animation:ct-abre .4s cubic-bezier(.3,1.3,.5,1)}
       </div>
     </section>
 
+    {{FAQ}}
+
     <div class="assina">
       <div>
         <h2 data-t="t97">Loja física deixa rastro público todos os dias. <em>Quem lê esse rastro com método decide antes.</em></h2>
@@ -539,6 +572,7 @@ dialog.contato[open]{animation:ct-abre .4s cubic-bezier(.3,1.3,.5,1)}
     <span data-t="t102">Rival Pulse é um produto <a href="https://cassiai.com">Cassi.ai</a>. Dados de fichas públicas, coletados com data e método registrados.</span>
   </footer>
 </div>
+{{JSONLD}}
 <script>
 (function(){
 var DIC = {
@@ -837,15 +871,16 @@ var DIC = {
 };
 var META = {"es": {"title": "Rival Pulse · Cassi.ai", "desc": "Inteligencia competitiva de tiendas físicas a partir de datos públicos: afluencia por hora, reputación y voz del cliente, tienda por tienda, con la competencia lado a lado.", "nome": "Números del proyecto piloto", "cassi": "Cassi.ai: abrir el sitio", "lang": "Idioma", "assunto": "Rival%20Pulse%20%C2%B7%20quiero%20conocerla"}, "en": {"title": "Rival Pulse · Cassi.ai", "desc": "Competitive intelligence for physical stores from public data: hourly busyness, reputation and voice of the customer, store by store, with competitors side by side.", "nome": "Pilot project figures", "cassi": "Cassi.ai: open the website", "lang": "Language", "assunto": "Rival%20Pulse%20%C2%B7%20I%20want%20to%20learn%20more"}};
 var l = null;
-try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
-l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
-if (["pt","es","en"].indexOf(l) < 0) l = "pt";
+// Cada idioma tem endereco proprio (/, /es/, /en/), porque buscador e motor
+// de resposta precisam de uma URL para indexar. O idioma da pagina vem do
+// atributo data-idioma, escrito na geracao.
+l = document.documentElement.getAttribute("data-idioma") || "pt";
 document.querySelectorAll(".idioma button").forEach(function(b){
   b.setAttribute("aria-pressed", String(b.getAttribute("data-l") === l));
   b.addEventListener("click", function(){
+    // guarda a escolha para o painel, que tem seletor proprio
     try { localStorage.setItem("vitrine-idioma", b.getAttribute("data-l")); } catch (e) {}
-    // volta ao topo da mesma pagina, sem ancora nem aviso antigo de login
-    var u = new URL(location.href); ["lang","erro","entrar"].forEach(function(k){ u.searchParams.delete(k); }); u.hash = ""; location.replace(u.toString());
+    location.assign(b.getAttribute("data-u"));
   });
 });
 if (l === "pt") return;
@@ -861,9 +896,7 @@ document.querySelectorAll('a[href*="subject=Rival"]').forEach(function(a){ a.hre
 <script>
 (function(){
 var l = null;
-try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
-l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
-if (["pt","es","en"].indexOf(l) < 0) l = "pt";
+l = document.documentElement.getAttribute("data-idioma") || "pt";
 var L = function(pt, es, en){ return l === "es" ? es : l === "en" ? en : pt; };
 var loc = {pt:"pt-BR",es:"es-ES",en:"en-US"}[l];
 var nf = function(v, d){ return v.toLocaleString(loc, {minimumFractionDigits:d||0, maximumFractionDigits:d||0}); };
@@ -1149,9 +1182,7 @@ addEventListener("resize", function(){ var b = tabs.querySelectorAll("button")[a
 <script>
 (function(){
 var l = null;
-try { l = new URLSearchParams(location.search).get("lang") || localStorage.getItem("vitrine-idioma"); } catch (e) {}
-l = (l || navigator.language || "pt").slice(0, 2).toLowerCase();
-if (["pt","es","en"].indexOf(l) < 0) l = "pt";
+l = document.documentElement.getAttribute("data-idioma") || "pt";
 var T = {
   pt:{t:"Pedir acesso ao Rival Pulse",sub:"Conte quem você é e qual vertical quer acompanhar. A Cassi.ai responde por e-mail.",nome:"Nome",empresa:"Empresa",email:"E-mail de trabalho",tel:"Telefone (opcional)",vertical:"Vertical de interesse",escolha:"Escolha uma vertical",outra:"Outra vertical",msg:"Mensagem (opcional)",msgph:"Marcas, cidades ou perguntas que você quer responder",enviar:"Enviar pedido",enviando:"Enviando…",okt:"Pedido enviado",okx:"Obrigado. A Cassi.ai responde no e-mail informado.",fechar:"Fechar",campos:"Preencha nome, e-mail válido e vertical.",falha:"O envio direto não funcionou agora. Abrimos o seu e-mail com a mensagem pronta para cassiano@cassiai.com.",assunto:"Rival Pulse · pedido de acesso"},
   es:{t:"Solicitar acceso a Rival Pulse",sub:"Cuéntenos quién es y qué vertical quiere seguir. Cassi.ai responde por correo.",nome:"Nombre",empresa:"Empresa",email:"Correo de trabajo",tel:"Teléfono (opcional)",vertical:"Vertical de interés",escolha:"Elija una vertical",outra:"Otra vertical",msg:"Mensaje (opcional)",msgph:"Marcas, ciudades o preguntas que quiere responder",enviar:"Enviar solicitud",enviando:"Enviando…",okt:"Solicitud enviada",okx:"Gracias. Cassi.ai responde al correo informado.",fechar:"Cerrar",campos:"Complete nombre, un correo válido y la vertical.",falha:"El envío directo no funcionó ahora. Abrimos su correo con el mensaje listo para cassiano@cassiai.com.",assunto:"Rival Pulse · solicitud de acceso"},
