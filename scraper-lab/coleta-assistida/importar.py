@@ -73,6 +73,16 @@ a{{color:#2563EB}} label{{white-space:nowrap;margin-right:10px}} tr:has(input:ch
 <h2>1. Instale o favorito</h2>
 <p>Arraste o botão azul para a barra de favoritos do navegador. Ele só lê a ficha que está aberta e baixa um arquivo; não navega nem rola nada sozinho.</p>
 <p><a class="fav" href="{html.escape(favorito())}">Salvar dados da loja</a></p>
+<p><b>Se não conseguir arrastar:</b> clique em “Copiar código”, depois clique com o botão direito na barra de favoritos, escolha “Adicionar página…”, dê o nome <i>Salvar dados da loja</i> e cole o código no campo URL.</p>
+<p><button id="copiar" type="button" style="font:600 14px 'Instrument Sans',sans-serif;padding:10px 16px;border-radius:10px;border:1px solid #2563EB;background:#fff;color:#2563EB;cursor:pointer">Copiar código</button> <span id="copiado" style="color:#16864a"></span></p>
+<textarea id="codigo" readonly style="width:100%;height:70px;font:12px monospace;border-radius:8px;border:1px solid rgba(15,23,42,.15);padding:8px">{html.escape(favorito())}</textarea>
+<script>
+document.getElementById("copiar").onclick = function () {{
+  var t = document.getElementById("codigo"); t.select();
+  (navigator.clipboard ? navigator.clipboard.writeText(t.value) : Promise.reject()).catch(function () {{ document.execCommand("copy"); }})
+    .finally(function () {{ document.getElementById("copiado").textContent = "Copiado. Agora cole no campo URL do novo favorito."; }});
+}};
+</script>
 
 <h2>2. Para cada loja da lista</h2>
 <ol class="passo">
