@@ -39,13 +39,13 @@
       "net": "Atendimento",
       "id": "cordialidade",
       "nome": "Cordialidade da equipe",
-      "re": "educad|simp[aá]tic|grosse|mal educ|atencios|cordial|ignor|prestativ"
+      "re": "atendiment|atendente|educad|educa[çc][ãa]o|grosse|\\bgross[ao]s?\\b|simp[aá]tic|cordial|respeit|cara (feia|amarrada)|m[áa] vontade|descaso|despreparad|profissiona|ger[eê]n(te|cia)|trat(a|am|aram|ou|ando)\\b|sorriso|pregui[çc]a|frieza|constrang|solícit|dispostos a ajudar|n[ãa]o (resolve|sabem resolver)"
     },
     {
       "net": "Atendimento",
       "id": "equipe",
       "nome": "Equipe disponível na loja",
-      "re": "n[ãa]o tinha (ningu[ée]m|funcion)|poucos funcion|falta de funcion|sem funcion|repositor|atendente|funcion[aá]rios?"
+      "re": "poucos (funcion|atendentes|operadores|repositores)|falta de (funcion|atendentes)|sem funcion[aá]rio|ningu[ée]m (para|pra) (atender|ajudar)|n[ãa]o (tem|tinha) (quem|ningu[ée]m)|supervisor|pouqu[íi]ssimo pessoal|pessoas suficientes|falta de pessoas|contratar"
     },
     {
       "net": "Atendimento",
@@ -57,43 +57,43 @@
       "net": "Caixa e fila",
       "id": "fila",
       "nome": "Fila e espera",
-      "re": "\\bfilas?\\b|demor|esper(a|ei|ar)\\b|lentid|\\blent[oa]s?\\b"
+      "re": "\\bfilas?\\b|demor|esper(a|ei|ar|ando)\\b|lentid|\\blent[oa]s?\\b|r[áa]pido para passar"
     },
     {
       "net": "Caixa e fila",
       "id": "caixas",
       "nome": "Caixas abertos",
-      "re": "caixas? (fechad|abert)|poucos caixas|s[óo] (um|dois|1|2) caixas?|um caixa"
+      "re": "poucos (caixas|atendentes|operadores)|caixas? fechad(os|o)s? (e|,)|caixas fechados\\.|operadores de caixa|postos de trabalho dos caixas|s[óo] (um|dois|1|2) caixas?\\b(?! de auto)|caixas? (funcionando|atendendo|abertos?)\\b|caixas? (r[áa]pid[oa] )?(sempre )?fechad|n[ãa]o (tem|ter) caixa|falta de caixa|falta de pessoas nos caixas|caixa fechar|apenas (um|1) caixa|quantidade de caixas|colocar caixas|caixas? para atender"
     },
     {
       "net": "Caixa e fila",
       "id": "self",
       "nome": "Autoatendimento",
-      "re": "self.?checkout|autoatendimento|caixa r[áa]pido"
+      "re": "self.?check|auto.?atendimento"
     },
     {
       "net": "Preço",
       "id": "preco_bom",
       "nome": "Preço competitivo",
-      "re": "pre[çc]os? (bom|bons|[óo]timo|justo|baixo)|barat|econom|em conta"
+      "re": "pre[çc]os? ([ée] |s[ãa]o |muito )?(bons?|bom|boa|boas|[óo]tim[oa]s?|competitivos?|compat[íi]veis|justos?|razo[áa]ve|acess[íi]ve|baixos?)|bons? pre[çc]os?|valores? (s[ãa]o )?(bons|baixos)|\\bbarat[oa]s?\\b|barat[íi]ssim|econom|em conta|custo.?benef|rivaliz"
     },
     {
       "net": "Preço",
       "id": "preco_alto",
       "nome": "Preço alto",
-      "re": "\\bcaros?\\b|car[ií]ssim|pre[çc]os? (alto|salgado)"
+      "re": "\\bcaros?\\b|car[íi]ssim|caro demais|pre[çc]os? (mais |um pouco |muito )?(alto|salgad)|mais car[oa]\\b|n[ãa]o s[ãa]o os melhores|acima da m[ée]dia|falso barato"
     },
     {
       "net": "Preço",
       "id": "promocao",
       "nome": "Promoção e ofertas",
-      "re": "promo|ofertas?|desconto|encarte"
+      "re": "\\bpromo|ofertas?\\b|desconto|encarte"
     },
     {
       "net": "Preço",
       "id": "divergencia",
       "nome": "Preço da gôndola diferente no caixa",
-      "re": "etiqueta|diverg|pre[çc]o (errado|diferente)|cobr(ou|aram|ado|ada) (a mais|diferente|errado)|placa"
+      "re": "etiqueta|diverg|pre[çc]os? (errado|diferente)|valor (maior|diferente)|outro valor|n[ãa]o tinha pre[çc]o|sem pre[çc]o|dobro do valor|um dia t[áa]|cobr(ou|aram|ado|ada) (a mais|diferente|errado)|anunciado|g[ôo]ndola[^.]{0,60}caixa|diferentes do valor|sempre apresentando diferen"
     },
     {
       "net": "Preço",
@@ -105,37 +105,37 @@
       "net": "Sortimento",
       "id": "variedade",
       "nome": "Variedade e marcas",
-      "re": "variedad|op[çc][õo]es|\\bmix\\b|marcas"
+      "re": "variedad|op[çc][õo]es|\\bmix\\b|marcas|diversidade|tem de tudo|tem tudo|completo|sortimento"
     },
     {
       "net": "Sortimento",
       "id": "falta",
       "nome": "Falta de produto",
-      "re": "\\bfalta\\b|faltando|n[ãa]o (tem|tinha|encontr|achei)|estoque|acab(ou|ado)|prateleiras? vazia|g[ôo]ndolas? vazia"
+      "re": "falta de (produto|mercadoria|reposi|estoque)|faltando|n[ãa]o (tinha|encontr\\w*|acho|achei) (o )?(produto|item|itens|o que)|n[ãa]o havia chegado|estoque\\b|reposi[çc]|prateleiras? vazia|g[ôo]ndolas? vazia|\\bvazio\\b|ruptura|nunca sabe se vai ter|retirar itens do pedido|nunca tem\\b|abastecid"
     },
     {
       "net": "Perecíveis",
       "id": "hortifruti",
       "nome": "Hortifrúti",
-      "re": "hortifr|frutas?\\b|verduras?\\b|legumes?\\b|sacol[ãa]o"
+      "re": "hortifr|ortif|frutas?\\b|verduras?\\b|legumes?\\b|sacol[ãa]o|tomatinho"
     },
     {
       "net": "Perecíveis",
       "id": "acougue",
       "nome": "Açougue, padaria e frios",
-      "re": "a[çc]ougue|carnes?\\b|padaria|\\bp[ãa]es?\\b|frios|peixaria|rotisseria"
+      "re": "a[çc]ougue|carnes?\\b|padaria|\\bp[ãa]es?\\b|p[ãa]o sovado|frios|peixaria|rotisseria|f[íi]gado|lactic|latic"
     },
     {
       "net": "Perecíveis",
       "id": "validade",
       "nome": "Validade e qualidade",
-      "re": "vencid|validade|estragad|podre|mofad|azed"
+      "re": "vencid|validade|estragad|podre|mofad|azed|qualidade (dos produtos|ótima|boa)|qualidade ótim|produtos [óo]timos"
     },
     {
       "net": "Pagamento",
       "id": "cartao_loja",
       "nome": "Cartão da loja",
-      "re": "passa[ií]|cart[ãa]o (da loja|pr[óo]prio|do assa|do costa|carrefour|do carrefour|atacad)|carrefour pass"
+      "re": "passa[ií]|cart[ãa]o (da loja|pr[óo]prio|do assa|do costa|carrefour|do carrefour|atacad)|carrefour pass|fatura|cobran[çc]a indevida"
     },
     {
       "net": "Pagamento",
@@ -153,13 +153,13 @@
       "net": "Loja e estrutura",
       "id": "limpeza",
       "nome": "Limpeza e organização",
-      "re": "organiz|bagun|limp[ae]|suj[ao]|arrumad|cheiro|fedor|moscas?\\b"
+      "re": "organizad|desorganiz|bem organiz|bagun|\\blimp[ao]s?\\b|limpeza (d|do|da)\\b|falta de cuidado com a limpeza|sujeira|\\bsuj[ao]s?\\b|arrumad|desarrum|cheiro|fedor|odor|moscas?\\b|baratinhas|higiene"
     },
     {
       "net": "Loja e estrutura",
       "id": "conforto",
       "nome": "Conforto e lotação",
-      "re": "ar condicionado|quente|calor|climatiz|corredor|apertad|lotad|banheiro"
+      "re": "ar.?condicionado|refrigera[çc][ãa]o do ambiente|climatiz|calor\\b|ru[íi]do|\\bsom (ambiente|alto)|barulh|bebedouro|banheiro|corredor|local apertado|muito cheio|bem cheio|ambiente (é )?(bom|agrad)|\\bamplo\\b|espa[çc]os[ao]|muito espa[çc]o|fica(r)? cheio"
     },
     {
       "net": "Loja e estrutura",
@@ -177,13 +177,19 @@
       "net": "Acesso",
       "id": "localizacao",
       "nome": "Localização e horário",
-      "re": "localiza[çc]|f[áa]cil acesso|hor[áa]rio|24 ?h|abre cedo|fecha cedo"
+      "re": "localiza[çc]|bem localizad|f[áa]cil acesso|perto de casa|\\b24 ?h|hor[áa]rio de funcionamento|abre (cedo|tarde)|fecha (cedo|tarde)"
     },
     {
       "net": "Avaliação geral",
       "id": "elogio",
       "nome": "Elogio geral",
-      "re": "^\\W*(muito )?(bom|boa|[óo]tim[oa]|excelente|top|show|maravilh)|recomendo|gostei|adoro"
+      "re": "recomendo|super indico|\\bindico\\b|^\\W*(muito bom|[óo]tim[oa]|excelente)\\W*(supermercado|mercado|lugar|loja|atacad\\w*)?\\W*(\\.\\.+\\w.*)?$|lugar (excelente|[óo]timo)|[óo]timo lugar|melhor (atacad|lugar|hipermercado)|sempre compro|^\\W*amo\\b|maravilhoso|gostei|\\bamei\\b|\\bamo\\b|tudo de bom|excelente|escelente|vale a pena|muito bom\\b"
+    },
+    {
+      "net": "Canais digitais",
+      "id": "entrega",
+      "nome": "Entrega, retirada e compra online",
+      "re": "entreg|delivery|frete|retirad|pedido|aplicativo|\\bapp\\b|compra online|ifood|site\\b"
     }
   ],
   "destaque_tema": "divergencia",
