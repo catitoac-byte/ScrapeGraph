@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Rival Pulse · Cassi.ai</title>
-<link rel="icon" href="/cassi-wordmark.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 :root{
@@ -93,7 +93,7 @@ var box = document.getElementById("idiomas");
 ["pt","es","en"].forEach(function(x){
   var b = document.createElement("button");
   b.type = "button"; b.textContent = x.toUpperCase(); b.setAttribute("aria-pressed", String(x === l));
-  b.onclick = function(){ try { localStorage.setItem("vitrine-idioma", x); } catch (e) {} var u = new URL(location.href); u.searchParams.delete("lang"); location.replace(u.toString()); };
+  b.onclick = function(){ try { localStorage.setItem("vitrine-idioma", x); } catch (e) {} var u = new URL(location.href); ["lang","sem"].forEach(function(k){ u.searchParams.delete(k); }); u.hash = ""; location.replace(u.toString()); };
   box.appendChild(b);
 });
 var q = new URLSearchParams(location.search);

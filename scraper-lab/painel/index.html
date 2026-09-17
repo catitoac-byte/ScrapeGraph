@@ -366,7 +366,7 @@ const L3 = (pt,es,en) => LANG==="es"?es:LANG==="en"?en:pt;
 const LOCALE = L3("pt-BR","es-ES","en-US");
 document.documentElement.lang = L3("pt-BR","es","en");
 const TR = k => (D.i18n&&D.i18n[LANG]&&D.i18n[LANG][k]) || D[k];
-const trocarIdioma = l => { try{ localStorage.setItem("vitrine-idioma",l); }catch(e){} const u=new URL(location.href); u.searchParams.delete("lang"); location.replace(u.toString()); };
+const trocarIdioma = l => { try{ localStorage.setItem("vitrine-idioma",l); }catch(e){} const u=new URL(location.href); u.searchParams.delete("lang"); u.hash=""; location.replace(u.toString()); };
 
 // Cores reais das marcas (verticais/<id>.json), com os tons do tema escuro.
 // Texto sobre a cor da marca: branco ou tinta escura, pelo contraste.

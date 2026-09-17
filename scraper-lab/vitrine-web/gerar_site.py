@@ -78,7 +78,7 @@ def painel(cfg: dict) -> str:
         "<!doctype html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
         "<meta name=\"robots\" content=\"noindex, nofollow\">\n"
-        "<link rel=\"icon\" href=\"/cassi-wordmark.svg\">\n"
+        "<link rel=\"icon\" type=\"image/png\" sizes=\"64x64\" href=\"/favicon.png\">\n"
         f"{TEMA_INICIAL}{head}\n{resto[:corte]}\n</head>\n<body>\n{resto[corte:]}\n</body>\n</html>\n"
     )
     return doc.replace('<script src="data.js"></script>', f'<script src="/v/{cfg["id"]}/data.js"></script>')
@@ -143,7 +143,7 @@ def montar() -> None:
     if (destino / "api").exists():
         shutil.rmtree(destino / "api")
     shutil.copytree(MODELO / "api", destino / "api")
-    for logo in ("cassi-wordmark.svg", "cassi-wordmark-reversed.svg"):
+    for logo in ("cassi-wordmark.svg", "cassi-wordmark-reversed.svg", "favicon.png"):
         shutil.copy(MODELO / "template" / logo, pub / logo)
     (pub / "index.html").write_text(pagina(verticais), encoding="utf-8")
     (pub / "painel" / "index.html").write_text(escolha(verticais), encoding="utf-8")
