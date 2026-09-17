@@ -41,7 +41,7 @@ a{color:inherit}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:22px}
 .brand{display:flex;align-items:center;gap:14px;text-decoration:none}
 .brand img{height:26px;width:auto;display:block}
-.brand .prod{font-family:var(--f-display);font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);padding-left:14px;border-left:1px solid var(--line-2)}
+.brand .prod{text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);padding-left:14px;border-left:1px solid var(--line-2)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 22px;border-radius:.75rem;border:0;background:var(--blue);color:#F8FAFC;font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:transform .2s, box-shadow .2s}
 .btn:hover{transform:scale(1.03);box-shadow:0 0 40px rgba(37,99,235,.35)}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
@@ -155,10 +155,10 @@ footer img{height:20px;display:block}
 <body>
 <div class="wrap">
   <header class="nav">
-    <a class="brand" href="/" aria-label="Vitrine, um produto Cassi.ai">
-      <img src="/cassi-wordmark.svg" alt="Cassi.ai" width="78" height="26">
-      <span class="prod">Vitrine</span>
-    </a>
+    <div class="brand">
+      <a href="https://cassiai.com" target="_blank" rel="noopener" title="Cassi.ai: abrir o site"><img src="/cassi-wordmark.svg" alt="Cassi.ai" width="78" height="26"></a>
+      <a class="prod" href="/">Vitrine</a>
+    </div>
     <a class="btn ghost" href="#entrar">Entrar</a>
   </header>
 

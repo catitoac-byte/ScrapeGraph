@@ -64,6 +64,10 @@ button{cursor:pointer}
 .app{display:grid;grid-template-columns:88px minmax(0,1fr);min-height:100vh}
 .rail{position:sticky;top:0;height:100vh;padding:18px 0;display:flex;flex-direction:column;align-items:center;gap:6px}
 .rail-in{background:var(--rail);border-radius:28px;margin:0 14px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
+.mark-logo{display:block;width:60px;padding:6px 4px 14px;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,.1);text-align:center;border-radius:10px}
+.mark-logo img{width:100%;height:auto;display:block}
+.mark-logo:hover img{opacity:.85}
+.mark-txt{color:#fff;font:600 13px var(--f-display)}
 .mark{width:40px;height:40px;border-radius:14px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 19px var(--f-display);margin-bottom:12px}
 .tabs{display:flex;flex-direction:column;gap:6px;align-items:center}
 .tabs button{position:relative;width:48px;height:48px;border:0;border-radius:16px;background:transparent;color:var(--rail-ink);display:grid;place-items:center;transition:background .2s,color .2s}
@@ -78,7 +82,7 @@ button{cursor:pointer}
   .app{grid-template-columns:minmax(0,1fr)}
   .rail{position:fixed;inset:auto 0 0 0;height:auto;padding:10px 12px;z-index:50}
   .rail-in{flex-direction:row;height:auto;margin:0;padding:6px;border-radius:22px;justify-content:space-around;box-shadow:0 0 0 1px var(--line-2),var(--lift)}
-  .mark{display:none}
+  .mark,.mark-logo{display:none}
   .tabs{flex-direction:row;gap:2px;width:100%;justify-content:space-around}
   .tabs .tip-nav{display:none}
   .wrap{padding-inline:16px;padding-block:14px 110px}
@@ -1216,7 +1220,9 @@ function App(){
   return html`<div class="app">
     <aside class="rail" aria-label="Navegação">
       <div class="rail-in">
-        <div class="mark" aria-hidden="true">V</div>
+        <a class="mark-logo" href="https://cassiai.com" target="_blank" rel="noopener" title="Cassi.ai: abrir o site">
+          <img src="/cassi-wordmark-reversed.svg" alt="Cassi.ai" onError=${e=>{e.currentTarget.replaceWith(Object.assign(document.createElement("span"),{textContent:"cassi.ai",className:"mark-txt"}));}}/>
+        </a>
         <nav class="tabs" role="tablist" aria-label="Seções" aria-orientation="vertical">
           ${TABS.map(t=>html`<button key=${t.id} role="tab" id=${"tab-"+t.id} aria-selected=${tab===t.id} aria-label=${t.nome} onClick=${()=>setTab(t.id)}>
             ${ICONES[t.id]}${t.beta?html`<span class="dot-beta" aria-hidden="true"></span>`:null}<span class="tip-nav">${t.nome}${t.beta?" · beta":""}</span></button>`)}

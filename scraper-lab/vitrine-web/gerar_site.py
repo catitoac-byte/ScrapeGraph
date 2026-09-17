@@ -31,9 +31,9 @@ BARRA = """<style>
 .vg-bar .sair{border:0;border-radius:999px;padding:8px 12px;background:var(--chip,#EEF0F3);color:inherit;font:inherit;cursor:pointer}
 .vg-bar .sair:hover{background:var(--accent,#D9F26A);color:var(--accent-ink,#0F1318)}
 :root[data-theme="dark"] .vg-bar .marca img{filter:invert(1) brightness(1.6)}
-@media (max-width:760px){.vg-bar{top:8px;right:8px}.vg-bar .marca{display:none}}
+@media (max-width:760px){.vg-bar{top:8px;right:8px}}
 </style>
-<div class="vg-bar"><a class="marca" href="/" title="Vitrine · Cassi.ai"><img src="/cassi-wordmark.svg" alt="Cassi.ai"></a>
+<div class="vg-bar"><a class="marca" href="https://cassiai.com" target="_blank" rel="noopener" title="Cassi.ai: abrir o site"><img src="/cassi-wordmark.svg" alt="Cassi.ai"></a>
 <span class="l"><button type="button" class="sair" id="vg-tema" aria-pressed="false">Tema escuro</button><a class="sair" href="/api/sair">Sair</a></span></div>
 <script>
 (function(){
@@ -145,7 +145,8 @@ def main(vertical: str) -> None:
     for nome in ("middleware.js", "package.json", "package-lock.json", "vercel.json"):
         shutil.copy(MODELO / nome, destino / nome)
     shutil.copytree(MODELO / "api", destino / "api", dirs_exist_ok=True)
-    shutil.copy(MODELO / "template" / "cassi-wordmark.svg", pub / "cassi-wordmark.svg")
+    for logo in ("cassi-wordmark.svg", "cassi-wordmark-reversed.svg"):
+        shutil.copy(MODELO / "template" / logo, pub / logo)
     (pub / "index.html").write_text(pagina(cfg, dados), encoding="utf-8")
     if dados:
         (pub / "painel" / "index.html").write_text(painel(cfg), encoding="utf-8")
