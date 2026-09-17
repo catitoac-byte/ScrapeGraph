@@ -1,6 +1,9 @@
-// Pedido de contato da pagina de entrada.
-// Envia por e-mail via Resend quando RESEND_API_KEY existe.
-// CONTATO_PARA (padrao cassiano@cassiai.com) e CONTATO_DE (remetente verificado no Resend).
+import nodemailer from "nodemailer";
+
+// Pedido de contato da pagina de entrada, enviado para CONTATO_PARA (padrao cassiano@cassiai.com).
+// 1) Gmail: GMAIL_USUARIO + GMAIL_SENHA_APP (senha de app do Google, nunca a senha da conta)
+// 2) Resend: RESEND_API_KEY (+ CONTATO_DE com remetente verificado)
+// Sem nenhum dos dois, responde 503 e a pagina abre o e-mail do visitante.
 const LIMITE = { nome: 120, empresa: 160, email: 160, telefone: 40, vertical: 80, idioma: 5 };
 
 // Troca caracteres de controle por espaco (a mensagem mantem quebras de linha)
@@ -28,9 +31,8 @@ export async function POST(req) {
   c.mensagem = limpa(d.mensagem, 2000, true);
   if (!c.nome || !c.vertical || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c.email)) return json({ ok: false, erro: "campos" }, 422);
 
-  const chave = process.env.RESEND_API_KEY;
-  if (!chave) return json({ ok: false, erro: "sem_envio" }, 503);
-
+  const para = process.env.CONTATO_PARA || "cassiano@cassiai.com";
+  const assunto = `Rival Pulse · pedido de acesso · ${c.vertical} · ${c.nome}`;
   const texto = [
     `Nome: ${c.nome}`,
     `Empresa: ${c.empresa || "-"}`,
@@ -41,14 +43,31 @@ export async function POST(req) {
     "",
     c.mensagem || "(sem mensagem)",
   ].join("\n");
+
+  if (process.env.GMAIL_USUARIO && process.env.GMAIL_SENHA_APP) {
+    try {
+      const t = nodemailer.createTransport({
+        host: "smtp.gmail.com", port: 465, secure: true,
+        auth: { user: process.env.GMAIL_USUARIO, pass: process.env.GMAIL_SENHA_APP.replace(/\s+/g, "") },
+      });
+      await t.sendMail({ from: `"Rival Pulse" <${process.env.GMAIL_USUARIO}>`, to: para, replyTo: c.email, subject: assunto, text: texto });
+      return json({ ok: true });
+    } catch (e) {
+      console.error("contato gmail:", e && e.code);
+      return json({ ok: false, erro: "envio" }, 502);
+    }
+  }
+
+  const chave = process.env.RESEND_API_KEY;
+  if (!chave) return json({ ok: false, erro: "sem_envio" }, 503);
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${chave}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       from: process.env.CONTATO_DE || "Rival Pulse <onboarding@resend.dev>",
-      to: [process.env.CONTATO_PARA || "cassiano@cassiai.com"],
+      to: [para],
       reply_to: c.email,
-      subject: `Rival Pulse · pedido de acesso · ${c.vertical} · ${c.nome}`,
+      subject: assunto,
       text: texto,
     }),
   }).catch(() => null);
