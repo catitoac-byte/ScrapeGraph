@@ -61,28 +61,44 @@ button{cursor:pointer}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* estrutura: trilho + area principal */
-.app{display:grid;grid-template-columns:88px minmax(0,1fr);min-height:100vh}
-.rail{position:sticky;top:0;height:100vh;padding:18px 0;display:flex;flex-direction:column;align-items:center;gap:6px}
-.rail-in{background:var(--rail);border-radius:28px;margin:0 14px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
-.mark-logo{display:block;width:60px;padding:6px 4px 14px;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,.1);text-align:center;border-radius:10px}
+.app{display:grid;grid-template-columns:88px minmax(0,1fr);min-height:100vh;transition:grid-template-columns .45s cubic-bezier(.6,0,.2,1)}
+.app.aberto{grid-template-columns:236px minmax(0,1fr)}
+.rail{position:sticky;top:0;height:100vh;padding:18px 0;display:flex;flex-direction:column;align-items:stretch;gap:6px;z-index:45}
+.rail-in{background:var(--rail);border-radius:28px;margin:0 14px;padding:14px 8px;display:flex;flex-direction:column;align-items:stretch;gap:6px;height:100%}
+.mark-logo{display:block;width:60px;align-self:center;transition:width .45s cubic-bezier(.6,0,.2,1);padding:6px 4px 14px;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,.1);text-align:center;border-radius:10px}
 .mark-logo img{width:100%;height:auto;display:block}
 .mark-logo:hover img{opacity:.85}
 .mark-txt{color:#fff;font:600 13px var(--f-display)}
 .mark{width:40px;height:40px;border-radius:14px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 19px var(--f-display);margin-bottom:12px}
-.tabs{display:flex;flex-direction:column;gap:6px;align-items:center}
-.tabs button{position:relative;width:48px;height:48px;border:0;border-radius:16px;background:transparent;color:var(--rail-ink);display:grid;place-items:center;transition:background .2s,color .2s}
+.tabs{position:relative;display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.tabs button{position:relative;z-index:1;width:100%;height:48px;border:0;border-radius:16px;background:transparent;color:var(--rail-ink);display:flex;align-items:center;gap:12px;padding:0 13px;transition:background .2s,color .25s}
+.tabs .rot{display:none;white-space:nowrap;font-weight:600;font-size:13.5px}
+.aberto .tabs .rot{display:inline;animation:rot-in .35s .12s both}
+@keyframes rot-in{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.aberto .tabs .tip-nav,.aberto .tabs .dot-beta{display:none}
+.aberto .mark-logo{width:96px}
+.recolher{margin-top:auto;height:40px;border:0;border-radius:14px;background:rgba(255,255,255,.06);color:var(--rail-ink);display:flex;align-items:center;justify-content:center;gap:8px;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden}
+.recolher:hover{background:rgba(255,255,255,.12);color:#fff}
+.recolher svg{width:18px;height:18px;flex:none;transition:transform .45s cubic-bezier(.6,0,.2,1)}
+.aberto .recolher svg{transform:rotate(180deg)}
+.recolher .rot{display:none}
+.aberto .recolher .rot{display:inline}
 .tabs button:hover{background:rgba(255,255,255,.08);color:#fff}
 .tabs button[aria-selected="true"]{background:var(--rail-on);color:var(--rail-on-ink)}
-.tabs button svg{width:21px;height:21px}
+.tabs:has(>.gota.pronta) button[aria-selected="true"]{background:transparent}
+.tabs button svg{width:21px;height:21px;flex:none}
 .tabs .tip-nav{position:absolute;left:58px;top:50%;transform:translateY(-50%);background:var(--tip);color:var(--tip-ink);font-size:12px;font-weight:600;padding:5px 9px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:40}
 .tabs button:hover .tip-nav,.tabs button:focus-visible .tip-nav{opacity:1}
-.tabs .dot-beta{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.tabs .dot-beta{position:absolute;top:8px;left:32px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
 .wrap{padding-inline:28px 32px;padding-block:22px 64px;min-width:0;max-width:1440px}
 @media (max-width:760px){
   .app{grid-template-columns:minmax(0,1fr)}
   .rail{position:fixed;inset:auto 0 0 0;height:auto;padding:10px 12px;z-index:50}
   .rail-in{flex-direction:row;height:auto;margin:0;padding:6px;border-radius:22px;justify-content:space-around;box-shadow:0 0 0 1px var(--line-2),var(--lift)}
-  .mark,.mark-logo{display:none}
+  .mark,.mark-logo,.recolher{display:none}
+  .app.aberto{grid-template-columns:minmax(0,1fr)}
+  .tabs .rot{display:none}
+  .tabs button{width:48px;justify-content:center;padding:0}
   .tabs{flex-direction:row;gap:2px;width:100%;justify-content:space-around}
   .tabs .tip-nav{display:none}
   .wrap{padding-inline:16px;padding-block:14px 110px}
@@ -125,7 +141,17 @@ select,input[type=search]{height:36px;border-radius:999px;border:0;background:va
 select{padding-right:30px}
 input[type=search]{width:210px}
 select:hover,input[type=search]:hover{background:var(--sunk)}
-.seg{display:flex;flex-wrap:wrap;background:var(--chip);border-radius:999px;padding:3px;gap:2px}
+.seg{position:relative;display:flex;flex-wrap:wrap;background:var(--chip);border-radius:999px;padding:3px;gap:2px;--gota-cor:var(--chip-on)}
+.seg button{position:relative;z-index:1}
+.seg:has(>.gota.pronta) button[aria-pressed="true"]{background:transparent}
+/* gota: indicador que escorre de um item para outro */
+.gota{position:absolute;inset:0;pointer-events:none;z-index:0;filter:url(#gota);opacity:0;transition:opacity .2s}
+.gota.on{opacity:1}
+.gota i{position:absolute;left:0;top:0;width:var(--w,0);height:var(--h,0);border-radius:var(--r,999px);background:var(--gota-cor,var(--accent));transform:translate(var(--x,0),var(--y,0))}
+.gota.pronta .ga{transition:transform .5s cubic-bezier(.5,1.45,.45,1),width .35s,height .35s}
+.gota.pronta .gb{transition:transform .8s cubic-bezier(.25,.9,.3,1),width .5s,height .5s}
+.gota .gb{border-radius:999px;width:calc(var(--w,0) * .62);height:calc(var(--h,0) * .62);margin:calc(var(--h,0) * .19) 0 0 calc(var(--w,0) * .19)}
+.tabs{--gota-cor:var(--rail-on)}.tabs .gota i{--r:16px}
 .seg button{border:0;background:transparent;border-radius:999px;height:30px;padding:0 11px;font-weight:600;font-size:12.5px;color:var(--ink-2);transition:background .15s,color .15s}
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink)}
@@ -284,7 +310,9 @@ textarea{width:100%;min-height:96px;resize:vertical;border-radius:var(--r-sm);bo
 .secao-t{font-size:24px;font-weight:400;letter-spacing:-.02em}
 .top-dir{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
 @media (max-width:760px){.top-dir{align-items:flex-start}}
-.idioma{display:inline-flex;background:var(--panel);border-radius:999px;padding:3px;box-shadow:var(--shadow)}
+.idioma{position:relative;display:inline-flex;background:var(--panel);border-radius:999px;padding:3px;box-shadow:var(--shadow);--gota-cor:var(--accent)}
+.idioma button{position:relative;z-index:1}
+.idioma:has(>.gota.pronta) button[aria-pressed="true"]{background:transparent}
 .idioma button{border:0;background:transparent;border-radius:999px;height:28px;min-width:38px;font-weight:700;font-size:12px;color:var(--ink-3)}
 .idioma button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .nivel{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end;margin-top:0}
@@ -500,8 +528,34 @@ function Stars({v,size=13}){
   }
   return html`<span class="starrow" role="img" aria-label=${fmt(v,1)+L3(" de 5 estrelas"," de 5 estrellas"," out of 5 stars")}>${out}</span>`;
 }
+const Gota = () => html`<span class="gota" aria-hidden="true"><i class="ga"></i><i class="gb"></i></span>`;
+// Posiciona cada gota no item ativo do seu grupo. Observa a troca de aria-pressed/aria-selected
+// em qualquer lugar da pagina, entao funciona tambem nos grupos que re-renderizam sozinhos.
+const GOTA_VISTOS = new WeakSet();
+let gotaRO = null;
+function posicionarGotas(){
+  document.querySelectorAll(".gota").forEach(g=>{
+    const c = g.parentElement;
+    if(gotaRO && !GOTA_VISTOS.has(c)){ GOTA_VISTOS.add(c); gotaRO.observe(c); }
+    const a = c.querySelector(':scope > [aria-selected="true"], :scope > [aria-pressed="true"]');
+    if(!a){ g.classList.remove("on"); return; }
+    g.style.setProperty("--x", a.offsetLeft+"px"); g.style.setProperty("--y", a.offsetTop+"px");
+    g.style.setProperty("--w", a.offsetWidth+"px"); g.style.setProperty("--h", a.offsetHeight+"px");
+    g.classList.add("on");
+    if(!g.classList.contains("pronta")) setTimeout(()=>g.classList.add("pronta"),60);
+  });
+}
+(function(){
+  let pend = 0;
+  const agenda = () => { if(pend) return; pend = setTimeout(()=>{ pend = 0; posicionarGotas(); },0); };
+  new MutationObserver(agenda).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["aria-pressed","aria-selected","class"]});
+  gotaRO = new ResizeObserver(agenda); gotaRO.observe(document.body);
+  addEventListener("resize",agenda);
+  document.addEventListener("transitionend",e=>{ if(e.target.classList&&e.target.classList.contains("app")) agenda(); });
+})();
+
 function Seg({value,onChange,options,label,className=""}){
-  return html`<div class=${"seg "+className} role="group" aria-label=${label}>
+  return html`<div class=${"seg "+className} role="group" aria-label=${label}><${Gota}/>
     ${options.map(o=>html`<button key=${o.id} type="button" aria-pressed=${value===o.id} onClick=${()=>onChange(o.id)}>${o.nome}</button>`)}
   </div>`;
 }
@@ -523,6 +577,13 @@ function LineChart({series,height=260,yMax=100,xs=HORAS,fmtX=hh,fmtV=v=>pct(v),t
   const [w,setW] = useState(700);
   const [hover,setHover] = useState(null);
   useEffect(()=>{ const ro=new ResizeObserver(e=>setW(e[0].contentRect.width)); ro.observe(ref.current); return ()=>ro.disconnect(); },[]);
+  if(xs===HORAS){
+    // So as horas em que alguma marca tem dado, com uma hora de folga de cada lado
+    const com = HORAS.filter(h=>series.some(s=>s.pts[h]!=null));
+    if(com.length>1){ const a=Math.max(HORAS[0],com[0]-1), b=Math.min(HORAS[HORAS.length-1],com[com.length-1]+1); xs=HORAS.filter(h=>h>=a&&h<=b); every=xs.length>12?2:1; }
+    const vals = series.flatMap(s=>Object.values(s.pts).filter(v=>v!=null));
+    if(vals.length && yMin===0){ yMin = Math.max(0, Math.floor((Math.min(...vals)-8)/25)*25); ticks = ticks.filter(t=>t>=yMin); }
+  }
   const m = {l:34,r:14,t:12,b:26};
   const iw = Math.max(10,w-m.l-m.r), ih = height-m.t-m.b;
   const x = v => m.l + (xs.indexOf(v))/(xs.length-1)*iw;
@@ -542,8 +603,9 @@ function LineChart({series,height=260,yMax=100,xs=HORAS,fmtX=hh,fmtV=v=>pct(v),t
     <svg width=${w} height=${height} role="img" aria-label=${label}>
       ${ticks.map(t=>html`<g key=${t}><line x1=${m.l} x2=${m.l+iw} y1=${y(t)} y2=${y(t)} stroke="var(--line)" stroke-dasharray=${t?"2 4":""}/><text x=${m.l-8} y=${y(t)+3.5} text-anchor="end">${fmt(t,t%1?1:0)}</text></g>`)}
       ${xs.filter((h,i)=>i%every===0).map((h,i,a)=>html`<text key=${h} x=${x(h)} y=${height-8} text-anchor=${a.length>1&&i===a.length-1&&every===1?"end":a.length>1&&i===0&&every===1?"start":"middle"}>${fmtX(h)}</text>`)}
+      ${hover!=null && html`<rect x=${x(hover)-iw/(xs.length-1)/2} y=${m.t} width=${iw/(xs.length-1)} height=${ih} rx="8" fill="var(--sunk)" opacity="0.7"/>`}
       ${series.map(s=>html`<g key=${s.m}>
-        ${(()=>{ const hs=xs.filter(h=>s.pts[h]!=null); if(hs.length<2) return null;
+        ${(()=>{ if(xs.length<30) return null; const hs=xs.filter(h=>s.pts[h]!=null); if(hs.length<2) return null;
           const contiguo = hs.every((h,i)=>i===0||xs.indexOf(h)-xs.indexOf(hs[i-1])===1);
           if(!contiguo) return null;
           const area = path(s.pts)+`L${x(hs[hs.length-1]).toFixed(1)},${y(yMin).toFixed(1)}L${x(hs[0]).toFixed(1)},${y(yMin).toFixed(1)}Z`;
@@ -551,13 +613,13 @@ function LineChart({series,height=260,yMax=100,xs=HORAS,fmtX=hh,fmtV=v=>pct(v),t
           return html`<g><defs><linearGradient id=${gid} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stop-color=${cor(s.m)} stop-opacity="0.08"/><stop offset="1" stop-color=${cor(s.m)} stop-opacity="0"/>
             </linearGradient></defs><path d=${area} fill=${`url(#${gid})`}/></g>`; })()}
+        <path d=${path(s.pts)} fill="none" stroke="var(--panel)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
         <path d=${path(s.pts)} fill="none" stroke=${cor(s.m)} stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
         ${(()=>{const r=resumoCurva(s.pts); if(!r) return null; return html`<g>
           <circle cx=${x(r.pico)} cy=${y(r.valor)} r="5" fill=${cor(s.m)} stroke="var(--panel)" stroke-width="2"/>
         </g>`})()}
       </g>`)}
       ${hover!=null && html`<g>
-        <line x1=${x(hover)} x2=${x(hover)} y1=${m.t} y2=${m.t+ih} stroke="var(--ink-3)" stroke-width="1"/>
         ${series.map(s=>s.pts[hover]!=null && html`<circle key=${s.m} cx=${x(hover)} cy=${y(s.pts[hover])} r="4.5" fill=${cor(s.m)} stroke="var(--panel)" stroke-width="2"/>`)}
       </g>`}
     </svg>
@@ -1220,6 +1282,8 @@ const ICONES = {
 
 function App(){
   const [tab,setTab] = useState("panorama");
+  const [aberto,setAberto] = useState(()=>{ try{ return localStorage.getItem("vitrine-trilho")==="1"; }catch(e){ return false; } });
+  const alternarTrilho = () => setAberto(v=>{ try{ localStorage.setItem("vitrine-trilho", v?"0":"1"); }catch(e){} return !v; });
   const [dia,setDia] = useState("todos");
   const [shop,setShop] = useState("todos");
   const [estrelas,setEstrelas] = useState([]);
@@ -1271,16 +1335,23 @@ function App(){
 
   const TABS = [{id:"panorama",nome:L3("Visão geral","Visión general","Overview")},{id:"movimento",nome:L3("Movimento","Afluencia","Busyness")},{id:"reputacao",nome:L3("Reputação","Reputación","Reputation")},{id:"voz",nome:L3("Voz do cliente","Voz del cliente","Voice of the customer")},{id:"lojas",nome:L3("Lojas","Tiendas","Stores")},{id:"ia",nome:L3("Analista IA","Analista IA","AI analyst"),beta:true}];
 
-  return html`<div class="app">
+  return html`<div class=${"app"+(aberto?" aberto":"")}>
+    <svg width="0" height="0" style=${{position:"absolute"}} aria-hidden="true"><defs><filter id="gota" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
+      <feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="g"/>
+      <feComposite in="SourceGraphic" in2="g" operator="atop"/></filter></defs></svg>
     <aside class="rail" aria-label=${L3("Navegação","Navegación","Navigation")}>
       <div class="rail-in">
         <a class="mark-logo" href="https://cassiai.com" target="_blank" rel="noopener" title=${L3("Cassi.ai: abrir o site","Cassi.ai: abrir el sitio","Cassi.ai: open the website")}>
           <img src="/cassi-wordmark-reversed.svg" alt="Cassi.ai" onError=${e=>{e.currentTarget.replaceWith(Object.assign(document.createElement("span"),{textContent:"cassi.ai",className:"mark-txt"}));}}/>
         </a>
-        <nav class="tabs" role="tablist" aria-label=${L3("Seções","Secciones","Sections")} aria-orientation="vertical">
+        <nav class="tabs" role="tablist" aria-label=${L3("Seções","Secciones","Sections")} aria-orientation="vertical"><${Gota}/>
           ${TABS.map(t=>html`<button key=${t.id} role="tab" id=${"tab-"+t.id} aria-selected=${tab===t.id} aria-label=${t.nome} onClick=${()=>setTab(t.id)}>
-            ${ICONES[t.id]}${t.beta?html`<span class="dot-beta" aria-hidden="true"></span>`:null}<span class="tip-nav">${t.nome}${t.beta?" · beta":""}</span></button>`)}
+            ${ICONES[t.id]}${t.beta?html`<span class="dot-beta" aria-hidden="true"></span>`:null}<span class="rot">${t.nome}${t.beta?html` <span class="beta">Beta</span>`:null}</span><span class="tip-nav">${t.nome}${t.beta?" · beta":""}</span></button>`)}
         </nav>
+        <button type="button" class="recolher" aria-expanded=${aberto} onClick=${alternarTrilho} title=${aberto?L3("Recolher menu","Contraer menú","Collapse menu"):L3("Expandir menu","Expandir menú","Expand menu")}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 7l5 5-5 5"/></svg>
+          <span class="rot">${L3("Recolher menu","Contraer menú","Collapse menu")}</span></button>
       </div>
     </aside>
   <div class="wrap">
@@ -1291,7 +1362,7 @@ function App(){
         <div class="meta"><span>${L3("Coleta","Recolección","Collected")} <b>${new Date(D.coleta+"T12:00").toLocaleDateString(LOCALE,{day:"2-digit",month:"short",year:"numeric"})}</b></span><span><b>${LOJAS.length}</b> ${L3("lojas","tiendas","stores")}</span><span><b>${fmt(REVS.length)}</b> ${L3("avaliações lidas","reseñas leídas","reviews read")}</span><span>${L3("Fonte","Fuente","Source")}: Google Maps</span></div>
       </div>
       <div class="top-dir">
-        <div class="idioma" role="group" aria-label=${L3("Idioma","Idioma","Language")}>${["pt","es","en"].map(l=>html`<button key=${l} type="button" aria-pressed=${LANG===l} onClick=${()=>{ if(l!==LANG) trocarIdioma(l); }}>${l.toUpperCase()}</button>`)}</div>
+        <div class="idioma" role="group" aria-label=${L3("Idioma","Idioma","Language")}><${Gota}/>${["pt","es","en"].map(l=>html`<button key=${l} type="button" aria-pressed=${LANG===l} onClick=${()=>{ if(l!==LANG) trocarIdioma(l); }}>${l.toUpperCase()}</button>`)}</div>
         <div class="legend" aria-label=${L3("Legenda das marcas","Leyenda de marcas","Brand legend")}>${MARCAS.map(m=>html`<span class="lg" key=${m}><${Swatch} m=${m}/>${m}</span>`)}</div>
       </div>
     </header>
