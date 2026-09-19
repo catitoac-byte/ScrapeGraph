@@ -434,6 +434,9 @@ const LOJAS = D.lojas;
 const FAIXA_AMOSTRA = (()=>{ const c={}; D.avaliacoes.forEach(r=>{c[r.s]=(c[r.s]||0)+1;}); const v=Object.values(c); if(!v.length) return ""; const a=Math.min(...v), b=Math.max(...v); return a===b?L3(`de ${b} avaliações por loja`,`de ${b} reseñas por tienda`,`of ${b} reviews per store`):L3(`de ${a} a ${b} avaliações por loja`,`de ${a} a ${b} reseñas por tienda`,`of ${a} to ${b} reviews per store`); })();
 const ORDEM_TXT = D.ordenacao === "mais recentes" ? L3("as mais recentes de cada loja","las más recientes de cada tienda","the most recent for each store") : L3("na ordem de relevância do Google","en el orden de relevancia de Google","in Google's relevance order");
 const LOJA = Object.fromEntries(LOJAS.map(l=>[l.id,l]));
+// Imobiliaria nao tem grafico de movimento no Google: sem pico, some a aba
+// Movimento, o filtro de dia e as colunas e blocos de pico.
+const TEM_PICO = LOJAS.some(l=>Object.values(l.pico||{}).some(h=>Object.values(h||{}).some(v=>v>0)));
 const REVS = D.avaliacoes.map((r,i)=>({...r, i, marca:LOJA[r.s].marca, temas:r.t?TODOS.filter(t=>t.re.test(r.t)).map(t=>t.id):[]}));
 const SHOPPINGS = [...new Set(LOJAS.map(l=>l.shopping))].sort((a,b)=>{
   const na = new Set(LOJAS.filter(l=>l.shopping===a).map(l=>l.marca)).size;
@@ -830,7 +833,7 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
         <dl class="kv">
           <div><dt>${d.rep.amostra?L3("Avaliações no filtro","Reseñas en el filtro","Reviews in filter"):L3("Avaliações no Google","Reseñas en Google","Google reviews")}</dt><dd class="num">${fmt(d.rep.tot)}</dd></div>
           <div><dt>${L3("Notas 1 e 2","Notas 1 y 2","1 and 2 stars")}</dt><dd class="num">${pct(d.rep.neg,1)}${rkNeg.best===d.m?html`<span class="rank r-best">${L3("menor","menor","lowest")}</span>`:rkNeg.worst===d.m?html`<span class="rank r-worst">${L3("maior","mayor","highest")}</span>`:null}</dd></div>
-          <div><dt>${dia==="todos"?L3("Pico da semana","Pico de la semana","Weekly peak"):L3("Pico do dia","Pico del día","Daily peak")}</dt><dd>${d.pk?html`<span>${DIA_CURTO[d.pk.dia]} ${hh(d.pk.pico)}</span> <span class="num note">${pct(d.pk.valor)}</span>`:"–"}</dd></div>
+          ${TEM_PICO?html`<div><dt>${dia==="todos"?L3("Pico da semana","Pico de la semana","Weekly peak"):L3("Pico do dia","Pico del día","Daily peak")}</dt><dd>${d.pk?html`<span>${DIA_CURTO[d.pk.dia]} ${hh(d.pk.pico)}</span> <span class="num note">${pct(d.pk.valor)}</span>`:"–"}</dd></div>`:null}
           <div><dt>${L3("Responde a loja","Respuesta de la tienda","Store replies")}</dt><dd class="num">${pct(d.st.resp)}${rkResp.best===d.m?html`<span class="rank r-best">${L3("mais","más","most")}</span>`:null}</dd></div>
           <div><dt>${d.rep.amostra?L3("Total no Google","Total en Google","Google total"):L3("Avaliações lidas","Reseñas leídas","Reviews read")}</dt><dd class="num">${fmt(d.rep.amostra?reputacao(lojas,d.m).tot:d.st.n)}</dd></div>
           <div><dt>${L3("Tema mais crítico","Tema más crítico","Most critical topic")}</dt><dd>${d.piorTema?html`<button class="linkbtn" style=${{padding:0,fontSize:14,fontWeight:600,color:"var(--ink)"}} onClick=${()=>{setTema(d.piorTema.t.id);setTab("voz");}}>${d.piorTema.t.nome}</button> <span class="num note">${pct(d.piorTema.neg)} ${L3("neg.","neg.","neg.")}</span>`:"–"}</dd></div>
@@ -838,12 +841,12 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
       </article>`)}
     </div>
 
-    <div class="grid g21">
-      <section class="panel">
+    <div class=${TEM_PICO?"grid g21":"grid"}>
+      ${TEM_PICO?html`<section class="panel">
         <div class="ph"><div><h2>${dia==="todos"?L3("Movimento médio da semana","Afluencia media de la semana","Average weekly busyness"):L3("Movimento de ","Afluencia del ","Busyness on ")+DIA_LONGO[dia]}</h2><p class="sub">${L3("Percentual de lotação por hora no Google, média das lojas abertas. O ponto marca o pico de cada marca.","Porcentaje de afluencia por hora en Google, promedio de las tiendas abiertas. El punto marca el pico de cada marca.","Google's hourly busyness percentage, averaged across open stores. The dot marks each brand's peak.")}</p></div>
           <button class="linkbtn" onClick=${()=>setTab("movimento")}>${L3("Abrir movimento","Ver afluencia","Open busyness")}</button></div>
         <${LineChart} series=${MARCAS.map(m=>({m,pts:curvaMarca(lojas,m,dia).curva}))}/>
-      </section>
+      </section>`:null}
       <section class="panel">
         <div class="ph"><div><h2>${L3("Leitura rápida","Lectura rápida","Quick read")}</h2><p class="sub">${L3("Gerada a partir do recorte atual.","Generada a partir de la selección actual.","Generated from the current selection.")}</p></div></div>
         <ul class="insights">
@@ -1169,15 +1172,15 @@ function Lojas({lojas,revs,amostra,dia}){
     <section class="panel" style=${{marginTop:16}}>
       <div class="ph"><div><h2>${L3("Todas as lojas","Todas las tiendas","All stores")}</h2><p class="sub">${L3("Clique no cabeçalho para ordenar. Horário de hoje","Haga clic en el encabezado para ordenar. Horario de hoy","Click a header to sort. Today's hours")} (${DIA_LONGO[hoje]}). ${amostra?L3("Nota, avaliações, notas 1 e 2 e resposta saem da amostra filtrada.","Nota, reseñas, notas 1 y 2 y respuesta salen de la muestra filtrada.","Rating, reviews, 1 and 2 stars and replies come from the filtered sample."):L3("Nota, avaliações e notas 1 e 2 são o total do Google; resposta vem das avaliações lidas.","Nota, reseñas y notas 1 y 2 son el total de Google; la respuesta sale de las reseñas leídas.","Rating, reviews and 1 and 2 stars are Google's totals; replies come from the collected reviews.")}</p></div></div>
       <div class="tablewrap"><table>
-        <thead><tr><${H_} k="shopping">${L3("Local","Lugar","Location")}</${H_}><${H_} k="marca">${L3("Marca","Marca","Brand")}</${H_}><${H_} k="nota" r>${L3("Nota","Nota","Rating")}</${H_}><${H_} k="total" r>${L3("Avaliações","Reseñas","Reviews")}</${H_}><${H_} k="neg" r>${L3("Notas 1 e 2","Notas 1 y 2","1 and 2 stars")}</${H_}><${H_} k="pico" r>${dia==="todos"?L3("Pico máx.","Pico máx.","Max peak"):L3("Pico ","Pico ","Peak ")+DIA_CURTO[dia]}</${H_}><th>${L3("Quando","Cuándo","When")}</th><th>${L3("Hoje","Hoy","Today")}</th><${H_} k="resp" r>${L3("Responde","Responde","Replies")}</${H_}><th>${L3("Telefone","Teléfono","Phone")}</th><th>${L3("Endereço","Dirección","Address")}</th></tr></thead>
+        <thead><tr><${H_} k="shopping">${L3("Local","Lugar","Location")}</${H_}><${H_} k="marca">${L3("Marca","Marca","Brand")}</${H_}><${H_} k="nota" r>${L3("Nota","Nota","Rating")}</${H_}><${H_} k="total" r>${L3("Avaliações","Reseñas","Reviews")}</${H_}><${H_} k="neg" r>${L3("Notas 1 e 2","Notas 1 y 2","1 and 2 stars")}</${H_}>${TEM_PICO?html`<${H_} k="pico" r>${dia==="todos"?L3("Pico máx.","Pico máx.","Max peak"):L3("Pico ","Pico ","Peak ")+DIA_CURTO[dia]}</${H_}><th>${L3("Quando","Cuándo","When")}</th>`:null}<th>${L3("Hoje","Hoy","Today")}</th><${H_} k="resp" r>${L3("Responde","Responde","Replies")}</${H_}><th>${L3("Telefone","Teléfono","Phone")}</th><th>${L3("Endereço","Dirección","Address")}</th></tr></thead>
         <tbody>${rows.map(r=>html`<tr key=${r.id}>
           <td style=${{fontWeight:600}}>${localNome(r.shopping)}${r.pendente?html` <span class="badge" style=${{background:"var(--warn-bg)",color:"var(--warn)"}} title=${r.pendente}>${L3("coleta parcial","recolección parcial","partial collection")}</span>`:null}</td>
           <td><${Brand} m=${r.marca}/></td>
           <td class="r num"><b>${fmt(r.notaF,2)}</b></td>
           <td class="r num">${fmt(r.totalF)}</td>
           <td class="r num" style=${{color:r.neg>=9?"var(--crit)":null}}>${pct(r.neg,1)}</td>
-          <td class="r num">${r.best?pct(r.best.v):"–"}</td>
-          <td class="note" style=${{whiteSpace:"nowrap"}}>${r.best?`${DIA_CURTO[r.best.d]} ${hh(r.best.h)}`:""}</td>
+          ${TEM_PICO?html`<td class="r num">${r.best?pct(r.best.v):"–"}</td>
+          <td class="note" style=${{whiteSpace:"nowrap"}}>${r.best?`${DIA_CURTO[r.best.d]} ${hh(r.best.h)}`:""}</td>`:null}
           <td class="num" style=${{whiteSpace:"nowrap"}}>${r.hoje}</td>
           <td class="r num">${pct(r.resp)}</td>
           <td class="num" style=${{whiteSpace:"nowrap"}}>${r.telefone}</td>
@@ -1392,7 +1395,7 @@ function App(){
     return partes.join(" ");
   })();
 
-  const TABS = [{id:"panorama",nome:L3("Visão geral","Visión general","Overview")},{id:"movimento",nome:L3("Movimento","Afluencia","Busyness")},{id:"reputacao",nome:L3("Reputação","Reputación","Reputation")},{id:"voz",nome:L3("Voz do cliente","Voz del cliente","Voice of the customer")},{id:"lojas",nome:L3("Lojas","Tiendas","Stores")},{id:"ia",nome:L3("Analista IA","Analista IA","AI analyst"),beta:true}];
+  const TABS = [{id:"panorama",nome:L3("Visão geral","Visión general","Overview")},{id:"movimento",nome:L3("Movimento","Afluencia","Busyness")},{id:"reputacao",nome:L3("Reputação","Reputación","Reputation")},{id:"voz",nome:L3("Voz do cliente","Voz del cliente","Voice of the customer")},{id:"lojas",nome:L3("Lojas","Tiendas","Stores")},{id:"ia",nome:L3("Analista IA","Analista IA","AI analyst"),beta:true}].filter(t=>TEM_PICO||t.id!=="movimento");
 
   return html`<div class=${"app"+(aberto?" aberto":"")}>
     <svg width="0" height="0" style=${{position:"absolute"}} aria-hidden="true"><defs><filter id="gota" x="-30%" y="-30%" width="160%" height="160%">
@@ -1434,11 +1437,11 @@ function App(){
 
     <div class="filters">
       <div class="frow">
-        <label class="chipsel" for="f-dia"><span>${L3("Dia","Día","Day")}</span>
+        ${TEM_PICO?html`<label class="chipsel" for="f-dia"><span>${L3("Dia","Día","Day")}</span>
           <select id="f-dia" value=${dia} onChange=${e=>setDia(e.target.value)}>
             <option value="todos">${L3("Semana inteira","Toda la semana","Whole week")}</option>
             ${DIAS.map(d=>html`<option key=${d} value=${d}>${cap(DIA_LONGO[d])}</option>`)}
-          </select></label>
+          </select></label>`:null}
         <label class="chipsel" for="f-shop"><span>${L3("Locais","Lugares","Locations")}</span>
           <select id="f-shop" value=${shop} onChange=${e=>setShop(e.target.value)}>
             <option value="todos">${L3("Todos","Todos","All")}</option>

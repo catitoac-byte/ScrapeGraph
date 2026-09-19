@@ -10,6 +10,12 @@ ainda na fila e o favorito "Salvar dados da loja" (salvar_loja.js).
 "importar" le os arquivos vitrine_*.json da pasta indicada, junta a aba de
 visao geral com a de avaliacoes de cada loja, confere o municipio pelo CEP e
 grava a loja como coletada no mesmo estado usado por coleta_em_lotes.py.
+
+Duas chaves opcionais da vertical mudam o roteiro:
+- "pico": false tira o passo de rolar ate os horarios de pico (imobiliaria
+  nao tem o grafico no Google).
+- "avaliacoes_desde": "AAAA-MM-DD" diz ate onde rolar as avaliacoes e corta
+  na importacao as que tem data estimada anterior.
 """
 
 import html
@@ -43,15 +49,35 @@ def favorito() -> str:
 def pagina(vertical: str) -> Path:
     cfg = json.loads((VERTICAIS / f"{vertical}.json").read_text(encoding="utf-8"))
     estado = carregar(SAIDA / f"{cfg['saida']}_estado.json")
-    # Rodizio entre as marcas, para as primeiras lojas ja permitirem comparar
+    # Rodizio entre as marcas, para as primeiras lojas ja permitirem comparar.
+    # Dentro da marca, primeiro as fichas com mais avaliacoes no mapa do mercado.
+    total = {}
+    mercado = SAIDA / f"{cfg['saida']}_mercado.json"
+    if mercado.exists():
+        total = {n["place_id"]: n["total_avaliacoes"] or 0
+                 for n in json.loads(mercado.read_text(encoding="utf-8"))}
     por_marca: dict[str, list[dict]] = {}
-    for item in estado["fila"]:
+    for item in sorted(estado["fila"], key=lambda i: -total.get(_chave(i["url"]), -1)):
         por_marca.setdefault(item["marca"], []).append(item)
     ordem = []
     while any(por_marca.values()):
         for m in [x["nome"] for x in cfg["marcas"]]:
             if por_marca.get(m):
                 ordem.append(por_marca[m].pop(0))
+    if cfg.get("pico", True):
+        passo_visao = ("Na aba <b>Visão geral</b>, role até aparecer <b>Horários de pico</b> e clique no favorito. "
+                       "Sai um arquivo terminado em <code>visao-geral</code>.")
+    else:
+        passo_visao = ("Na aba <b>Visão geral</b>, clique no favorito assim que a ficha carregar (este setor não tem "
+                       "horários de pico no Google). Sai um arquivo terminado em <code>visao-geral</code>.")
+    desde = cfg.get("avaliacoes_desde")
+    if desde:
+        d0 = datetime.fromisoformat(desde)
+        meses = (datetime.now() - d0).days // 30 + 1
+        passo_rolar = (f"role a lista até aparecer a primeira avaliação <b>“há {meses} meses”</b> ou mais antiga. "
+                       f"O painel usa só as de {d0.strftime('%m/%Y')} para cá, então não precisa ir além.")
+    else:
+        passo_rolar = "role a lista até onde quiser (umas 100 a 300 avaliações)."
     linhas = []
     for i, item in enumerate(ordem, 1):
         nome = unquote(item["url"].split("/place/")[1].split("/")[0]).replace("+", " ")
@@ -96,8 +122,8 @@ document.getElementById("copiar").onclick = function () {{
 <h2>2. Para cada loja da lista</h2>
 <ol class="passo">
 <li>Abra o link da loja. Se o Google mostrar “visualização limitada”, entre na sua conta Google neste navegador.</li>
-<li>Na aba <b>Visão geral</b>, role até aparecer <b>Horários de pico</b> e clique no favorito. Sai um arquivo terminado em <code>visao-geral</code>.</li>
-<li>Vá para a aba <b>Avaliações</b>, escolha <b>Ordenar › Mais recentes</b> e role a lista até onde quiser (umas 100 a 300 avaliações). Clique no favorito de novo. Sai um arquivo terminado em <code>avaliacoes</code>.</li>
+<li>{passo_visao}</li>
+<li>Vá para a aba <b>Avaliações</b>, escolha <b>Ordenar › Mais recentes</b> e {passo_rolar} Clique no favorito de novo. Sai um arquivo terminado em <code>avaliacoes</code>.</li>
 <li>Marque a loja abaixo e siga para a próxima, no seu ritmo.</li>
 </ol>
 <p class="aviso">Os arquivos vão para a pasta de Downloads. Quando terminar (ou a cada algumas lojas), me avise que eu importo e publico o painel.</p>
@@ -116,7 +142,7 @@ document.getElementById("copiar").onclick = function () {{
 
 
 
-def montar_loja(marca: str, arquivos: list[dict]) -> Loja:
+def montar_loja(marca: str, arquivos: list[dict], desde: str = "") -> Loja:
     # O arquivo da aba de avaliacoes tambem traz estrelas, mas nunca o pico:
     # a ficha e o arquivo com mais dias de pico preenchidos
     ficha = max(arquivos, key=lambda a: sum(1 for v in a["horarios_pico"].values() if v))
@@ -145,12 +171,15 @@ def montar_loja(marca: str, arquivos: list[dict]) -> Loja:
             if r["id"] in vistos:
                 continue
             vistos.add(r["id"])
+            data_est = _estimar_data(r["data_relativa"], agora)
+            if desde and data_est and data_est < desde:
+                continue
             est = _num(r["estrelas_txt"])
             loja.avaliacoes.append(Avaliacao(
                 id=r["id"], autor="", autor_info="Local Guide" if r["local_guide"] else "",
                 estrelas=int(est) if est is not None else None,
                 data_relativa=_limpar(r["data_relativa"]),
-                data_estimada=_estimar_data(r["data_relativa"], agora),
+                data_estimada=data_est,
                 texto=_limpar(r["texto"]), curtidas=None,
                 resposta_proprietario=_limpar(r["resposta_proprietario"]), fotos=r["fotos"],
             ))
@@ -180,7 +209,7 @@ def importar(vertical: str, pasta: Path, publicar_site: bool) -> None:
         if not marca:
             print(f"   ignorado (loja fora da lista): {arquivos[0]['nome']}")
             continue
-        loja = montar_loja(marca, arquivos)
+        loja = montar_loja(marca, arquivos, cfg.get("avaliacoes_desde", ""))
         estado["fila"] = [i for i in estado["fila"] if _chave(i["url"]) != chave]
         if loja.cidade and _sem_acento(loja.cidade) != alvo:
             estado["fora"].append({"marca": marca, "url": loja.url, "cidade": loja.cidade})

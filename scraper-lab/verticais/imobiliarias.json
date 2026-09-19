@@ -1,13 +1,328 @@
 {
   "id": "imobiliarias",
-  "titulo": "Imobiliárias de Goiânia, unidade a unidade",
+  "titulo": "My Broker, URBS e Investt, unidade a unidade",
   "nome_pagina": "Rival Pulse Imobiliárias Goiânia",
   "rotulo_piloto": "imobiliárias",
   "cidade": "Goiânia, GO",
   "saida": "imobiliarias_goiania",
+  "pico": false,
+  "avaliacoes_desde": "2026-01-01",
+  "periodo_mensal_desde": "2026-01",
+  "marcas": [
+    {
+      "nome": "My Broker",
+      "padrao": "^my broker\\b",
+      "consultas": [
+        "My Broker {cidade}",
+        "My Broker imobiliária {cidade}",
+        "My Broker aluguel {cidade}"
+      ],
+      "artigo": "a"
+    },
+    {
+      "nome": "URBS",
+      "padrao": "^urbs\\b",
+      "consultas": [
+        "URBS imobiliária {cidade}",
+        "URBS {cidade}",
+        "URBS Aluga {cidade}"
+      ],
+      "artigo": "a"
+    },
+    {
+      "nome": "Investt",
+      "padrao": "\\binvestt\\b",
+      "consultas": [
+        "Investt Imóveis {cidade}",
+        "Investt {cidade}"
+      ],
+      "artigo": "a"
+    }
+  ],
+  "temas": [
+    {
+      "net": "Atendimento",
+      "id": "cordialidade",
+      "nome": "Cordialidade",
+      "re": "atendiment|atendente|atencios|educad|grosse|\\bgross[ao]s?\\b|simp[aá]tic|cordial|respeit|descaso|despreparad|prestativ|gentil|paci[êe]ncia|humaniza",
+      "nome_es": "Cordialidad",
+      "nome_en": "Courtesy"
+    },
+    {
+      "net": "Atendimento",
+      "id": "corretor",
+      "nome": "Corretor e consultor",
+      "re": "corretor|consultor|vendedor|vendedora",
+      "nome_es": "Corredor y asesor",
+      "nome_en": "Broker and agent"
+    },
+    {
+      "net": "Atendimento",
+      "id": "retorno",
+      "nome": "Retorno e comunicação",
+      "re": "retorn|n[ãa]o (me )?respond|sem resposta|v[áa]cuo|ningu[ée]m (atende|responde)|n[ãa]o atende[m]? (o )?telefone|whats|mensage|liga[çc][ãa]o|liguei|comunica[çc]",
+      "nome_es": "Respuesta y comunicación",
+      "nome_en": "Follow-up and communication"
+    },
+    {
+      "net": "Atendimento",
+      "id": "agilidade",
+      "nome": "Agilidade e prazo",
+      "re": "[áa]gil|agilidade|r[áa]pid|eficien|demor|lentid|\\blent[oa]s?\\b|prazo",
+      "nome_es": "Agilidad y plazos",
+      "nome_en": "Speed and deadlines"
+    },
+    {
+      "net": "Locação",
+      "id": "vistoria",
+      "nome": "Vistoria",
+      "re": "vistori|laudo",
+      "nome_es": "Inspección",
+      "nome_en": "Move-in and move-out inspection"
+    },
+    {
+      "net": "Locação",
+      "id": "caucao",
+      "nome": "Caução e garantias",
+      "re": "cau[çc][ãa]o|dep[óo]sito|reembols|seguro.?fian|fiador|t[íi]tulo de capitaliza|garantia locat",
+      "nome_es": "Depósito y garantías",
+      "nome_en": "Deposit and guarantees"
+    },
+    {
+      "net": "Locação",
+      "id": "manutencao",
+      "nome": "Manutenção e reparos",
+      "re": "manuten[çc]|reparo|consert|vazament|infiltra|\\bmofo|goteira|chuveiro|encanament|defeito|problema(s)? no (im[óo]vel|apartamento|ap\\b|casa)",
+      "nome_es": "Mantenimiento y reparaciones",
+      "nome_en": "Maintenance and repairs"
+    },
+    {
+      "net": "Locação",
+      "id": "contrato",
+      "nome": "Contrato e burocracia",
+      "re": "contrato|burocra|document|assinatura|cadastr|an[áa]lise de cr[ée]dito|aprova[çc]|papelada|renova[çc]",
+      "nome_es": "Contrato y trámites",
+      "nome_en": "Contract and paperwork"
+    },
+    {
+      "net": "Locação",
+      "id": "cobranca",
+      "nome": "Taxas e cobranças",
+      "re": "\\btaxas?\\b|boleto|cobran|cobrad|cobrar|\\bmulta|juros|iptu|reajust|\\bigp",
+      "nome_es": "Tasas y cobros",
+      "nome_en": "Fees and charges"
+    },
+    {
+      "net": "Locação",
+      "id": "rescisao",
+      "nome": "Saída e rescisão",
+      "re": "rescis|rescind|desocupa|entrega (das|da) chave|devol(vi|ver|u[çc][ãa]o d[ao]s?) (as |a )?chave|entrega do im[óo]vel|sa[íi]da do im[óo]vel",
+      "nome_es": "Salida y rescisión",
+      "nome_en": "Move-out and termination"
+    },
+    {
+      "net": "Proprietário",
+      "id": "repasse",
+      "nome": "Repasse e gestão para o dono",
+      "re": "repasse|repassa|propriet[áa]ri|administra[çc][ãa]o do (meu )?im[óo]vel|meu im[óo]vel|inquilin",
+      "nome_es": "Pagos y gestión para el dueño",
+      "nome_en": "Owner payouts and management"
+    },
+    {
+      "net": "Compra e venda",
+      "id": "negociacao",
+      "nome": "Compra, venda e negociação",
+      "re": "\\bcompr(a|ei|ar|amos)\\b|\\bvend(a|er|i|eu|emos)\\b|negocia|financiament|escritura|comiss[ãa]o|proposta",
+      "nome_es": "Compra, venta y negociación",
+      "nome_en": "Buying, selling and negotiation"
+    },
+    {
+      "net": "Compra e venda",
+      "id": "imoveis",
+      "nome": "Imóveis e visitas",
+      "re": "visita|op[çc][õo]es|im[óo]veis dispon|an[úu]ncio|\\bfotos? d|portf[óo]lio|carteira de im",
+      "nome_es": "Inmuebles y visitas",
+      "nome_en": "Listings and viewings"
+    },
+    {
+      "net": "Confiança",
+      "id": "confianca",
+      "nome": "Confiança e transparência",
+      "re": "confian|confi[áa]ve|transpar|honest|seriedade|\\bs[ée]ri[ao]s?\\b|[ée]tic[ao]|golpe|fraude|engan|mentir|mentira|desonest|procon|justi[çc]a|advogad",
+      "nome_es": "Confianza y transparencia",
+      "nome_en": "Trust and transparency"
+    },
+    {
+      "net": "Escritório",
+      "id": "estrutura",
+      "nome": "Escritório e estrutura",
+      "re": "ambiente|estrutura|escrit[óo]rio|estacionamento|\\bcaf[ée]\\b|localiza[çc][ãa]o|aconcheg|organiza",
+      "nome_es": "Oficina e instalaciones",
+      "nome_en": "Office and facilities"
+    }
+  ],
+  "busca_exemplo": "vistoria, caução, repasse…",
+  "site": {
+    "temas_lista": "atendimento, retorno, vistoria, caução, manutenção, taxas, repasse ao proprietário e confiança",
+    "pergunta_local": "Onde a concorrência atende melhor que a minha imobiliária?",
+    "comparacao_local": "A matriz por local põe frente a frente unidades da mesma região.",
+    "usuario": "imobiliarias"
+  },
+  "cores": {
+    "light": [
+      "#1D1EB7",
+      "#262626",
+      "#C94449"
+    ],
+    "dark": [
+      "#6667F0",
+      "#D4D4D4",
+      "#E05A5F"
+    ],
+    "origem": "My Broker azul do logo (#1D1EB7); URBS preto do logo, cinza claro no tema escuro; Investt vermelho do pino do logo (#C94449), clareados no escuro para leitura"
+  },
+  "vocabulario": {
+    "pt": [
+      [
+        "Inteligência de varejo",
+        "Inteligência de mercado"
+      ],
+      [
+        "\\bLoja de rua\\b",
+        "Unidade de rua"
+      ],
+      [
+        "\\blojas\\b",
+        "unidades"
+      ],
+      [
+        "\\bLojas\\b",
+        "Unidades"
+      ],
+      [
+        "\\bLOJAS\\b",
+        "UNIDADES"
+      ],
+      [
+        "\\bloja\\b",
+        "unidade"
+      ],
+      [
+        "\\bLoja\\b",
+        "Unidade"
+      ],
+      [
+        "\\bLOJA\\b",
+        "UNIDADE"
+      ]
+    ],
+    "es": [
+      [
+        "Inteligencia de retail",
+        "Inteligencia de mercado"
+      ],
+      [
+        "\\bTienda de calle\\b",
+        "Oficina de calle"
+      ],
+      [
+        "\\btiendas\\b",
+        "oficinas"
+      ],
+      [
+        "\\bTiendas\\b",
+        "Oficinas"
+      ],
+      [
+        "\\btienda\\b",
+        "oficina"
+      ],
+      [
+        "\\bTienda\\b",
+        "Oficina"
+      ]
+    ],
+    "en": [
+      [
+        "Retail intelligence",
+        "Market intelligence"
+      ],
+      [
+        "\\bStreet store\\b",
+        "Street office"
+      ],
+      [
+        "\\bstores\\b",
+        "offices"
+      ],
+      [
+        "\\bStores\\b",
+        "Offices"
+      ],
+      [
+        "\\bstore\\b",
+        "office"
+      ],
+      [
+        "\\bStore\\b",
+        "Office"
+      ],
+      [
+        "\\bshoppers\\b",
+        "clients"
+      ]
+    ]
+  },
+  "i18n": {
+    "es": {
+      "titulo": "My Broker, URBS e Investt, oficina por oficina",
+      "rotulo_piloto": "inmobiliarias",
+      "temas_lista": "atención, respuesta, inspección, depósito, mantenimiento, tasas, pagos al dueño y confianza",
+      "pergunta_local": "¿Dónde la competencia atiende mejor que mi inmobiliaria?",
+      "comparacao_local": "La matriz por lugar enfrenta oficinas de la misma zona."
+    },
+    "en": {
+      "titulo": "My Broker, URBS and Investt, office by office",
+      "rotulo_piloto": "real estate agencies",
+      "temas_lista": "service, follow-up, inspections, deposits, maintenance, fees, owner payouts and trust",
+      "pergunta_local": "Where does the competition serve clients better than my agency?",
+      "comparacao_local": "The location matrix puts offices in the same area side by side."
+    }
+  },
+  "nets_i18n": {
+    "Atendimento": {
+      "es": "Atención",
+      "en": "Service"
+    },
+    "Locação": {
+      "es": "Alquiler",
+      "en": "Rentals"
+    },
+    "Proprietário": {
+      "es": "Propietario",
+      "en": "Owners"
+    },
+    "Compra e venda": {
+      "es": "Compra y venta",
+      "en": "Sales"
+    },
+    "Confiança": {
+      "es": "Confianza",
+      "en": "Trust"
+    },
+    "Escritório": {
+      "es": "Oficina",
+      "en": "Office"
+    }
+  },
   "mercado": {
     "categorias": "^(?!.*(construtor|incorporador|cartorio|loteamento|desenvolvedora|condominio|seguro|advogad)).*(imobiliari|corretor|corretora|aluguel de imoveis|administradora de imoveis|agencia de imoveis|agente imobili|consultor imobili)",
-    "caixa": [-16.80, -16.45, -49.45, -49.08],
+    "caixa": [
+      -16.8,
+      -16.45,
+      -49.45,
+      -49.08
+    ],
     "consultas": [
       "imobiliária {cidade}",
       "imobiliárias em {cidade}",
@@ -52,6 +367,5 @@
       "imobiliária Setor Perim, {cidade}",
       "imobiliária Vila Maria José, {cidade}"
     ]
-  },
-  "marcas": []
+  }
 }
