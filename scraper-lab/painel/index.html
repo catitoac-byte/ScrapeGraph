@@ -362,7 +362,11 @@ const D = window.PAINEL;
 // Idioma: ?lang= na URL, depois a escolha salva, depois o navegador. Trocar recarrega a pagina.
 const LANG = (()=>{ let v=null; try{ v=new URLSearchParams(location.search).get("lang")||localStorage.getItem("vitrine-idioma"); }catch(e){}
   v = v || (navigator.language||"pt").slice(0,2).toLowerCase(); return ["pt","es","en"].includes(v)?v:"pt"; })();
-const L3 = (pt,es,en) => LANG==="es"?es:LANG==="en"?en:pt;
+// Vocabulario da vertical: troca palavras dos textos fixos (ex.: "loja" vira
+// "unidade" em imobiliarias). Sem "vocabulario" no JSON da vertical, nada muda.
+const VOC = ((D.vocabulario||{})[LANG]||[]).map(([de,para])=>[new RegExp(de,"g"),para]);
+const L3 = (pt,es,en) => { const s = LANG==="es"?es:LANG==="en"?en:pt;
+  return VOC.length && typeof s==="string" ? VOC.reduce((t,[re,p])=>t.replace(re,p), s) : s; };
 const LOCALE = L3("pt-BR","es-ES","en-US");
 document.documentElement.lang = L3("pt-BR","es","en");
 const TR = k => (D.i18n&&D.i18n[LANG]&&D.i18n[LANG][k]) || D[k];

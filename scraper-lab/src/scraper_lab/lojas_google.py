@@ -192,6 +192,104 @@ def _chave(url: str) -> str:
     return m.group(1) if m else url.split("?")[0]
 
 
+# ---------------------------------------------------------------- mercado
+
+@dataclass
+class Negocio:
+    """Um resultado da busca do Maps, lido do cartao da lista, sem abrir a ficha."""
+    nome: str
+    url: str
+    place_id: str
+    categoria: str = ""
+    nota: float | None = None
+    total_avaliacoes: int | None = None
+    endereco: str = ""
+    telefone: str = ""
+    latitude: float | None = None
+    longitude: float | None = None
+    consultas: list[str] = field(default_factory=list)
+
+
+_NOTA_CARTAO = re.compile(r"^(\d,\d)\(([\d.]+)\)$")
+_FONE = re.compile(r"\(\d{2}\) ?\d{4,5}-\d{4}")
+
+
+def _ler_cartao(nome: str, href: str, texto: str) -> Negocio:
+    n = Negocio(nome=_limpar(nome), url=href.split("?")[0], place_id=_chave(href))
+    m = re.search(r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", unquote(href))
+    if m:
+        n.latitude, n.longitude = float(m.group(1)), float(m.group(2))
+    linhas = [_limpar(l) for l in texto.splitlines() if _limpar(l)]
+    for l in linhas:
+        mn = _NOTA_CARTAO.match(l)
+        if mn and n.nota is None:
+            n.nota = _num(mn.group(1))
+            n.total_avaliacoes = int(mn.group(2).replace(".", ""))
+        elif "·" in l and not n.categoria and not re.match(r"(Aberto|Fechado|Abre|Fecha)", l):
+            partes = [p.strip() for p in l.split("·")]
+            n.categoria = partes[0]
+            n.endereco = partes[-1] if len(partes) > 1 else ""
+        fone = _FONE.search(l)
+        if fone and not n.telefone:
+            n.telefone = fone.group()
+    if n.nota is None and re.search(r"Nenhuma avaliação", texto):
+        n.total_avaliacoes = 0
+    return n
+
+
+def _colher(page: Page, q: str, achados: dict[str, Negocio]) -> int:
+    """Le os cartoes visiveis agora e junta em `achados`. Devolve quantos sao novos."""
+    cartoes = page.evaluate("""()=>[...document.querySelectorAll('div[role="feed"] a.hfpxzc')].map(a=>{
+      const c=a.closest('div.Nv2PK')||a.parentElement;
+      return [a.getAttribute('aria-label')||'', a.href, c?c.innerText:'']})""")
+    novos = 0
+    for nome, href, texto in cartoes:
+        neg = _ler_cartao(nome, href, texto)
+        atual = achados.get(neg.place_id)
+        if atual is None:
+            achados[neg.place_id] = atual = neg
+            novos += 1
+        else:
+            # Cartao esvaziado numa leitura anterior: completa o que faltou
+            for campo in ("nota", "total_avaliacoes", "categoria", "endereco", "telefone"):
+                if getattr(atual, campo) in (None, "") and getattr(neg, campo) not in (None, ""):
+                    setattr(atual, campo, getattr(neg, campo))
+        if q not in atual.consultas:
+            atual.consultas.append(q)
+    return novos
+
+
+def mapear(page: Page, consultas: list[str], delay: float = 3.0,
+           achados: dict[str, Negocio] | None = None) -> dict[str, Negocio]:
+    """Varre a lista de resultados de cada consulta e guarda todos os negocios,
+    sem filtro de marca. Serve para ver o mercado antes de escolher quem entra
+    no painel. So le os cartoes: nao abre fichas nem avaliacoes.
+
+    O Maps esvazia os cartoes do topo quando a lista rola ate o fim (sobra o
+    nome, some a nota). Por isso os cartoes sao lidos a cada rolagem."""
+    achados = {} if achados is None else achados
+    for q in consultas:
+        _ir(page, f"https://www.google.com/maps/search/{quote_plus(q)}?hl=pt-BR&gl=br")
+        feed = page.locator('div[role="feed"]')
+        if not feed.count():
+            print(f"      '{q}': sem lista")
+            continue
+        novos = _colher(page, q, achados)
+        parado, anterior = 0, -1
+        while parado < 3:
+            feed.evaluate("e=>e.scrollBy(0,5000)")
+            page.wait_for_timeout(1500)
+            novos += _colher(page, q, achados)
+            n = page.locator("a.hfpxzc").count()
+            parado = parado + 1 if n == anterior else 0
+            anterior = n
+            if page.get_by_text(re.compile("chegou ao final da lista")).count():
+                break
+        print(f"      '{q}': {anterior} na lista, {novos} novos, {len(achados)} no total")
+        time.sleep(delay + random.random() * 2)
+    return achados
+
+
 # ---------------------------------------------------------------- ficha
 
 def _rolar_painel(page: Page, vezes: int = 12) -> None:
