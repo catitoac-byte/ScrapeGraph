@@ -190,12 +190,29 @@ def montar_loja(marca: str, arquivos: list[dict], desde: str = "") -> Loja:
     return loja
 
 
+_CAMPOS_SO_AUTOMATICOS = (
+    "atributos", "destaques", "postagem_proprietario", "total_fotos", "foto_capa", "categoria")
+
+
+def completar_com_cache(loja: Loja, extra: dict | None) -> None:
+    """Preenche com o que so a coleta automatica (coletar_visao.py) tem: o
+    favorito Salvar dados da loja nao abre a aba Sobre nem le destaques ou
+    fotos. So entra no que a coleta assistida deixou vazio."""
+    if not extra:
+        return
+    for campo in _CAMPOS_SO_AUTOMATICOS:
+        if not getattr(loja, campo) and extra.get(campo):
+            setattr(loja, campo, extra[campo])
+
+
 def importar(vertical: str, pasta: Path, publicar_site: bool) -> None:
     cfg = json.loads((VERTICAIS / f"{vertical}.json").read_text(encoding="utf-8"))
     caminho = SAIDA / f"{cfg['saida']}_estado.json"
     estado = carregar(caminho)
     marca_por_chave = {_chave(i["url"]): i["marca"] for i in estado["fila"]}
     marca_por_chave.update({k: d["marca"] for k, d in estado["feitas"].items()})
+    cache_visao_path = SAIDA / f"{cfg['saida']}_visao.json"
+    cache_visao = json.loads(cache_visao_path.read_text(encoding="utf-8")) if cache_visao_path.exists() else {}
     grupos: dict[str, list[dict]] = {}
     for f in sorted(pasta.glob("vitrine_*.json")):
         d = json.loads(f.read_text(encoding="utf-8"))
@@ -210,6 +227,7 @@ def importar(vertical: str, pasta: Path, publicar_site: bool) -> None:
             print(f"   ignorado (loja fora da lista): {arquivos[0]['nome']}")
             continue
         loja = montar_loja(marca, arquivos, cfg.get("avaliacoes_desde", ""))
+        completar_com_cache(loja, cache_visao.get(chave))
         estado["fila"] = [i for i in estado["fila"] if _chave(i["url"]) != chave]
         if loja.cidade and _sem_acento(loja.cidade) != alvo:
             estado["fora"].append({"marca": marca, "url": loja.url, "cidade": loja.cidade})
