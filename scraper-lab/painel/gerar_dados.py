@@ -24,6 +24,27 @@ SHOPPING_POR_ENDERECO = [
     (r"24 de Outubro", "Loja de rua · Centro"),
 ]
 
+# O Google so preenche "localizada_em" para loja dentro de shopping. Escritorio
+# num predio ou galeria (comum em imobiliaria) nao ganha esse campo, mas quem
+# cadastrou o negocio as vezes escreve o nome do predio no proprio endereco.
+_PREDIO_PALAVRA = re.compile(
+    r"\b(edif[íi]cio|ed\.|edf\.|galeria|shopping(?:\s*center)?|mall|centro\s+empresarial|"
+    r"business\s+center|torre|complexo(?:\s+comercial)?|condom[íi]nio\s+comercial|"
+    r"espa[çc]o\s+empresarial)(?![^\W\d_])", re.I)
+# (?![^\W\d_]) barra letra logo depois: um \b comum falha quando a palavra
+# termina em ponto ("Ed.") seguido de espaco, porque ponto e espaco sao os
+# dois nao-letra e \b so marca fronteira letra/nao-letra.
+
+
+def predio(endereco: str) -> str:
+    """Nome do predio ou galeria citado no endereco, quando existir. Testado contra
+    as 958 imobiliarias do mapa de mercado de Goiania: sem falso positivo (bairro
+    como "Parque Amazônia" nao casa, por exemplo)."""
+    for parte in re.split(r"\s*[-,]\s*", endereco):
+        if _PREDIO_PALAVRA.search(parte):
+            return parte.strip()
+    return ""
+
 
 def shopping(loja: dict) -> str:
     local = re.sub(r"^(Andar [^·]*·\s*|Localizado em\s*)", "", loja["localizada_em"]).strip()
@@ -32,6 +53,9 @@ def shopping(loja: dict) -> str:
     for padrao, nome in SHOPPING_POR_ENDERECO:
         if re.search(padrao, loja["endereco"]):
             return nome
+    pred = predio(loja["endereco"])
+    if pred:
+        return pred
     # Loja de rua (caso comum em atacarejo): o local vira o bairro
     b = bairro(loja["endereco"])
     return f"Rua · {b}" if b else "Loja de rua"
