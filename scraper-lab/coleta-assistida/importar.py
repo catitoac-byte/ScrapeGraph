@@ -254,7 +254,9 @@ def importar(vertical: str, pasta: Path, publicar_site: bool) -> None:
             print(f"   ignorado (loja fora da lista): {arquivos[0]['nome']}")
             continue
         loja = montar_loja(marca, arquivos, cfg.get("avaliacoes_desde", ""))
-        completar_com_cache(loja, cache_visao.get(chave))
+        # Recoleta de uma loja ja feita: o que ela ja tinha vale como cache, senao
+        # uma segunda passada so na aba Avaliacoes apagaria endereco, nota e telefone
+        completar_com_cache(loja, cache_visao.get(chave) or estado["feitas"].get(chave))
         estado["fila"] = [i for i in estado["fila"] if _chave(i["url"]) != chave]
         if loja.cidade and _sem_acento(loja.cidade) != alvo:
             estado["fora"].append({"marca": marca, "url": loja.url, "cidade": loja.cidade})

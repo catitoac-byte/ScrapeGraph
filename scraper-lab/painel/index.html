@@ -780,12 +780,19 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
   const insights = useMemo(()=>{
     const out=[];
     const com = dados.filter(d=>d.rep.nota!=null);
+    // Lista com todas as marcas: "A 4,7, B 4,6 e C 4,4"
+    const serie = (arr,f) => arr.map(f).reduce((txt,item,i,a)=> txt + (i===0?"":(i===a.length-1?L3(" e "," y "," and "):", ")) + item, "");
     if(com.length>=2){
+      const sN=[...com].sort((a,b)=>b.rep.nota-a.rep.nota);
+      out.push({k:"t-info",t:L3("Nota","Nota","Rating"),x:L3(
+        `${serie(sN,d=>`${d.m} ${fmt(d.rep.nota,2)}`)}. Da primeira para a última vão ${fmt(sN[0].rep.nota-sN[sN.length-1].rep.nota,2)} ponto.`,
+        `${serie(sN,d=>`${d.m} ${fmt(d.rep.nota,2)}`)}. De la primera a la última hay ${fmt(sN[0].rep.nota-sN[sN.length-1].rep.nota,2)} punto.`,
+        `${serie(sN,d=>`${d.m} ${fmt(d.rep.nota,2)}`)}. From first to last there is a ${fmt(sN[0].rep.nota-sN[sN.length-1].rep.nota,2)} point gap.`)});
       const s=[...com].sort((a,b)=>b.rep.neg-a.rep.neg);
       out.push({k:"t-crit",t:L3("Atenção","Atención","Watch out"),x:L3(
-        `${s[0].m} concentra a maior parcela de notas 1 e 2 ${amostra?"na amostra filtrada":"no Google"} (${pct(s[0].rep.neg,1)}), contra ${pct(s[s.length-1].rep.neg,1)} ${de(s[s.length-1].m)}.`,
-        `${s[0].m} concentra la mayor proporción de notas 1 y 2 ${amostra?"en la muestra filtrada":"en Google"} (${pct(s[0].rep.neg,1)}), frente a ${pct(s[s.length-1].rep.neg,1)} ${de(s[s.length-1].m)}.`,
-        `${s[0].m} has the largest share of 1 and 2 star ratings ${amostra?"in the filtered sample":"on Google"} (${pct(s[0].rep.neg,1)}), versus ${pct(s[s.length-1].rep.neg,1)} for ${s[s.length-1].m}.`)});
+        `Notas 1 e 2 ${amostra?"na amostra filtrada":"no Google"}: ${serie(s,d=>`${d.m} ${pct(d.rep.neg,1)}`)}.`,
+        `Notas 1 y 2 ${amostra?"en la muestra filtrada":"en Google"}: ${serie(s,d=>`${d.m} ${pct(d.rep.neg,1)}`)}.`,
+        `1 and 2 star ratings ${amostra?"in the filtered sample":"on Google"}: ${serie(s,d=>`${d.m} ${pct(d.rep.neg,1)}`)}.`)});
     }
     const dt = D.destaque_tema && TEMA_POR_ID[D.destaque_tema] ? D.destaque_tema : null;
     const cart = dt ? dados.map(d=>({m:d.m,v:d.stT.temas[dt].n,p:d.stT.temas[dt].pct})).sort((a,b)=>b.v-a.v) : [];
@@ -800,11 +807,37 @@ function Panorama({lojas,revs,revsTemas,revsNeg,amostra,dia,setTab,setTema}){
         `When people mention queues and checkout, ${pct(fila[0].neg)} of reviews for ${fila[0].m} are negative.`),tema:"fila"});
     const pk = dados.filter(d=>d.pk).map(d=>`${d.m} ${DIA_LONGO[d.pk.dia]} ${L3("às","a las","at")} ${hh(d.pk.pico)}`);
     if(pk.length) out.push({k:"t-info",t:L3("Movimento","Afluencia","Busyness"),x:`${dia==="todos"?L3("Pico da semana","Pico de la semana","Weekly peak"):L3("Pico de ","Pico del ","Peak on ")+DIA_LONGO[dia]}: ${pk.join(", ")}.`,tab:"movimento"});
+    // Onde cada marca mais apanha, com a base junto: em tema de nicho o
+    // percentual costuma vir de 6 a 10 avaliacoes, e sem o "em N" engana
+    const MIN_TEMA = 5;
+    const criticos = dados.map(d=>{
+      const t = NETS.map(n=>({nome:n.nome, id:n.id, ...d.stN.temas[n.id]}))
+        .filter(x=>x.n>=MIN_TEMA && x.neg!=null && x.neg>0).sort((a,b)=>b.neg-a.neg)[0];
+      return t ? {m:d.m, ...t} : null;
+    }).filter(Boolean).sort((a,b)=>b.neg-a.neg);
+    if(criticos.length) out.push({k:"t-warn",t:L3("Pior tema de cada uma","Peor tema de cada una","Each one's worst topic"),x:
+      serie(criticos,c=>L3(`${c.m} em ${c.nome} (${pct(c.neg)} de ${fmt(c.n)} avaliações)`,
+        `${c.m} en ${c.nome} (${pct(c.neg)} de ${fmt(c.n)} reseñas)`,
+        `${c.m} on ${c.nome} (${pct(c.neg)} of ${fmt(c.n)} reviews)`))+"."});
+    // Um net que domina em todas as marcas diz mais que a media de cada uma
+    const dom = NETS.map(n=>({n, vs:dados.map(d=>({m:d.m, p:d.stT.temas[n.id].pct, q:d.stT.temas[n.id].n}))}))
+      .filter(x=>x.vs.every(v=>v.p>=50 && v.q>=MIN_TEMA))
+      .sort((a,b)=>b.vs.reduce((s,v)=>s+v.p,0)-a.vs.reduce((s,v)=>s+v.p,0))[0];
+    if(dom) out.push({k:"t-info",t:L3("O que domina a conversa","Lo que domina la conversación","What dominates the conversation"),x:L3(
+      `${dom.n.nome} aparece em ${serie([...dom.vs].sort((a,b)=>b.p-a.p),(v,i)=>`${pct(v.p)} ${i===0?"das avaliações com texto ":""}${de(v.m)}`)}.`,
+      `${dom.n.nome} aparece en ${serie([...dom.vs].sort((a,b)=>b.p-a.p),(v,i)=>`${pct(v.p)} ${i===0?"de las reseñas con texto ":""}${de(v.m)}`)}.`,
+      `${dom.n.nome} shows up in ${serie([...dom.vs].sort((a,b)=>b.p-a.p),(v,i)=>`${pct(v.p)} ${i===0?"of text reviews for ":"for "}${v.m}`)}.`), tema:dom.n.id});
     const resp = dados.filter(d=>d.st.respNeg!=null).sort((a,b)=>b.st.respNeg-a.st.respNeg);
     if(resp.length>=2) out.push({k:"t-good",t:L3("Relacionamento","Relación","Engagement"),x:L3(
-        `${resp[0].m} responde ${pct(resp[0].st.respNeg)} das avaliações negativas da amostra. ${resp[resp.length-1].m} responde ${pct(resp[resp.length-1].st.respNeg)}.`,
-        `${resp[0].m} responde ${pct(resp[0].st.respNeg)} de las reseñas negativas de la muestra. ${resp[resp.length-1].m} responde ${pct(resp[resp.length-1].st.respNeg)}.`,
-        `${resp[0].m} replies to ${pct(resp[0].st.respNeg)} of negative reviews in the sample. ${resp[resp.length-1].m} replies to ${pct(resp[resp.length-1].st.respNeg)}.`)});
+        `Resposta a avaliação negativa: ${serie(resp,d=>`${d.m} ${pct(d.st.respNeg)}`)}.`,
+        `Respuesta a reseña negativa: ${serie(resp,d=>`${d.m} ${pct(d.st.respNeg)}`)}.`,
+        `Replies to negative reviews: ${serie(resp,d=>`${d.m} ${pct(d.st.respNeg)}`)}.`)});
+    // So avisa da amostra desigual quando ela e mesmo desigual
+    const lidas = dados.map(d=>({m:d.m, n:d.st.n})).filter(x=>x.n).sort((a,b)=>b.n-a.n);
+    if(lidas.length>=2 && lidas[0].n >= 3*lidas[lidas.length-1].n) out.push({k:"t-info",t:L3("Tamanho da amostra","Tamaño de la muestra","Sample size"),x:L3(
+      `As bases são desiguais: ${serie(lidas,x=>`${x.m} ${fmt(x.n)}`)} avaliações lidas. Percentual de quem tem base pequena oscila mais.`,
+      `Las bases son desiguales: ${serie(lidas,x=>`${x.m} ${fmt(x.n)}`)} reseñas leídas. El porcentaje de quien tiene base pequeña oscila más.`,
+      `Sample sizes differ: ${serie(lidas,x=>`${x.m} ${fmt(x.n)}`)} reviews read. Percentages on the smaller bases move more.`)});
     return out;
   },[lojas,revs,revsTemas,revsNeg,amostra,dia]);
 
