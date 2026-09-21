@@ -85,7 +85,10 @@ def main(vertical: str) -> None:
     cfg = json.loads((VERTICAIS / f"{vertical}.json").read_text(encoding="utf-8"))
     nome = cfg["saida"]
     lojas = json.load(open(SAIDA / f"{nome}.json", encoding="utf-8"))
-    hoje = date.fromisoformat(lojas[0]["coletado_em"][:10])
+    # A mais recente, nao a primeira da lista: quando a coleta assistida
+    # importa em varios dias (imobiliaria levou de 19 a 21/09), usar a
+    # primeira loja envelhecia "ha quantos meses" de toda avaliacao mais nova.
+    hoje = max(date.fromisoformat(l["coletado_em"][:10]) for l in lojas)
     saida_lojas, avaliacoes = [], []
     for i, l in enumerate(lojas):
         sid = f"s{i}"
