@@ -64,7 +64,16 @@ def pagina(vertical: str) -> Path:
         for m in [x["nome"] for x in cfg["marcas"]]:
             if por_marca.get(m):
                 ordem.append(por_marca[m].pop(0))
-    if cfg.get("pico", True):
+    cache_visao_path = SAIDA / f"{cfg['saida']}_visao.json"
+    cache_visao = json.loads(cache_visao_path.read_text(encoding="utf-8")) if cache_visao_path.exists() else {}
+    cobertas = sum(1 for it in estado["fila"] if _chave(it["url"]) in cache_visao)
+    pular_visao = estado["fila"] and cobertas == len(estado["fila"])
+
+    if pular_visao:
+        # coletar_visao.py ja trouxe endereco, telefone, nota e horario sem
+        # login pra toda a fila: so falta o texto das avaliacoes.
+        passo_visao = ""
+    elif cfg.get("pico", True):
         passo_visao = ("Na aba <b>Visão geral</b>, role até aparecer <b>Horários de pico</b> e clique no favorito. "
                        "Sai um arquivo terminado em <code>visao-geral</code>.")
     else:
@@ -84,7 +93,8 @@ def pagina(vertical: str) -> Path:
         linhas.append(
             f'<tr><td class="n">{i}</td><td>{html.escape(item["marca"])}</td>'
             f'<td><a href="{html.escape(item["url"])}&hl=pt-BR" target="_blank" rel="noopener">{html.escape(nome)}</a></td>'
-            f'<td><label><input type="checkbox"> ficha</label> <label><input type="checkbox"> avaliações</label></td></tr>'
+            + '<td>' + ('' if pular_visao else '<label><input type="checkbox"> ficha</label> ')
+            + '<label><input type="checkbox"> avaliações</label></td></tr>'
         )
     doc = f"""<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -122,10 +132,11 @@ document.getElementById("copiar").onclick = function () {{
 <h2>2. Para cada loja da lista</h2>
 <ol class="passo">
 <li>Abra o link da loja. Se o Google mostrar “visualização limitada”, entre na sua conta Google neste navegador.</li>
-<li>{passo_visao}</li>
-<li>Vá para a aba <b>Avaliações</b>, escolha <b>Ordenar › Mais recentes</b> e {passo_rolar} Clique no favorito de novo. Sai um arquivo terminado em <code>avaliacoes</code>.</li>
+{"" if pular_visao else f'<li>{passo_visao}</li>'}
+<li>Vá para a aba <b>Avaliações</b>, escolha <b>Ordenar › Mais recentes</b> e {passo_rolar} Clique no favorito. Sai um arquivo terminado em <code>avaliacoes</code>.</li>
 <li>Marque a loja abaixo e siga para a próxima, no seu ritmo.</li>
 </ol>
+{'<p class="aviso">Endereço, telefone, nota e horário já vieram sem login pra toda essa lista: não precisa clicar em nada na aba Visão geral, só na aba Avaliações.</p>' if pular_visao else ''}
 <p class="aviso">Os arquivos vão para a pasta de Downloads. Quando terminar (ou a cada algumas lojas), me avise que eu importo e publico o painel.</p>
 
 <h2>3. Lojas</h2>
@@ -191,18 +202,34 @@ def montar_loja(marca: str, arquivos: list[dict], desde: str = "") -> Loja:
 
 
 _CAMPOS_SO_AUTOMATICOS = (
-    "atributos", "destaques", "postagem_proprietario", "total_fotos", "foto_capa", "categoria")
+    "atributos", "destaques", "postagem_proprietario", "total_fotos", "foto_capa")
+
+# Quando so a aba Avaliacoes foi salva (sem o favorito na Visao geral), o
+# favorito ainda le nome e place_id certos (vem de atributo do container, nao
+# do conteudo da aba), mas estes campos ficam vazios ou errados: o seletor de
+# nota pega a ESTRELA DA PRIMEIRA AVALIACAO da lista, nao a nota da loja.
+_CAMPOS_VISAO_GERAL = (
+    "categoria", "nota", "total_avaliacoes", "endereco", "cidade", "localizada_em",
+    "telefone", "site", "plus_code", "latitude", "longitude", "horario_funcionamento")
 
 
 def completar_com_cache(loja: Loja, extra: dict | None) -> None:
     """Preenche com o que so a coleta automatica (coletar_visao.py) tem: o
     favorito Salvar dados da loja nao abre a aba Sobre nem le destaques ou
-    fotos. So entra no que a coleta assistida deixou vazio."""
+    fotos. So entra no que a coleta assistida deixou vazio.
+
+    Se so a aba Avaliacoes foi salva (endereco vazio: o favorito nunca rodou
+    na Visao geral), usa a coleta automatica tambem pros campos fixos, em vez
+    do que veio (vazio ou errado) do arquivo de avaliacoes."""
     if not extra:
         return
     for campo in _CAMPOS_SO_AUTOMATICOS:
         if not getattr(loja, campo) and extra.get(campo):
             setattr(loja, campo, extra[campo])
+    if not loja.endereco:
+        for campo in _CAMPOS_VISAO_GERAL:
+            if extra.get(campo) not in (None, ""):
+                setattr(loja, campo, extra[campo])
 
 
 def importar(vertical: str, pasta: Path, publicar_site: bool) -> None:
