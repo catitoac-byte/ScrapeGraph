@@ -1355,7 +1355,7 @@ function Comparar({lojas, revs, revsSemEstrela, amostra, marcaFoco, setMarcaFoco
     const st = revStats(revs.filter(r=>r.s===l.id));
     const stN = revStats(revsSemEstrela.filter(r=>r.s===l.id));
     const nets = NETS.map(n=>({id:n.id, nome:n.nome, ...stN.temas[n.id]}));
-    const criticos = nets.filter(x=>x.n>=3 && x.neg!=null).sort((a,b)=>b.neg-a.neg);
+    const criticos = nets.filter(x=>x.n>=MIN_TXT && x.neg!=null).sort((a,b)=>b.neg-a.neg);
     return {l, ...rp, lidas:st.n, comTexto:stN.comTexto, resp:st.resp, nets, pior:criticos[0]||null};
   }).sort((a,b)=>(b.nota??-1)-(a.nota??-1)),[daMarca,revs,revsSemEstrela,amostra]);
 

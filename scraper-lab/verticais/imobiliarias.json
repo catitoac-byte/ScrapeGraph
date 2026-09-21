@@ -156,7 +156,7 @@
       "net": "Escritório",
       "id": "estrutura",
       "nome": "Escritório e estrutura",
-      "re": "ambiente|estrutura|escrit[óo]rio|estacionamento|\\bcaf[ée]\\b|localiza[çc][ãa]o|aconcheg|organiza",
+      "re": "ambiente|estrutura|escrit[óo]rio|estacionamento|\\bcaf[ée]\\b|aconcheg|sala de espera|recep[çc][ãa]o",
       "nome_es": "Oficina e instalaciones",
       "nome_en": "Office and facilities"
     }
