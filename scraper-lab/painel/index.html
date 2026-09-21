@@ -448,7 +448,7 @@ const repLoja = (l, amostra) => {
   if(amostra){ const rs=amostra.filter(r=>r.s===l.id), n=rs.length;
     return {nota:n?rs.reduce((a,r)=>a+r.e,0)/n:null, total:n, neg:n?rs.filter(r=>r.e<=2).length/n*100:null}; }
   const dt=[1,2,3,4,5].reduce((a,k)=>a+(l.dist?.[k]||0),0);
-  return {nota:notaLoja(l), total:l.total, neg:dt?((l.dist[1]||0)+(l.dist[2]||0))/dt*100:null};
+  return {nota:notaLoja(l), total:l.total ?? (dt||null), neg:dt?((l.dist[1]||0)+(l.dist[2]||0))/dt*100:null};
 };
 const marcasNoShopping = s => new Set(LOJAS.filter(l=>l.shopping===s).map(l=>l.marca));
 
@@ -1309,12 +1309,93 @@ PERGUNTA: ${pergunta}`;
 
 /* ------------------------------------------------------------ app */
 const ICO = d => html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+
+/* Comparacao entre as lojas da MESMA marca: a rede vista por dentro, em vez
+   de marca contra marca. Nasceu da vertical de imobiliarias, onde My Broker
+   tem 16 unidades e URBS 10, e a media da marca escondia a diferenca entre
+   elas. */
+function Comparar({lojas, revs, revsSemEstrela, amostra, marcaFoco, setMarcaFoco, setUni, setTema, setTab}){
+  const MIN_TXT = 5;
+  const daMarca = useMemo(()=>lojas.filter(l=>l.marca===marcaFoco),[lojas,marcaFoco]);
+  const linhas = useMemo(()=>daMarca.map(l=>{
+    const rp = repLoja(l, amostra);
+    const st = revStats(revs.filter(r=>r.s===l.id));
+    const stN = revStats(revsSemEstrela.filter(r=>r.s===l.id));
+    const nets = NETS.map(n=>({id:n.id, nome:n.nome, ...stN.temas[n.id]}));
+    const criticos = nets.filter(x=>x.n>=3 && x.neg!=null).sort((a,b)=>b.neg-a.neg);
+    return {l, ...rp, lidas:st.n, comTexto:stN.comTexto, resp:st.resp, nets, pior:criticos[0]||null};
+  }).sort((a,b)=>(b.nota??-1)-(a.nota??-1)),[daMarca,revs,revsSemEstrela,amostra]);
+
+  // Nota de 5,00 com 4 avaliacoes nao e "melhor" que 4,60 com 379: o selo so
+  // vale com base minima, e some no empate para nao marcar quatro melhores
+  const MIN_BASE = 20;
+  const comBase = linhas.filter(x=>x.nota!=null && (x.total||0)>=MIN_BASE).map(x=>x.nota);
+  const unico = v => v!=null && comBase.filter(n=>n===v).length===1;
+  const alta = comBase.length>1 && unico(Math.max(...comBase)) ? Math.max(...comBase) : null;
+  const baixa = comBase.length>1 && unico(Math.min(...comBase)) ? Math.min(...comBase) : null;
+  const opcoes = MARCAS.map(m=>({id:m, nome:`${m} (${lojas.filter(l=>l.marca===m).length})`}));
+  const abrir = (id, tema) => { setUni(id); if(tema) setTema(tema); setTab("voz"); };
+
+  return html`<div>
+    <section class="panel">
+      <div class="ph"><div><h2>${L3("Escolha a marca","Elija la marca","Pick the brand")}</h2>
+        <p class="sub">${L3("Compara as lojas de uma marca entre si, não com as concorrentes. Entre parênteses, quantas lojas dela entram no recorte atual.","Compara las tiendas de una marca entre sí, no con las competidoras. Entre paréntesis, cuántas tiendas suyas entran en la selección actual.","Compares one brand's stores against each other, not against competitors. In brackets, how many of its stores are in the current selection.")}</p></div></div>
+      <${Seg} value=${marcaFoco} onChange=${setMarcaFoco} options=${opcoes} label=${L3("Marca","Marca","Brand")}/>
+    </section>
+
+    <section class="panel" style=${{marginTop:16}}>
+      <div class="ph"><div><h2>${L3("Loja a loja dentro da marca","Tienda por tienda dentro de la marca","Store by store within the brand")}</h2>
+        <p class="sub">${L3(`Da melhor para a menor nota. “Melhor” e “menor” só marcam lojas com ao menos ${MIN_BASE} avaliações, para não premiar nota alta de base pequena.`,`De la mejor a la menor nota. “Mejor” y “menor” solo marcan tiendas con al menos ${MIN_BASE} reseñas, para no premiar una nota alta con base pequeña.`,`From the highest to the lowest rating. “Best” and “lowest” only mark stores with at least ${MIN_BASE} reviews, so a high rating on a small base is not rewarded.`)} ${amostra?L3("Com filtro de avaliação ligado, nota, avaliações e notas 1 e 2 saem da amostra filtrada.","Con un filtro de reseñas activo, la nota, las reseñas y las notas 1 y 2 salen de la muestra filtrada.","With a review filter on, rating, reviews and 1 and 2 stars come from the filtered sample."):L3("Nota, avaliações e notas 1 e 2 são o total do Google; “lidas” e “responde” saem das avaliações coletadas.","La nota, las reseñas y las notas 1 y 2 son el total de Google; “leídas” y “responde” salen de las reseñas recogidas.","Rating, reviews and 1 and 2 stars are Google's totals; “read” and “replies” come from the collected reviews.")}</p></div></div>
+      ${!linhas.length ? html`<div class="empty">${L3("Sem loja desta marca no recorte","Sin tiendas de esta marca en la selección","No stores of this brand in the selection")}</div>` : html`
+      <div class="tablewrap"><table>
+        <thead><tr><th>${L3("Local","Lugar","Location")}</th><th>${L3("Loja","Tienda","Store")}</th>
+          <th class="r">${L3("Nota","Nota","Rating")}</th><th class="r">${L3("Avaliações","Reseñas","Reviews")}</th>
+          <th class="r">${L3("Notas 1 e 2","Notas 1 y 2","1 and 2 stars")}</th><th class="r">${L3("Lidas","Leídas","Read")}</th>
+          <th class="r">${L3("Responde","Responde","Replies")}</th><th>${L3("Tema mais crítico","Tema más crítico","Most critical topic")}</th></tr></thead>
+        <tbody>${linhas.map(x=>html`<tr key=${x.l.id}>
+          <td style=${{fontWeight:600,minWidth:140}}>${localNome(x.l.shopping)}</td>
+          <td><button class="linkbtn" style=${{padding:0,fontSize:14,fontWeight:600,color:"var(--ink)",textAlign:"left"}}
+              onClick=${()=>abrir(x.l.id)} title=${L3("Ler as avaliações desta loja","Leer las reseñas de esta tienda","Read this store's reviews")}>${x.l.nome}</button></td>
+          <td class="r num"><b>${fmt(x.nota,2)}</b>${(x.total||0)<MIN_BASE?null:alta!=null&&x.nota===alta?html`<span class="rank r-best">${L3("melhor","mejor","best")}</span>`:baixa!=null&&x.nota===baixa?html`<span class="rank r-worst">${L3("menor","menor","lowest")}</span>`:null}</td>
+          <td class="r num">${fmt(x.total)}</td>
+          <td class="r num" style=${{color:x.neg>=9?"var(--crit)":null}}>${pct(x.neg,1)}</td>
+          <td class="r num">${fmt(x.lidas)}</td>
+          <td class="r num">${x.lidas?pct(x.resp):"–"}</td>
+          <td>${!x.pior?html`<span class="note">${L3("sem base","sin base","not enough data")}</span>`
+            :x.pior.neg===0?html`<span class="note">${L3("nenhuma negativa","sin negativas","no negative reviews")}</span>`
+            :html`<button class="linkbtn" style=${{padding:0,fontSize:14,fontWeight:600,color:"var(--ink)"}} onClick=${()=>abrir(x.l.id,x.pior.id)}>${x.pior.nome}</button> <span class="note num">${pct(x.pior.neg)} ${L3("neg.","neg.","neg.")}</span>`}</td>
+        </tr>`)}</tbody>
+      </table></div>
+      ${alta!=null&&baixa!=null&&alta!==baixa?html`<p class="note" style=${{marginTop:8}}>${L3(`Entre a melhor e a menor loja ${de(marcaFoco)} vão ${fmt(alta-baixa,2)} ponto de nota.`,`Entre la mejor y la peor tienda ${de(marcaFoco)} hay ${fmt(alta-baixa,2)} punto de nota.`,`Between the best and the lowest store for ${marcaFoco} there is a ${fmt(alta-baixa,2)} point gap.`)}</p>`:null}`}
+    </section>
+
+    ${linhas.length?html`<section class="panel" style=${{marginTop:16}}>
+      <div class="ph"><div><h2>${L3("Do que falam em cada loja","De qué hablan en cada tienda","What people talk about at each store")}</h2>
+        <p class="sub">${L3(`Parcela das avaliações com texto de cada loja que citam cada net. Embaixo, quantas avaliações sustentam o número e quantas dessas são negativas. Loja com menos de ${MIN_TXT} avaliações com texto no recorte fica de fora. O filtro de estrelas não se aplica aqui.`,`Proporción de las reseñas con texto de cada tienda que citan cada net. Debajo, cuántas reseñas sostienen el número y cuántas de esas son negativas. Las tiendas con menos de ${MIN_TXT} reseñas con texto quedan fuera. El filtro de estrellas no se aplica aquí.`,`Share of each store's text reviews that mention each net. Below, how many reviews back the number and how many of those are negative. Stores with fewer than ${MIN_TXT} text reviews are left out. The star filter does not apply here.`)}</p></div></div>
+      <div class="tablewrap"><table class="matrix">
+        <thead><tr><th>${L3("Loja","Tienda","Store")}</th>${NETS.map(n=>html`<th key=${n.id}>${n.nome}</th>`)}</tr></thead>
+        <tbody>${linhas.map(x=>html`<tr key=${x.l.id}>
+          <td style=${{fontWeight:600,minWidth:160}}>${x.l.nome}<div class="note" style=${{fontWeight:400}}>${localNome(x.l.shopping)}</div></td>
+          ${x.comTexto<MIN_TXT
+            ? html`<td colSpan=${NETS.length}><span class="note">${x.comTexto?L3(`só ${x.comTexto} ${x.comTexto===1?"avaliação":"avaliações"} com texto no recorte`,`solo ${x.comTexto} ${x.comTexto===1?"reseña":"reseñas"} con texto en la selección`,`only ${x.comTexto} text review${x.comTexto===1?"":"s"} in the selection`):L3("sem avaliação no recorte","sin reseñas en la selección","no reviews in the selection")}</span></td>`
+            : x.nets.map(n=>html`<td key=${n.id}><div class="mcell">
+                <div class="v"><b class="num">${pct(n.pct)}</b></div>
+                <div class="mtrack"><div style=${{width:Math.min(100,n.pct)+"%",background:cor(marcaFoco)}}></div></div>
+                <span class="note num">${fmt(n.n)}${n.neg!=null?" · "+pct(n.neg)+" "+L3("neg.","neg.","neg."):""}</span>
+              </div></td>`)}
+        </tr>`)}</tbody>
+      </table></div>
+    </section>`:null}
+  </div>`;
+}
+
 const ICONES = {
   panorama: ICO(html`<rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="4.5" rx="2"/><rect x="13.5" y="11" width="7" height="9.5" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/>`),
   movimento: ICO(html`<path d="M3 13h3.5l2.5-7 4 13 2.8-8H21"/>`),
   reputacao: ICO(html`<path d="M12 3.6l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6L12 16.2 6.9 19l1.1-5.6-4.2-3.9 5.7-.7z"/>`),
   voz: ICO(html`<path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8.5A1.5 1.5 0 0 1 19 17H10l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 5 5.5z"/><path d="M8 10h8M8 13h5"/>`),
   lojas: ICO(html`<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>`),
+  comparar: ICO(html`<path d="M5 20V10M12 20V4M19 20v-7"/>`),
   ia: ICO(html`<path d="M12 3.5l1.6 4.4 4.4 1.6-4.4 1.6L12 15.5l-1.6-4.4L6 9.5l4.4-1.6z"/><path d="M18.5 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>`),
 };
 
@@ -1348,6 +1429,10 @@ function App(){
   const alternarTrilho = () => setAberto(v=>{ try{ localStorage.setItem("vitrine-trilho", v?"0":"1"); }catch(e){} return !v; });
   const [dia,setDia] = useState("todos");
   const [shop,setShop] = useState("todos");
+  const [uni,setUni] = useState("");
+  // Comeca pela marca com mais lojas, que e onde a comparacao interna rende
+  const [marcaFoco,setMarcaFoco] = useState(()=>[...MARCAS].sort((a,b)=>
+    LOJAS.filter(l=>l.marca===b).length - LOJAS.filter(l=>l.marca===a).length)[0]);
   const [estrelas,setEstrelas] = useState([]);
   const [tema,setTema] = useState("");
   const [periodo,setPeriodo] = useState("todos");
@@ -1355,7 +1440,10 @@ function App(){
   const [buscaDeb,setBuscaDeb] = useState("");
   useEffect(()=>{ const t=setTimeout(()=>setBuscaDeb(busca.trim()),220); return ()=>clearTimeout(t); },[busca]);
 
-  const lojas = useMemo(()=> shop==="todos" ? LOJAS : shop==="tres" ? LOJAS.filter(l=>marcasNoShopping(l.shopping).size===3) : LOJAS.filter(l=>l.shopping===shop),[shop]);
+  const lojas = useMemo(()=>{
+    const base = shop==="todos" ? LOJAS : shop==="tres" ? LOJAS.filter(l=>marcasNoShopping(l.shopping).size===3) : LOJAS.filter(l=>l.shopping===shop);
+    return uni ? base.filter(l=>l.id===uni) : base;
+  },[shop,uni]);
   const ids = useMemo(()=>new Set(lojas.map(l=>l.id)),[lojas]);
   const per = PERIODOS.find(p=>p.id===periodo);
   const revsBase = useMemo(()=>REVS.filter(r=>ids.has(r.s) && (!estrelas.length||estrelas.includes(r.e)) && per.ok(r.m)),[ids,estrelas,periodo]);
@@ -1380,12 +1468,13 @@ function App(){
   const ativos = [];
   if(dia!=="todos") ativos.push({t:L3("Dia: ","Día: ","Day: ")+DIA_LONGO[dia], x:()=>setDia("todos")});
   if(shop!=="todos") ativos.push({t:shop==="tres"?L3("Locais com as três marcas","Lugares con las tres marcas","Locations with all three brands"):L3("Local: ","Lugar: ","Location: ")+localNome(shop), x:()=>setShop("todos")});
+  if(uni && LOJA[uni]) ativos.push({t:L3("Loja: ","Tienda: ","Store: ")+LOJA[uni].nome, x:()=>setUni("")});
   if(estrelas.length) ativos.push({t:L3("Estrelas: ","Estrellas: ","Stars: ")+[...estrelas].sort().join(", "), x:()=>setEstrelas([])});
   if(periodo!=="todos") ativos.push({t:L3("Período: ","Período: ","Period: ")+per.nome, x:()=>setPeriodo("todos")});
   if(tema) ativos.push({t:L3("Tema: ","Tema: ","Topic: ")+TEMA_POR_ID[tema].nome, x:()=>setTema("")});
   if(buscaDeb) ativos.push({t:`${L3("Busca","Búsqueda","Search")}: “${buscaDeb}”`, x:()=>setBusca("")});
   const filtrosTxt = ativos.length ? ativos.map(a=>a.t).join("; ") : L3("nenhum, cidade inteira","ninguno, toda la ciudad","none, whole city");
-  const limpar = ()=>{setDia("todos");setShop("todos");setEstrelas([]);setPeriodo("todos");setTema("");setBusca("");};
+  const limpar = ()=>{setDia("todos");setShop("todos");setUni("");setEstrelas([]);setPeriodo("todos");setTema("");setBusca("");};
   const pend = LOJAS.filter(l=>l.pendente);
   const escopo = (()=>{
     const partes = [];
@@ -1395,7 +1484,7 @@ function App(){
     return partes.join(" ");
   })();
 
-  const TABS = [{id:"panorama",nome:L3("Visão geral","Visión general","Overview")},{id:"movimento",nome:L3("Movimento","Afluencia","Busyness")},{id:"reputacao",nome:L3("Reputação","Reputación","Reputation")},{id:"voz",nome:L3("Voz do cliente","Voz del cliente","Voice of the customer")},{id:"lojas",nome:L3("Lojas","Tiendas","Stores")},{id:"ia",nome:L3("Analista IA","Analista IA","AI analyst"),beta:true}].filter(t=>TEM_PICO||t.id!=="movimento");
+  const TABS = [{id:"panorama",nome:L3("Visão geral","Visión general","Overview")},{id:"movimento",nome:L3("Movimento","Afluencia","Busyness")},{id:"reputacao",nome:L3("Reputação","Reputación","Reputation")},{id:"voz",nome:L3("Voz do cliente","Voz del cliente","Voice of the customer")},{id:"lojas",nome:L3("Lojas","Tiendas","Stores")},{id:"comparar",nome:L3("Comparar lojas","Comparar tiendas","Compare stores")},{id:"ia",nome:L3("Analista IA","Analista IA","AI analyst"),beta:true}].filter(t=>TEM_PICO||t.id!=="movimento");
 
   return html`<div class=${"app"+(aberto?" aberto":"")}>
     <svg width="0" height="0" style=${{position:"absolute"}} aria-hidden="true"><defs><filter id="gota" x="-30%" y="-30%" width="160%" height="160%">
@@ -1448,6 +1537,11 @@ function App(){
             <option value="tres">${L3("Com as três marcas","Con las tres marcas","With all three brands")}</option>
             ${SHOPPINGS.map(s=>html`<option key=${s} value=${s}>${localNome(s)} (${[...marcasNoShopping(s)].length}/3)</option>`)}
           </select></label>
+        <label class="chipsel" for="f-uni"><span>${L3("Loja","Tienda","Store")}</span>
+          <select id="f-uni" value=${uni} onChange=${e=>setUni(e.target.value)}>
+            <option value="">${L3("Todas","Todas","All")}</option>
+            ${MARCAS.map(m=>html`<optgroup key=${m} label=${m}>${LOJAS.filter(l=>l.marca===m).map(l=>html`<option key=${l.id} value=${l.id}>${l.nome}</option>`)}</optgroup>`)}
+          </select></label>
         <label class="chipsel" for="f-tema"><span>${L3("Tema","Tema","Topic")}</span>
           <select id="f-tema" value=${tema} onChange=${e=>setTema(e.target.value)}><option value="">${L3("Todos","Todos","All")}</option>${NETS.map(n=>html`<optgroup key=${n.id} label=${n.nome}><option value=${n.id}>${n.nome} (${L3("net inteira","net completa","whole net")})</option>${TEMAS.filter(t=>t.net===n.net).map(t=>html`<option key=${t.id} value=${t.id}>${t.nome}</option>`)}</optgroup>`)}</select></label>
         <label class="chipsel" for="f-per"><span>${L3("Período","Período","Period")}</span>
@@ -1468,6 +1562,7 @@ function App(){
       ${tab==="reputacao" && html`<${Reputacao} lojas=${lojas} revs=${revs} revsNeg=${revsSemEstrela} amostra=${amostra} estrelas=${estrelas} setEstrelas=${setEstrelas}/>`}
       ${tab==="voz" && html`<${Voz} lojas=${lojas} revs=${revs} revsTemas=${revsSemTema} revsNeg=${revsSemEstrela} estrelas=${estrelas} tema=${tema} setTema=${setTema} busca=${buscaDeb}/>`}
       ${tab==="lojas" && html`<${Lojas} lojas=${lojas} revs=${revs} amostra=${amostra} dia=${dia}/>`}
+      ${tab==="comparar" && html`<${Comparar} lojas=${lojas} revs=${revs} revsSemEstrela=${revsSemEstrela} amostra=${amostra} marcaFoco=${marcaFoco} setMarcaFoco=${setMarcaFoco} setUni=${setUni} setTema=${setTema} setTab=${setTab}/>`}
       ${tab==="ia" && html`<${Analista} lojas=${lojas} revs=${revs} filtrosTxt=${filtrosTxt} amostra=${amostra}/>`}
       </div>
     </main>
