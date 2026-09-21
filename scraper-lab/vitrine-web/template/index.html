@@ -402,7 +402,7 @@ dialog.contato[open]{animation:ct-abre .4s cubic-bezier(.3,1.3,.5,1)}
           </label>
           <button class="btn" type="submit" data-t="t10">Entrar no painel</button>
         </form>
-        <p class="foot" data-t="t11">Sem acesso ainda? Escreva para <a href="mailto:cassiano@cassiai.com">cassiano@cassiai.com</a>.</p>
+        <p class="foot" data-t="t11">Sem acesso ainda? <a href="#contato" data-contato>Peça pelo formulário</a>.</p>
     </aside>
 
     <section aria-labelledby="t-trabalho">
@@ -608,7 +608,7 @@ var DIC = {
 "t8": "El usuario o la contraseña no coinciden. Revíselos e intente de nuevo.",
 "t9": "Inicie sesión con su usuario para abrir el panel.",
 "t10": "Entrar al panel",
-"t11": "¿Aún sin acceso? Escriba a <a href=\"mailto:cassiano@cassiai.com\">cassiano@cassiai.com</a>.",
+"t11": "¿Aún sin acceso? <a href=\"#contato\" data-contato>Pídalo con el formulario</a>.",
 "t12": "Piloto · una capital · {{ROTULO_PILOTO_ES}}",
 "t13": "tiendas monitoreadas",
 "t14": "cadenas comparadas",
@@ -755,7 +755,7 @@ var DIC = {
 "t8": "Username or password don’t match. Check them and try again.",
 "t9": "Sign in with your username to open the dashboard.",
 "t10": "Open dashboard",
-"t11": "No access yet? Write to <a href=\"mailto:cassiano@cassiai.com\">cassiano@cassiai.com</a>.",
+"t11": "No access yet? <a href=\"#contato\" data-contato>Request it with the form</a>.",
 "t12": "Pilot · one state capital · {{ROTULO_PILOTO_EN}}",
 "t13": "stores tracked",
 "t14": "chains compared",
@@ -1230,9 +1230,9 @@ addEventListener("resize", function(){ var b = tabs.querySelectorAll("button")[a
 var l = null;
 l = document.documentElement.getAttribute("data-idioma") || "pt";
 var T = {
-  pt:{t:"Pedir acesso ao Rival Pulse",sub:"Conte quem você é e qual vertical quer acompanhar. A Cassi.ai responde por e-mail.",nome:"Nome",empresa:"Empresa",email:"E-mail de trabalho",tel:"Telefone (opcional)",vertical:"Vertical de interesse",escolha:"Escolha uma vertical",outra:"Outra vertical",msg:"Mensagem (opcional)",msgph:"Marcas, cidades ou perguntas que você quer responder",enviar:"Enviar pedido",enviando:"Enviando…",okt:"Pedido enviado",okx:"Obrigado. A Cassi.ai responde no e-mail informado.",fechar:"Fechar",campos:"Preencha nome, e-mail válido e vertical.",falha:"O envio direto não funcionou agora. Abrimos o seu e-mail com a mensagem pronta para cassiano@cassiai.com.",assunto:"Rival Pulse · pedido de acesso"},
-  es:{t:"Solicitar acceso a Rival Pulse",sub:"Cuéntenos quién es y qué vertical quiere seguir. Cassi.ai responde por correo.",nome:"Nombre",empresa:"Empresa",email:"Correo de trabajo",tel:"Teléfono (opcional)",vertical:"Vertical de interés",escolha:"Elija una vertical",outra:"Otra vertical",msg:"Mensaje (opcional)",msgph:"Marcas, ciudades o preguntas que quiere responder",enviar:"Enviar solicitud",enviando:"Enviando…",okt:"Solicitud enviada",okx:"Gracias. Cassi.ai responde al correo informado.",fechar:"Cerrar",campos:"Complete nombre, un correo válido y la vertical.",falha:"El envío directo no funcionó ahora. Abrimos su correo con el mensaje listo para cassiano@cassiai.com.",assunto:"Rival Pulse · solicitud de acceso"},
-  en:{t:"Request access to Rival Pulse",sub:"Tell us who you are and which vertical you want to track. Cassi.ai replies by email.",nome:"Name",empresa:"Company",email:"Work email",tel:"Phone (optional)",vertical:"Vertical of interest",escolha:"Choose a vertical",outra:"Other vertical",msg:"Message (optional)",msgph:"Brands, cities or questions you want answered",enviar:"Send request",enviando:"Sending…",okt:"Request sent",okx:"Thank you. Cassi.ai will reply to the email you provided.",fechar:"Close",campos:"Fill in your name, a valid email and the vertical.",falha:"Direct sending did not work right now. We opened your email app with the message ready for cassiano@cassiai.com.",assunto:"Rival Pulse · access request"}
+  pt:{t:"Pedir acesso ao Rival Pulse",sub:"Conte quem você é e qual vertical quer acompanhar. A Cassi.ai responde por e-mail.",nome:"Nome",empresa:"Empresa",email:"E-mail de trabalho",tel:"Telefone (opcional)",vertical:"Vertical de interesse",escolha:"Escolha uma vertical",outra:"Outra vertical",msg:"Mensagem (opcional)",msgph:"Marcas, cidades ou perguntas que você quer responder",enviar:"Enviar pedido",enviando:"Enviando…",okt:"Pedido enviado",okx:"Obrigado. A Cassi.ai responde no e-mail informado.",fechar:"Fechar",campos:"Preencha nome, e-mail válido e vertical.",falha:"O envio não funcionou agora. Tente de novo em instantes.",assunto:"Rival Pulse · pedido de acesso"},
+  es:{t:"Solicitar acceso a Rival Pulse",sub:"Cuéntenos quién es y qué vertical quiere seguir. Cassi.ai responde por correo.",nome:"Nombre",empresa:"Empresa",email:"Correo de trabajo",tel:"Teléfono (opcional)",vertical:"Vertical de interés",escolha:"Elija una vertical",outra:"Otra vertical",msg:"Mensaje (opcional)",msgph:"Marcas, ciudades o preguntas que quiere responder",enviar:"Enviar solicitud",enviando:"Enviando…",okt:"Solicitud enviada",okx:"Gracias. Cassi.ai responde al correo informado.",fechar:"Cerrar",campos:"Complete nombre, un correo válido y la vertical.",falha:"El envío no funcionó ahora. Inténtelo de nuevo en un momento.",assunto:"Rival Pulse · solicitud de acceso"},
+  en:{t:"Request access to Rival Pulse",sub:"Tell us who you are and which vertical you want to track. Cassi.ai replies by email.",nome:"Name",empresa:"Company",email:"Work email",tel:"Phone (optional)",vertical:"Vertical of interest",escolha:"Choose a vertical",outra:"Other vertical",msg:"Message (optional)",msgph:"Brands, cities or questions you want answered",enviar:"Send request",enviando:"Sending…",okt:"Request sent",okx:"Thank you. Cassi.ai will reply to the email you provided.",fechar:"Close",campos:"Fill in your name, a valid email and the vertical.",falha:"It did not go through. Please try again in a moment.",assunto:"Rival Pulse · access request"}
 }[l];
 var dlg = document.getElementById("contato"), form = document.getElementById("ct-form"), ok = document.getElementById("ct-ok");
 var erro = document.getElementById("ct-erro"), btn = document.getElementById("ct-enviar"), sel = document.getElementById("ct-vertical");
@@ -1252,7 +1252,8 @@ function abrir(e){
   document.getElementById("ct-nome").focus();
 }
 function fechar(){ if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
-document.querySelectorAll("[data-contato]").forEach(function(a){ a.addEventListener("click", abrir); });
+// Delegado no documento: o texto traduzido recria os links, e um vínculo direto se perderia.
+document.addEventListener("click", function(e){ var a = e.target.closest && e.target.closest("[data-contato]"); if (a) abrir(e); });
 if (location.hash === "#contato") { history.replaceState(null, "", location.pathname + location.search); setTimeout(abrir, 300); }
 document.getElementById("ct-x").addEventListener("click", fechar);
 document.getElementById("ct-fim").addEventListener("click", fechar);
@@ -1271,9 +1272,7 @@ form.addEventListener("submit", function(e){
       btn.disabled = false; btn.textContent = T.enviar;
       if (res.ok) { form.hidden = true; ok.hidden = false; form.reset(); document.getElementById("ct-fim").focus(); return; }
       if (res.j && res.j.erro === "campos") { erro.textContent = T.campos; erro.classList.add("on"); return; }
-      var corpo = [T.nome + ": " + d.nome, T.empresa + ": " + (d.empresa || "-"), T.email + ": " + d.email, T.tel + ": " + (d.telefone || "-"), T.vertical + ": " + d.vertical, "", d.mensagem || ""].join("\n");
       erro.textContent = T.falha; erro.classList.add("on");
-      location.href = "mailto:cassiano@cassiai.com?subject=" + encodeURIComponent(T.assunto + " · " + d.vertical) + "&body=" + encodeURIComponent(corpo);
     });
 });
 })();

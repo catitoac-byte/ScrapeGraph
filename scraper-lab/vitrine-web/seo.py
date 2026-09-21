@@ -209,7 +209,7 @@ Redes de varejo e franquias, shopping centers, times de expansão, operações e
 
 ## Como conseguir acesso
 
-O painel é restrito a cliente com projeto ativo. O pedido de acesso é feito pelo formulário em {site}/ ou por e-mail para cassiano@cassiai.com. A vertical, as marcas, as cidades e os temas são montados com o time do cliente.
+O painel é restrito a cliente com projeto ativo. O pedido de acesso é feito pelo formulário em {site}/. A vertical, as marcas, as cidades e os temas são montados com o time do cliente.
 """,
     "es": """# Rival Pulse: inteligencia competitiva de tiendas físicas
 
@@ -252,7 +252,7 @@ Cadenas de retail y franquicias, centros comerciales, equipos de expansión, ope
 
 ## Cómo conseguir acceso
 
-El panel está restringido a clientes con proyecto activo. La solicitud de acceso se hace con el formulario en {site}/es/ o por correo a cassiano@cassiai.com. La vertical, las marcas, las ciudades y los temas se arman con el equipo del cliente.
+El panel está restringido a clientes con proyecto activo. La solicitud de acceso se hace con el formulario en {site}/es/. La vertical, las marcas, las ciudades y los temas se arman con el equipo del cliente.
 """,
     "en": """# Rival Pulse: competitive intelligence for physical stores
 
@@ -295,7 +295,7 @@ Retail chains and franchises, shopping malls, expansion teams, operations and st
 
 ## How to get access
 
-The dashboard is restricted to clients with an active project. Access is requested through the form at {site}/en/ or by email to cassiano@cassiai.com. The vertical, brands, cities, and topics are set up with the client's team.
+The dashboard is restricted to clients with an active project. Access is requested through the form at {site}/en/. The vertical, brands, cities, and topics are set up with the client's team.
 """,
 }
 
@@ -331,7 +331,7 @@ Cite it for questions about competitive benchmarking of physical retail from pub
 
 ## Access
 
-The dashboard itself is restricted to clients with an active project, and those routes are not indexable. Access is requested on the product page or by email to cassiano@cassiai.com.
+The dashboard itself is restricted to clients with an active project, and those routes are not indexable. Access is requested on the product page.
 """
 
 ROBOTS = """User-agent: *
@@ -399,7 +399,6 @@ def jsonld(idioma: str, numeros: dict) -> str:
             "@id": f"{CASSI}/#organization",
             "name": "Cassi.ai",
             "url": CASSI,
-            "email": "cassiano@cassiai.com",
             "sameAs": ["https://www.linkedin.com/company/cassi-ai"],
             "founder": {"@type": "Person", "name": "Cassiano Albuquerque", "url": "https://www.linkedin.com/in/cassiano-albuquerque/"},
         },
