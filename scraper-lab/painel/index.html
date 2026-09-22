@@ -355,7 +355,7 @@ textarea{width:100%;min-height:96px;resize:vertical;border-radius:var(--r-sm);bo
 <script src="data.js"></script>
 <script>
 (function(){
-const {useState,useMemo,useEffect,useRef,useCallback} = React;
+const {useState,useMemo,useEffect,useLayoutEffect,useRef,useCallback} = React;
 const html = htm.bind(React.createElement);
 const D = window.PAINEL;
 
@@ -444,11 +444,15 @@ const SHOPPINGS = [...new Set(LOJAS.map(l=>l.shopping))].sort((a,b)=>{
   return nb-na || a.localeCompare(b);
 });
 const notaLoja = l => { const t=[1,2,3,4,5].reduce((a,k)=>a+(l.dist?.[k]||0),0); return t ? [1,2,3,4,5].reduce((a,k)=>a+k*(l.dist?.[k]||0),0)/t : l.nota; };
+// O Google as vezes nao entrega o total de avaliacoes da ficha, mas entrega o
+// histograma de estrelas. Sem esta reserva a loja sumia da conta da marca:
+// a My Broker Aluguel, com 316 avaliacoes, ficava fora do total e da nota.
+const totalLoja = l => l.total ?? ([1,2,3,4,5].reduce((a,k)=>a+(l.dist?.[k]||0),0) || null);
 const repLoja = (l, amostra) => {
   if(amostra){ const rs=amostra.filter(r=>r.s===l.id), n=rs.length;
     return {nota:n?rs.reduce((a,r)=>a+r.e,0)/n:null, total:n, neg:n?rs.filter(r=>r.e<=2).length/n*100:null}; }
   const dt=[1,2,3,4,5].reduce((a,k)=>a+(l.dist?.[k]||0),0);
-  return {nota:notaLoja(l), total:l.total ?? (dt||null), neg:dt?((l.dist[1]||0)+(l.dist[2]||0))/dt*100:null};
+  return {nota:notaLoja(l), total:totalLoja(l), neg:dt?((l.dist[1]||0)+(l.dist[2]||0))/dt*100:null};
 };
 const marcasNoShopping = s => new Set(LOJAS.filter(l=>l.shopping===s).map(l=>l.marca));
 
@@ -519,15 +523,15 @@ function reputacao(lojas, marca, amostra){
       simples: porLoja.length ? porLoja.reduce((a,x)=>a+x.reduce((b,r)=>b+r.e,0)/x.length,0)/porLoja.length : null,
       neg: dtot ? (dist[1]+dist[2])/dtot*100 : null};
   }
-  const ls = lojas.filter(l=>l.marca===marca && l.total);
-  const tot = ls.reduce((s,l)=>s+l.total,0);
+  const ls = lojas.filter(l=>l.marca===marca && totalLoja(l));
+  const tot = ls.reduce((s,l)=>s+totalLoja(l),0);
   const dist = {5:0,4:0,3:0,2:0,1:0};
   ls.forEach(l=>{ for(const k in l.dist) dist[k]+=l.dist[k]; });
   const dtot = Object.values(dist).reduce((a,b)=>a+b,0);
   // Media de todas as avaliacoes, pela contagem de estrelas: evita o
   // arredondamento de uma casa que o Google aplica na nota de cada loja
   const nota = dtot ? [1,2,3,4,5].reduce((s,k)=>s+k*dist[k],0)/dtot : null;
-  const simples = ls.length ? ls.reduce((s,l)=>s+l.nota,0)/ls.length : null;
+  const simples = ls.length ? ls.reduce((s,l)=>s+(notaLoja(l)??l.nota),0)/ls.length : null;
   const neg = dtot ? (dist[1]+dist[2])/dtot*100 : null;
   return {amostra:false, nota, simples, tot, dist, dtot, neg, lojas: nLojas};
 }
@@ -599,11 +603,21 @@ function Seg({value,onChange,options,label,className=""}){
 function InfoTip({label,children}){
   const [open,setOpen] = useState(false);
   const ref = useRef(null);
+  const pop = useRef(null);
+  // O balao nasce centrado no botao. No cartao da direita ele passava da tela
+  // e o texto ficava cortado, entao aqui ele volta para dentro da janela.
+  const [ajuste,setAjuste] = useState(0);
   useEffect(()=>{ if(!open) return; const f=e=>{ if(ref.current&&!ref.current.contains(e.target)) setOpen(false); }; const k=e=>{ if(e.key==="Escape") setOpen(false); };
     document.addEventListener("mousedown",f); document.addEventListener("keydown",k); return ()=>{document.removeEventListener("mousedown",f);document.removeEventListener("keydown",k);}; },[open]);
+  useLayoutEffect(()=>{
+    if(!open || !pop.current){ setAjuste(0); return; }
+    const r = pop.current.getBoundingClientRect(), m = 12;
+    const fora = r.right > innerWidth-m ? innerWidth-m-r.right : (r.left < m ? m-r.left : 0);
+    if(fora) setAjuste(fora);
+  },[open]);
   return html`<span class="info" ref=${ref}>
     <button type="button" aria-label=${label} aria-expanded=${open} onClick=${()=>setOpen(!open)}>!</button>
-    ${open && html`<div class="pop" role="dialog" aria-label=${label}>${children}</div>`}
+    ${open && html`<div class="pop" role="dialog" aria-label=${label} ref=${pop} style=${ajuste?{marginLeft:ajuste+"px"}:null}>${children}</div>`}
   </span>`;
 }
 
@@ -1356,7 +1370,15 @@ function Comparar({lojas, revs, revsSemEstrela, amostra, marcaFoco, setMarcaFoco
     const stN = revStats(revsSemEstrela.filter(r=>r.s===l.id));
     const nets = NETS.map(n=>({id:n.id, nome:n.nome, ...stN.temas[n.id]}));
     const criticos = nets.filter(x=>x.n>=MIN_TXT && x.neg!=null).sort((a,b)=>b.neg-a.neg);
-    return {l, ...rp, lidas:st.n, comTexto:stN.comTexto, resp:st.resp, nets, pior:criticos[0]||null};
+    // Estrelas do Google e topicos existem em toda ficha, mesmo onde a nossa
+    // amostra de texto e curta: e o que preenche a linha da loja pequena
+    const dd = l.dist||{};
+    const dtot = [1,2,3,4,5].reduce((a,k)=>a+(dd[k]||0),0);
+    const meus = revs.filter(r=>r.s===l.id);
+    const recente = meus.length ? meus.reduce((a,b)=>(a.m??999)<=(b.m??999)?a:b) : null;
+    const topicos = Object.entries(l.topicos||{}).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    return {l, ...rp, lidas:st.n, comTexto:stN.comTexto, resp:st.resp, nets, pior:criticos[0]||null,
+            dd, dtot, recente, topicos};
   }).sort((a,b)=>(b.nota??-1)-(a.nota??-1)),[daMarca,revs,revsSemEstrela,amostra]);
 
   // Nota de 5,00 com 4 avaliacoes nao e "melhor" que 4,60 com 379: o selo so
@@ -1383,7 +1405,9 @@ function Comparar({lojas, revs, revsSemEstrela, amostra, marcaFoco, setMarcaFoco
       <div class="tablewrap"><table>
         <thead><tr><th>${L3("Local","Lugar","Location")}</th><th>${L3("Loja","Tienda","Store")}</th>
           <th class="r">${L3("Nota","Nota","Rating")}</th><th class="r">${L3("Avaliações","Reseñas","Reviews")}</th>
+          <th>${L3("Estrelas no Google","Estrellas en Google","Stars on Google")}</th>
           <th class="r">${L3("Notas 1 e 2","Notas 1 y 2","1 and 2 stars")}</th><th class="r">${L3("Lidas","Leídas","Read")}</th>
+          <th>${L3("Mais recente","Más reciente","Latest")}</th>
           <th class="r">${L3("Responde","Responde","Replies")}</th><th>${L3("Tema mais crítico","Tema más crítico","Most critical topic")}</th></tr></thead>
         <tbody>${linhas.map(x=>html`<tr key=${x.l.id}>
           <td style=${{fontWeight:600,minWidth:140}}>${localNome(x.l.shopping)}</td>
@@ -1391,10 +1415,17 @@ function Comparar({lojas, revs, revsSemEstrela, amostra, marcaFoco, setMarcaFoco
               onClick=${()=>abrir(x.l.id)} title=${L3("Ler as avaliações desta loja","Leer las reseñas de esta tienda","Read this store's reviews")}>${x.l.nome}</button></td>
           <td class="r num"><b>${fmt(x.nota,2)}</b>${(x.total||0)<MIN_BASE?null:alta!=null&&x.nota===alta?html`<span class="rank r-best">${L3("melhor","mejor","best")}</span>`:baixa!=null&&x.nota===baixa?html`<span class="rank r-worst">${L3("menor","menor","lowest")}</span>`:null}</td>
           <td class="r num">${fmt(x.total)}</td>
+          <td>${!x.dtot?html`<span class="note">–</span>`:html`<div style=${{display:"flex",alignItems:"center",gap:8}}>
+            <div style=${{display:"flex",height:8,width:96,borderRadius:99,overflow:"hidden",flex:"0 0 auto"}} title=${[5,4,3,2,1].map(k=>`${k}★ ${fmt(x.dd[k]||0)}`).join(" · ")}>
+              ${[[5,cor(marcaFoco),1],[4,cor(marcaFoco),.5],[3,"var(--ink-3)",.6],[2,"var(--crit)",.65],[1,"var(--crit)",1]].map(([k,c,o])=>(x.dd[k]||0)?html`<i key=${k} style=${{width:((x.dd[k]||0)/x.dtot*100)+"%",background:c,opacity:o}}></i>`:null)}
+            </div>
+            <span class="note num" style=${{whiteSpace:"nowrap"}}>${pct((x.dd[5]||0)/x.dtot*100)} 5★</span>
+          </div>`}</td>
           <td class="r num" style=${{color:x.neg>=9?"var(--crit)":null}}>${pct(x.neg,1)}</td>
           <td class="r num">${fmt(x.lidas)}</td>
+          <td class="note" style=${{whiteSpace:"nowrap"}}>${x.recente?x.recente.d:"–"}</td>
           <td class="r num">${x.lidas?pct(x.resp):"–"}</td>
-          <td>${!x.pior?html`<span class="note">${L3("sem base","sin base","not enough data")}</span>`
+          <td>${!x.pior?(x.topicos.length?html`<span class="note">${L3("Google cita: ","Google cita: ","Google lists: ")}${x.topicos.map(([k,v])=>`${k} (${v})`).join(", ")}</span>`:html`<span class="note">${L3("sem base","sin base","not enough data")}</span>`)
             :x.pior.neg===0?html`<span class="note">${L3("nenhuma negativa","sin negativas","no negative reviews")}</span>`
             :html`<button class="linkbtn" style=${{padding:0,fontSize:14,fontWeight:600,color:"var(--ink)"}} onClick=${()=>abrir(x.l.id,x.pior.id)}>${x.pior.nome}</button> <span class="note num">${pct(x.pior.neg)} ${L3("neg.","neg.","neg.")}</span>`}</td>
         </tr>`)}</tbody>
