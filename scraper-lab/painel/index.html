@@ -289,6 +289,7 @@ textarea{width:100%;min-height:96px;resize:vertical;border-radius:var(--r-sm);bo
 .info>button{width:18px;height:18px;border-radius:50%;border:0;background:var(--chip);color:var(--ink-2);font-size:11px;font-weight:800;line-height:1;padding:0;display:inline-flex;align-items:center;justify-content:center}
 .info>button:hover,.info>button[aria-expanded="true"]{background:var(--accent);color:var(--accent-ink)}
 .pop{position:absolute;z-index:30;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(320px,80vw);background:var(--panel);border-radius:var(--r-sm);box-shadow:var(--lift);padding:14px 16px;font-size:12.5px;line-height:1.55;color:var(--ink-2);text-align:left;white-space:normal}
+.pop.solto{position:fixed;left:0;top:0;transform:none;margin:0}
 .pop b{color:var(--ink)}
 .pop p{margin:0 0 6px}
 .matrix td{vertical-align:top}
@@ -604,20 +605,36 @@ function InfoTip({label,children}){
   const [open,setOpen] = useState(false);
   const ref = useRef(null);
   const pop = useRef(null);
-  // O balao nasce centrado no botao. No cartao da direita ele passava da tela
-  // e o texto ficava cortado, entao aqui ele volta para dentro da janela.
-  const [ajuste,setAjuste] = useState(0);
-  useEffect(()=>{ if(!open) return; const f=e=>{ if(ref.current&&!ref.current.contains(e.target)) setOpen(false); }; const k=e=>{ if(e.key==="Escape") setOpen(false); };
-    document.addEventListener("mousedown",f); document.addEventListener("keydown",k); return ()=>{document.removeEventListener("mousedown",f);document.removeEventListener("keydown",k);}; },[open]);
-  useLayoutEffect(()=>{
-    if(!open || !pop.current){ setAjuste(0); return; }
-    const r = pop.current.getBoundingClientRect(), m = 12;
-    const fora = r.right > innerWidth-m ? innerWidth-m-r.right : (r.left < m ? m-r.left : 0);
-    if(fora) setAjuste(fora);
-  },[open]);
+  const [pos,setPos] = useState(null);
+  // O cartao da marca tem overflow:hidden (cantos arredondados) e transform no
+  // hover, entao um balao dentro dele era cortado embaixo e do lado. Ele sai
+  // para o body e se posiciona pela janela, virando para cima quando falta
+  // espaco. Ao rolar ele acompanha o botao, em vez de fechar: fechar no scroll
+  // sumia sozinho, porque qualquer elemento da pagina dispara o evento.
+  const posicionar = useCallback(()=>{
+    if(!pop.current || !ref.current) return;
+    const b = ref.current.getBoundingClientRect(), r = pop.current.getBoundingClientRect(), m = 12;
+    const left = Math.max(m, Math.min(b.left + b.width/2 - r.width/2, innerWidth - m - r.width));
+    const abaixo = b.bottom + 8;
+    const top = abaixo + r.height > innerHeight - m && b.top - 8 - r.height > m
+      ? b.top - 8 - r.height : Math.min(abaixo, Math.max(m, innerHeight - m - r.height));
+    setPos(p => p && Math.abs(p.left-left)<0.5 && Math.abs(p.top-top)<0.5 ? p : {left, top});
+  },[]);
+  useEffect(()=>{ if(!open){ setPos(null); return; }
+    const dentro = e => (ref.current&&ref.current.contains(e.target)) || (pop.current&&pop.current.contains(e.target));
+    const f=e=>{ if(!dentro(e)) setOpen(false); };
+    const k=e=>{ if(e.key==="Escape") setOpen(false); };
+    document.addEventListener("mousedown",f); document.addEventListener("keydown",k);
+    addEventListener("scroll",posicionar,true); addEventListener("resize",posicionar);
+    return ()=>{document.removeEventListener("mousedown",f);document.removeEventListener("keydown",k);
+      removeEventListener("scroll",posicionar,true); removeEventListener("resize",posicionar);}; },[open,posicionar]);
+  useLayoutEffect(()=>{ if(open) posicionar(); },[open,posicionar]);
   return html`<span class="info" ref=${ref}>
     <button type="button" aria-label=${label} aria-expanded=${open} onClick=${()=>setOpen(!open)}>!</button>
-    ${open && html`<div class="pop" role="dialog" aria-label=${label} ref=${pop} style=${ajuste?{marginLeft:ajuste+"px"}:null}>${children}</div>`}
+    ${open && ReactDOM.createPortal(
+      html`<div class="pop solto" role="dialog" aria-label=${label} ref=${pop}
+        style=${{left:(pos?pos.left:0)+"px", top:(pos?pos.top:0)+"px", visibility:pos?"visible":"hidden",
+                 maxHeight:"min(70vh, 520px)", overflowY:"auto"}}>${children}</div>`, document.body)}
   </span>`;
 }
 
@@ -1379,12 +1396,20 @@ function Comparar({lojas, revs, revsSemEstrela, amostra, marcaFoco, setMarcaFoco
     const topicos = Object.entries(l.topicos||{}).sort((a,b)=>b[1]-a[1]).slice(0,3);
     return {l, ...rp, lidas:st.n, comTexto:stN.comTexto, resp:st.resp, nets, pior:criticos[0]||null,
             dd, dtot, recente, topicos};
-  }).sort((a,b)=>(b.nota??-1)-(a.nota??-1)),[daMarca,revs,revsSemEstrela,amostra]);
+  }).sort((a,b)=>{
+    // Loja sem avaliacao coletada vai para o fim das duas tabelas: ela so tem
+    // o que o Google mostra, entao ficar no topo por nota alta atrapalha a leitura
+    const nivel = x => x.comTexto>=MIN_TXT ? 0 : (x.lidas ? 1 : 2);
+    return nivel(a)-nivel(b) || (b.nota??-1)-(a.nota??-1);
+  }),[daMarca,revs,revsSemEstrela,amostra]);
 
   // Nota de 5,00 com 4 avaliacoes nao e "melhor" que 4,60 com 379: o selo so
   // vale com base minima, e some no empate para nao marcar quatro melhores
   const MIN_BASE = 20;
-  const comBase = linhas.filter(x=>x.nota!=null && (x.total||0)>=MIN_BASE).map(x=>x.nota);
+  // Selo so entre as lojas com avaliacao coletada: sem isso o "melhor" caia
+  // numa loja do fim da lista, da qual so sabemos o que o Google mostra
+  const elegivel = x => x.nota!=null && (x.total||0)>=MIN_BASE && x.comTexto>=MIN_TXT;
+  const comBase = linhas.filter(elegivel).map(x=>x.nota);
   const unico = v => v!=null && comBase.filter(n=>n===v).length===1;
   const alta = comBase.length>1 && unico(Math.max(...comBase)) ? Math.max(...comBase) : null;
   const baixa = comBase.length>1 && unico(Math.min(...comBase)) ? Math.min(...comBase) : null;
@@ -1400,7 +1425,7 @@ function Comparar({lojas, revs, revsSemEstrela, amostra, marcaFoco, setMarcaFoco
 
     <section class="panel" style=${{marginTop:16}}>
       <div class="ph"><div><h2>${L3("Loja a loja dentro da marca","Tienda por tienda dentro de la marca","Store by store within the brand")}</h2>
-        <p class="sub">${L3(`Da melhor para a menor nota. “Melhor” e “menor” só marcam lojas com ao menos ${MIN_BASE} avaliações, para não premiar nota alta de base pequena.`,`De la mejor a la menor nota. “Mejor” y “menor” solo marcan tiendas con al menos ${MIN_BASE} reseñas, para no premiar una nota alta con base pequeña.`,`From the highest to the lowest rating. “Best” and “lowest” only mark stores with at least ${MIN_BASE} reviews, so a high rating on a small base is not rewarded.`)} ${amostra?L3("Com filtro de avaliação ligado, nota, avaliações e notas 1 e 2 saem da amostra filtrada.","Con un filtro de reseñas activo, la nota, las reseñas y las notas 1 y 2 salen de la muestra filtrada.","With a review filter on, rating, reviews and 1 and 2 stars come from the filtered sample."):L3("Nota, avaliações e notas 1 e 2 são o total do Google; “lidas” e “responde” saem das avaliações coletadas.","La nota, las reseñas y las notas 1 y 2 son el total de Google; “leídas” y “responde” salen de las reseñas recogidas.","Rating, reviews and 1 and 2 stars are Google's totals; “read” and “replies” come from the collected reviews.")}</p></div></div>
+        <p class="sub">${L3(`Da melhor para a menor nota, com as lojas sem avaliação coletada no fim. “Melhor” e “menor” só marcam quem tem avaliação lida e ao menos ${MIN_BASE} avaliações no Google, para não premiar nota alta de base pequena.`,`De la mejor a la menor nota, con las tiendas sin reseñas recogidas al final. “Mejor” y “menor” solo marcan a quien tiene reseñas leídas y al menos ${MIN_BASE} reseñas en Google, para no premiar una nota alta con base pequeña.`,`From the highest to the lowest rating, with stores without collected reviews at the end. “Best” and “lowest” only mark stores that have collected reviews and at least ${MIN_BASE} Google reviews, so a high rating on a small base is not rewarded.`)} ${amostra?L3("Com filtro de avaliação ligado, nota, avaliações e notas 1 e 2 saem da amostra filtrada.","Con un filtro de reseñas activo, la nota, las reseñas y las notas 1 y 2 salen de la muestra filtrada.","With a review filter on, rating, reviews and 1 and 2 stars come from the filtered sample."):L3("Nota, avaliações e notas 1 e 2 são o total do Google; “lidas” e “responde” saem das avaliações coletadas.","La nota, las reseñas y las notas 1 y 2 son el total de Google; “leídas” y “responde” salen de las reseñas recogidas.","Rating, reviews and 1 and 2 stars are Google's totals; “read” and “replies” come from the collected reviews.")}</p></div></div>
       ${!linhas.length ? html`<div class="empty">${L3("Sem loja desta marca no recorte","Sin tiendas de esta marca en la selección","No stores of this brand in the selection")}</div>` : html`
       <div class="tablewrap"><table>
         <thead><tr><th>${L3("Local","Lugar","Location")}</th><th>${L3("Loja","Tienda","Store")}</th>
@@ -1413,7 +1438,7 @@ function Comparar({lojas, revs, revsSemEstrela, amostra, marcaFoco, setMarcaFoco
           <td style=${{fontWeight:600,minWidth:140}}>${localNome(x.l.shopping)}</td>
           <td><button class="linkbtn" style=${{padding:0,fontSize:14,fontWeight:600,color:"var(--ink)",textAlign:"left"}}
               onClick=${()=>abrir(x.l.id)} title=${L3("Ler as avaliações desta loja","Leer las reseñas de esta tienda","Read this store's reviews")}>${x.l.nome}</button></td>
-          <td class="r num"><b>${fmt(x.nota,2)}</b>${(x.total||0)<MIN_BASE?null:alta!=null&&x.nota===alta?html`<span class="rank r-best">${L3("melhor","mejor","best")}</span>`:baixa!=null&&x.nota===baixa?html`<span class="rank r-worst">${L3("menor","menor","lowest")}</span>`:null}</td>
+          <td class="r num"><b>${fmt(x.nota,2)}</b>${!elegivel(x)?null:alta!=null&&x.nota===alta?html`<span class="rank r-best">${L3("melhor","mejor","best")}</span>`:baixa!=null&&x.nota===baixa?html`<span class="rank r-worst">${L3("menor","menor","lowest")}</span>`:null}</td>
           <td class="r num">${fmt(x.total)}</td>
           <td>${!x.dtot?html`<span class="note">–</span>`:html`<div style=${{display:"flex",alignItems:"center",gap:8}}>
             <div style=${{display:"flex",height:8,width:96,borderRadius:99,overflow:"hidden",flex:"0 0 auto"}} title=${[5,4,3,2,1].map(k=>`${k}★ ${fmt(x.dd[k]||0)}`).join(" · ")}>
