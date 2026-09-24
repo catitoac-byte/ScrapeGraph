@@ -210,7 +210,7 @@ def montar() -> None:
     dic = dicionarios(modelo)
     coleta = max((d.get("coleta", "") for _, d in verticais), default="")[:10]
     for idioma in seo.IDIOMAS:
-        destino_idioma = pub if idioma == "pt" else pub / idioma
+        destino_idioma = pub if idioma == "en" else pub / idioma
         destino_idioma.mkdir(parents=True, exist_ok=True)
         (destino_idioma / "index.html").write_text(pagina(modelo, idioma, trocas, dic), encoding="utf-8")
         (destino_idioma / "index.md").write_text(aplicar(seo.markdown(idioma), trocas), encoding="utf-8")

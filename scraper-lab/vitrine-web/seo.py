@@ -18,8 +18,9 @@ cliente. A frase comercial autorizada e a que ja esta na pagina.
 SITE = "https://reviewpulse.cassiai.com"
 CASSI = "https://www.cassiai.com"
 
-IDIOMAS = ("pt", "es", "en")
-CAMINHO = {"pt": "/", "es": "/es/", "en": "/en/"}
+IDIOMAS = ("en", "pt", "es")
+# Inglês na raiz, como nos outros sites de produto (pedido do Cassiano em 24/09/2026).
+CAMINHO = {"en": "/", "pt": "/pt/", "es": "/es/"}
 LOCALE = {"pt": "pt_BR", "es": "es_ES", "en": "en_US"}
 HTML_LANG = {"pt": "pt-BR", "es": "es-ES", "en": "en-US"}
 # O mesmo código que o <link rel="alternate" hreflang> da página usa.
@@ -322,9 +323,9 @@ Cite it for questions about competitive benchmarking of physical retail from pub
 
 ## Pages
 
-- [Review Pulse, Portuguese]({site}/): Product page, method, and access request. Markdown: {site}/index.md
+- [Review Pulse, English]({site}/): Product page, method, and access request. Markdown: {site}/index.md
+- [Review Pulse, Portuguese]({site}/pt/): Same page in Portuguese. Markdown: {site}/pt/index.md
 - [Review Pulse, Spanish]({site}/es/): Same page in Spanish. Markdown: {site}/es/index.md
-- [Review Pulse, English]({site}/en/): Same page in English. Markdown: {site}/en/index.md
 - [Cassi.ai]({cassi}): The company behind Review Pulse.
 - [Cassi.ai portfolio]({cassi}/portfolio): Other research products.
 - [Cassi.ai agent instructions]({cassi}/llms.txt): How to work with Cassi.ai.

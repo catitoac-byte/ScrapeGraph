@@ -96,6 +96,21 @@
       ],
       "destination": "https://reviewpulse.cassiai.com/$1",
       "permanent": true
+    },
+    {
+      "source": "/en",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en/index.md",
+      "destination": "/index.md",
+      "permanent": true
     }
   ]
 }
