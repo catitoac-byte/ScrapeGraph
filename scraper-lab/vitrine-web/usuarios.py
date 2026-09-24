@@ -1,5 +1,5 @@
 """
-Usuarios do Rival Pulse e as verticais que cada um abre.
+Usuarios do Review Pulse e as verticais que cada um abre.
 
     uv run python vitrine-web/usuarios.py listar
     uv run python vitrine-web/usuarios.py novo cliente-x moda supermercados

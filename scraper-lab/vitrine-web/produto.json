@@ -1,8 +1,11 @@
 {
-  "nome": "Rival Pulse",
+  "nome": "Review Pulse",
   "projeto": "rivalpulse",
-  "dominio": "rivalpulse.cassiai.com",
-  "dominios_antigos": {"moda": "vitrine.cassiai.com", "supermercados": "atacarejo.cassiai.com"},
+  "dominio": "reviewpulse.cassiai.com",
+  "dominios_antigos": {
+    "moda": "vitrine.cassiai.com",
+    "supermercados": "atacarejo.cassiai.com"
+  },
   "textos": {
     "pt": {
       "temas_lista": "atendimento, fila, preço, produto, trocas, falta de item e estrutura da loja",

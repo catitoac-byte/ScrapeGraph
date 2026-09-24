@@ -32,7 +32,7 @@ export async function POST(req) {
   if (!c.nome || !c.vertical || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c.email)) return json({ ok: false, erro: "campos" }, 422);
 
   const para = process.env.CONTATO_PARA || "cassiano@cassiai.com";
-  const assunto = `Rival Pulse · pedido de acesso · ${c.vertical} · ${c.nome}`;
+  const assunto = `Review Pulse · pedido de acesso · ${c.vertical} · ${c.nome}`;
   const texto = [
     `Nome: ${c.nome}`,
     `Empresa: ${c.empresa || "-"}`,
@@ -50,7 +50,7 @@ export async function POST(req) {
         host: "smtp.gmail.com", port: 465, secure: true,
         auth: { user: process.env.GMAIL_USUARIO, pass: process.env.GMAIL_SENHA_APP.replace(/\s+/g, "") },
       });
-      await t.sendMail({ from: `"Rival Pulse" <${process.env.GMAIL_USUARIO}>`, to: para, replyTo: c.email, subject: assunto, text: texto });
+      await t.sendMail({ from: `"Review Pulse" <${process.env.GMAIL_USUARIO}>`, to: para, replyTo: c.email, subject: assunto, text: texto });
       return json({ ok: true });
     } catch (e) {
       console.error("contato gmail:", e && e.code);
@@ -64,7 +64,7 @@ export async function POST(req) {
     method: "POST",
     headers: { Authorization: `Bearer ${chave}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: process.env.CONTATO_DE || "Rival Pulse <onboarding@resend.dev>",
+      from: process.env.CONTATO_DE || "Review Pulse <onboarding@resend.dev>",
       to: [para],
       reply_to: c.email,
       subject: assunto,

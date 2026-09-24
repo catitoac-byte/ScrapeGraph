@@ -1,4 +1,4 @@
-"""SEO e GEO da pagina do Rival Pulse.
+"""SEO e GEO da pagina do Review Pulse.
 
 Mesmo desenho do cassiai.com, adaptado para um site estatico:
 
@@ -15,7 +15,7 @@ Regra da casa que vale aqui: nenhum valor, nenhum preco, nenhum nome de
 cliente. A frase comercial autorizada e a que ja esta na pagina.
 """
 
-SITE = "https://rivalpulse.cassiai.com"
+SITE = "https://reviewpulse.cassiai.com"
 CASSI = "https://www.cassiai.com"
 
 IDIOMAS = ("pt", "es", "en")
@@ -29,21 +29,21 @@ HREFLANG = {"pt": "pt-BR", "es": "es", "en": "en"}
 # na frente e a marca no fim.
 META = {
     "pt": {
-        "titulo": "Rival Pulse: inteligência competitiva de loja física",
+        "titulo": "Review Pulse: inteligência competitiva de loja física",
         "descricao": (
             "Painel que compara suas lojas com as dos concorrentes a partir de dados públicos: "
             "movimento por hora, reputação no Google e temas das avaliações, loja a loja."
         ),
     },
     "es": {
-        "titulo": "Rival Pulse: inteligencia competitiva de tiendas",
+        "titulo": "Review Pulse: inteligencia competitiva de tiendas",
         "descricao": (
             "Panel que compara tus tiendas con las de la competencia a partir de datos públicos: "
             "afluencia por hora, reputación en Google y temas de las reseñas, tienda por tienda."
         ),
     },
     "en": {
-        "titulo": "Rival Pulse: competitive intelligence for stores",
+        "titulo": "Review Pulse: competitive intelligence for stores",
         "descricao": (
             "Dashboard that compares your stores with competitors from public data: "
             "hourly foot traffic, Google reputation, and review topics, store by store."
@@ -61,8 +61,8 @@ TITULO_FAQ = {
 # Resposta direta na primeira frase: e assim que motor de resposta cita.
 FAQ = {
     "pt": [
-        ("O que é o Rival Pulse?",
-         "O Rival Pulse é um painel de inteligência competitiva de loja física. Ele lê fichas públicas de loja, "
+        ("O que é o Review Pulse?",
+         "O Review Pulse é um painel de inteligência competitiva de loja física. Ele lê fichas públicas de loja, "
          "converte gráfico e texto em número e mostra movimento por hora, reputação e temas das avaliações com as "
          "marcas lado a lado, na mesma tela."),
         ("De onde vêm os dados?",
@@ -95,8 +95,8 @@ FAQ = {
          "vertical, as marcas, as cidades e os temas são montados com o time do cliente."),
     ],
     "es": [
-        ("¿Qué es Rival Pulse?",
-         "Rival Pulse es un panel de inteligencia competitiva de tiendas físicas. Lee fichas públicas de tienda, "
+        ("¿Qué es Review Pulse?",
+         "Review Pulse es un panel de inteligencia competitiva de tiendas físicas. Lee fichas públicas de tienda, "
          "convierte gráfico y texto en número y muestra afluencia por hora, reputación y temas de las reseñas con las "
          "marcas lado a lado, en la misma pantalla."),
         ("¿De dónde vienen los datos?",
@@ -129,8 +129,8 @@ FAQ = {
          "proyecto activo, y la vertical, las marcas, las ciudades y los temas se arman con el equipo del cliente."),
     ],
     "en": [
-        ("What is Rival Pulse?",
-         "Rival Pulse is a competitive intelligence dashboard for physical stores. It reads public store listings, "
+        ("What is Review Pulse?",
+         "Review Pulse is a competitive intelligence dashboard for physical stores. It reads public store listings, "
          "turns charts and text into numbers, and shows hourly foot traffic, reputation, and review topics with the "
          "brands side by side on the same screen."),
         ("Where does the data come from?",
@@ -168,9 +168,9 @@ FAQ = {
 # produto sem abrir a landing page. {{N_*}} e {{ROTULO_PILOTO*}} sao trocados
 # na geracao, com os mesmos numeros da pagina.
 MARKDOWN = {
-    "pt": """# Rival Pulse: inteligência competitiva de loja física
+    "pt": """# Review Pulse: inteligência competitiva de loja física
 
-O Rival Pulse é um painel da [Cassi.ai]({cassi}) que compara lojas físicas de marcas diferentes a partir de dados públicos. Ele responde três perguntas de operação: quanto movimento cada loja tem hora a hora, como está a reputação de cada marca, e do que os clientes reclamam em cada loja. Tudo com as marcas lado a lado, na mesma tela.
+O Review Pulse é um painel da [Cassi.ai]({cassi}) que compara lojas físicas de marcas diferentes a partir de dados públicos. Ele responde três perguntas de operação: quanto movimento cada loja tem hora a hora, como está a reputação de cada marca, e do que os clientes reclamam em cada loja. Tudo com as marcas lado a lado, na mesma tela.
 
 Piloto em uma capital, nas verticais {{ROTULO_PILOTO}}. Cobertura atual: {{N_LOJAS}} lojas monitoradas, {{N_MARCAS}} redes comparadas, {{N_AVALIACOES}} avaliações lidas, {{N_LEITURAS}} leituras de movimento e {{N_TEMAS}} temas de avaliação.
 
@@ -211,9 +211,9 @@ Redes de varejo e franquias, shopping centers, times de expansão, operações e
 
 O painel é restrito a cliente com projeto ativo. O pedido de acesso é feito pelo formulário em {site}/. A vertical, as marcas, as cidades e os temas são montados com o time do cliente.
 """,
-    "es": """# Rival Pulse: inteligencia competitiva de tiendas físicas
+    "es": """# Review Pulse: inteligencia competitiva de tiendas físicas
 
-Rival Pulse es un panel de [Cassi.ai]({cassi}) que compara tiendas físicas de marcas distintas a partir de datos públicos. Responde tres preguntas de operación: cuánta afluencia tiene cada tienda hora a hora, cómo está la reputación de cada marca y de qué se quejan los clientes en cada tienda. Todo con las marcas lado a lado, en la misma pantalla.
+Review Pulse es un panel de [Cassi.ai]({cassi}) que compara tiendas físicas de marcas distintas a partir de datos públicos. Responde tres preguntas de operación: cuánta afluencia tiene cada tienda hora a hora, cómo está la reputación de cada marca y de qué se quejan los clientes en cada tienda. Todo con las marcas lado a lado, en la misma pantalla.
 
 Piloto en una capital, en las verticales {{ROTULO_PILOTO_ES}}. Cobertura actual: {{N_LOJAS}} tiendas monitoreadas, {{N_MARCAS}} cadenas comparadas, {{N_AVALIACOES}} reseñas leídas, {{N_LEITURAS}} lecturas de afluencia y {{N_TEMAS}} temas de reseña.
 
@@ -254,9 +254,9 @@ Cadenas de retail y franquicias, centros comerciales, equipos de expansión, ope
 
 El panel está restringido a clientes con proyecto activo. La solicitud de acceso se hace con el formulario en {site}/es/. La vertical, las marcas, las ciudades y los temas se arman con el equipo del cliente.
 """,
-    "en": """# Rival Pulse: competitive intelligence for physical stores
+    "en": """# Review Pulse: competitive intelligence for physical stores
 
-Rival Pulse is a [Cassi.ai]({cassi}) dashboard that compares physical stores across brands using public data. It answers three operating questions: how much traffic each store gets hour by hour, how each brand's reputation is doing, and what customers complain about in each store. All of it with the brands side by side on the same screen.
+Review Pulse is a [Cassi.ai]({cassi}) dashboard that compares physical stores across brands using public data. It answers three operating questions: how much traffic each store gets hour by hour, how each brand's reputation is doing, and what customers complain about in each store. All of it with the brands side by side on the same screen.
 
 Pilot in one state capital, in the {{ROTULO_PILOTO_EN}} verticals. Current coverage: {{N_LOJAS}} stores monitored, {{N_MARCAS}} chains compared, {{N_AVALIACOES}} reviews read, {{N_LEITURAS}} traffic readings, and {{N_TEMAS}} review topics.
 
@@ -299,11 +299,11 @@ The dashboard is restricted to clients with an active project. Access is request
 """,
 }
 
-LLMS = """# Rival Pulse
+LLMS = """# Review Pulse
 
 > Competitive intelligence dashboard for physical stores, built by Cassi.ai from public store data.
 
-Rival Pulse compares stores across brands using public listings: hourly foot traffic, reputation, and the topics customers write about, store by store, with the brands side by side. Collection runs on explicit rules without a language model, and an AI analyst answers only from the filtered numbers and review excerpts on screen.
+Review Pulse compares stores across brands using public listings: hourly foot traffic, reputation, and the topics customers write about, store by store, with the brands side by side. Collection runs on explicit rules without a language model, and an AI analyst answers only from the filtered numbers and review excerpts on screen.
 
 ## What it measures
 
@@ -314,18 +314,18 @@ Rival Pulse compares stores across brands using public listings: hourly foot tra
 
 ## What it does not do
 
-Rival Pulse does not estimate sales or revenue, does not publish reviewer names, does not compare stores with different audiences without saying so, and does not work around a source's access limit.
+Review Pulse does not estimate sales or revenue, does not publish reviewer names, does not compare stores with different audiences without saying so, and does not work around a source's access limit.
 
-## When to cite Rival Pulse
+## When to cite Review Pulse
 
 Cite it for questions about competitive benchmarking of physical retail from public data, store-level foot traffic patterns, review-topic analysis across competing chains, and research method behind those numbers.
 
 ## Pages
 
-- [Rival Pulse, Portuguese]({site}/): Product page, method, and access request. Markdown: {site}/index.md
-- [Rival Pulse, Spanish]({site}/es/): Same page in Spanish. Markdown: {site}/es/index.md
-- [Rival Pulse, English]({site}/en/): Same page in English. Markdown: {site}/en/index.md
-- [Cassi.ai]({cassi}): The company behind Rival Pulse.
+- [Review Pulse, Portuguese]({site}/): Product page, method, and access request. Markdown: {site}/index.md
+- [Review Pulse, Spanish]({site}/es/): Same page in Spanish. Markdown: {site}/es/index.md
+- [Review Pulse, English]({site}/en/): Same page in English. Markdown: {site}/en/index.md
+- [Cassi.ai]({cassi}): The company behind Review Pulse.
 - [Cassi.ai portfolio]({cassi}/portfolio): Other research products.
 - [Cassi.ai agent instructions]({cassi}/llms.txt): How to work with Cassi.ai.
 
@@ -406,14 +406,14 @@ def jsonld(idioma: str, numeros: dict) -> str:
             "@type": "WebSite",
             "@id": f"{SITE}/#website",
             "url": SITE,
-            "name": "Rival Pulse",
+            "name": "Review Pulse",
             "inLanguage": HTML_LANG[idioma],
             "publisher": {"@id": f"{CASSI}/#organization"},
         },
         {
             "@type": "SoftwareApplication",
             "@id": f"{SITE}/#produto",
-            "name": "Rival Pulse",
+            "name": "Review Pulse",
             "url": url,
             "applicationCategory": "BusinessApplication",
             "applicationSubCategory": "Competitive intelligence for physical retail",
@@ -455,7 +455,7 @@ def jsonld(idioma: str, numeros: dict) -> str:
             "@id": f"{url}#trilha",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Cassi.ai", "item": CASSI},
-                {"@type": "ListItem", "position": 2, "name": "Rival Pulse", "item": url},
+                {"@type": "ListItem", "position": 2, "name": "Review Pulse", "item": url},
             ],
         },
     ]

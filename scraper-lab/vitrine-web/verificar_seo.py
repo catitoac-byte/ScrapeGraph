@@ -1,7 +1,7 @@
-"""Confere o SEO e o GEO do Rival Pulse, no pacote gerado ou no ar.
+"""Confere o SEO e o GEO do Review Pulse, no pacote gerado ou no ar.
 
     python3 vitrine-web/verificar_seo.py                 # sites/rivalpulse/public
-    python3 vitrine-web/verificar_seo.py --ar            # https://rivalpulse.cassiai.com
+    python3 vitrine-web/verificar_seo.py --ar            # https://reviewpulse.cassiai.com
 
 O que ele cobra, em cada idioma: titulo e descricao proprios, canonico certo,
 hreflang para os tres idiomas, espelho em markdown declarado e existente,
@@ -112,7 +112,7 @@ def raiz(no_ar: bool) -> None:
     exige("painel" not in mapa and "/v/" not in mapa, "sitemap.xml: endereço privado listado")
 
     llms, _ = ler("/llms.txt", no_ar)
-    exige(llms.startswith("# Rival Pulse"), "llms.txt: sem título")
+    exige(llms.startswith("# Review Pulse"), "llms.txt: sem título")
     exige("index.md" in llms and "cassiai.com" in llms, "llms.txt: sem os espelhos ou sem a Cassi.ai")
 
     if no_ar:

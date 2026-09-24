@@ -1,5 +1,5 @@
 """
-Monta o site unico do Rival Pulse com todas as verticais piloto.
+Monta o site unico do Review Pulse com todas as verticais piloto.
 
     uv run python vitrine-web/gerar_site.py
     uv run python vitrine-web/gerar_site.py --redirecionamentos
