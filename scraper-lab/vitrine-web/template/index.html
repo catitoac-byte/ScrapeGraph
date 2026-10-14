@@ -392,6 +392,7 @@ dialog.contato[open]{animation:ct-abre .4s cubic-bezier(.3,1.3,.5,1)}
         <h2 id="login-t" data-t="t6">Acesse o painel</h2>
         <p class="sub" data-t="t7">Área restrita a clientes com projeto ativo.</p>
         <div class="msg err" id="m-erro" role="alert" data-t="t8">Usuário ou senha não conferem. Confira e tente de novo.</div>
+        <div class="msg err" id="m-limite" role="alert" data-t="t104">Muitas tentativas seguidas. Aguarde 15 minutos e tente de novo.</div>
         <div class="msg info" id="m-entrar" role="status" data-t="t9">Entre com seu usuário para abrir o painel.</div>
         <form method="post" action="/api/login">
           <label for="usuario"><span data-t="f1">Usuário</span>
@@ -701,6 +702,7 @@ var DIC = {
 "t101": "Cassi.ai es una empresa de ingeniería de software especializada en los desafíos de investigación, innovación e insights. Veinte años en investigación de mercados, ex ESOMAR Brasil, con charlas en IIEX, ESOMAR y ABEP.",
 "t102": "Review Pulse es un producto de <a href=\"https://cassiai.com\">Cassi.ai</a>. Datos de fichas públicas, recolectados con fecha y método registrados.",
 "t103": "Otros productos Cassi.ai:",
+"t104": "Demasiados intentos seguidos. Espere 15 minutos e intente de nuevo.",
 "f1": "Usuario",
 "f2": "Contraseña",
 "x3": "Datos ilustrativos. Los ejemplos avanzan solos: pase el mouse por encima para leer con calma.",
@@ -848,6 +850,7 @@ var DIC = {
 "t101": "Cassi.ai is a software engineering company focused on the pain points of research, innovation and insights. Twenty years in market research, former ESOMAR Brazil, with talks at IIEX, ESOMAR and ABEP.",
 "t102": "Review Pulse is a <a href=\"https://cassiai.com\">Cassi.ai</a> product. Data from public listings, collected with date and method on record.",
 "t103": "Other Cassi.ai products:",
+"t104": "Too many attempts in a row. Wait 15 minutes and try again.",
 "f1": "Username",
 "f2": "Password",
 "x3": "Illustrative data. The examples play on their own: hover to read at your pace.",
@@ -1159,7 +1162,8 @@ addEventListener("resize", function(){ var b = tabs.querySelectorAll("button")[a
 <script>
 (function(){
   var q = new URLSearchParams(location.search);
-  if(q.get("erro")) document.getElementById("m-erro").classList.add("on");
+  if(q.get("erro") === "limite") document.getElementById("m-limite").classList.add("on");
+  else if(q.get("erro")) document.getElementById("m-erro").classList.add("on");
   else if(q.get("entrar")) document.getElementById("m-entrar").classList.add("on");
   // O login é uma janela: abre pelo botão Entrar, por ?entrar=1, por ?erro=1 ou por #entrar
   // (é para onde o painel manda quem chega sem sessão).
