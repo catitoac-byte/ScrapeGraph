@@ -1,0 +1,878 @@
+{
+  "id": "sinteticos",
+  "titulo": "Mercado de dados e personas sintéticas em pesquisa",
+  "mercado": "Empresas, ofertas, dados e metodologias de respondentes sintéticos, personas sintéticas, gêmeos digitais, simulação de população e boost de amostra em pesquisa de mercado e opinião",
+  "janela": {
+    "inicio": "2023-01-01",
+    "fim": "2026-10-17"
+  },
+  "idiomas": [
+    "en",
+    "pt",
+    "es",
+    "fr",
+    "de",
+    "ja",
+    "ko"
+  ],
+  "regioes": [
+    "EUA",
+    "Reino Unido",
+    "Europa",
+    "Brasil",
+    "México",
+    "Argentina",
+    "Colômbia",
+    "Chile",
+    "Índia",
+    "Japão",
+    "Coreia",
+    "Austrália",
+    "Oriente Médio",
+    "África"
+  ],
+  "saida": "sinteticos",
+  "ordem": [
+    "V4",
+    "V2",
+    "V3",
+    "V1",
+    "V5"
+  ],
+  "teto_buscas": {
+    "V4": 55,
+    "V2": 55,
+    "V3": 55,
+    "V1": 55
+  },
+  "teto_paginas_por_empresa": 8,
+  "sementes": {
+    "empresas": "~/Projetos/dados-sinteticos-abep/dados/vendors_all.json",
+    "metodologias": "~/Projetos/dados-sinteticos-abep/dados/methods_validation.md",
+    "cases": "~/Projetos/dados-sinteticos-abep/dados/cases_media.json"
+  },
+  "ausencias_conhecidas": {
+    "Brazilian incumbents checked: Kantar IBOPE Media, Nielsen Brasil, MindMiners, Opinion Box, Offerwise, Netquest, Hibou, Box1824": "registro agregador da base inicial, não é uma empresa"
+  },
+  "listas_terceiros": [
+    {
+      "nome": "GreenBook, synthetic data",
+      "url": "https://www.greenbook.org/market-research-companies/synthetic-data"
+    },
+    {
+      "nome": "G2, synthetic data",
+      "url": "https://www.g2.com/categories/synthetic-data"
+    },
+    {
+      "nome": "Capterra, synthetic data",
+      "url": "https://www.capterra.com/synthetic-data-software/"
+    }
+  ],
+  "bloqueios_conhecidos": {
+    "g2.com": "HTTP 403 a acesso direto",
+    "capterra.com": "HTTP 403 a acesso direto",
+    "trustradius.com": "HTTP 403 a acesso direto",
+    "gartner.com": "HTTP 403 em Gartner Reviews",
+    "linkedin.com/in/": "HTTP 999 em perfil pessoal",
+    "reddit.com": "bloqueio a robôs"
+  },
+  "consultas": {
+    "V4": {
+      "en": [
+        "synthetic respondents market research platform",
+        "synthetic personas consumer research startup",
+        "digital twins of consumers market research",
+        "AI focus group synthetic participants",
+        "synthetic survey sample boost low incidence",
+        "population simulation AI agents market research",
+        "best synthetic research tools 2026",
+        "synthetic data market research vendors list",
+        "silicon sample company survey research",
+        "synthetic panel launch insights 2026"
+      ],
+      "pt": [
+        "personas sintéticas pesquisa de mercado empresa",
+        "respondentes sintéticos pesquisa Brasil",
+        "gêmeos digitais consumidores pesquisa"
+      ],
+      "es": [
+        "personas sintéticas investigación de mercados",
+        "encuestados sintéticos empresa investigación",
+        "datos sintéticos investigación de mercados México Argentina Colombia Chile"
+      ],
+      "fr": [
+        "personas synthétiques études de marché"
+      ],
+      "de": [
+        "synthetische Personas Marktforschung"
+      ],
+      "ja": [
+        "合成ペルソナ 市場調査"
+      ],
+      "ko": [
+        "합성 페르소나 시장조사"
+      ]
+    },
+    "V2": {
+      "en": [
+        "how synthetic personas are built market research",
+        "synthetic focus group methodology",
+        "AI interview synthetic participants how it works",
+        "persona chat consumer insights grounded in survey data",
+        "synthetic persona bias controls disclosure"
+      ],
+      "pt": [
+        "como são construídas personas sintéticas"
+      ],
+      "es": [
+        "cómo se construyen personas sintéticas"
+      ]
+    },
+    "V3": {
+      "en": [
+        "synthetic data vs real survey comparison case study",
+        "synthetic respondents accuracy study results correlation",
+        "synthetic sample failed replicate survey",
+        "synthetic research case study brand results",
+        "independent evaluation synthetic respondents"
+      ],
+      "pt": [
+        "estudo dados sintéticos comparação pesquisa real"
+      ],
+      "es": [
+        "estudio comparación datos sintéticos encuesta real"
+      ]
+    },
+    "V1": {
+      "en": [
+        "synthetic respondents validation framework",
+        "silicon samples LLM survey fidelity paper",
+        "synthetic data market research guidance association",
+        "TSTR synthetic data utility evaluation",
+        "LLM simulated survey variance subgroup error"
+      ],
+      "pt": [
+        "dados sintéticos pesquisa LGPD diretriz",
+        "validação personas sintéticas consumidor brasileiro"
+      ],
+      "es": [
+        "datos sintéticos investigación guía validación"
+      ]
+    }
+  },
+  "fontes_v1_extras": [
+    {
+      "url": "https://esomar.org/20-questions-to-help-buyers-of-ai-based-services",
+      "familia": "boa_pratica"
+    },
+    {
+      "url": "https://www.mrs.org.uk/pdf/MRS_SyntheticData+AI_Paper_Mar2025.pdf",
+      "familia": "boa_pratica"
+    },
+    {
+      "url": "https://www.insightsassociation.org/News-Updates/Articles/ArticleID/2614/Code-in-Action-Synthetic-Data-Revisited",
+      "familia": "boa_pratica"
+    },
+    {
+      "url": "https://artificialintelligenceact.eu/article/50/",
+      "familia": "regulacao"
+    },
+    {
+      "url": "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm",
+      "familia": "regulacao"
+    },
+    {
+      "url": "https://www.iso.org/standard/73671.html",
+      "familia": "regulacao"
+    }
+  ],
+  "subpaginas": {
+    "padrao_link": "synthetic|\\bpersonas?\\b|personabot|twins?\\b|simulat|audiences?\\b|pricing|plans|precos|precios|about|sobre|nosotros|company|contact|contato|contacto|customers|clientes|case|research|accuracy|validat|benchmark|science|method|how-it-works|product|platform|security|privacy|trust",
+    "prioridade": [
+      "synthetic",
+      "personas?\\b",
+      "personabot",
+      "twins?\\b",
+      "simulat",
+      "audiences?\\b",
+      "pricing",
+      "plans",
+      "precos",
+      "precios",
+      "accuracy",
+      "validat",
+      "benchmark",
+      "science",
+      "method",
+      "how-it-works",
+      "about",
+      "sobre",
+      "nosotros",
+      "contact",
+      "contato",
+      "contacto",
+      "customers",
+      "case",
+      "clientes",
+      "security",
+      "trust",
+      "privacy",
+      "research",
+      "product",
+      "platform",
+      "company"
+    ],
+    "padrao_sitemap": "synthetic|\\bpersonas?\\b|personabot|twins?\\b|simulat|virtual-(audience|consumer|respondent)|silicon|sintetic|g[eê]meo|gemelo|digital-human"
+  },
+  "vocabulario": {
+    "tipo_campo": [
+      "literal",
+      "inferido",
+      "not found",
+      "not accessible"
+    ],
+    "company_type": [
+      "startup",
+      "incumbent_research",
+      "panel",
+      "survey_platform",
+      "agency",
+      "consultancy",
+      "academic"
+    ],
+    "offer_type": [
+      "persona_chat",
+      "synthetic_survey_sample",
+      "data_boost",
+      "digital_twins_of_real_people",
+      "population_simulation"
+    ],
+    "base_da_persona": [
+      "llm_prompting_only",
+      "calibrated_on_proprietary_survey_data",
+      "calibrated_on_public_data",
+      "calibrated_on_proprietary_behavioral_data",
+      "twins_of_real_panelists",
+      "not_disclosed"
+    ],
+    "validation_level": [
+      "none",
+      "self_reported",
+      "third_party",
+      "peer_reviewed"
+    ],
+    "familia": [
+      "construcao",
+      "validacao",
+      "regulacao",
+      "boa_pratica"
+    ],
+    "tipo_de_fonte": [
+      "peer_reviewed",
+      "preprint",
+      "associacao",
+      "fornecedor",
+      "imprensa"
+    ],
+    "independente_ou_autodeclarado": [
+      "independente",
+      "autodeclarado"
+    ]
+  },
+  "classificadores": {
+    "offer_type": {
+      "persona_chat": "(chat|talk|converse|ask|interview)\\w*\\s+(with\\s+)?(your\\s+|ai\\s+|synthetic\\s+)?(personas?|customers?|audiences?|consumers?)|persona[s]?\\s*(chat|bot)|synthetic\\s+(focus\\s+groups?|interviews?)|ai\\s+personas?|personas?\\s+sint[eé]tic|personas?\\s+de\\s+ia",
+      "synthetic_survey_sample": "synthetic\\s+(respondents?|samples?|survey|responses?|panel|audiences?|consumers?|data)|silicon\\s+samples?|respondentes?\\s+sint[eé]tic|encuestados?\\s+sint[eé]tic|amostras?\\s+sint[eé]tic|muestras?\\s+sint[eé]tic|datos\\s+sint[eé]ticos|dados\\s+sint[eé]ticos",
+      "data_boost": "\\bboost\\w*\\s+(your\\s+|the\\s+)?(samples?|sample\\s+sizes?|subgroups?|bases?|respondents|surveys?|data|n\\b)|(synthetic|data|sample)\\s+boost\\w*|augment\\w*\\s+(your\\s+|the\\s+)?(samples?|surveys?|survey\\s+data|respondents|subgroups?)|low[- ]incidence|hard[- ]to[- ]reach|niche\\s+(segments?|audiences?)|refor[cç]o\\s+de\\s+amostra",
+      "digital_twins_of_real_people": "digital\\s+twins?|g[eê]meos?\\s+digita|gemelos?\\s+digita|twins?\\s+of\\s+(real\\s+)?(people|customers?|consumers?|panelists?|respondents?)",
+      "population_simulation": "simulat\\w*\\s+(of\\s+)?(entire\\s+|whole\\s+)?(populations?|societ|markets?|human\\s+behavio|people|audiences?)|agent[- ]based\\s+simulat|population\\s+model|simula[cç][aã]o\\s+de\\s+popula|simulaci[oó]n\\s+de\\s+poblaci"
+    },
+    "base_da_persona": {
+      "twins_of_real_panelists": "(twins?|replicas?|clones?)\\s+of\\s+(real\\s+)?(panelists?|respondents?|people|participants?|individuals)|twins?\\s+(built|created|trained)\\s+(from|on)\\s+[^.]{0,60}(interviews?|panelists?|respondents?|real\\s+people)|interviewed\\s+(real\\s+)?people",
+      "calibrated_on_proprietary_survey_data": "(trained|calibrated|grounded|built|fine[- ]tuned|anchored|based)\\s+(on|in|with|using|upon)\\s+[^.]{0,80}(surveys?|panel|responses|respondents|primary\\s+research|proprietary\\s+data|millions\\s+of|real\\s+(people|consumers|insights))",
+      "calibrated_on_proprietary_behavioral_data": "(trained|calibrated|grounded|built|anchored|modell?ed)\\s+(on|in|with|using|from)\\s+[^.]{0,80}(real[- ]world\\s+behavio|transaction|purchase|behavio(u)?ral\\s+data|first[- ]party|clickstream|loyalty|crm|customer\\s+data)|from\\s+your\\s+(own\\s+|customer\\s+|first[- ]party\\s+)data",
+      "calibrated_on_public_data": "(trained|calibrated|grounded|built)\\s+(on|in|with|using)\\s+[^.]{0,80}(census|public\\s+data|open\\s+data|government\\s+statistics|publicly\\s+available)",
+      "llm_prompting_only": "powered\\s+by\\s+(gpt|chatgpt|openai|claude|gemini|llama|large\\s+language\\s+models?)|built\\s+on\\s+(gpt|openai|large\\s+language\\s+models?)"
+    },
+    "validacao": "(\\d{1,3}(\\.\\d+)?\\s?%\\s+(accura|match|correlat|agree|similar|alignment|replicat))|(accura\\w*|correlat\\w*|fidelity|benchmark\\w*|validat\\w*|replicat\\w*|TVD|MAE|R²|r\\s?=\\s?0?\\.\\d)",
+    "validacao_numero": "\\d",
+    "nivel_peer_reviewed": "peer[- ]reviewed|published\\s+in\\s+(the\\s+)?(journal|proceedings|nature|science|pnas)|journal\\s+of\\s+",
+    "nivel_third_party": "independent(ly)?\\s+(stud|evaluat|validat|test|research|audit)|conducted\\s+by\\s+[A-Z]|in\\s+partnership\\s+with\\s+[^.]{0,60}(university|universidad|universidade|institute|school)|third[- ]party",
+    "preco": "(\\$|€|£|¥|₩|R\\$|US\\$|USD|EUR|GBP)\\s?\\d[\\d.,]*\\s*(k\\b|m\\b)?",
+    "financiamento": "(raised|raises|secured|closes?|closed|announces?)\\s+[^.]{0,40}(\\$|€|£|US\\$)\\s?\\d[\\d.,]*\\s*(m|million|bn|billion|k)?\\b[^.]{0,60}|series\\s+[a-e]\\b[^.]{0,80}(\\$|€|£)\\s?\\d|seed\\s+(round|funding)[^.]{0,80}(\\$|€|£)\\s?\\d",
+    "fundacao": "(founded|established|fundad[ao]|fund[oó]|est\\.)\\s+(in\\s+|em\\s+|en\\s+)?((19|20)\\d\\d)",
+    "sede": "(headquartered|headquarters|based|sede|sediada|ubicad[ao]s?)\\s+(is\\s+)?(in|em|en|na|no)\\s+([A-Z][\\w .,'-]{2,60})",
+    "como_construida": "(personas?|twins?|respondents?|participants?|agents?)\\s+(are|is)\\s+(built|created|generated|trained|grounded|modeled|modelled|constructed|powered|calibrated)[^.]{0,200}",
+    "granularidade": "(individual[- ]level|1:1|one[- ]to[- ]one|demographic|psychographic|attributes|segments?|millions\\s+of\\s+(personas|profiles|agents)|\\d[\\d,.]*\\s+(personas|profiles|agents|twins))",
+    "controle_de_vies": "\\bbias(es)?\\b|debias|representativ|stereotyp|calibrat|weighting|guardrail|hallucinat",
+    "divulgacao": "disclos|transparen|label(l)?ed\\s+as\\s+synthetic|clearly\\s+(marked|identified)|not\\s+real\\s+people|ai[- ]generated",
+    "origem_dados": "(trained|calibrated|grounded|built|anchored|fed)\\s+(on|with|in|by|using)\\s+[^.]{0,160}(data|survey|panel|interviews|responses|records)",
+    "volume": "\\d[\\d,.]*\\s*(\\+\\s*)?(million|m\\b|billion|bn|k\\b|thousand)?\\s*(respondents|responses|people|consumers|panelists|members|participants|interviews|data\\s?points|surveys|profiles|personas|questions)",
+    "cobertura": "\\d+\\s*\\+?\\s*(countries|markets|languages|países|idiomas|mercados)",
+    "privacidade": "GDPR|LGPD|CCPA|SOC\\s?2|ISO\\s?27001|ISO\\s?20252|consent|anonymi[sz]|pseudonymi|privacy[- ]preserving|differential\\s+privacy|no\\s+PII|personally\\s+identifiable",
+    "formato_entrega": "\\bAPI\\b|CSV|SPSS|Excel|dashboard|export|integrat\\w+\\s+with|PowerPoint|report",
+    "resultado_case": "(\\d{1,3}(\\.\\d+)?\\s?%|r\\s?=\\s?0?\\.\\d+|correlation\\s+of\\s+0?\\.\\d+|0\\.\\d{2})",
+    "limites": "(limitation|however|fail\\w*|cannot|can\\s+not|should\\s+not|not\\s+(a\\s+)?(substitute|replacement)|caution|risk|bias|overestimat|underestimat|less\\s+accurate|poor(ly)?)",
+    "quando_usar": "(useful|can\\s+be\\s+used|recommend\\w*|appropriate|suitable|well[- ]suited|promising|help(s)?\\s+(researchers|practitioners)|should\\s+be\\s+used|best\\s+used)",
+    "familia_validacao": "validat|fidelity|evaluat|accura|benchmark|compar|replicat|test[- ]retest|TSTR|utility|privacy|distort|bias|perils|misportray|flatten|question(ing)?|whose\\s+opinions|audit|limits?",
+    "familia_construcao": "generat|simulat|prompt|fine[- ]tun|retrieval|RAG|agent|persona|twin|condition|backstor",
+    "brasil": "Brasil|Brazil|brasileir|Brazilian|LGPD|ABEP|portugu[eê]s",
+    "contexto": "synthetic|sint[eé]tic|persona|twin|g[eê]me|gemel|simulat|simula|silicon|\\bAI\\b|\\bIA\\b|LLM|agent|virtual\\s+(respondent|consumer|audience)",
+    "preco_contexto": "(per|/)\\s*(month|mo|year|yr|seat|user|study|project|respondent|complete|credit|persona)\\b|starting\\s+at|starts?\\s+at|plans?\\s+(start|from)|engagements?\\s+start|pilots?\\s+from|a\\s+partir\\s+de|desde\\s+(\\$|€|R)|billed\\s+(monthly|annually)|per\\s+month|/mo\\b",
+    "preco_sem_valor": "contact\\s+(sales|us)|talk\\s+to\\s+(sales|us|an?\\s+expert)|book\\s+a\\s+(demo|call)|request\\s+(a\\s+)?(quote|demo|pricing|proposal)|custom\\s+pricing|tailored\\s+pricing|get\\s+a\\s+quote|fale\\s+com|solicite|cont[aá]ctanos|free\\s+(plan|trial|tier)",
+    "endereco": "\\b\\d{5}(-\\d{4})?\\b|\\b[A-Z]{1,2}\\d[A-Z\\d]?\\s?\\d[A-Z]{2}\\b|\\b(Street|St\\.|Avenue|Ave\\.?|Road|Rd\\.?|Floor|Suite|Rua|Av\\.|Avenida|Calle|Strasse|Straße|Boulevard|Blvd)\\b",
+    "clientes": "(trusted\\s+by|used\\s+by|chosen\\s+by|customers\\s+(include|like)|clients\\s+(include|like|such\\s+as)|brands\\s+(like|such\\s+as|including)|teams\\s+at|companies\\s+(like|such\\s+as)|partnered\\s+with|work(s|ed)?\\s+with|nossos\\s+clientes|clientes\\s+como|nuestros\\s+clientes)",
+    "validacao_preferir": "achiev|reach|track|match|outperform|deliver|show(s|ed)?\\b|found|result|replicat|correlat|accura",
+    "validacao_evitar": "for\\s+example|e\\.g\\.|i\\.e\\.|means\\s+(that\\s+)?the|such\\s+as|imagine|suppose|hypothetical",
+    "pesquisa_de_mercado": "survey|respondent|consumer|market\\s+research|panel|poll|brand|questionnaire|focus\\s+group|pesquisa|encuesta|consumidor"
+  },
+  "dominios_imprensa": [
+    "techcrunch.com",
+    "forbes.com",
+    "ft.com",
+    "wsj.com",
+    "bloomberg.com",
+    "reuters.com",
+    "businessinsider.com",
+    "venturebeat.com",
+    "theverge.com",
+    "wired.com",
+    "fastcompany.com",
+    "adweek.com",
+    "marketingweek.com",
+    "research-live.com",
+    "quirks.com",
+    "greenbook.org",
+    "mrweb.com",
+    "insightsassociation.org",
+    "esomar.org",
+    "axios.com",
+    "cnbc.com",
+    "nytimes.com",
+    "theinformation.com",
+    "sifted.eu",
+    "valor.globo.com",
+    "exame.com",
+    "meioemensagem.com.br",
+    "startupi.com.br",
+    "nikkei.com",
+    "economist.com",
+    "hbr.org"
+  ],
+  "dominios_academicos": [
+    "arxiv.org",
+    "doi.org",
+    "nature.com",
+    "cambridge.org",
+    "sciencedirect.com",
+    "springer.com",
+    "wiley.com",
+    "tandfonline.com",
+    "sagepub.com",
+    "pnas.org",
+    "jstor.org",
+    "ssrn.com",
+    "papers.ssrn.com",
+    "ideas.repec.org",
+    "acm.org",
+    "aclanthology.org",
+    "openreview.net",
+    "pubsonline.informs.org"
+  ],
+  "dominios_associacoes": [
+    "esomar.org",
+    "mrs.org.uk",
+    "insightsassociation.org",
+    "aapor.org",
+    "iso.org",
+    "abep.org",
+    "amai.org",
+    "artificialintelligenceact.eu",
+    "eur-lex.europa.eu",
+    "planalto.gov.br",
+    "pewresearch.org",
+    "ama.org"
+  ],
+  "dominios_ignorados": [
+    "linkedin.com",
+    "facebook.com",
+    "twitter.com",
+    "x.com",
+    "instagram.com",
+    "youtube.com",
+    "youtu.be",
+    "tiktok.com",
+    "google.com",
+    "apple.com",
+    "github.com",
+    "wikipedia.org",
+    "medium.com",
+    "substack.com",
+    "crunchbase.com",
+    "g2.com",
+    "capterra.com",
+    "trustradius.com",
+    "gartner.com",
+    "producthunt.com",
+    "w3.org",
+    "schema.org",
+    "cloudflare.com",
+    "hubspot.com",
+    "calendly.com",
+    "vimeo.com",
+    "wistia.com"
+  ],
+  "locais": {
+    "United States": [
+      "United States",
+      "EUA"
+    ],
+    "USA": [
+      "United States",
+      "EUA"
+    ],
+    "US": [
+      "United States",
+      "EUA"
+    ],
+    "New York": [
+      "United States",
+      "EUA"
+    ],
+    "San Francisco": [
+      "United States",
+      "EUA"
+    ],
+    "California": [
+      "United States",
+      "EUA"
+    ],
+    "Boston": [
+      "United States",
+      "EUA"
+    ],
+    "Chicago": [
+      "United States",
+      "EUA"
+    ],
+    "Delaware": [
+      "United States",
+      "EUA"
+    ],
+    "United Kingdom": [
+      "United Kingdom",
+      "Reino Unido"
+    ],
+    "UK": [
+      "United Kingdom",
+      "Reino Unido"
+    ],
+    "London": [
+      "United Kingdom",
+      "Reino Unido"
+    ],
+    "England": [
+      "United Kingdom",
+      "Reino Unido"
+    ],
+    "Scotland": [
+      "United Kingdom",
+      "Reino Unido"
+    ],
+    "Germany": [
+      "Germany",
+      "Europa"
+    ],
+    "France": [
+      "France",
+      "Europa"
+    ],
+    "Spain": [
+      "Spain",
+      "Europa"
+    ],
+    "Italy": [
+      "Italy",
+      "Europa"
+    ],
+    "Netherlands": [
+      "Netherlands",
+      "Europa"
+    ],
+    "Belgium": [
+      "Belgium",
+      "Europa"
+    ],
+    "Switzerland": [
+      "Switzerland",
+      "Europa"
+    ],
+    "Sweden": [
+      "Sweden",
+      "Europa"
+    ],
+    "Denmark": [
+      "Denmark",
+      "Europa"
+    ],
+    "Norway": [
+      "Norway",
+      "Europa"
+    ],
+    "Finland": [
+      "Finland",
+      "Europa"
+    ],
+    "Ireland": [
+      "Ireland",
+      "Europa"
+    ],
+    "Portugal": [
+      "Portugal",
+      "Europa"
+    ],
+    "Poland": [
+      "Poland",
+      "Europa"
+    ],
+    "Austria": [
+      "Austria",
+      "Europa"
+    ],
+    "Czech": [
+      "Czech Republic",
+      "Europa"
+    ],
+    "Lithuania": [
+      "Lithuania",
+      "Europa"
+    ],
+    "Estonia": [
+      "Estonia",
+      "Europa"
+    ],
+    "Greece": [
+      "Greece",
+      "Europa"
+    ],
+    "Paris": [
+      "France",
+      "Europa"
+    ],
+    "Berlin": [
+      "Germany",
+      "Europa"
+    ],
+    "Amsterdam": [
+      "Netherlands",
+      "Europa"
+    ],
+    "Madrid": [
+      "Spain",
+      "Europa"
+    ],
+    "Barcelona": [
+      "Spain",
+      "Europa"
+    ],
+    "Brazil": [
+      "Brazil",
+      "Brasil"
+    ],
+    "Brasil": [
+      "Brazil",
+      "Brasil"
+    ],
+    "São Paulo": [
+      "Brazil",
+      "Brasil"
+    ],
+    "Rio de Janeiro": [
+      "Brazil",
+      "Brasil"
+    ],
+    "Mexico": [
+      "Mexico",
+      "México"
+    ],
+    "México": [
+      "Mexico",
+      "México"
+    ],
+    "Argentina": [
+      "Argentina",
+      "Argentina"
+    ],
+    "Buenos Aires": [
+      "Argentina",
+      "Argentina"
+    ],
+    "Colombia": [
+      "Colombia",
+      "Colômbia"
+    ],
+    "Bogotá": [
+      "Colombia",
+      "Colômbia"
+    ],
+    "Chile": [
+      "Chile",
+      "Chile"
+    ],
+    "Santiago": [
+      "Chile",
+      "Chile"
+    ],
+    "India": [
+      "India",
+      "Índia"
+    ],
+    "Bangalore": [
+      "India",
+      "Índia"
+    ],
+    "Bengaluru": [
+      "India",
+      "Índia"
+    ],
+    "Mumbai": [
+      "India",
+      "Índia"
+    ],
+    "Japan": [
+      "Japan",
+      "Japão"
+    ],
+    "Tokyo": [
+      "Japan",
+      "Japão"
+    ],
+    "Korea": [
+      "Korea",
+      "Coreia"
+    ],
+    "Seoul": [
+      "Korea",
+      "Coreia"
+    ],
+    "Australia": [
+      "Australia",
+      "Austrália"
+    ],
+    "Sydney": [
+      "Australia",
+      "Austrália"
+    ],
+    "Melbourne": [
+      "Australia",
+      "Austrália"
+    ],
+    "New Zealand": [
+      "New Zealand",
+      "Austrália"
+    ],
+    "Israel": [
+      "Israel",
+      "Oriente Médio"
+    ],
+    "Tel Aviv": [
+      "Israel",
+      "Oriente Médio"
+    ],
+    "United Arab Emirates": [
+      "United Arab Emirates",
+      "Oriente Médio"
+    ],
+    "UAE": [
+      "United Arab Emirates",
+      "Oriente Médio"
+    ],
+    "Dubai": [
+      "United Arab Emirates",
+      "Oriente Médio"
+    ],
+    "Saudi Arabia": [
+      "Saudi Arabia",
+      "Oriente Médio"
+    ],
+    "Turkey": [
+      "Turkey",
+      "Oriente Médio"
+    ],
+    "South Africa": [
+      "South Africa",
+      "África"
+    ],
+    "Nigeria": [
+      "Nigeria",
+      "África"
+    ],
+    "Kenya": [
+      "Kenya",
+      "África"
+    ],
+    "Egypt": [
+      "Egypt",
+      "África"
+    ],
+    "Canada": [
+      "Canada",
+      "EUA"
+    ],
+    "Toronto": [
+      "Canada",
+      "EUA"
+    ],
+    "Singapore": [
+      "Singapore",
+      "Ásia (outros)"
+    ],
+    "China": [
+      "China",
+      "Ásia (outros)"
+    ],
+    "Hong Kong": [
+      "Hong Kong",
+      "Ásia (outros)"
+    ]
+  },
+  "status_fora_de_v4": {
+    "no_public_offering_found": "base inicial não achou oferta pública",
+    "stance_only": "base inicial achou só opinião, sem oferta",
+    "exploring": "base inicial: só em exploração",
+    "research": "estudo acadêmico, sem oferta comercial; entra em V3 e V1",
+    "third_party_evidence": "fonte independente, não vende o produto; entra em V3 e V1"
+  },
+  "sementes_dominio": {
+    "Kantar": "kantar.com",
+    "NielsenIQ": "nielseniq.com",
+    "YouGov": "yougov.com",
+    "Zappi": "zappi.io",
+    "WPP": "satalia.com",
+    "Market Logic Software": "marketlogicsoftware.com",
+    "AlmapBBDO": "almapbbdo.com.br",
+    "MJV Technology & Innovation": "mjvinnovation.com",
+    "DNP Dai Nippon Printing": "dnp.co.jp"
+  },
+  "empresa_propria": {
+    "name": "Cassi.ai",
+    "dominio": "cassiai.com",
+    "url": "https://www.cassiai.com/",
+    "produtos": [
+      {
+        "nome": "Synthetic Lab",
+        "url": "https://syntheticlab.cassiai.com/"
+      },
+      {
+        "nome": "Synthetic Vertical Simulator",
+        "url": "https://simulator.cassiai.com/"
+      },
+      {
+        "nome": "Portfólio",
+        "url": "https://www.cassiai.com/portfolio"
+      }
+    ],
+    "company_type": {
+      "valor": "startup",
+      "tipo": "inferido",
+      "quote": "The company was founded by Cassiano Albuquerque, a ResTech practitioner with more than 20 years of experience in research innovation and automation.",
+      "url": "https://www.cassiai.com/about"
+    },
+    "headline_verbatim": {
+      "valor": "Cassi.ai: automation software for market research",
+      "tipo": "literal",
+      "quote": "Cassi.ai: automation software for market research",
+      "url": "https://www.cassiai.com/"
+    },
+    "headline_oferta": {
+      "valor": "Explore more of your own data with Synthetic Lab.",
+      "tipo": "literal",
+      "quote": "Explore more of your own data with Synthetic Lab.",
+      "url": "https://syntheticlab.cassiai.com/"
+    },
+    "offer_type": [
+      {
+        "valor": "persona_chat",
+        "tipo": "inferido",
+        "quote": "The Mirror Room is a synthetic focus group.",
+        "url": "https://syntheticlab.cassiai.com/"
+      },
+      {
+        "valor": "synthetic_survey_sample",
+        "tipo": "inferido",
+        "quote": "A stratified sample with census statistics, margin of error and confidence level, grounded in your past studies.",
+        "url": "https://syntheticlab.cassiai.com/"
+      },
+      {
+        "valor": "population_simulation",
+        "tipo": "inferido",
+        "quote": "Personas walk through a mall, a supermarket, a dealership, a beach, a plaza and an office, talk in speech bubbles and reply to each other in small groups.",
+        "url": "https://simulator.cassiai.com/"
+      }
+    ],
+    "grounding": {
+      "valor": "calibrated_on_proprietary_survey_data",
+      "tipo": "inferido",
+      "quote": "That is why the personas are grounded in your own studies.",
+      "url": "https://syntheticlab.cassiai.com/"
+    },
+    "como_e_construida": {
+      "valor": "A stratified sample built from census statistics, grounded in your past studies, interviewed and put to debate, read by several models, with every insight traceable to what supports it.",
+      "tipo": "literal",
+      "quote": "A stratified sample built from census statistics, grounded in your past studies, interviewed and put to debate, read by several models, with every insight traceable to what supports it.",
+      "url": "https://syntheticlab.cassiai.com/"
+    },
+    "controle_de_vies": {
+      "valor": "Several models read the same data, and a final judge settles the points where they disagree.",
+      "tipo": "literal",
+      "quote": "Several models read the same data, and a final judge settles the points where they disagree.",
+      "url": "https://syntheticlab.cassiai.com/"
+    },
+    "validation_claim": {
+      "valor": "none",
+      "tipo": "inferido",
+      "url": "https://syntheticlab.cassiai.com/",
+      "basis": "nenhum número de acurácia nas páginas abertas",
+      "level": {
+        "valor": "none",
+        "tipo": "inferido",
+        "url": "https://syntheticlab.cassiai.com/"
+      }
+    },
+    "limites": {
+      "valor": "Never replaces fieldwork in a decision that needs a real sample.",
+      "tipo": "literal",
+      "quote": "Never replaces fieldwork in a decision that needs a real sample.",
+      "url": "https://syntheticlab.cassiai.com/"
+    },
+    "privacidade": {
+      "valor": "Each project's material is isolated, and your language-model keys stay in the server's memory only during the session.",
+      "tipo": "literal",
+      "quote": "Each project's material is isolated, and your language-model keys stay in the server's memory only during the session.",
+      "url": "https://simulator.cassiai.com/"
+    },
+    "dados_que_alimentam": {
+      "valor": "each one receives the material you provide, such as past studies, segmentations, interview transcripts and CRM signals when allowed, and answers from that material",
+      "tipo": "literal",
+      "quote": "each one receives the material you provide, such as past studies, segmentations, interview transcripts and CRM signals when allowed, and answers from that material",
+      "url": "https://simulator.cassiai.com/"
+    },
+    "pricing": {
+      "valor": "not found",
+      "tipo": "not found",
+      "url": "https://syntheticlab.cassiai.com/",
+      "nota": "a página convida a pedir acesso, sem preço"
+    },
+    "hq_country": {
+      "valor": "not found",
+      "tipo": "not found",
+      "url": "https://www.cassiai.com/about",
+      "urls_verificadas": [
+        "https://www.cassiai.com/",
+        "https://www.cassiai.com/about",
+        "https://www.cassiai.com/security"
+      ]
+    },
+    "named_customers": []
+  }
+}

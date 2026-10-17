@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Comparador de Sintéticos</title>
+<meta name="description" content="Quem vende personas e respondentes sintéticos, como constrói, o que publica de validação, e o caminho de método do curso ABEP.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Visual do deck da Voxpopme (deck-web): rail numerado, tipografia grande, um trilho violeta como gesto. */
+:root{
+  --bg:#F5F3F8;--card:#FFFFFF;--ink:#241A3A;--ink-2:#5B5870;--line:#E3DEEC;
+  --plum:#2A1A45;--violet:#8B4BAF;--violet-soft:#F1E8F7;--teal:#4FB39A;--sky:#1FA2E0;--amber:#F3A712;--red:#E4572E;--orange:#F26430;
+  --shadow:0 14px 40px rgba(42,26,69,.12);
+  --body:'Poppins',system-ui,Segoe UI,Arial,sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15102A;--card:#1F1836;--ink:#F3EFFA;--ink-2:#B9B2CC;--line:#352C4F;--plum:#0E0A1C;--violet:#B983D6;--violet-soft:#2C2144;--teal:#5CC7AC;--sky:#4DB8EC;--shadow:0 14px 40px rgba(0,0,0,.45);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15102A;--card:#1F1836;--ink:#F3EFFA;--ink-2:#B9B2CC;--line:#352C4F;--plum:#0E0A1C;--violet:#B983D6;--violet-soft:#2C2144;--teal:#5CC7AC;--sky:#4DB8EC;--shadow:0 14px 40px rgba(0,0,0,.45);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;overflow:hidden}
+a{color:var(--sky)}
+h2,h3{text-wrap:balance;margin:0;line-height:1.06}
+h2{font-size:clamp(28px,3.6vw,46px);font-weight:700;letter-spacing:-.01em}
+h3{font-size:18px;font-weight:600}
+p{margin:0}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--violet);font-weight:500}
+.lead{font-size:17px;color:var(--ink-2);max-width:64ch}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;font-weight:600;font-size:13px;border:2px solid transparent;cursor:pointer;font-family:var(--body);text-decoration:none}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-ghost{background:transparent;color:var(--violet);border-color:var(--violet)}
+button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.hl{position:relative;display:inline-block;color:var(--violet);padding:.02em .22em;margin:0 .04em;border:1px solid rgba(139,75,175,.5);background:var(--violet-soft)}
+.hl i{position:absolute;width:9px;height:9px;background:var(--orange);border-radius:1px}
+.hl i.c1{left:-5px;top:-5px}.hl i.c2{right:-5px;top:-5px}.hl i.c3{left:18px;bottom:-5px}.hl i.c4{right:18px;bottom:-5px}
+.dot{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violet);font-weight:500;margin-bottom:12px}
+.dot::before{content:"";width:9px;height:9px;border-radius:2px;background:var(--violet)}
+.rail{position:fixed;left:0;right:0;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+.rail .in{display:flex;overflow-x:auto;scrollbar-width:none}
+.rail a{flex:1;min-width:150px;display:flex;flex-direction:column;justify-content:center;padding:9px 14px;text-decoration:none;color:var(--ink);border-right:1px solid var(--line)}
+.rail a .k{font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+.rail a .t{font-size:13px;font-weight:600;white-space:nowrap}
+.rail a .s{font-size:11px;color:var(--ink-2);white-space:nowrap}
+.rail a.on{background:var(--plum);color:#fff}
+.rail a.on .k,.rail a.on .s{color:#C9A5E0}
+.progress{height:3px;background:var(--amber);width:0;transition:width .2s}
+.deck{height:calc(100% - 50px);overflow-y:auto;scroll-snap-type:y proximity;scroll-behavior:smooth;padding-top:60px}
+.scene{min-height:100%;scroll-snap-align:start;padding:44px 24px 40px}
+.scene > .in{width:100%;max-width:1280px;margin:0 auto}
+.head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:18px}
+.head .lead{margin-top:8px}
+.foot{position:fixed;left:0;right:0;bottom:0;height:50px;padding:0 18px;z-index:6;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.credit{display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--ink);border-left:3px solid var(--violet);padding-left:12px}
+.credit b{font-size:12px}
+.credit span{font-size:11px;color:var(--ink-2);font-family:var(--mono)}
+.slidenav{display:flex;align-items:center;gap:8px}
+.slidenav button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:15px}
+.slidenav .num{font-family:var(--mono);font-size:12px;color:var(--ink-2);min-width:48px;text-align:center}
+.srcnote{font-family:var(--mono);font-size:11px;color:var(--ink-2);margin-top:12px}
+/* 01 mapa */
+.mapctl{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.seg{display:inline-flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px;flex-wrap:wrap}
+.seg .lbl{font-family:var(--mono);font-size:11px;color:var(--ink-2);padding:0 10px;text-transform:uppercase;letter-spacing:.08em}
+.seg button{border:0;background:transparent;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;font-family:var(--body)}
+.seg button.on{background:var(--plum);color:#fff}
+.filters{display:flex;gap:6px;flex-wrap:wrap;width:100%}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink);font-family:var(--body);display:inline-flex;gap:7px;align-items:center}
+.chip i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.chip b{font-family:var(--mono);font-weight:500;font-size:11px;color:var(--ink-2)}
+.chip.on{background:var(--plum);border-color:var(--plum);color:#fff}.chip.on b{color:#C9A5E0}
+.count{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px}
+.count i{width:9px;height:9px;border-radius:2px;background:var(--violet)}
+.count b{font-family:var(--mono);font-weight:500}
+.clusters{display:grid;grid-template-columns:1.4fr .6fr;gap:16px}
+.cluster-svg{background:var(--card);border:1px solid var(--line);border-radius:18px;min-width:0;position:relative;overflow:hidden}
+.cluster-svg svg{width:100%;height:auto;display:block}
+.node{cursor:pointer}
+.node rect{transition:stroke-width .15s}
+.node:hover rect{stroke-width:2.5}
+.node text{pointer-events:none;font-family:var(--body);font-size:11.5px;font-weight:600}
+.hull{fill-opacity:.06;stroke-width:1.5;stroke-dasharray:6 5;stroke-linejoin:round}
+.glab rect{rx:6}
+.glab text{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em}
+.heard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);min-width:0;display:grid;gap:10px;align-content:start}
+.heard h3{font-size:22px}
+.heard .pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:6px;color:#fff;margin:0 4px 4px 0}
+.heard blockquote{margin:0;font-size:15px;line-height:1.45;font-style:italic;border-left:4px solid var(--violet);padding:2px 0 2px 12px}
+.heard .k{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink-2);letter-spacing:.06em}
+.heard .v{font-size:14px}
+.ver{display:inline-flex;gap:6px;align-items:center;font-family:var(--mono);font-size:11px;background:#E3F5EF;color:#1F7A62;border-radius:6px;padding:3px 8px}
+.does{background:var(--plum);color:#fff;border-radius:12px;padding:14px;display:grid;gap:6px;border-left:6px solid var(--teal)}
+.does .k{color:#C9A5E0}
+.does .w{font-size:13px;color:#D9CFE8}
+/* tabela de comparacao que vai juntando */
+.basket{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.basket .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tray{display:flex;gap:6px;flex-wrap:wrap}
+.tray span{display:inline-flex;gap:8px;align-items:center;border:1.5px solid var(--violet);color:var(--violet);border-radius:999px;padding:4px 6px 4px 12px;font-size:13px;font-weight:600}
+.tray span.cassi{background:var(--violet);color:#fff}
+.tray button{border:0;background:var(--violet-soft);color:var(--violet);width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:13px;line-height:1}
+.cmpwrap{overflow-x:auto;margin-top:12px}
+.cmp{border-collapse:collapse;font-size:13.5px;min-width:100%}
+.cmp th{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:8px;border-bottom:2px solid var(--line);min-width:210px;vertical-align:bottom}
+.cmp th.cassi{color:var(--violet)}
+.cmp th:first-child,.cmp td:first-child{min-width:150px;width:150px;position:sticky;left:0;background:var(--card)}
+.cmp td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp td.k{color:var(--ink-2);font-size:12.5px;font-weight:600}
+.cmp td q{font-style:italic;display:block;color:var(--ink);margin-top:3px}
+.cmp td q::before,.cmp td q::after{content:'"'}
+.cmp td .nf{color:var(--ink-2);font-family:var(--mono);font-size:11px}
+.cmp td .lv{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:6px;display:inline-block}
+.lv.none{background:#FBE3E1;color:#B23A22}.lv.self_reported{background:#FFF1D6;color:#8A5A00}.lv.third_party,.lv.peer_reviewed{background:#E3F5EF;color:#1F7A62}
+.cmp td a{font-size:12px}
+.empty{color:var(--ink-2);font-size:14px;padding:6px 0}
+/* 02 mercado */
+.market{display:grid;grid-template-columns:1.3fr .7fr;gap:16px}
+.map2{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px;min-width:0}
+.map2 svg{width:100%;height:auto;display:block}
+.chipv{cursor:pointer}
+.chipv rect{transition:stroke-width .15s}
+.chipv:hover rect,.chipv.on rect{stroke-width:3}
+.compare{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);min-width:0;align-self:start}
+.compare table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:12px}
+.compare th{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+.compare td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+.compare td.k{color:var(--ink-2);font-size:12.5px;width:24%}.compare td{width:38%}
+.compare .hl2{font-style:italic;font-size:13px;color:var(--ink-2);margin-top:10px}
+.autobar{height:4px;background:var(--line);border-radius:2px;margin-top:12px;overflow:hidden}
+.autobar i{display:block;height:100%;width:0;background:var(--violet)}
+.kpis{display:flex;gap:26px;flex-wrap:wrap;margin-top:14px}
+.big{font-size:40px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.big small{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink-2);font-weight:500;margin-top:4px;max-width:22ch}
+/* 03 rota */
+.route{display:grid;grid-template-columns:2.35fr .9fr;gap:16px;align-items:stretch}
+.routeCanvas{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;min-width:0;background-image:radial-gradient(var(--line) 1px,transparent 1px);background-size:18px 18px;display:flex;align-items:center}
+.routeCanvas > div{width:100%}
+.routeCanvas svg{width:100%;height:auto;display:block}
+.edge{fill:none;stroke:var(--line);stroke-width:2}
+.edge.done{stroke:var(--teal)}
+.st rect{fill:var(--card);stroke:var(--line);stroke-width:1.5;transition:stroke .3s,stroke-width .3s}
+.st.done rect{stroke:var(--teal);stroke-width:2}
+.st.run rect{stroke:var(--violet);stroke-width:3}
+.st.sel rect{fill:var(--violet-soft)}
+.st text{font-family:var(--body);fill:var(--ink);font-size:13.5px;font-weight:600}
+.st .sub{font-size:11px;font-weight:500;fill:var(--ink-2);font-family:var(--mono)}
+.st .num{font-family:var(--mono);fill:var(--ink-2);font-size:10px;font-weight:500}
+.st .chk{fill:var(--teal);font-size:12px;font-weight:700;opacity:0}
+.st.done .chk{opacity:1}
+.colh{font-family:var(--mono);font-size:11px;fill:var(--ink-2);letter-spacing:.08em}
+.pkt{fill:var(--teal);stroke:#fff;stroke-width:2}
+.io{display:grid;gap:10px;align-content:start}
+.iobox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:var(--shadow)}
+.iobox .k{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink-2);display:flex;justify-content:space-between;gap:8px}
+.iobox h3{margin-top:6px;font-size:16px}
+.iobox p{font-size:13.5px;color:var(--ink-2);margin-top:6px}
+.iobox.out{border-left:6px solid var(--teal)}
+.iobox.in{border-left:6px solid var(--violet)}
+.iobox.stn{border-left:6px solid var(--amber)}
+.iobox.stn a{font-size:12px}
+.stepnav{display:flex;gap:8px;align-items:center}
+.stepnav .pbar{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.stepnav .pbar i{display:block;height:100%;width:0;background:var(--violet);transition:width .4s}
+.final{background:var(--plum);color:#fff;border-radius:14px;padding:15px;display:none;gap:6px}
+.final.show{display:grid}
+.final .k{font-family:var(--mono);font-size:11px;color:#C9A5E0;text-transform:uppercase}
+.final span{font-size:13px;color:#D9CFE8}
+@media (max-width:980px){.clusters,.market,.route{grid-template-columns:1fr}}
+@media (max-width:700px){
+  html,body{height:auto;overflow:auto}
+  .deck{height:auto;overflow:visible;scroll-snap-type:none;padding-top:58px;padding-bottom:60px}
+  .scene{min-height:0;padding:34px 16px 30px}
+  h2{font-size:clamp(25px,7.5vw,32px)}.lead{font-size:15px}
+  .seg .lbl{display:none}.rail a{min-width:118px}.rail a .s{display:none}
+  .credit span{display:none}.big{font-size:30px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="rail"><div class="in" id="rail"></div><div class="progress" id="progress"></div></div>
+<div class="deck" id="deck">
+
+<section class="scene" id="s1">
+  <div class="in">
+    <div class="head"><div><p class="dot">01 · Quem vende</p><h2><span id="h1n"></span> empresas vendem persona ou respondente sintético. <span class="hl">Clique para juntar e comparar.</span></h2><p class="lead">Começam juntas. Depois o mapa se reagrupa pelo que cada uma vende, pela base da persona e pelo que publica de validação. Passe o mouse para ler a empresa. Clique para colocá-la na comparação ao lado da Cassi.ai.</p></div></div>
+    <div class="mapctl"><div class="seg" id="groupBy"><span class="lbl">Agrupar por</span><button type="button" class="on" data-g="all">Todas</button><button type="button" data-g="oferta">Oferta</button><button type="button" data-g="base">Base da persona</button><button type="button" data-g="val">Validação</button><button type="button" data-g="reg">Região</button><button type="button" data-g="grupo">Origem</button></div><span class="count"><i></i><b id="peopleCount"></b></span><div class="filters" id="filters"></div></div>
+    <div class="clusters">
+      <div class="cluster-svg" id="clusterSvg"></div>
+      <div class="heard" id="heard"></div>
+    </div>
+    <div class="basket" id="basket">
+      <div class="top"><div><p class="mono">Comparação, lado a lado</p><h3 id="bTitle">Cassi.ai e as empresas que você clicar</h3></div><div class="tray" id="tray"></div></div>
+      <div class="cmpwrap"><table class="cmp" id="cmp"></table></div>
+    </div>
+    <p class="srcnote" id="src1"></p>
+  </div>
+</section>
+
+<section class="scene" id="s2">
+  <div class="in">
+    <div class="head"><div><p class="dot">02 · O mercado</p><h2>Quase todo mundo diz que ancora a persona em dados. <span class="hl">Poucos publicam a prova.</span></h2><p class="lead">Na horizontal, de onde vem a persona. Na vertical, o que a empresa publica de validação. A comparação com a Cassi.ai roda sozinha até você segurar uma empresa.</p></div></div>
+    <div class="market">
+      <div class="map2" id="map2"></div>
+      <div class="compare" id="compare"></div>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <p class="srcnote">Fonte: página de cada empresa, lida pela base inicial e, nas marcadas, conferida pela coleta automática do scraper-lab em 17 out 2026. Sem número publicado quer dizer que não achamos número de acurácia nas páginas abertas.</p>
+  </div>
+</section>
+
+<section class="scene" id="s3">
+  <div class="in">
+    <div class="head"><div><p class="dot">03 · Por trás do método</p><h2>Da pergunta à decisão, <span class="hl">uma estação de cada vez.</span></h2><p class="lead">Aperte próximo e siga a pergunta. Ela abre em seis jeitos de construir a persona, passa por três testes de fidelidade, três de utilidade e três regras, e só então vira decisão. Clique numa estação para ler o método e a fonte.</p></div><div style="display:flex;gap:8px"><button class="btn btn-ghost" id="rPrev" type="button">‹ Anterior</button><button class="btn btn-teal" id="rNext" type="button">Próximo ›</button><button class="btn btn-ghost" id="rAuto" type="button">Auto</button></div></div>
+    <div class="route">
+      <div class="routeCanvas"><div id="routeSvg"></div></div>
+      <div class="io">
+        <div class="stepnav"><span class="mono" id="stepLbl"></span><div class="pbar"><i id="stepBar"></i></div></div>
+        <div class="iobox in"><div class="k"><span>Entra</span><span id="inWho"></span></div><h3 id="inT"></h3><p id="inP"></p></div>
+        <div class="iobox out"><div class="k"><span>Sai</span><span id="outWho"></span></div><h3 id="outT"></h3><p id="outP"></p></div>
+        <div class="iobox stn" id="stn"><div class="k"><span>Estação</span><span id="stnN"></span></div><h3 id="stnT"></h3><p id="stnP"></p><p id="stnS"></p></div>
+        <div class="final" id="final"><span class="k">No mapa deste curso</span><b id="finalB"></b><span id="finalS"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="foot"><a class="credit" href="https://www.cassiai.com/" target="_blank" rel="noopener"><b>Mapa por Cassiano Albuquerque · Cassi.ai</b><span>curso ABEP de dados e personas sintéticas</span></a><div class="slidenav"><button type="button" id="prevBtn" aria-label="Anterior">‹</button><span class="num" id="slideNum">1 / 3</span><button type="button" id="nextBtn" aria-label="Próximo">›</button></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+window.DADOS=/*__DADOS__*/{};
+</script>
+<script>
+(function(){
+  var D=window.DADOS,E=D.empresas||[],G=window.gsap;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+  [].slice.call(document.querySelectorAll('.hl')).forEach(function(h){['c1','c2','c3','c4'].forEach(function(c){var i=document.createElement('i');i.className=c;h.appendChild(i);});});
+  var OF={persona_chat:'Chat com persona',synthetic_survey_sample:'Amostra sintética',data_boost:'Boost de amostra',digital_twins_of_real_people:'Gêmeos de pessoas reais',population_simulation:'Simulação de população'};
+  var OFC={persona_chat:'#8B4BAF',synthetic_survey_sample:'#1FA2E0',data_boost:'#F3A712',digital_twins_of_real_people:'#4FB39A',population_simulation:'#E4572E'};
+  var BASE={llm_prompting_only:'Só prompt no modelo',not_disclosed:'Não divulga',calibrated_on_public_data:'Calibrada em dados públicos',calibrated_on_proprietary_survey_data:'Calibrada em pesquisa própria',calibrated_on_proprietary_behavioral_data:'Calibrada em comportamento',twins_of_real_panelists:'Gêmeos de painelistas reais'};
+  var BASEC={llm_prompting_only:'#E4572E',not_disclosed:'#6C8EAD',calibrated_on_public_data:'#F3A712',calibrated_on_proprietary_survey_data:'#8B4BAF',calibrated_on_proprietary_behavioral_data:'#1FA2E0',twins_of_real_panelists:'#4FB39A'};
+  var VAL={none:'Sem número publicado',self_reported:'Autodeclarada',third_party:'Por terceiro',peer_reviewed:'Revisada por pares'};
+  var VALC={none:'#E4572E',self_reported:'#F3A712',third_party:'#4FB39A',peer_reviewed:'#2E86AB'};
+  var PRI=['digital_twins_of_real_people','population_simulation','data_boost','synthetic_survey_sample','persona_chat'];
+  function oferta(e){for(var i=0;i<PRI.length;i++)if(e.of.indexOf(PRI[i])>=0)return PRI[i];return 'persona_chat';}
+  var PAL=['#8B4BAF','#1FA2E0','#4FB39A','#F3A712','#E4572E','#2E86AB','#6C8EAD','#7B4B94','#3BB273','#F26430','#B23A22','#5B5870'];
+  var regs=Object.keys(D.contagem.regiao).sort(function(a,b){return D.contagem.regiao[b]-D.contagem.regiao[a];});
+  var GRP={
+    all:{k:function(){return 'all';},l:function(){return 'Todas as empresas';},c:function(){return '#8B4BAF';}},
+    oferta:{k:oferta,l:function(k){return 'Oferta principal: '+OF[k];},c:function(k){return OFC[k];}},
+    base:{k:function(e){return e.base;},l:function(k){return BASE[k]||k;},c:function(k){return BASEC[k]||'#6C8EAD';}},
+    val:{k:function(e){return e.val;},l:function(k){return VAL[k];},c:function(k){return VALC[k];}},
+    reg:{k:function(e){return e.reg;},l:function(k){return k;},c:function(k){return PAL[regs.indexOf(k)%PAL.length];}},
+    grupo:{k:function(e){return e.grupo;},l:function(k){return k;},c:function(k){return {'Startup':'#8B4BAF','Incumbente regional':'#1FA2E0','Internacional':'#4FB39A','Cassi.ai':'#F26430'}[k]||'#6C8EAD';}}
+  };
+  var cassi=E.filter(function(e){return e.cassi;})[0];
+  document.getElementById('h1n').textContent=E.length-1;
+  var c=D.contagem;
+  document.getElementById('src1').textContent='Fonte: '+D.meta.fonte+'. '+c.verificadas+' de '+c.total+' empresas conferidas página a página pela coleta. Captura de '+D.meta.data+'.';
+
+  /* rail e cenas */
+  var SC=[['01','Quem vende',(E.length-1)+' empresas e a Cassi.ai'],['02','O mercado','base da persona contra validação'],['03','Por trás do método','17 estações, da pergunta à decisão']];
+  var rail=document.getElementById('rail');SC.forEach(function(s,i){var a=document.createElement('a');a.href='#s'+(i+1);a.innerHTML='<span class="k">'+s[0]+'</span><span class="t">'+s[1]+'</span><span class="s">'+s[2]+'</span>';rail.appendChild(a);});
+  var deck=document.getElementById('deck'),scenes=[].slice.call(document.querySelectorAll('.scene')),links=[].slice.call(rail.children),idx=0;
+  function go(i){i=Math.max(0,Math.min(scenes.length-1,i));idx=i;scenes[i].scrollIntoView({block:'start'});}
+  document.getElementById('prevBtn').onclick=function(){go(idx-1);};document.getElementById('nextBtn').onclick=function(){go(idx+1);};
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="#s"]');if(!a)return;e.preventDefault();go(parseInt(a.getAttribute('href').slice(2),10)-1);});
+  deck.addEventListener('scroll',function(){document.getElementById('progress').style.width=(deck.scrollTop/(deck.scrollHeight-deck.clientHeight)*100)+'%';},{passive:true});
+
+  /* comparacao que vai juntando */
+  var cesta=[];
+  function lvl(v){return '<span class="lv '+v+'">'+VAL[v]+'</span>';}
+  function nf(t){return !t||t==='not found'?'<span class="nf">not found</span>':esc(t);}
+  function quote(t){return t?'<q>'+esc(t)+'</q>':'';}
+  var LINHAS=[
+    ['O que vende',function(e){return e.of.map(function(o){return OF[o];}).join(', ')||'<span class="nf">not found</span>';}],
+    ['Produto',function(e){return nf(e.produto);}],
+    ['Manchete',function(e){return e.head?quote(e.head):'<span class="nf">not found</span>';}],
+    ['Base da persona',function(e){return esc(BASE[e.base]||e.base)+quote(e.base_q);}],
+    ['Validação publicada',function(e){return lvl(e.val)+quote(e.val_q)+(e.val_b?'<div class="nf">'+esc(e.val_b)+'</div>':'');}],
+    ['Preço',function(e){return nf(e.preco);}],
+    ['Clientes citados',function(e){return nf(e.cli);}],
+    ['Sede',function(e){return nf(e.hq);}],
+    ['Ressalva publicada',function(e){return e.ressalva?quote(e.ressalva):'<span class="nf">nenhuma</span>';}],
+    ['Fonte',function(e){var u=(e.coleta&&e.coleta.urls&&e.coleta.urls.length?e.coleta.urls:e.fontes).slice(0,3);return (e.coleta?'<span class="ver">conferida pela coleta</span><br>':'<span class="nf">base inicial</span><br>')+u.map(function(x){return '<a href="'+esc(x)+'" target="_blank" rel="noopener">'+esc(x.replace(/^https?:\/\/(www\.)?/,'').slice(0,42))+'</a>';}).join('<br>');}]
+  ];
+  function render(novo){
+    var cols=[cassi].concat(cesta);
+    document.getElementById('tray').innerHTML=cols.map(function(e){return '<span class="'+(e.cassi?'cassi':'')+'">'+esc(e.n)+(e.cassi?'':'<button type="button" data-id="'+e.id+'" aria-label="Tirar '+esc(e.n)+'">×</button>')+'</span>';}).join('');
+    [].slice.call(document.querySelectorAll('#tray button')).forEach(function(b){b.onclick=function(){tirar(b.dataset.id);};});
+    document.getElementById('bTitle').textContent=cesta.length?'Cassi.ai e mais '+cesta.length+(cesta.length===1?' empresa':' empresas'):'Clique numa empresa do mapa para trazê-la para cá';
+    var h='<tr><th></th>'+cols.map(function(e){return '<th class="'+(e.cassi?'cassi':'')+'" data-id="'+e.id+'">'+esc(e.n)+'</th>';}).join('')+'</tr>';
+    h+=LINHAS.map(function(r){return '<tr><td class="k">'+r[0]+'</td>'+cols.map(function(e){return '<td data-id="'+e.id+'">'+r[1](e)+'</td>';}).join('')+'</tr>';}).join('');
+    document.getElementById('cmp').innerHTML=h;
+    if(novo&&G&&!reduce){G.fromTo('#cmp [data-id="'+novo+'"]',{opacity:0,y:10,backgroundColor:'rgba(139,75,175,.14)'},{opacity:1,y:0,backgroundColor:'rgba(0,0,0,0)',duration:.6,stagger:.03});}
+    if(window.__marcar)window.__marcar();
+  }
+  function noCesto(id){return cesta.some(function(e){return e.id===id;});}
+  function juntar(e){if(e.cassi||noCesto(e.id))return;cesta.push(e);if(cesta.length>5)cesta.shift();render(e.id);}
+  function tirar(id){cesta=cesta.filter(function(e){return e.id!==id;});render();}
+  window.__juntar=juntar;window.__alternar=function(e){if(noCesto(e.id))tirar(e.id);else juntar(e);};
+
+  /* cartao da empresa */
+  var heard=document.getElementById('heard');
+  function cartao(e){
+    heard.innerHTML='<p class="mono">'+esc(e.grupo)+(e.reg!=='não informada'?' · '+esc(e.reg):'')+'</p><h3>'+esc(e.n)+'</h3>'+
+      (e.coleta?'<span class="ver">conferida pela coleta em '+esc(e.coleta.data||'')+'</span>':'')+
+      '<div>'+e.of.map(function(o){return '<span class="pill" style="background:'+OFC[o]+'">'+OF[o]+'</span>';}).join('')+'</div>'+
+      (e.head?'<blockquote>“'+esc(e.head)+'”</blockquote>':'')+
+      '<div><div class="k">Base da persona</div><div class="v">'+esc(BASE[e.base]||e.base)+'</div></div>'+
+      '<div><div class="k">Validação publicada</div><div class="v">'+lvl(e.val)+' '+(e.val_q?esc(e.val_q):'')+'</div></div>'+
+      (e.cassi?'<div class="does"><div class="k">Como a Cassi.ai constrói</div><div>'+esc(e.como)+'</div><div class="w">“'+esc(e.vies)+'” '+esc(e.ressalva)+'</div></div>':
+      '<button type="button" class="btn '+(noCesto(e.id)?'btn-ghost':'btn-teal')+'" id="addBtn">'+(noCesto(e.id)?'Tirar da comparação':'Juntar à comparação')+'</button>');
+    var b=document.getElementById('addBtn');if(b)b.onclick=function(){window.__alternar(e);cartao(e);};
+    if(G&&!reduce)G.fromTo(heard,{opacity:.6,y:6},{opacity:1,y:0,duration:.25});
+  }
+
+  /* 01 mapa de forcas com envoltorias (slide 02) */
+  (function(){
+    var W=1000,H=760,groupBy='all',filtro='all';
+    var svg=d3.select('#clusterSvg').append('svg').attr('viewBox','0 0 '+W+' '+H).attr('role','img').attr('aria-label','Mapa das empresas de sintéticos');
+    var root=svg.append('g'),hullG=root.append('g'),labG=root.append('g'),g=root.append('g');
+    var nodes=E.map(function(e,i){var w=Math.min(e.n.length,22)*6.9+22;return {e:e,w:w,h:26,x:W/2+(Math.random()-.5)*360,y:H/2+(Math.random()-.5)*300};});
+    function chave(n){return GRP[groupBy].k(n.e);}
+    function grupos(){var m={};nodes.forEach(function(n){var k=chave(n);(m[k]=m[k]||[]).push(n);});return m;}
+    var centros={};
+    function layout(){var gs=grupos(),ks=Object.keys(gs);centros={};if(ks.length===1){centros[ks[0]]={x:W/2,y:H/2+16};return;}
+      var raiz=d3.hierarchy({children:ks.map(function(k){return {k:k,v:d3.sum(gs[k],function(n){return n.w*n.h;})};})}).sum(function(d){return d.v||0;});
+      d3.pack().size([W-60,H-90]).padding(72)(raiz);raiz.leaves().forEach(function(l){centros[l.data.k]={x:l.x+30,y:l.y+60};});}
+    var nd=g.selectAll('g').data(nodes).enter().append('g').attr('class','node').attr('tabindex',0).attr('role','button').attr('aria-label',function(d){return d.e.n;})
+      .on('mouseenter',function(ev,d){cartao(d.e);}).on('click',function(ev,d){cartao(d.e);window.__alternar(d.e);cartao(d.e);})
+      .on('keydown',function(ev,d){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();window.__alternar(d.e);cartao(d.e);}});
+    nd.append('rect').attr('x',function(d){return -d.w/2;}).attr('y',-13).attr('width',function(d){return d.w;}).attr('height',26).attr('rx',13)
+      .attr('fill',function(d){return d.e.cassi?'var(--violet)':'var(--card)';}).attr('stroke',function(d){return d.e.cassi?'var(--violet)':'#8B4BAF';}).attr('stroke-width',1.3);
+    nd.append('text').attr('text-anchor','middle').attr('y',4).attr('fill',function(d){return d.e.cassi?'#fff':'var(--ink)';}).text(function(d){return d.e.n.length>22?d.e.n.slice(0,21)+'…':d.e.n;});
+    /* colisao por retangulo: os nos sao chips de texto, nao circulos */
+    function colisao(){var ns;function f(a){for(var i=0;i<ns.length;i++)for(var j=i+1;j<ns.length;j++){var p=ns[i],q=ns[j],dx=q.x-p.x,dy=q.y-p.y,ox=(p.w+q.w)/2+6-Math.abs(dx),oy=(p.h+q.h)/2+6-Math.abs(dy);if(ox>0&&oy>0){if(ox<oy*0.8){var sx=(dx<0?-1:1)*ox*.5;p.x-=sx;q.x+=sx;}else{var sy=(dy<0?-1:1)*oy*.5;p.y-=sy;q.y+=sy;}}}}f.initialize=function(n){ns=n;};return f;}
+    var sim=d3.forceSimulation(nodes).alphaDecay(.018).velocityDecay(.45).force('col',colisao()).force('col2',colisao()).force('col3',colisao()).force('col4',colisao()).force('col5',colisao()).on('tick',function(){nodes.forEach(function(d){d.x=Math.max(d.w/2+10,Math.min(W-d.w/2-10,d.x));d.y=Math.max(40,Math.min(H-18,d.y));});nd.attr('transform',function(d){return 'translate('+d.x+','+d.y+')';});envoltorias();});
+    function envoltorias(){var gs=grupos(),ks=Object.keys(gs);
+      var hs=hullG.selectAll('path').data(ks,function(k){return k;});hs.exit().remove();
+      hs.enter().append('path').attr('class','hull').merge(hs).attr('stroke',function(k){return GRP[groupBy].c(k);}).attr('fill',function(k){return GRP[groupBy].c(k);}).attr('d',function(k){var pts=[];gs[k].forEach(function(n){[[-1,-1],[1,-1],[1,1],[-1,1]].forEach(function(s){pts.push([n.x+s[0]*(n.w/2+10),n.y+s[1]*(n.h/2+10)]);});});var h=d3.polygonHull(pts);return h?'M'+h.map(function(p){return p.join(',');}).join('L')+'Z':'';}).style('opacity',function(k){return groupBy==='all'?0:(filtro==='all'||filtro===k?1:.15);});
+      var ls=labG.selectAll('g').data(groupBy==='all'?[]:ks,function(k){return k;});ls.exit().remove();
+      var le=ls.enter().append('g').attr('class','glab').style('cursor','pointer').on('click',function(ev,k){setFiltro(filtro===k?'all':k);});le.append('rect').attr('height',22).attr('rx',6);le.append('text').attr('y',15);
+      le.merge(ls).each(function(k){var ns=gs[k],top=d3.min(ns,function(n){return n.y-n.h/2;}),cx=d3.mean(ns,function(n){return n.x;}),t=(GRP[groupBy].l(k)+' · '+ns.length).toUpperCase(),w=t.length*6.9+18,col=GRP[groupBy].c(k),s=d3.select(this);s.attr('transform','translate('+Math.max(4,Math.min(W-w-4,cx-w/2))+','+Math.max(4,top-34)+')');s.select('rect').attr('width',w).attr('fill','var(--card)').attr('stroke',col).attr('stroke-width',1.5);s.select('text').attr('x',w/2).attr('text-anchor','middle').attr('fill',col).text(t);}).style('opacity',function(k){return filtro==='all'||filtro===k?1:0;});}
+    function relayout(){layout();
+      nd.transition().duration(400).style('opacity',function(d){return filtro==='all'||chave(d)===filtro?1:.25;});
+      sim.force('x',d3.forceX(function(d){return centros[chave(d)].x;}).strength(.045)).force('y',d3.forceY(function(d){return centros[chave(d)].y;}).strength(.06)).alpha(1).restart();
+      var n=filtro==='all'?nodes.length:nodes.filter(function(d){return chave(d)===filtro;}).length;document.getElementById('peopleCount').textContent=n+' de '+nodes.length+' empresas';chips();}
+    function chips(){var el=document.getElementById('filters');if(groupBy==='all'){el.innerHTML='';return;}var gs=grupos(),ks=Object.keys(gs).sort(function(a,b){return gs[b].length-gs[a].length;});
+      el.innerHTML='<button type="button" class="chip'+(filtro==='all'?' on':'')+'" data-k="all">Todas <b>'+nodes.length+'</b></button>'+ks.map(function(k){return '<button type="button" class="chip'+(filtro===k?' on':'')+'" data-k="'+esc(k)+'"><i style="background:'+GRP[groupBy].c(k)+'"></i>'+esc(GRP[groupBy].l(k))+' <b>'+gs[k].length+'</b></button>';}).join('');
+      [].slice.call(el.children).forEach(function(b){b.onclick=function(){setFiltro(b.dataset.k);};});}
+    function setFiltro(k){filtro=k;relayout();}
+    window.__agrupar=function(gb){groupBy=gb;filtro='all';[].slice.call(document.querySelectorAll('#groupBy button')).forEach(function(b){b.classList.toggle('on',b.dataset.g===gb);});relayout();};
+    window.__marcar=function(){nd.select('rect').attr('stroke-width',function(d){return d.e.cassi?1.3:(noCesto(d.e.id)?3.2:1.3);}).attr('fill',function(d){return d.e.cassi?'var(--violet)':(noCesto(d.e.id)?'var(--violet-soft)':'var(--card)');});};
+    [].slice.call(document.querySelectorAll('#groupBy button')).forEach(function(b){b.onclick=function(){paraSeq();window.__agrupar(b.dataset.g);};});
+    relayout();
+  })();
+  var seq=[];function sequencia(){if(reduce)return;seq.push(setTimeout(function(){window.__agrupar('base');},2600));seq.push(setTimeout(function(){window.__agrupar('val');},7600));}
+  function paraSeq(){seq.forEach(clearTimeout);seq=[];}
+  cartao(cassi);render();
+
+  /* 02 mapa 2x2 com comparacao automatica (slide 04) */
+  var autoT=null,autoI=0,segurou=false,escolher,ordem2=[];
+  (function(){
+    var XB=[['llm_prompting_only'],['not_disclosed'],['calibrated_on_public_data','calibrated_on_proprietary_survey_data','calibrated_on_proprietary_behavioral_data'],['twins_of_real_panelists']];
+    var XL=['SÓ PROMPT NO MODELO','NÃO DIVULGA','ANCORADA EM DADOS','GÊMEOS DE PESSOAS REAIS'];
+    var YB=[['third_party','peer_reviewed'],['self_reported'],['none']];
+    var YL=['TERCEIRO OU PARES','AUTODECLARADA','SEM NÚMERO'];
+    var x0=120,x1=990,W=1000,cw=(x1-x0)/4;
+    function xb(e){for(var i=0;i<XB.length;i++)if(XB[i].indexOf(e.base)>=0)return i;return 1;}
+    function yb(e){for(var i=0;i<YB.length;i++)if(YB[i].indexOf(e.val)>=0)return i;return 2;}
+    var cel={};E.forEach(function(e){var k=xb(e)+'-'+yb(e);(cel[k]=cel[k]||[]).push(e);});
+    /* fluxo dentro de cada celula: a altura de cada faixa cresce com a celula mais cheia */
+    function fluxo(lista){var linhas=[[]],larg=0;lista.forEach(function(e){var w=Math.min(e.n.length,16)*6.3+18;if(larg+w>cw-18&&linhas[linhas.length-1].length){linhas.push([]);larg=0;}linhas[linhas.length-1].push({e:e,w:w,dx:larg});larg+=w+6;});return linhas;}
+    var alturas=YB.map(function(_,y){var m=1;for(var x=0;x<4;x++){var l=cel[x+'-'+y];if(l)m=Math.max(m,fluxo(l.sort(function(a,b){return a.cassi?-1:b.cassi?1:a.n.localeCompare(b.n);})).length);}return Math.max(70,m*27+34);});
+    var y0=40,H=y0+d3.sum(alturas)+70;
+    var svg=d3.select('#map2').append('svg').attr('viewBox','0 0 '+W+' '+H).attr('role','img').attr('aria-label','Mapa de posicionamento: base da persona contra validação publicada');
+    var topo=[y0];alturas.forEach(function(h){topo.push(topo[topo.length-1]+h);});
+    for(var x=0;x<=4;x++)svg.append('line').attr('x1',x0+x*cw).attr('x2',x0+x*cw).attr('y1',y0).attr('y2',topo[3]).attr('stroke','var(--line)').attr('stroke-dasharray',x%4?'5 5':null);
+    topo.forEach(function(t,i){svg.append('line').attr('x1',x0).attr('x2',x1).attr('y1',t).attr('y2',t).attr('stroke','var(--line)').attr('stroke-dasharray',i%3?'5 5':null);});
+    function lab(x,y,t,a,w,s){svg.append('text').attr('x',x).attr('y',y).attr('text-anchor',a||'start').attr('font-family','var(--mono)').attr('font-size',s||11).attr('fill','var(--ink-2)').attr('font-weight',w||500).attr('letter-spacing','.06em').text(t);}
+    XL.forEach(function(t,i){lab(x0+cw*i+cw/2,topo[3]+22,t,'middle');});
+    lab((x0+x1)/2,topo[3]+50,'DE ONDE VEM A PERSONA','middle',700,12);
+    YL.forEach(function(t,i){svg.append('text').attr('transform','translate('+(x0-14)+','+(topo[i]+alturas[i]/2)+') rotate(-90)').attr('text-anchor','middle').attr('font-family','var(--mono)').attr('font-size',10.5).attr('fill','var(--ink-2)').text(t);});
+    svg.append('text').attr('transform','translate(30,'+((y0+topo[3])/2)+') rotate(-90)').attr('text-anchor','middle').attr('font-family','var(--mono)').attr('font-size',12).attr('font-weight',700).attr('fill','var(--ink-2)').attr('letter-spacing','.08em').text('O QUE PUBLICA DE VALIDAÇÃO');
+    var nz=(cel['2-0']||[]).length+(cel['3-0']||[]).length;
+    var zz=svg.append('g');zz.append('rect').attr('x',x0+cw*2+4).attr('y',y0+4).attr('width',cw*2-8).attr('height',alturas[0]-8).attr('rx',8).attr('fill','var(--violet)').attr('fill-opacity',.06).attr('stroke','var(--violet)').attr('stroke-dasharray','5 4');
+    zz.append('text').attr('x',x0+cw*3).attr('y',y0+20).attr('text-anchor','middle').attr('font-size',12).attr('font-weight',700).attr('fill','var(--ink)').text('Ancorada e validada por fora: '+nz+(nz===1?' empresa':' empresas'));
+    Object.keys(cel).forEach(function(k){var xi=+k.split('-')[0],yi=+k.split('-')[1],ls=fluxo(cel[k]),off=yi===0&&xi>=2?20:0;
+      ls.forEach(function(linha,r){linha.forEach(function(it){var e=it.e,gx=x0+cw*xi+10+it.dx,gy=topo[yi]+12+off+r*27;ordem2.push(e);
+        var gg=svg.append('g').attr('class','chipv').attr('data-id',e.id).attr('tabindex',0).attr('role','button').attr('aria-label','Comparar '+e.n);
+        gg.append('rect').attr('x',gx).attr('y',gy).attr('width',it.w).attr('height',22).attr('rx',11).attr('fill',e.cassi?'var(--violet)':(e.coleta?'var(--violet-soft)':'var(--card)')).attr('stroke',e.cassi?'var(--violet)':'var(--ink-2)').attr('stroke-width',e.cassi?2:1);
+        gg.append('text').attr('x',gx+it.w/2).attr('y',gy+15).attr('text-anchor','middle').attr('font-size',10.5).attr('font-weight',e.cassi?700:500).attr('fill',e.cassi?'#fff':'var(--ink)').text(e.n.length>16?e.n.slice(0,15)+'…':e.n);
+        gg.on('click',function(){segurou=true;paraAuto();escolher(e);}).on('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();segurou=true;paraAuto();escolher(e);}});});});});
+    var cmp=document.getElementById('compare');
+    escolher=function(e){svg.selectAll('.chipv').classed('on',function(){return this.getAttribute('data-id')===e.id;});
+      if(e.cassi){cmp.innerHTML='<p class="mono">Cassi.ai</p><h3>Ancorada nos estudos do cliente, sem número publicado ainda.</h3><p class="lead" style="font-size:14px;margin-top:8px">'+esc(e.como)+'</p><p class="hl2">“'+esc(e.ressalva)+'”</p>';return;}
+      var lin=[['Oferta',function(x){return x.of.map(function(o){return OF[o];}).join(', ');}],['Base da persona',function(x){return BASE[x.base]||x.base;}],['Validação',function(x){return VAL[x.val];}],['Preço',function(x){return x.preco;}],['Sede',function(x){return x.hq;}]];
+      cmp.innerHTML='<p class="mono">Lado a lado'+(segurou?'':' · automático')+'</p><h3>Cassi.ai e '+esc(e.n)+'</h3><table><tr><th></th><th>Cassi.ai</th><th>'+esc(e.n)+'</th></tr>'+lin.map(function(r){return '<tr><td class="k">'+r[0]+'</td><td>'+esc(r[1](cassi))+'</td><td>'+esc(r[1](e))+'</td></tr>';}).join('')+'</table>'+
+        (e.head?'<p class="hl2">Manchete deles: “'+esc(e.head)+'”</p>':'')+'<p class="hl2">A nossa: “'+esc(cassi.head)+'”</p>'+
+        '<div style="margin-top:12px"><button type="button" class="btn btn-teal" id="add2">Juntar à comparação da cena 01</button></div><div class="autobar"><i id="autoI"></i></div>';
+      document.getElementById('add2').onclick=function(){window.__juntar(e);this.textContent='Na comparação ✓';};
+      if(!segurou&&!reduce&&G)G.fromTo('#autoI',{width:'0%'},{width:'100%',duration:2.6,ease:'none'});};
+    escolher(ordem2.filter(function(e){return !e.cassi;})[0]);
+    var tot=E.length,semN=E.filter(function(e){return e.val==='none';}).length,fora=E.filter(function(e){return e.val==='third_party'||e.val==='peer_reviewed';}).length,anc=E.filter(function(e){return xb(e)===2;}).length;
+    svg.append('text').attr('x',x1).attr('y',topo[3]+50).attr('text-anchor','end').attr('font-family','var(--mono)').attr('font-size',10.5).attr('fill','var(--ink-2)').text('CHIP LILÁS: CONFERIDA PELA COLETA');
+    document.getElementById('kpis').innerHTML=[[anc,'dizem ancorar a persona em dados'],[semN,'não publicam número de validação'],[fora,'citam terceiro ou revisão por pares'],[tot,'empresas no mapa, com a Cassi.ai']].map(function(k){return '<div class="big">'+k[0]+'<small>'+k[1]+'</small></div>';}).join('');
+  })();
+  function iniciaAuto(){if(autoT||segurou||reduce)return;var lista=ordem2.filter(function(e){return !e.cassi;});autoT=setInterval(function(){autoI=(autoI+1)%lista.length;escolher(lista[autoI]);},2700);}
+  function paraAuto(){if(autoT){clearInterval(autoT);autoT=null;}}
+
+  /* 03 rota de metodos (slide 07) */
+  function conta(f){return E.filter(f).length;}
+  var nPrompt=conta(function(e){return e.base==='llm_prompting_only';}),nCal=conta(function(e){return /^calibrated/.test(e.base);}),nTwin=conta(function(e){return e.base==='twins_of_real_panelists'||e.of.indexOf('digital_twins_of_real_people')>=0;}),nSim=conta(function(e){return e.of.indexOf('population_simulation')>=0;}),nBoost=conta(function(e){return e.of.indexOf('data_boost')>=0;}),nVal=conta(function(e){return e.val!=='none';}),nFora=conta(function(e){return e.val==='third_party'||e.val==='peer_reviewed';});
+  var NODES=[
+    {id:'q',x:12,y:212,t:'Pergunta do estudo',s:'qual decisão vai sair',st:0,d:'Antes da técnica vem o uso. A AAPOR separa três usos do respondente de IA, em risco crescente: diagnóstico antes do campo, aumento ou imputação depois do campo, e substituição de pessoas. A substituição é a mais arriscada.',f:'AAPOR, Responsible AI Integration in Survey Research, 2026',u:'https://aapor.org/wp-content/uploads/2026/05/Responsible-AI-Integration-In-Survey-Research.pdf'},
+    {id:'c1',x:227,y:12,t:'Prompt no modelo',s:nPrompt+' empresas no mapa',st:1,d:'O modelo recebe uma descrição de persona e responde. É rápido e não exige dado próprio, mas herda o que o treino do modelo sabe e o que ele ignora. Argyle et al. condicionaram o GPT-3 em milhares de histórias sociodemográficas de respondentes reais.',f:'Argyle et al., Political Analysis, 2023',u:'https://arxiv.org/abs/2209.06899'},
+    {id:'c2',x:227,y:92,t:'Contexto e RAG',s:'estudos do cliente',st:1,d:'A persona recebe como contexto estudos, segmentações e transcrições e responde a partir desse material. No estudo de Arora et al., a qualidade do dado sintético melhorou com poucos exemplos e com geração aumentada por recuperação.',f:'Arora, Chakraborty e Nishimura, Journal of Marketing, 2025',u:'https://doi.org/10.1177/00222429241276529'},
+    {id:'c3',x:227,y:172,t:'Calibração em pesquisa',s:nCal+' empresas no mapa',st:1,d:'O modelo é ajustado a respostas reais de pesquisa. Maier et al. testaram 57 pesquisas de cuidado pessoal com 9.300 respostas humanas: pedir a nota direto deu distribuições irreais, mapear texto livre para a escala chegou a 90% da confiabilidade teste-reteste humana.',f:'Maier et al., 2025 (PyMC Labs e Colgate-Palmolive)',u:'https://arxiv.org/abs/2510.08338'},
+    {id:'c4',x:227,y:252,t:'Gêmeo de pessoa real',s:nTwin+' empresas no mapa',st:1,d:'Um modelo de uma pessoa identificada, ancorado nas respostas dela. Park et al. construíram agentes de 1.052 adultos a partir de entrevistas de duas horas. Peng et al. acharam correlação média de 0,20 com as respostas humanas em 164 desfechos novos.',f:'Park et al., 2024; Peng et al., 2025',u:'https://arxiv.org/abs/2509.19088'},
+    {id:'c5',x:227,y:332,t:'Simulação de população',s:nSim+' empresas no mapa',st:1,d:'Muitos agentes com memória, reflexão e planejamento interagem no tempo e produzem comportamento social emergente. É o desenho dos Generative Agents de Park et al. em 2023.',f:'Park et al., Generative Agents, 2023',u:'https://arxiv.org/abs/2304.03442'},
+    {id:'c6',x:227,y:412,t:'Boost de amostra',s:nBoost+' empresas no mapa',st:1,d:'Um modelo treinado no próprio arquivo da pesquisa cria linhas para um segmento pequeno. O paper Fairgen e IFOP pede no mínimo 300 respondentes de campo e segmento abaixo de 15% do total, e valida com teste em paralelo contra um boost real.',f:'Cohen e Duhard, ESOMAR Congress 2024',u:'https://ana.esomar.org/api/public/document/file_renderer/12519'},
+    {id:'f1',x:442,y:92,t:'Distribuições',s:'KS, TV, Wasserstein',st:2,d:'Compare pergunta a pergunta: KS para escalas, variação total para categorias, Wasserstein quando a ordem das opções importa. A Pew mediu o erro absoluto médio em pontos percentuais e achou diferença média de 12 pontos em quase 300 perguntas.',f:'Pew Research Center, 30 set 2026',u:'https://www.pewresearch.org/data-labs/2026/09/30/can-ai-stand-in-for-human-survey-takers-not-really/'},
+    {id:'f2',x:442,y:212,t:'Estrutura conjunta',s:'correlações, Cramér V',st:2,d:'Acertar a média não basta. Bisbee et al. acharam médias parecidas com a ANES, mas coeficientes de regressão diferentes, e respostas que mudam com a redação do prompt e ao longo de três meses.',f:'Bisbee et al., Political Analysis, 2024',u:'https://doi.org/10.1017/pan.2024.5'},
+    {id:'f3',x:442,y:332,t:'Variância e subgrupo',s:'DP sintético / DP real',st:2,d:'O sintético costuma comprimir a variância: Peng et al. acharam desvio menor em 154 de 164 casos. Reporte o erro por subgrupo, porque o agregado esconde onde o modelo falha.',f:'Peng et al., Digital Twins as Funhouse Mirrors, 2025',u:'https://arxiv.org/abs/2509.19088'},
+    {id:'u1',x:657,y:92,t:'TSTR e TRTR',s:'treina no sintético',st:3,d:'Treine um modelo de drivers no sintético e teste num holdout real (TSTR). Compare com o mesmo modelo treinado no real (TRTR). A diferença é a perda de utilidade.',f:'Esteban, Hyland e Rätsch, 2017',u:'https://arxiv.org/abs/1706.02633'},
+    {id:'u2',x:657,y:212,t:'Teto de teste-reteste',s:'o humano contra si',st:3,d:'Normalize pela consistência humana. Park et al. dividiram a acurácia bruta de 65,67% pela autoconsistência de 79,53% dos participantes. Mostre sempre o número bruto ao lado do normalizado.',f:'Park et al., 2024',u:'https://arxiv.org/abs/2411.10109'},
+    {id:'u3',x:657,y:332,t:'Baselines e holdout',s:'aleatório, cópula, perfil',st:3,d:'Bata um respondente aleatório, um modelo estatístico sem LLM e uma persona só demográfica. Cummins mostrou que só a configuração muda a correlação entre estruturas humana e sintética de 0,23 a 0,84.',f:'Cummins, 2025',u:'https://arxiv.org/abs/2509.13397'},
+    {id:'r1',x:872,y:92,t:'Privacidade e LGPD',s:'art. 12, § 2º',st:4,d:'Gêmeo de pessoa identificada pode ser dado pessoal: a LGPD inclui dados usados para formar o perfil comportamental de pessoa identificada. Dado sintético não é automaticamente anônimo.',f:'Lei 13.709/2018, art. 12',u:'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm'},
+    {id:'r2',x:872,y:212,t:'Divulgação',s:'ICC/ESOMAR, IA, AAPOR',st:4,d:'O Código ICC/ESOMAR de 2025 manda informar o cliente quando há dado ou persona sintética e dizer o grau de supervisão humana. A AAPOR pede que respostas geradas não sejam chamadas de participantes nem de pesquisa de opinião.',f:'ICC/ESOMAR International Code, 2025',u:'https://community.esomar.org/uploads/public/knowledge-and-standards/codes-and-guidelines/ICCESOMAR-International-Code_English.pdf'},
+    {id:'r3',x:872,y:332,t:'Normas e AI Act',s:'ISO 20252:2026, art. 50',st:4,d:'A ISO 20252:2026 substituiu a de 2019 e inclui políticas de IA e automação. O AI Act exige marcar como artificial o conteúdo sintético (art. 50), com prazo até 2 dez 2026 para sistemas já no mercado.',f:'ISO; Orrick, jul 2026',u:'https://www.iso.org/standard/73671.html'},
+    {id:'d',x:1087,y:212,t:'Decisão',s:'usar, ir a campo, descartar',st:5,d:'Use o sintético para explorar e cortar opções. Valide em campo o que vai decidir. O conselho da MRS pede que ele seja tratado como ferramenta complementar.',f:'MRS AIA Council, 2025',u:'https://www.mrs.org.uk/pdf/MRS_AISyntheticData_AIACouncil.pdf'}
+  ];
+  var EDGES=[['q','c1'],['q','c2'],['q','c3'],['q','c4'],['q','c5'],['q','c6'],
+    ['c1','f1'],['c2','f1'],['c3','f1'],['c6','f1'],['c3','f2'],['c4','f2'],['c5','f2'],['c6','f2'],['c1','f3'],['c2','f3'],['c4','f3'],['c5','f3'],
+    ['f1','u1'],['f2','u1'],['f2','u3'],['f3','u2'],['f3','u3'],['f1','u2'],
+    ['u1','r1'],['u2','r2'],['u3','r2'],['u3','r3'],['r1','d'],['r2','d'],['r3','d']];
+  var ST=[
+    {t:'Pergunta',inW:'do cliente',inT:'Uma decisão de negócio',inP:'Que rota de campanha seguir, que preço testar, que segmento ouvir.',outW:'para a construção',outT:'O uso definido',outP:'Diagnóstico antes do campo, aumento depois do campo ou substituição. Cada uso pede um nível de prova.'},
+    {t:'Construção',inW:'da pergunta',inT:'Seis jeitos de fazer a persona',inP:'No mapa: '+nCal+' empresas dizem calibrar em dados, '+nTwin+' falam em gêmeos, '+nSim+' em simulação, '+nBoost+' em boost e '+nPrompt+' usam só o modelo.',outW:'para a fidelidade',outT:'Respostas sintéticas',outP:'Ainda sem prova de que se parecem com as reais.'},
+    {t:'Fidelidade',inW:'da construção',inT:'Respostas sintéticas',inP:'Comparadas com uma amostra real no mesmo instrumento e no mesmo período.',outW:'para a utilidade',outT:'Forma, estrutura e variância medidas',outP:'Erro por pergunta, por par de perguntas e por subgrupo.'},
+    {t:'Utilidade e teto',inW:'da fidelidade',inT:'Erros conhecidos',inP:'Falta saber se o dado serve para a tarefa e se bate o que já existe sem LLM.',outW:'para as regras',outT:'Perda de utilidade e ganho sobre baselines',outP:'Com o teto humano de teste-reteste ao lado.'},
+    {t:'Regras',inW:'da utilidade',inT:'Um resultado validado',inP:'Agora entra o que se pode fazer com ele e o que é preciso dizer ao cliente.',outW:'para a decisão',outT:'Privacidade, divulgação e norma',outP:'LGPD, Código ICC/ESOMAR, AAPOR, ISO 20252 e AI Act.'},
+    {t:'Decisão',inW:'de todas as estações',inT:'Método, prova e regra',inP:'Cada estação deixa um registro.',outW:'para o cliente',outT:'Usar, ir a campo ou descartar',outP:'O sintético corta opções. O campo decide.'}
+  ];
+  document.getElementById('finalB').textContent=nVal+' de '+E.length+' empresas publicam algum número de validação; '+nFora+' por terceiro ou revisão por pares.';
+  document.getElementById('finalS').textContent='A Cassi.ai ainda não publica número. Esta rota é o que um comprador pode pedir a qualquer fornecedor, inclusive a nós.';
+  (function(){
+    var W=1290,H=490,NW=196,NH=46;
+    var svg=d3.select('#routeSvg').append('svg').attr('viewBox','0 0 '+W+' '+H).attr('role','img').attr('aria-label','Rota de método, da pergunta à decisão');
+    var by={};NODES.forEach(function(n){by[n.id]=n;});
+    [['CONSTRUÇÃO',227],['FIDELIDADE',442],['UTILIDADE',657],['REGRAS',872]].forEach(function(c){svg.append('text').attr('class','colh').attr('x',c[1]+NW/2).attr('y',H-6).attr('text-anchor','middle').text(c[0]);});
+    var eg=svg.append('g'),ng=svg.append('g'),pg=svg.append('g'),paths={};
+    EDGES.forEach(function(e){var a=by[e[0]],b=by[e[1]],xa=a.x+NW,ya=a.y+NH/2,xb=b.x,yb=b.y+NH/2,mx=(xa+xb)/2;paths[e[0]+'>'+e[1]]=eg.append('path').attr('class','edge').attr('d','M'+xa+' '+ya+'C'+mx+' '+ya+' '+mx+' '+yb+' '+xb+' '+yb).node();});
+    NODES.forEach(function(n,i){var g=ng.append('g').attr('class','st').attr('id','n-'+n.id).attr('tabindex',0).attr('role','button').style('cursor','pointer').on('click',function(){paraR();estacao(n);setStage(n.st,true);}).on('keydown',function(ev){if(ev.key==='Enter'){paraR();estacao(n);setStage(n.st,true);}});
+      g.append('rect').attr('x',n.x).attr('y',n.y).attr('width',NW).attr('height',NH).attr('rx',8);
+      g.append('text').attr('class','num').attr('x',n.x+10).attr('y',n.y+14).text(String(i+1).padStart(2,'0'));
+      g.append('text').attr('x',n.x+10).attr('y',n.y+29).text(n.t);
+      g.append('text').attr('class','sub').attr('x',n.x+10).attr('y',n.y+41).text(n.s);
+      g.append('text').attr('class','chk').attr('x',n.x+NW-14).attr('y',n.y+15).text('✓');});
+    var cur=0,auto=null,sel=null;
+    function pacote(k,dur){var p=paths[k];if(!p)return;if(!G||reduce){d3.select(p).classed('done',true);return;}var L=p.getTotalLength(),c=pg.append('circle').attr('class','pkt').attr('r',6);
+      G.to({v:0},{v:L,duration:dur/1000,ease:'power1.inOut',onUpdate:function(){var pt=p.getPointAtLength(this.targets()[0].v);c.attr('cx',pt.x).attr('cy',pt.y);},onComplete:function(){c.remove();d3.select(p).classed('done',true);}});}
+    function estacao(n){sel=n.id;document.getElementById('stnN').textContent=n.t;document.getElementById('stnT').textContent=n.t;document.getElementById('stnP').textContent=n.d;document.getElementById('stnS').innerHTML='Fonte: <a href="'+n.u+'" target="_blank" rel="noopener">'+esc(n.f)+'</a>';
+      svg.selectAll('.st').classed('sel',function(){return this.id==='n-'+sel;});if(G&&!reduce)G.fromTo('#stn',{y:8,opacity:.5},{y:0,opacity:1,duration:.3});}
+    function setStage(i,manual){cur=Math.max(0,Math.min(ST.length-1,i));var s=ST[cur];
+      svg.selectAll('.st').attr('class',function(){var n=by[this.id.slice(2)];return 'st'+(n.st<cur?' done':n.st===cur?' run':'')+(n.id===sel?' sel':'');});
+      svg.selectAll('.edge').classed('done',false);
+      Object.keys(paths).forEach(function(k){if(by[k.split('>')[1]].st<cur)d3.select(paths[k]).classed('done',true);});
+      pg.selectAll('*').remove();EDGES.forEach(function(e){if(by[e[1]].st===cur)pacote(e[0]+'>'+e[1],900);});
+      document.getElementById('stepLbl').textContent='etapa '+(cur+1)+' de '+ST.length+' · '+s.t;document.getElementById('stepBar').style.width=((cur+1)/ST.length*100)+'%';
+      [['inWho','inW'],['inT','inT'],['inP','inP'],['outWho','outW'],['outT','outT'],['outP','outP']].forEach(function(k){document.getElementById(k[0]).textContent=s[k[1]];});
+      document.getElementById('final').classList.toggle('show',cur===ST.length-1);
+      if(!manual){var primeira=NODES.filter(function(n){return n.st===cur;})[0];estacao(primeira);}
+      if(G&&!reduce)G.fromTo('.iobox.in,.iobox.out',{y:8,opacity:.5},{y:0,opacity:1,duration:.35,stagger:.08});}
+    document.getElementById('rPrev').onclick=function(){paraR();setStage(cur-1);};
+    document.getElementById('rNext').onclick=function(){paraR();setStage(cur+1);};
+    document.getElementById('rAuto').onclick=function(){if(auto)paraR();else rotaAuto();};
+    function paraR(){if(auto){clearInterval(auto);auto=null;document.getElementById('rAuto').textContent='Auto';}}
+    window.__rota=function(){if(reduce){setStage(ST.length-1);return;}paraR();setStage(0);document.getElementById('rAuto').textContent='Pausa';auto=setInterval(function(){if(cur>=ST.length-1){paraR();return;}setStage(cur+1);},3200);};
+    function rotaAuto(){window.__rota();}
+    setStage(0);
+  })();
+
+  var rodou={};
+  var io=new IntersectionObserver(function(es){es.forEach(function(en){if(!en.isIntersecting)return;var s=en.target;idx=scenes.indexOf(s);document.getElementById('slideNum').textContent=(idx+1)+' / '+scenes.length;links.forEach(function(a,i){a.classList.toggle('on',i===idx);});
+    if(s.id==='s1'&&!rodou.s1){rodou.s1=true;sequencia();}
+    if(s.id==='s2')iniciaAuto();else paraAuto();
+    if(s.id==='s3'&&!rodou.s3){rodou.s3=true;window.__rota();}
+  });},{root:window.innerWidth<=700?null:deck,rootMargin:'-45% 0px -45% 0px',threshold:0});
+  scenes.forEach(function(s){io.observe(s);});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(idx+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1);}});
+})();
+</script>
+</body>
+</html>

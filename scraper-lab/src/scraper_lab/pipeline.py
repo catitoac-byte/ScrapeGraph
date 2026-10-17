@@ -39,17 +39,27 @@ def id_da_url(url: str) -> str:
 # Cache
 # --------------------------------------------------------------------------
 
+def ler_json(caminho: Path, padrao=None):
+    """Le um JSON de cache; devolve o padrao quando o arquivo ainda nao existe."""
+    if caminho.exists():
+        return json.loads(caminho.read_text(encoding="utf-8"))
+    return {} if padrao is None else padrao
+
+
+def gravar_json(caminho: Path, obj, indent: int = 1) -> None:
+    """Grava com troca atomica: nunca deixa o arquivo pela metade."""
+    caminho.parent.mkdir(parents=True, exist_ok=True)
+    tmp = caminho.with_suffix(caminho.suffix + ".tmp")
+    tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=indent), encoding="utf-8")
+    tmp.replace(caminho)
+
+
 def carregar_cache() -> dict[str, dict]:
-    if CACHE.exists():
-        return json.loads(CACHE.read_text(encoding="utf-8"))
-    return {}
+    return ler_json(CACHE)
 
 
 def salvar_cache(cache: dict[str, dict]) -> None:
-    CACHE.parent.mkdir(parents=True, exist_ok=True)
-    tmp = CACHE.with_suffix(".tmp")
-    tmp.write_text(json.dumps(cache, ensure_ascii=False, indent=1), encoding="utf-8")
-    tmp.replace(CACHE)  # troca atomica: nunca deixa o cache pela metade
+    gravar_json(CACHE, cache)
 
 
 def importar_json(caminho: Path, cache: dict[str, dict]) -> int:
