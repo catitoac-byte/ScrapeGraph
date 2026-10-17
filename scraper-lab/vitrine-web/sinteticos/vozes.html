@@ -124,6 +124,31 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 .chipq{border:1px solid var(--line);border-left:5px solid var(--violet);border-radius:8px;padding:8px 10px;font-size:13px;background:var(--card)}
 .chipq.pro{border-left-color:var(--pro)}.chipq.contra{border-left-color:var(--contra)}.chipq.meio{border-left-color:var(--meio)}
 .chipq small{display:block;color:var(--ink-2);font-size:11px;font-family:var(--mono)}
+.midia{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.graf{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.graf .img{background:#fff;padding:8px;cursor:zoom-in;border-bottom:1px solid var(--line)}
+.graf img{display:block;width:100%;height:auto}
+.graf .t{padding:12px 14px;display:grid;gap:6px;font-size:13.5px}
+.graf .t b{font-size:15px}
+.graf .k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;color:var(--violet);letter-spacing:.08em}
+.num4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.num4 div{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--contra);border-radius:12px;padding:14px}
+.num4 b{display:block;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.num4 small{display:block;font-size:12.5px;color:var(--ink-2);margin-top:6px}
+.videos{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.vid{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--ink);display:flex;flex-direction:column}
+.vid:hover{border-color:var(--violet)}
+.vid .th{position:relative;aspect-ratio:16/9;background:var(--plum) center/cover no-repeat}
+.vid .th::after{content:"▶";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--plum);display:grid;place-items:center;font-size:16px}
+.vid .b{padding:10px 12px;display:grid;gap:4px;font-size:12.5px}
+.vid .b b{font-size:13.5px;line-height:1.25}
+.vid .b span{color:var(--ink-2)}
+.lb{position:fixed;inset:0;background:rgba(14,10,28,.88);z-index:20;display:none;align-items:center;justify-content:center;overflow:hidden}
+.lb.show{display:flex}
+.lb img{max-width:92vw;max-height:86vh;background:#fff;border-radius:8px}
+.lb button{position:fixed;right:18px;top:18px;background:#fff;color:var(--plum);border:0;border-radius:999px;padding:8px 14px;font-weight:700;cursor:pointer;font-family:var(--body)}
+@media (max-width:1000px){.midia,.videos,.num4{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.midia,.videos,.num4{grid-template-columns:1fr}}
 .tabuleiro{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
 .cartao{perspective:700px;cursor:pointer;border:0;background:none;padding:0;font-family:var(--body);text-align:left;min-height:130px}
 .cartao .f{position:relative;width:100%;height:100%;min-height:130px;transition:transform .5s;transform-style:preserve-3d}
@@ -166,13 +191,24 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 </div></section>
 
 <section class="scene" id="s4"><div class="in">
-  <div class="head"><div><p class="dot">04 · O que levar para a sala</p><h2>Cinco leituras que <span class="hl">as falas sustentam.</span></h2><p class="lead">Cada leitura é uma inferência nossa a partir das falas, com as falas que a sustentam à vista. Use como pergunta para a turma, não como conclusão.</p></div></div>
+  <div class="head"><div><p class="dot">04 · Gráficos, números e vídeos</p><h2>Duas fontes mostram, <span class="hl">em gráfico, onde o sintético erra.</span></h2><p class="lead">As capturas vêm das páginas originais, com o link para cada uma. A leitura abaixo de cada gráfico descreve só o que aparece nele. Clique na imagem para ampliar.</p></div></div>
+  <div class="midia" id="graficos"></div>
+  <h3 style="margin-top:22px">Os números do teste da Strat7</h3>
+  <div class="num4" id="num4"></div>
+  <h3 style="margin-top:22px">Para assistir e discutir</h3>
+  <div class="videos" id="videos"></div>
+  <p class="srcnote">Vídeos: títulos e canais verificados na base do curso (cases_media.json). Não assisti à íntegra; a coluna "por que ver" é a anotação da base. As miniaturas carregam do YouTube.</p>
+</div></section>
+
+<section class="scene" id="s5"><div class="in">
+  <div class="head"><div><p class="dot">05 · O que levar para a sala</p><h2>Cinco leituras que <span class="hl">as falas sustentam.</span></h2><p class="lead">Cada leitura é uma inferência nossa a partir das falas, com as falas que a sustentam à vista. Use como pergunta para a turma, não como conclusão.</p></div></div>
   <div class="leit" id="leit"></div>
 </div></section>
 
 </div>
-<div class="foot"><a class="credit" href="https://www.cassiai.com/" target="_blank" rel="noopener"><b>Vozes por Cassiano Albuquerque · Cassi.ai</b><span>curso ABEP de dados e personas sintéticas</span></a><div style="display:flex;gap:8px;align-items:center"><a class="tbtn" href="comparador-sinteticos.html">Comparador</a><a class="tbtn" href="open-source.html">Laboratório</a><button type="button" class="tbtn" id="tema">Tema escuro</button></div><div class="slidenav"><button type="button" id="prevBtn" aria-label="Anterior">‹</button><span class="num" id="slideNum">1 / 4</span><button type="button" id="nextBtn" aria-label="Próximo">›</button></div></div>
+<div class="foot"><a class="credit" href="https://www.cassiai.com/" target="_blank" rel="noopener"><b>Vozes por Cassiano Albuquerque · Cassi.ai</b><span>curso ABEP de dados e personas sintéticas</span></a><div style="display:flex;gap:8px;align-items:center"><a class="tbtn" href="comparador-sinteticos.html">Comparador</a><a class="tbtn" href="open-source.html">Laboratório</a><button type="button" class="tbtn" id="tema">Tema escuro</button></div><div class="slidenav"><button type="button" id="prevBtn" aria-label="Anterior">‹</button><span class="num" id="slideNum">1 / 5</span><button type="button" id="nextBtn" aria-label="Próximo">›</button></div></div>
 
+<div class="lb" id="lb" role="dialog" aria-label="Imagem ampliada"><img id="lbImg" alt=""><button type="button" id="lbX">Fechar ✕</button></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>window.VOZES=/*__DADOS__*/{};</script>
 <script>
@@ -192,7 +228,7 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
   (function(){var r=document.documentElement,b=document.getElementById('tema');function ap(t){if(t==='dark')r.setAttribute('data-theme','dark');else r.removeAttribute('data-theme');b.textContent=t==='dark'?'Tema claro':'Tema escuro';}
     var s=null;try{s=localStorage.getItem('tema-sinteticos');}catch(e){}ap(s||'light');b.onclick=function(){var t=r.getAttribute('data-theme')==='dark'?'light':'dark';ap(t);try{localStorage.setItem('tema-sinteticos',t);}catch(e){}};})();
   /* rail */
-  var SC=[['01','O placar das vozes',F.length+' falas'],['02','Os dez temas','o que se repete'],['03','Jogo das vozes','quatro modos'],['04','Para a sala','cinco leituras']];
+  var SC=[['01','O placar das vozes',F.length+' falas'],['02','Os dez temas','o que se repete'],['03','Jogo das vozes','quatro modos'],['04','Gráficos e vídeos','a prova em imagem'],['05','Para a sala','cinco leituras']];
   var rail=document.getElementById('rail');SC.forEach(function(s,i){var a=document.createElement('a');a.href='#s'+(i+1);a.innerHTML='<span class="k">'+s[0]+'</span><span class="t">'+s[1]+'</span><span class="s">'+s[2]+'</span>';rail.appendChild(a);});
   var deck=document.getElementById('deck'),scenes=[].slice.call(document.querySelectorAll('.scene')),links=[].slice.call(rail.children),idx=0;
   function go(i){i=Math.max(0,Math.min(scenes.length-1,i));idx=i;scenes[i].scrollIntoView({block:'start'});}
@@ -258,7 +294,19 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
       [].slice.call(document.querySelectorAll('#vez .opts button')).forEach(function(b){b.onclick=function(){var ok=b.dataset.l===f.lado;if(!ok)erros++;dar('debate',ok?10:0,ok);var d=document.createElement('div');d.className='chipq '+f.lado;d.innerHTML=esc(f.pt.valor.length>110?f.pt.valor.slice(0,107)+'…':f.pt.valor)+'<small>'+esc(f.quem)+' · '+LADO[f.lado]+(ok?'':' · você tinha colocado do outro lado')+'</small>';document.getElementById('col-'+f.lado).appendChild(d);i++;vez();};});}
     placar();vez();}
   placar();iniciar('quem');
-  /* 04 leituras: inferência nossa, com as falas que sustentam */
+  /* 04 midia */
+  var GR=[
+    ['img/graf-kantar-gpt4.png','Kantar: GPT-4 contra pessoas','Dois exemplos do teste da Kantar, 5.275 e 5.050 respondentes. No preço em produto de luxo, 53% das pessoas dizem "importante" e 39% "extremamente importante"; o GPT-4 dá 65% e 31%. Na pergunta sobre conexão com quem compartilha a paixão, 37% das pessoas ficam no neutro e o GPT-4 só 7%, enquanto 65% dele concorda em parte, contra 22% delas.','O que mostra: o modelo concentra as respostas e some com o meio-termo.','https://www.kantar.com/Inspiration/Analytics/What-is-synthetic-sample-and-is-it-all-its-cracked-up-to-be','Kantar, early stage R&D, 2024'],
+    ['img/graf-kantar-subgrupo.png','Kantar: o recorte por renda','A mesma pergunta de preço, na população toda (N=5.275) e só em quem ganha menos de US$ 125 mil por ano (N=1.617). Entre as pessoas desse recorte, 47% dizem "importante" e 47% "extremamente importante". O GPT-4 dá 69% e 29%.','O que mostra: o erro piora no subgrupo, que é o recorte que o marketing mais usa.','https://www.kantar.com/Inspiration/Analytics/What-is-synthetic-sample-and-is-it-all-its-cracked-up-to-be','Kantar, early stage R&D, 2024'],
+    ['img/graf-pew.png','Pew: o erro por grupo','Valores lidos do gráfico da Pew, em pontos percentuais: total 12,4; republicanos 16,1; democratas 13,6; brancos 12,5; hispânicos 13,9; negros 15,1; asiáticos 13,5. O texto da página diz que os respondentes de IA diferiram dos humanos em média 12 pontos.','O que mostra: o erro médio esconde grupos em que ele passa de 15 pontos.','https://www.pewresearch.org/data-labs/2026/09/30/can-ai-stand-in-for-human-survey-takers-not-really/','Pew Research Center, 30 set 2026']
+  ];
+  document.getElementById('graficos').innerHTML=GR.map(function(g){return '<div class="graf"><div class="img" data-i="'+esc(g[0])+'"><img src="'+g[0]+'" alt="'+esc(g[1])+'" loading="lazy"></div><div class="t"><span class="k">'+esc(g[5])+'</span><b>'+esc(g[1])+'</b><span>'+esc(g[2])+'</span><span style="color:var(--violet);font-weight:600">'+esc(g[3])+'</span><a href="'+g[4]+'" target="_blank" rel="noopener">abrir a fonte ↗</a></div></div>';}).join('');
+  var lb=document.getElementById('lb');[].slice.call(document.querySelectorAll('.graf .img')).forEach(function(d){d.onclick=function(){document.getElementById('lbImg').src=d.dataset.i;lb.classList.add('show');};});
+  document.getElementById('lbX').onclick=function(){lb.classList.remove('show');};lb.onclick=function(e){if(e.target===lb)lb.classList.remove('show');};document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('show');});
+  document.getElementById('num4').innerHTML=[['2,0 e 2,8','pontos de erro médio dos dois fornecedores na consciência de marca (todas as marcas)'],['19%','das vezes em que o sintético acertou a variação de um ano para o outro'],['13 de 16','marcas em que o sintético perdeu o movimento real'],['68%','das vezes em que o sintético puro contradisse a própria ordem de preço (32,8% misturado ao real)']].map(function(k){return '<div><b>'+k[0]+'</b><small>'+k[1]+'</small></div>';}).join('');
+  var VD=[['gseHxz4PfVw',"Synthetic Survey Data? It's Not Data",'Sawtooth Software','Visão cética de quem faz conjoint. Boa para contrapor com as falas de fornecedores.'],['uHDHY9DTJ_g',"Synthetic Data Beyond the Hype: What It Is, What It Isn't, and Why It Matters",'ESOMAR','Definições e limites, na voz da associação. Bom para abrir o módulo.'],['7W43BfgzjH8','Digital Twins and the Limits of Synthetic Behavior','Olivier Toubia (Columbia), entrevista','Onde os gêmeos digitais falham: estereótipo e hiper-racionalidade.'],['dr58U0WZP6s','Can Digital Twins Really Replace Human Participants in Research?','Prolific, The Signal','Visão de uma empresa de painel humano. Vale discutir o incentivo dos dois lados.'],['opGrImK4twc','The Potential Threat of AI to Online Survey Research','Sean Westwood (PNAS)','O outro lado: robôs se passando por respondentes.'],['YnNF55QV0zs','Persona Engineering: A Field Guide to AI Synthetic Personas','Ishan Anand, AI Engineer','Como se engenha uma persona: ancoragem, prompt e avaliação.'],['x0LZPM2vSFo',"The Real Story Behind AI's Rapid Takeover of Research",'Greenbook, The Exchange 131','Panorama de adoção de IA e sintético.'],['AB1hW11OWVA','Synthetic research vs human insights in marketing','The Marketing Architects','O argumento pró-sintético B2B, do lado da Evidenza.']];
+  document.getElementById('videos').innerHTML=VD.map(function(v){return '<a class="vid" href="https://www.youtube.com/watch?v='+v[0]+'" target="_blank" rel="noopener"><div class="th" style="background-image:url(https://img.youtube.com/vi/'+v[0]+'/hqdefault.jpg)"></div><div class="b"><b>'+esc(v[1])+'</b><span>'+esc(v[2])+'</span><span><i>Por que ver:</i> '+esc(v[3])+'</span></div></a>';}).join('');
+  /* 05 leituras: inferência nossa, com as falas que sustentam */
   var LE=[
     ['Quem pede é quem vende.','Os dois lados do mercado se acusam de interesse. O sintético é empurrado por fornecedores e agências, e a crítica mais dura também vem de um fornecedor, da pesquisa tradicional.',['f02','f17','f16']],
     ['O consenso é complemento, não substituição.','Institutos, associações e a academia convergem para modelos mistos: o sintético como ferramenta ao lado da pesquisa humana.',['f08','f37','f29']],
