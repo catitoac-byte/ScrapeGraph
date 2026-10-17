@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Laboratório Open Source</title>
+<meta name="description" content="Dez ferramentas abertas do Hugging Face e do GitHub para o curso ABEP de dados e personas sintéticas: o que são, onde entram no método, como instalar, demo de 10 minutos e jogo.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F5F3F8;--card:#FFFFFF;--ink:#241A3A;--ink-2:#5B5870;--line:#E3DEEC;
+  --plum:#2A1A45;--violet:#8B4BAF;--violet-soft:#F1E8F7;--teal:#4FB39A;--sky:#1FA2E0;--amber:#F3A712;--red:#E4572E;--orange:#F26430;
+  --code:#1E1630;--shadow:0 14px 40px rgba(42,26,69,.12);
+  --body:'Poppins',system-ui,Segoe UI,Arial,sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+:root[data-theme="dark"]{--bg:#15102A;--card:#1F1836;--ink:#F3EFFA;--ink-2:#B9B2CC;--line:#352C4F;--plum:#0E0A1C;--violet:#B983D6;--violet-soft:#2C2144;--teal:#5CC7AC;--sky:#4DB8EC;--code:#0E0A1C;--shadow:0 14px 40px rgba(0,0,0,.45);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;overflow:hidden}
+a{color:var(--sky)}
+h2,h3,h4{text-wrap:balance;margin:0;line-height:1.08}
+h2{font-size:clamp(28px,3.6vw,46px);font-weight:700;letter-spacing:-.01em}
+h3{font-size:20px;font-weight:700}
+h4{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--violet);font-weight:500;margin-bottom:6px}
+p{margin:0}
+.lead{font-size:17px;color:var(--ink-2);max-width:66ch}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--violet);font-weight:500}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;border:2px solid transparent;cursor:pointer;font-family:var(--body);text-decoration:none}
+.btn-teal{background:var(--teal);color:#fff}.btn-ghost{background:transparent;color:var(--violet);border-color:var(--violet)}
+button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.hl{position:relative;display:inline-block;color:var(--violet);padding:.02em .22em;margin:0 .04em;border:1px solid rgba(139,75,175,.5);background:var(--violet-soft)}
+.hl i{position:absolute;width:9px;height:9px;background:var(--orange);border-radius:1px}
+.hl i.c1{left:-5px;top:-5px}.hl i.c2{right:-5px;top:-5px}.hl i.c3{left:18px;bottom:-5px}.hl i.c4{right:18px;bottom:-5px}
+.dot{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violet);font-weight:500;margin-bottom:12px}
+.dot::before{content:"";width:9px;height:9px;border-radius:2px;background:var(--violet)}
+.rail{position:fixed;left:0;right:0;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+.rail .in{display:flex;overflow-x:auto;scrollbar-width:none}
+.rail a{flex:1;min-width:140px;display:flex;flex-direction:column;justify-content:center;padding:9px 14px;text-decoration:none;color:var(--ink);border-right:1px solid var(--line)}
+.rail a .k{font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+.rail a .t{font-size:13px;font-weight:600;white-space:nowrap}
+.rail a .s{font-size:11px;color:var(--ink-2);white-space:nowrap}
+.rail a.on{background:var(--plum);color:#fff}.rail a.on .k,.rail a.on .s{color:#C9A5E0}
+.progress{height:3px;background:var(--amber);width:0;transition:width .2s}
+.deck{height:calc(100% - 50px);overflow-y:auto;scroll-snap-type:y proximity;scroll-behavior:smooth;padding-top:60px}
+.scene{min-height:100%;scroll-snap-align:start;padding:44px 24px 40px}
+.scene > .in{width:100%;max-width:1280px;margin:0 auto}
+.scene.dark{background:var(--plum);color:#fff}.scene.dark .lead{color:#D9CFE8}.scene.dark .dot{color:#C9A5E0}.scene.dark .dot::before{background:#C9A5E0}
+.scene.dark .hl{background:rgba(255,255,255,.12);color:#F1E8F7;border-color:rgba(255,255,255,.4)}
+.head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.head .lead{margin-top:8px}
+.foot{position:fixed;left:0;right:0;bottom:0;height:50px;padding:0 18px;z-index:6;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.credit{display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--ink);border-left:3px solid var(--violet);padding-left:12px}
+.credit b{font-size:12px}.credit span{font-size:11px;color:var(--ink-2);font-family:var(--mono)}
+.tbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--body)}
+.slidenav{display:flex;align-items:center;gap:8px}
+.slidenav button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.slidenav .num{font-family:var(--mono);font-size:12px;color:var(--ink-2);min-width:48px;text-align:center}
+.srcnote{font-family:var(--mono);font-size:11px;color:var(--ink-2);margin-top:14px}
+/* 01 abertura */
+.kpis{display:flex;gap:30px;flex-wrap:wrap;margin:22px 0 26px}
+.big{font-size:44px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.big small{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink-2);font-weight:500;margin-top:6px;max-width:20ch}
+.grid10{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;text-align:left;font-family:var(--body);color:var(--ink);padding:0;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;border-top:4px solid var(--violet)}
+.tcard:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.tcard .thumb{height:96px;background-size:cover;background-position:top left;border-bottom:1px solid var(--line)}
+.tcard .b{padding:10px 12px;display:grid;gap:4px}
+.tcard .n{font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+.tcard b{font-size:14px;line-height:1.2}
+.tcard .t{font-size:11.5px;color:var(--ink-2)}
+.tag{display:inline-block;font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:6px;color:#fff;margin:0 4px 4px 0}
+/* 02 ferramenta */
+.tool{display:grid;grid-template-columns:250px 1fr;gap:16px}
+.list{display:grid;gap:6px;align-content:start}
+.list button{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 12px;cursor:pointer;font-family:var(--body);color:var(--ink);font-size:13.5px;font-weight:600}
+.list button span{font-family:var(--mono);font-size:11px;color:var(--ink-2);min-width:20px}
+.list button.on{background:var(--plum);border-color:var(--plum);color:#fff}.list button.on span{color:#C9A5E0}
+.list button i{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:10px;color:var(--teal)}
+.detail{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);display:grid;grid-template-columns:1.05fr 1fr;gap:20px;min-width:0}
+.shot{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);cursor:zoom-in;aspect-ratio:16/10;background-size:cover;background-position:top left}
+.shot .zm{position:absolute;right:10px;bottom:10px;background:var(--plum);color:#fff;font-family:var(--mono);font-size:11px;padding:5px 9px;border-radius:6px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.meta span{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:6px;padding:3px 8px;color:var(--ink-2)}
+.meta span b{color:var(--ink);font-weight:500}
+.sec{display:grid;gap:4px}
+.sec p{font-size:14px}
+.sec .orig{font-size:12px;color:var(--ink-2);font-style:italic}
+.stack{display:grid;gap:14px;align-content:start}
+.steps{margin:0;padding-left:20px;font-size:14px;display:grid;gap:4px}
+pre{margin:0;background:var(--code);color:#E9E2F5;border-radius:10px;padding:36px 14px 12px;font-family:var(--mono);font-size:12.5px;line-height:1.55;overflow-x:auto;position:relative;white-space:pre}
+.copy{position:absolute;right:8px;top:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;border-radius:6px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:var(--mono)}
+.warn{border-left:5px solid var(--red);background:rgba(228,87,46,.07);padding:10px 12px;border-radius:0 10px 10px 0;font-size:13.5px}
+.station{border-left:5px solid var(--teal);background:rgba(79,179,154,.08);padding:10px 12px;border-radius:0 10px 10px 0;font-size:13.5px}
+.done-btn{justify-self:start}
+/* 03 matriz */
+.matrix{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;overflow-x:auto}
+.matrix table{border-collapse:collapse;width:100%;min-width:980px}
+.matrix th{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em;padding:8px;text-align:center;border-bottom:2px solid var(--line)}
+.matrix th:first-child{text-align:left}
+.matrix td{border-bottom:1px solid var(--line);padding:6px;text-align:center;font-size:13px}
+.matrix td:first-child{text-align:left;font-weight:600;white-space:nowrap}
+.matrix td button{border:0;border-radius:8px;padding:6px 8px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:var(--body);color:#fff;width:100%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--ink-2)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-2px}
+/* 04 jogo */
+.game{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
+.quiz,.trail{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);color:var(--ink)}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.score{font-family:var(--mono);font-size:13px}
+.score b{font-size:22px;color:var(--violet);font-family:var(--body)}
+.qbar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:12px 0 16px}
+.qbar i{display:block;height:100%;width:0;background:var(--violet);transition:width .4s}
+.qtext{font-size:21px;font-weight:600;line-height:1.3}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.opts button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:12px 14px;text-align:left;font-family:var(--body);font-size:14.5px;font-weight:600;cursor:pointer}
+.opts button.ok{border-color:var(--teal);background:rgba(79,179,154,.12)}
+.opts button.no{border-color:var(--red);background:rgba(228,87,46,.08)}
+.fb{margin-top:14px;font-size:14px;min-height:44px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.badge{border:1.5px dashed var(--line);border-radius:10px;padding:8px 10px;font-size:12.5px;font-weight:600;color:var(--ink-2);display:grid;gap:2px;min-width:120px}
+.badge small{font-family:var(--mono);font-size:10px;font-weight:500}
+.badge.on{border-style:solid;border-color:var(--amber);color:var(--ink);background:rgba(243,167,18,.1)}
+.trail ul{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+.trail li label{display:flex;gap:10px;align-items:center;font-size:13.5px;cursor:pointer}
+.trail input{width:18px;height:18px;accent-color:var(--violet)}
+.lvl{display:flex;justify-content:space-between;align-items:end;margin-top:6px}
+.lvl b{font-size:18px}.lvl span{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+/* 05 lacuna */
+.gap2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.col{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:20px}
+.col h3{font-size:18px;margin-bottom:10px}
+.col ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14.5px;color:#E7DFF2}
+.col a{color:#9FD8FF}
+/* lupa */
+.lb{position:fixed;inset:0;background:rgba(14,10,28,.86);z-index:20;display:none;align-items:center;justify-content:center;overflow:hidden}
+.lb.show{display:flex}
+.lb img{max-width:none;transform-origin:0 0;cursor:grab;user-select:none;-webkit-user-drag:none;position:absolute;left:0;top:0}
+.lbctl{position:fixed;right:18px;top:18px;display:flex;gap:6px;z-index:21}
+.lbctl button,.lbctl a{background:#fff;color:var(--plum);border:0;border-radius:999px;padding:8px 14px;font-weight:700;font-family:var(--body);cursor:pointer;font-size:13px;text-decoration:none}
+.lbcap{position:fixed;left:18px;bottom:18px;color:#fff;font-family:var(--mono);font-size:12px;z-index:21;background:rgba(0,0,0,.4);padding:6px 10px;border-radius:6px}
+@media (max-width:1100px){.grid10{grid-template-columns:repeat(3,1fr)}.detail{grid-template-columns:1fr}}
+@media (max-width:900px){.tool,.game,.gap2{grid-template-columns:1fr}.opts{grid-template-columns:1fr}}
+@media (max-width:700px){html,body{height:auto;overflow:auto}.deck{height:auto;overflow:visible;scroll-snap-type:none;padding-bottom:60px}.scene{min-height:0;padding:34px 16px 30px}.grid10{grid-template-columns:1fr 1fr}.credit span{display:none}.rail a .s{display:none}.big{font-size:32px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="rail"><div class="in" id="rail"></div><div class="progress" id="progress"></div></div>
+<div class="deck" id="deck">
+
+<section class="scene" id="s1"><div class="in">
+  <div class="head"><div><p class="dot">01 · Laboratório aberto</p><h2>Onze ferramentas abertas para levar à sala. <span class="hl">Cada uma cabe numa demo de dez minutos.</span></h2><p class="lead">Varremos o Hugging Face e o GitHub atrás de dados, bibliotecas, benchmarks e notebooks sobre dados e personas sintéticas. Saíram 69 itens. Estas onze são as que funcionam ao vivo numa aula, cada uma ilustrando uma estação do método, mais uma reserva para quem usa R.</p></div></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid10" id="grid10"></div>
+  <p class="srcnote">Fonte: open_source_material.json, varredura de 17 out 2026 pelas APIs públicas do Hugging Face e do GitHub. Estrelas, downloads e licenças como a API mostrou nesse dia. Imagens: capturas das páginas públicas de cada projeto, no mesmo dia.</p>
+</div></section>
+
+<section class="scene" id="s2"><div class="in">
+  <div class="head"><div><p class="dot">02 · Ferramenta por ferramenta</p><h2>O que é, onde entra no método, <span class="hl">como instalar e como demonstrar.</span></h2><p class="lead">Escolha uma ferramenta. Clique na imagem para ampliar. Os comandos de instalação foram copiados do README de cada projeto.</p></div></div>
+  <div class="tool"><div class="list" id="list"></div><div class="detail" id="detail"></div></div>
+</div></section>
+
+<section class="scene" id="s3"><div class="in">
+  <div class="head"><div><p class="dot">03 · Onde cada uma entra</p><h2>Cada ferramenta ilumina <span class="hl">uma estação do método.</span></h2><p class="lead">As colunas são as estações dos três fluxos do comparador: estudo, RAG, engenharia de contexto, corpus, interação, validação e entrega. A cor diz em qual fluxo a ferramenta mais ajuda. Clique para abrir a ferramenta.</p></div></div>
+  <div class="matrix"><table id="matrix"></table></div>
+  <div class="legend"><span><i style="background:#1FA2E0"></i>Dados sintéticos</span><span><i style="background:#8B4BAF"></i>Persona sintética</span><span><i style="background:#F26430"></i>Grupo focal sintético</span><span><i style="background:#4FB39A"></i>Serve aos três</span></div>
+</div></section>
+
+<section class="scene" id="s4"><div class="in">
+  <div class="head"><div><p class="dot">04 · Jogo da turma</p><h2>Qual ferramenta resolve? <span class="hl">Dez situações, dez pontos cada.</span></h2><p class="lead">Cada pergunta é uma situação real de projeto. Acertou, ganha pontos e um selo do módulo. Ao lado, a trilha do laboratório: marque cada ferramenta que você rodou de verdade.</p></div></div>
+  <div class="game">
+    <div class="quiz"><div class="qtop"><span class="mono" id="qn"></span><span class="score">pontos <b id="pts">0</b></span></div><div class="qbar"><i id="qbar"></i></div><p class="qtext" id="qtext"></p><div class="opts" id="opts"></div><p class="fb" id="fb"></p><div style="display:flex;gap:8px"><button class="btn btn-teal" id="qnext" type="button">Próxima ›</button><button class="btn btn-ghost" id="qreset" type="button">Recomeçar</button></div>
+      <h4 style="margin-top:18px">Selos</h4><div class="badges" id="badges"></div></div>
+    <div class="trail"><h4>Trilha do laboratório</h4><div class="lvl"><b id="lvlName"></b><span id="lvlXp"></span></div><div class="qbar"><i id="xpbar"></i></div><ul id="trail"></ul><p class="srcnote">A trilha fica salva só neste navegador.</p></div>
+  </div>
+</div></section>
+
+<section class="scene dark" id="s5"><div class="in">
+  <div class="head"><div><p class="dot">05 · Lacuna Brasil</p><h2>Já dá para montar personas brasileiras abertas. <span class="hl">Ainda não dá para validá-las com consumidor.</span></h2><p class="lead">É a lacuna que o paper da ABEP pretende atacar.</p></div></div>
+  <div class="gap2">
+    <div class="col"><h3>O que existe</h3><ul id="existe"></ul></div>
+    <div class="col"><h3>O que não achamos</h3><ul id="falta"></ul></div>
+  </div>
+</div></section>
+
+</div>
+<div class="foot"><a class="credit" href="https://www.cassiai.com/" target="_blank" rel="noopener"><b>Laboratório por Cassiano Albuquerque · Cassi.ai</b><span>curso ABEP de dados e personas sintéticas</span></a><div style="display:flex;gap:8px;align-items:center"><a class="tbtn" href="index.html" style="text-decoration:none">Abrir o comparador</a><button type="button" class="tbtn" id="tema">Tema escuro</button></div><div class="slidenav"><button type="button" id="prevBtn" aria-label="Anterior">‹</button><span class="num" id="slideNum">1 / 5</span><button type="button" id="nextBtn" aria-label="Próximo">›</button></div></div>
+
+<div class="lb" id="lb" role="dialog" aria-label="Imagem ampliada"><img id="lbImg" alt=""><div class="lbctl"><button type="button" id="zIn">+</button><button type="button" id="zOut">−</button><button type="button" id="zFit">Ajustar</button><a id="lbSrc" target="_blank" rel="noopener">Abrir a página ↗</a><button type="button" id="lbX">Fechar ✕</button></div><span class="lbcap" id="lbCap"></span></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function(){
+  var G=window.gsap,reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+  [].slice.call(document.querySelectorAll('.hl')).forEach(function(h){['c1','c2','c3','c4'].forEach(function(c){var i=document.createElement('i');i.className=c;h.appendChild(i);});});
+  var MOD={construcao:['Construção','#8B4BAF'],validacao:['Validação','#4FB39A'],privacidade:['Privacidade','#E4572E'],demonstracao:['Demonstração','#1FA2E0']};
+  var FLUXO={dados:'#1FA2E0',persona:'#8B4BAF',grupo:'#F26430',todos:'#4FB39A'};
+  var EST=['Estudo','RAG','Engenharia de contexto','Corpus','Interação','Validação','Entrega'];
+  /* dados conferidos na varredura de 17 out 2026 (open_source_material.json e READMEs) */
+  var T=[
+    {id:'tinytroupe',nome:'TinyTroupe',org:'Microsoft',tipo:'Biblioteca Python',url:'https://github.com/microsoft/TinyTroupe',img:'img/os-tinytroupe.png',lic:'MIT',pop:'7.599 estrelas',atual:'jul 2026',mods:['construcao','demonstracao'],nivel:'Python',custo:'chave OpenAI ou Azure OpenAI',
+      orig:'TinyTroupe is an experimental Python library that allows the simulation of people with specific personalities, interests, and goals.',
+      pt:'O TinyTroupe é uma biblioteca Python experimental que simula pessoas com personalidades, interesses e objetivos específicos.',
+      metodo:'Grupo focal sintético, estação de interação: vários agentes conversam entre si e com um moderador, e o notebook do exemplo compara o resultado com uma pesquisa real.',
+      caso:'Pesquisa de mercado de gaspacho engarrafado (exemplo 4 do README): a simulação é comparada com uma pesquisa feita com pessoas reais.',
+      inst:'conda create -n tinytroupe python=3.10\nconda activate tinytroupe\npip install git+https://github.com/microsoft/TinyTroupe.git@main',
+      demo:['Abrir o notebook "Bottled Gazpacho Market Research 5" na pasta examples.','Trocar o produto por um caso brasileiro, por exemplo um suco pronto.','Rodar o grupo e ler as falas.','Comparar com um resultado real que a turma conheça.'],
+      cuidado:'O próprio README chama a biblioteca de experimental. Resultado plausível não é resultado válido.',fluxo:'grupo',est:[2,4,5]},
+    {id:'edsl',nome:'EDSL',org:'Expected Parrot',tipo:'Biblioteca Python',url:'https://github.com/expectedparrot/edsl',img:'img/os-edsl.png',lic:'MIT',pop:'507 estrelas',atual:'out 2026',mods:['construcao','demonstracao'],nivel:'Python',custo:'chave de um provedor de LLM',
+      orig:'EDSL makes it easy to conduct computational social science and market research with AI.',
+      pt:'O EDSL facilita fazer ciência social computacional e pesquisa de mercado com IA.',
+      metodo:'Dados sintéticos e persona, estação de interação em lote: o mesmo questionário vai a vários agentes e vários modelos, e o resultado volta em tabela.',
+      caso:'Comparar como dois modelos respondem ao mesmo questionário com os mesmos agentes. A pasta docs/notebooks tem digital_twin.ipynb e explore_llm_biases.ipynb.',
+      inst:'pip install edsl',
+      demo:['Escrever três perguntas.','Criar dez agentes com traços brasileiros (idade, região, classe).','Rodar em dois modelos.','Mostrar a tabela e onde os modelos discordam.'],
+      cuidado:'O fluxo recomendado passa pelo servidor da Expected Parrot, que vende o serviço. Em sala, use chave própria.',fluxo:'dados',est:[2,4]},
+    {id:'nemotron',nome:'Nemotron-Personas-Brazil',org:'NVIDIA e WideLabs',tipo:'Dataset (Hugging Face)',url:'https://huggingface.co/datasets/nvidia/Nemotron-Personas-Brazil',img:'img/os-nemotron-viewer.png',lic:'CC BY 4.0',pop:'1 milhão de personas · 103 likes',atual:'jan 2026',mods:['construcao','demonstracao'],nivel:'sem código',custo:'nenhum',
+      orig:'Nemotron-Personas-Brazil é um conjunto de dados (dataset) de código aberto (CC BY 4.0) composto por personas geradas sinteticamente e fundamentadas em distribuições demográficas, geográficas e traços de personalidade reais do Brasil, visando capturar a diversidade e a riqueza da população.',
+      pt:'',
+      metodo:'Persona sintética, estações de estudo e engenharia de contexto: personas brasileiras prontas, com UF e município, que viram a ficha da persona no prompt.',
+      caso:'Filtrar 20 personas de um estado do Nordeste no visualizador do Hugging Face e usá-las como contexto para responder uma pergunta de pesquisa.',
+      inst:'pip install datasets\n\nfrom datasets import load_dataset\nnemotron_personas = load_dataset("nvidia/Nemotron-Personas-Brazil", "train")',
+      demo:['Abrir o visualizador do dataset no Hugging Face, sem instalar nada.','Filtrar por estado.','Copiar três personas para um prompt.','Comparar idade e escolaridade das personas com a PNAD.'],
+      cuidado:'São narrativas geradas por LLM. O card não publica a comparação com o Censo e não traz opiniões nem consumo medidos. O arquivo tem cerca de 2,5 GB.',fluxo:'persona',est:[0,2]},
+    {id:'sdv',nome:'SDV (Synthetic Data Vault)',org:'DataCebo',tipo:'Biblioteca Python',url:'https://github.com/sdv-dev/SDV',img:'img/os-sdv.png',lic:'Business Source License 1.1',pop:'3.578 estrelas',atual:'out 2026',mods:['construcao','validacao','demonstracao'],nivel:'Python',custo:'nenhum',
+      orig:'The Synthetic Data Vault (SDV) is a Python library designed to be your one-stop shop for creating tabular synthetic data.',
+      pt:'O Synthetic Data Vault (SDV) é uma biblioteca Python feita para ser o lugar único onde se cria dado sintético tabular.',
+      metodo:'Dados sintéticos, estação de corpus: é o modelo gerador clássico (cópula gaussiana, CTGAN), sem LLM, aprendendo a distribuição conjunta de uma base real.',
+      caso:'Gerar um sintético de uma base pública pequena de pesquisa e passar no relatório de qualidade. É o contraponto às personas de LLM.',
+      inst:'pip install sdv',
+      demo:['Carregar uma base pública pequena.','Treinar GaussianCopula.','Gerar 1.000 linhas.','Passar no SDMetrics (próxima ferramenta).'],
+      cuidado:'A licença do arquivo LICENSE é Business Source License 1.1 e proíbe oferecer serviço comercial de dados sintéticos com ela. A API do GitHub mostra NOASSERTION. Ponto importante para institutos.',fluxo:'dados',est:[3]},
+    {id:'sdmetrics',nome:'SDMetrics',org:'DataCebo',tipo:'Biblioteca Python',url:'https://github.com/sdv-dev/SDMetrics',img:'img/os-sdmetrics.png',lic:'MIT',pop:'264 estrelas',atual:'out 2026',mods:['validacao','demonstracao'],nivel:'Python',custo:'nenhum',
+      orig:"The SDMetrics library evaluates synthetic data by comparing it to the real data that you're trying to mimic.",
+      pt:'A biblioteca SDMetrics avalia dado sintético comparando com o dado real que ele tenta imitar.',
+      metodo:'Dados sintéticos, estação de validação: fidelidade coluna a coluna (KS, variação total) e par a par (correlações).',
+      caso:'O QualityReport com os dados de demonstração dá uma nota geral e notas por coluna e por par de colunas.',
+      inst:'pip install sdmetrics\n\nfrom sdmetrics import load_demo\nfrom sdmetrics.reports.single_table import QualityReport\n\nreal_data, synthetic_data, metadata = load_demo(modality=\'single_table\')\n\nmy_report = QualityReport()\nmy_report.generate(real_data, synthetic_data, metadata)',
+      demo:['Rodar o QualityReport nos dados de demonstração.','Ler a nota geral e as notas por coluna.','Abrir a visualização de "Column Pair Trends".','Discutir por que nota agregada esconde falha de subgrupo.'],
+      cuidado:'A pontuação agregada esconde falhas de subgrupo.',fluxo:'dados',est:[5]},
+    {id:'silicon-br',nome:'Silicon Sampling Brazil',org:'Universidade Presbiteriana Mackenzie',tipo:'Paper com código',url:'https://github.com/olucasaguiar/silicon-sampling-brazil',img:'img/os-silicon-br.png',lic:'MIT (arquivo LICENSE)',pop:'0 estrelas · novo',atual:'set 2026',mods:['construcao','validacao','demonstracao'],nivel:'Python',custo:'nenhum no modo gabarito',
+      orig:'This repository contains the replication code and data for evaluating whether LLMs can accurately simulate public opinion distributions in Brazil (silicon sampling).',
+      pt:'Este repositório tem o código e os dados de replicação para avaliar se LLMs simulam com precisão distribuições de opinião pública no Brasil (silicon sampling).',
+      metodo:'Persona sintética, estações de estudo e validação: personas do IBGE/SIDRA, gabarito CESOP/IPEC e modelos Sabiá, medindo a distância entre distribuições (JSD).',
+      caso:'É o estudo de caso brasileiro do curso. Com feature selection, cadeia de raciocínio e few-shot, o JSD caiu de 0,525 para 0,121 na melhor pergunta.',
+      inst:'git clone https://github.com/olucasaguiar/silicon-sampling-brazil.git\ncd silicon-sampling-brazil\nuv sync\n\nuv run python scripts/03_analyze_results.py \\\n    --results-dir data/results/percepcao_democracia \\\n    --gabarito data/cesop/gabarito_cesop.jsonl \\\n    --gabarito-only',
+      demo:['Clonar e instalar com uv.','Rodar a análise com --gabarito-only, sem chamar API.','Mostrar o JSD por cenário.','Comparar o melhor caso com a média entre perguntas.'],
+      cuidado:'O microdado do CESOP não é redistribuído, só o gabarito processado. O JSD de 0,121 é o melhor cenário numa pergunta.',fluxo:'persona',est:[0,5]},
+    {id:'ssr',nome:'Semantic-Similarity Rating',org:'PyMC Labs',tipo:'Biblioteca Python',url:'https://github.com/pymc-labs/semantic-similarity-rating',img:'img/os-ssr.png',lic:'Apache-2.0',pop:'185 estrelas',atual:'jun 2026',mods:['construcao','validacao','demonstracao'],nivel:'Python',custo:'nenhum',
+      orig:'A Python package implementing the Semantic-Similarity Rating methodology for converting LLM textual responses to Likert scale probability distributions using semantic similarity against reference statements.',
+      pt:'Um pacote Python que implementa o método Semantic-Similarity Rating para converter respostas em texto de um LLM em distribuições de probabilidade numa escala Likert, por similaridade semântica com frases de referência.',
+      metodo:'Dados sintéticos, estação de interação: em vez de pedir a nota direto, o LLM responde em texto e a resposta vira distribuição de 1 a 5. Validado no estudo da Colgate-Palmolive.',
+      caso:'Maier et al. testaram 57 pesquisas com 9.300 respostas humanas: o método chegou a 90% da confiabilidade teste-reteste humana.',
+      inst:'pip install git+https://github.com/pymc-labs/semantic-similarity-rating.git',
+      demo:['Gerar cinco respostas abertas de um LLM sobre um produto.','Escrever em português as frases de referência de 1 a 5.','Converter em distribuição.','Comparar com a nota pedida direto ao modelo.'],
+      cuidado:'O resultado depende das frases de referência e do modelo de embedding. Foi validado em higiene pessoal nos EUA.',fluxo:'dados',est:[4,5]},
+    {id:'synthbench',nome:'SynthBench',org:'DataViking Tech',tipo:'Benchmark',url:'https://github.com/DataViking-Tech/SynthBench',img:'img/os-synthbench.png',lic:'MIT',pop:'0 estrelas · novo',atual:'out 2026',mods:['validacao','demonstracao'],nivel:'linha de comando',custo:'nenhum com o provedor aleatório',
+      orig:'Open benchmark harness for synthetic survey respondent quality.',
+      pt:'Estrutura aberta de benchmark para medir a qualidade de respondentes sintéticos de pesquisa.',
+      metodo:'Os três fluxos, estação de validação: todo sistema precisa bater um respondente aleatório antes de qualquer outra conversa.',
+      caso:'Rodar o provedor "random" e ver em que posição ele fica no leaderboard.',
+      inst:'pip install synthbench-eval\nsynthbench run --provider random --suite smoke --output results/\nsynthbench leaderboard --results-dir results/',
+      demo:['Instalar.','Rodar o provedor aleatório na suíte smoke.','Abrir o leaderboard.','Perguntar à turma: o fornecedor de vocês bate isso?'],
+      cuidado:'Projeto novo, sem estrelas, ligado a um produto comercial. O pacote no PyPI se chama synthbench-eval; o nome synthbench é de outro projeto.',fluxo:'todos',est:[5]},
+    {id:'anonymeter',nome:'Anonymeter',org:'Statice (Anonos)',tipo:'Biblioteca Python',url:'https://github.com/statice/anonymeter',img:'img/os-anonymeter.png',lic:'The Clear BSD License',pop:'110 estrelas',atual:'jul 2026',mods:['privacidade','demonstracao'],nivel:'Python',custo:'nenhum',
+      orig:'Anonymeter is a unified statistical framework to jointly quantify different types of privacy risks in synthetic tabular datasets.',
+      pt:'O Anonymeter é uma estrutura estatística única para medir, em conjunto, diferentes tipos de risco de privacidade em bases tabulares sintéticas.',
+      metodo:'Dados sintéticos, estação de validação de privacidade: mede singularização, ligação e inferência entre a base original, a sintética e uma base de controle.',
+      caso:'Rodar sobre o sintético gerado com o SDV e ligar o resultado ao art. 12 da LGPD.',
+      inst:'pip install anonymeter',
+      demo:['Separar a base original em treino e controle.','Gerar o sintético com o treino.','Rodar SinglingOutEvaluator, LinkabilityEvaluator e InferenceEvaluator.','Ler o risco de cada um.'],
+      cuidado:'A avaliação da CNIL citada no README trata do método. Ela não certifica nenhuma base específica.',fluxo:'dados',est:[5]},
+    {id:'genagents',nome:'genagents (1.000 pessoas)',org:'Stanford HCI',tipo:'Paper com código',url:'https://github.com/StanfordHCI/genagents',img:'img/os-genagents.png',lic:'MIT',pop:'620 estrelas',atual:'nov 2024',mods:['construcao','demonstracao'],nivel:'Python',custo:'chave OpenAI',
+      orig:'This project introduces a novel agent architecture that simulates the attitudes and behaviors of real individuals by applying large language models (LLMs) to qualitative interviews about their lives.',
+      pt:'Este projeto apresenta uma nova arquitetura de agentes que simula atitudes e comportamentos de indivíduos reais, aplicando grandes modelos de linguagem a entrevistas qualitativas sobre a vida dessas pessoas.',
+      metodo:'Persona sintética, estações de corpus e interação: memória e reflexão do agente, a base dos gêmeos digitais de Park et al. 2024.',
+      caso:'Carregar um agente do banco GSS e fazer uma pergunta categórica e uma aberta.',
+      inst:'git clone https://github.com/StanfordHCI/genagents.git\ncd genagents\npip install -r requirements.txt\n# criar settings.py com OPENAI_API_KEY, como no README',
+      demo:['Instalar e configurar a chave.','Carregar um agente de gss_agents.','Fazer uma pergunta categórica e uma aberta.','Explicar por que os agentes de entrevista ficaram fechados.'],
+      cuidado:'Os 1.000 agentes de entrevista reais ficam atrás de API restrita. O banco aberto é demográfico, que no paper rendeu menos.',fluxo:'persona',est:[3,4]},
+    {id:'cogbot',nome:'COGbot Silicon Sampling',org:'Patricksturg (Hugging Face Space)',tipo:'Space (navegador)',url:'https://huggingface.co/spaces/Patricksturg/silicon-sampling-dashboard',img:'img/os-cogbot.png',lic:'MIT',pop:'0 likes',atual:'mai 2026',mods:['demonstracao'],nivel:'sem código',custo:'nenhum',
+      orig:'Generate synthetic survey responses using AI-powered persona simulation.',
+      pt:'Gere respostas sintéticas de pesquisa com simulação de personas por IA.',
+      metodo:'Dados sintéticos, estação de interação, para turma sem Python: pergunta, respostas de 2.204 personas europeias e download em CSV.',
+      caso:'Escrever uma pergunta, gerar respostas e baixar o CSV para abrir no Excel.',
+      inst:'Não precisa instalar. Abra o Space e clique em "Restart this Space" se ele estiver parado.',
+      demo:['Abrir o Space.','Reiniciar se estiver dormindo.','Escrever uma pergunta.','Baixar o CSV e discutir as personas europeias.'],
+      cuidado:'Em 17 out 2026 o Space estava dormindo por inatividade (veja a captura). Teste antes da aula. As personas são europeias.',fluxo:'dados',est:[4]}
+  ];
+  var RESERVA={id:'llmrpanel',nome:'LLMRpanel (reserva para R)',url:'https://github.com/asanaei/LLMRpanel',img:'img/os-llmrpanel.png',inst:'install.packages("LLMR")\nremotes::install_github("asanaei/LLMRpanel")\n# sem código: run_panel_studio()'};
+  T.forEach(function(t){if(!t.pt)t.pt=t.orig;});
+
+  /* rail e cenas */
+  var SC=[['01','Laboratório aberto','onze ferramentas'],['02','Ferramenta por ferramenta','instalar e demonstrar'],['03','Onde cada uma entra','as estações do método'],['04','Jogo da turma','quiz e trilha'],['05','Lacuna Brasil','o que falta']];
+  var rail=document.getElementById('rail');SC.forEach(function(s,i){var a=document.createElement('a');a.href='#s'+(i+1);a.innerHTML='<span class="k">'+s[0]+'</span><span class="t">'+s[1]+'</span><span class="s">'+s[2]+'</span>';rail.appendChild(a);});
+  var deck=document.getElementById('deck'),scenes=[].slice.call(document.querySelectorAll('.scene')),links=[].slice.call(rail.children),idx=0;
+  function go(i){i=Math.max(0,Math.min(scenes.length-1,i));idx=i;scenes[i].scrollIntoView({block:'start'});}
+  document.getElementById('prevBtn').onclick=function(){go(idx-1);};document.getElementById('nextBtn').onclick=function(){go(idx+1);};
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="#s"]');if(!a)return;e.preventDefault();go(parseInt(a.getAttribute('href').slice(2),10)-1);});
+  deck.addEventListener('scroll',function(){document.getElementById('progress').style.width=(deck.scrollTop/(deck.scrollHeight-deck.clientHeight)*100)+'%';},{passive:true});
+  (function(){var r=document.documentElement,b=document.getElementById('tema');function ap(t){if(t==='dark')r.setAttribute('data-theme','dark');else r.removeAttribute('data-theme');b.textContent=t==='dark'?'Tema claro':'Tema escuro';}
+    var s=null;try{s=localStorage.getItem('tema-sinteticos');}catch(e){}ap(s||'light');b.onclick=function(){var t=r.getAttribute('data-theme')==='dark'?'light':'dark';ap(t);try{localStorage.setItem('tema-sinteticos',t);}catch(e){}};})();
+
+  /* 01 */
+  document.getElementById('kpis').innerHTML=[['69','itens abertos encontrados'],['27','bibliotecas'],['12','datasets'],['9','benchmarks'],['1 mi','personas em português (Nemotron)'],['11','prontas para a sala']].map(function(k){return '<div class="big">'+k[0]+'<small>'+k[1]+'</small></div>';}).join('');
+  document.getElementById('grid10').innerHTML=T.map(function(t,i){return '<button type="button" class="tcard" data-i="'+i+'" style="border-top-color:'+FLUXO[t.fluxo]+'"><div class="thumb" style="background-image:url('+t.img+')"></div><div class="b"><span class="n">'+String(i+1).padStart(2,'0')+' · '+esc(t.tipo)+'</span><b>'+esc(t.nome)+'</b><span class="t">'+esc(t.org)+' · '+esc(t.lic)+'</span><div>'+t.mods.filter(function(m){return m!=='demonstracao';}).map(function(m){return '<span class="tag" style="background:'+MOD[m][1]+'">'+MOD[m][0]+'</span>';}).join('')+'</div></div></button>';}).join('')+'<button type="button" class="tcard" data-r="1" style="border-top-color:#6C8EAD"><div class="thumb" style="background-image:url('+RESERVA.img+')"></div><div class="b"><span class="n">R · reserva</span><b>LLMRpanel</b><span class="t">painel de personas em R, com modo offline</span></div></button>';
+  [].slice.call(document.querySelectorAll('.tcard')).forEach(function(b){b.onclick=function(){if(b.dataset.r)reserva();else abrir(+b.dataset.i);go(1);};});
+  if(G&&!reduce)G.from('.tcard',{y:18,opacity:0,duration:.5,stagger:.05,delay:.2});
+
+  /* trilha (estado local) */
+  var feitas={};try{feitas=JSON.parse(localStorage.getItem('trilha-sinteticos')||'{}')||{};}catch(e){feitas={};}
+  function salvar(){try{localStorage.setItem('trilha-sinteticos',JSON.stringify(feitas));}catch(e){}}
+
+  /* 02 */
+  var cur=0;
+  document.getElementById('list').innerHTML=T.map(function(t,i){return '<button type="button" data-i="'+i+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+esc(t.nome)+'<i id="ok-'+t.id+'"></i></button>';}).join('')+
+    '<button type="button" data-r="1"><span>R</span>'+esc(RESERVA.nome)+'</button>';
+  [].slice.call(document.querySelectorAll('#list button')).forEach(function(b){b.onclick=function(){if(b.dataset.r)reserva();else abrir(+b.dataset.i);};});
+  function codigo(c){return '<pre>'+esc(c)+'<button type="button" class="copy">copiar</button></pre>';}
+  function ligarCopia(){[].slice.call(document.querySelectorAll('.copy')).forEach(function(b){b.onclick=function(){var t=b.parentNode.firstChild.nodeValue||b.parentNode.textContent.replace(/copiar$/,'');try{navigator.clipboard.writeText(t.replace(/copiado$/,''));b.textContent='copiado';}catch(e){b.textContent='selecione e copie';}};});}
+  function abrir(i){cur=i;var t=T[i];
+    [].slice.call(document.querySelectorAll('#list button')).forEach(function(b){b.classList.toggle('on',b.dataset.i==String(i));});
+    var traduzido=t.pt!==t.orig;
+    document.getElementById('detail').innerHTML='<div class="stack"><div class="shot" id="shot" style="background-image:url('+t.img+')" role="button" tabindex="0" aria-label="Ampliar a captura de '+esc(t.nome)+'"><span class="zm">clique para ampliar</span></div>'+
+      '<div class="meta"><span>tipo <b>'+esc(t.tipo)+'</b></span><span>licença <b>'+esc(t.lic)+'</b></span><span>popularidade <b>'+esc(t.pop)+'</b></span><span>atualizado <b>'+esc(t.atual)+'</b></span><span>nível <b>'+esc(t.nivel)+'</b></span><span>custo <b>'+esc(t.custo)+'</b></span></div>'+
+      '<div class="sec"><h4>O que é</h4><p>'+esc(t.pt)+'</p>'+(traduzido?'<p class="orig">Original: “'+esc(t.orig)+'”</p>':'')+'<p style="font-size:13px"><a href="'+t.url+'" target="_blank" rel="noopener">'+esc(t.url.replace('https://',''))+' ↗</a></p></div>'+
+      '<div class="station"><b>Onde entra no método.</b> '+esc(t.metodo)+'</div></div>'+
+      '<div class="stack"><div class="sec"><h4>'+esc(t.nome)+' · '+esc(t.org)+'</h4><h3>Uso de caso no curso</h3><p>'+esc(t.caso)+'</p></div>'+
+      '<div class="sec"><h4>Como instalar</h4>'+codigo(t.inst)+'</div>'+
+      '<div class="sec"><h4>Demo de 10 minutos</h4><ol class="steps">'+t.demo.map(function(d){return '<li>'+esc(d)+'</li>';}).join('')+'</ol></div>'+
+      '<div class="warn"><b>Cuidado.</b> '+esc(t.cuidado)+'</div>'+
+      '<button type="button" class="btn '+(feitas[t.id]?'btn-ghost':'btn-teal')+' done-btn" id="feito">'+(feitas[t.id]?'Rodei esta ✓':'Marcar como rodada na trilha')+'</button></div>';
+    document.getElementById('shot').onclick=function(){lupa(t.img,t.url,t.nome);};
+    document.getElementById('shot').onkeydown=function(e){if(e.key==='Enter')lupa(t.img,t.url,t.nome);};
+    document.getElementById('feito').onclick=function(){feitas[t.id]=!feitas[t.id];salvar();abrir(i);trilha();};
+    ligarCopia();marcas();
+    if(G&&!reduce)G.fromTo('#detail',{opacity:.6,y:8},{opacity:1,y:0,duration:.3});}
+  function reserva(){[].slice.call(document.querySelectorAll('#list button')).forEach(function(b){b.classList.toggle('on',!!b.dataset.r);});
+    document.getElementById('detail').innerHTML='<div class="stack"><div class="shot" id="shot" style="background-image:url('+RESERVA.img+')"><span class="zm">clique para ampliar</span></div></div><div class="stack"><div class="sec"><h4>Para quem usa R</h4><h3>LLMRpanel</h3><p>Aplica questionários e experimentos a painéis de personas de modelo de linguagem. Sem código, run_panel_studio() abre uma interface com modo offline de demonstração, sem chave de API.</p><p class="orig">Original: “LLMRpanel administers survey and experimental instruments to panels of language model personas.”</p></div><div class="sec"><h4>Como instalar</h4>'+codigo(RESERVA.inst)+'</div><div class="warn"><b>Cuidado.</b> Projeto sem estrelas; a API do GitHub não identificou a licença.</div></div>';
+    document.getElementById('shot').onclick=function(){lupa(RESERVA.img,RESERVA.url,RESERVA.nome);};ligarCopia();}
+  function marcas(){T.forEach(function(t){var el=document.getElementById('ok-'+t.id);if(el)el.textContent=feitas[t.id]?'rodada':'';});}
+  abrir(0);
+
+  /* lupa com zoom e arraste */
+  var lb=document.getElementById('lb'),im=document.getElementById('lbImg'),z=1,px=0,py=0,arr=null;
+  function apl(){im.style.transform='translate('+px+'px,'+py+'px) scale('+z+')';}
+  function ajustar(){var w=im.naturalWidth||1280,h=im.naturalHeight||800;z=Math.min(window.innerWidth*.92/w,window.innerHeight*.86/h);px=(window.innerWidth-w*z)/2;py=(window.innerHeight-h*z)/2;apl();}
+  function zoom(f,cx,cy){cx=cx==null?window.innerWidth/2:cx;cy=cy==null?window.innerHeight/2:cy;var nz=Math.max(.3,Math.min(5,z*f));px=cx-(cx-px)*nz/z;py=cy-(cy-py)*nz/z;z=nz;apl();}
+  function lupa(src,url,nome){im.onload=ajustar;im.src=src;im.alt='Captura de '+nome;document.getElementById('lbSrc').href=url;document.getElementById('lbCap').textContent=nome+' · captura de 17 out 2026 · arraste para mover, role para ampliar';lb.classList.add('show');if(im.complete)ajustar();}
+  document.getElementById('zIn').onclick=function(){zoom(1.4);};document.getElementById('zOut').onclick=function(){zoom(1/1.4);};document.getElementById('zFit').onclick=ajustar;
+  document.getElementById('lbX').onclick=function(){lb.classList.remove('show');};
+  lb.addEventListener('wheel',function(e){e.preventDefault();zoom(e.deltaY<0?1.15:1/1.15,e.clientX,e.clientY);},{passive:false});
+  im.addEventListener('mousedown',function(e){arr=[e.clientX-px,e.clientY-py];im.style.cursor='grabbing';e.preventDefault();});
+  window.addEventListener('mousemove',function(e){if(arr){px=e.clientX-arr[0];py=e.clientY-arr[1];apl();}});
+  window.addEventListener('mouseup',function(){arr=null;im.style.cursor='grab';});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('show');});
+  lb.addEventListener('click',function(e){if(e.target===lb)lb.classList.remove('show');});
+
+  /* 03 matriz */
+  var mx='<tr><th>Ferramenta</th>'+EST.map(function(e){return '<th>'+e+'</th>';}).join('')+'</tr>';
+  mx+=T.map(function(t,i){return '<tr><td>'+esc(t.nome)+'</td>'+EST.map(function(_,j){return '<td>'+(t.est.indexOf(j)>=0?'<button type="button" data-i="'+i+'" style="background:'+FLUXO[t.fluxo]+'" aria-label="'+esc(t.nome)+' em '+EST[j]+'">abrir</button>':'')+'</td>';}).join('')+'</tr>';}).join('');
+  document.getElementById('matrix').innerHTML=mx;
+  [].slice.call(document.querySelectorAll('#matrix button')).forEach(function(b){b.onclick=function(){abrir(+b.dataset.i);go(1);};});
+
+  /* 04 jogo */
+  var Q=[
+    ['Você quer mostrar um grupo focal com personas conversando entre si, em Python, e comparar com uma pesquisa real.','tinytroupe','construcao'],
+    ['A turma precisa de personas brasileiras prontas, com estado e município, sem instalar nada.','nemotron','construcao'],
+    ['O cliente pergunta se a base sintética pode vazar dados de pessoas reais.','anonymeter','privacidade'],
+    ['Você quer comparar coluna a coluna uma base sintética com a real e dar uma nota de qualidade.','sdmetrics','validacao'],
+    ['O LLM dá nota 4 para tudo. Você quer transformar respostas abertas numa distribuição de 1 a 5.','ssr','construcao'],
+    ['Você quer provar que o sistema do fornecedor bate um respondente aleatório.','synthbench','validacao'],
+    ['Você precisa de um caso brasileiro com gabarito real de opinião pública e modelos Sabiá.','silicon-br','validacao'],
+    ['Você quer rodar o mesmo questionário com dez agentes em dois modelos e ver a tabela.','edsl','construcao'],
+    ['Você quer gerar uma base tabular sintética clássica, sem LLM, e sabe que a licença importa.','sdv','construcao'],
+    ['Você quer mostrar a arquitetura de memória e reflexão por trás dos gêmeos digitais de Stanford.','genagents','construcao']
+  ];
+  var por={};T.forEach(function(t){por[t.id]=t;});
+  var qi=0,pts=0,acertos={construcao:0,validacao:0,privacidade:0},resp=false,ordem=[];
+  function embaralha(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),x=a[i];a[i]=a[j];a[j]=x;}return a;}
+  function pergunta(){resp=false;var q=Q[qi];document.getElementById('qn').textContent='situação '+(qi+1)+' de '+Q.length;document.getElementById('qbar').style.width=(qi/Q.length*100)+'%';
+    document.getElementById('qtext').textContent=q[0];document.getElementById('fb').textContent='';
+    var outros=embaralha(T.filter(function(t){return t.id!==q[1];}).slice()).slice(0,3);ordem=embaralha([por[q[1]]].concat(outros));
+    document.getElementById('opts').innerHTML=ordem.map(function(t){return '<button type="button" data-id="'+t.id+'">'+esc(t.nome)+'</button>';}).join('');
+    [].slice.call(document.querySelectorAll('#opts button')).forEach(function(b){b.onclick=function(){responder(b);};});
+    if(G&&!reduce)G.from('#opts button',{y:10,opacity:0,duration:.3,stagger:.05});}
+  function responder(b){if(resp)return;resp=true;var q=Q[qi],certo=b.dataset.id===q[1];
+    [].slice.call(document.querySelectorAll('#opts button')).forEach(function(x){if(x.dataset.id===q[1])x.classList.add('ok');else if(x===b)x.classList.add('no');});
+    if(certo){pts+=10;acertos[q[2]]++;}
+    document.getElementById('pts').textContent=pts;
+    document.getElementById('fb').innerHTML=(certo?'<b style="color:var(--teal)">Isso.</b> ':'<b style="color:var(--red)">Quase.</b> A resposta é '+esc(por[q[1]].nome)+'. ')+esc(por[q[1]].metodo);
+    selos();if(G&&!reduce&&certo)G.fromTo('#pts',{scale:1.6},{scale:1,duration:.4,ease:'back.out(3)'});}
+  function selos(){var S=[['construcao','Construtor','acertou 3 de construção',3],['validacao','Validador','acertou 2 de validação',2],['privacidade','Guardião da LGPD','acertou a de privacidade',1]];
+    var h=S.map(function(s){var on=acertos[s[0]]>=s[3];return '<div class="badge'+(on?' on':'')+'">'+s[1]+'<small>'+s[2]+'</small></div>';}).join('');
+    h+='<div class="badge'+(pts>=Q.length*10?' on':'')+'">Turma 100<small>acertou todas</small></div>';
+    document.getElementById('badges').innerHTML=h;}
+  document.getElementById('qnext').onclick=function(){if(qi<Q.length-1){qi++;pergunta();}else{document.getElementById('qbar').style.width='100%';document.getElementById('qtext').textContent='Fim. Você fez '+pts+' de '+Q.length*10+' pontos.';document.getElementById('opts').innerHTML='';document.getElementById('fb').textContent='Recomece para jogar de novo, com as opções em outra ordem.';}};
+  document.getElementById('qreset').onclick=function(){qi=0;pts=0;acertos={construcao:0,validacao:0,privacidade:0};document.getElementById('pts').textContent=0;pergunta();selos();};
+  function trilha(){var n=T.filter(function(t){return feitas[t.id];}).length,xp=n*100,niv=n>=10?'Laboratório completo':n>=6?'Pesquisador sintético':n>=3?'Explorador':n>=1?'Primeiro passo':'Ainda não começou';
+    document.getElementById('lvlName').textContent=niv;document.getElementById('lvlXp').textContent=xp+' XP · '+n+' de '+T.length;document.getElementById('xpbar').style.width=(n/T.length*100)+'%';
+    document.getElementById('trail').innerHTML=T.map(function(t){return '<li><label><input type="checkbox" data-id="'+t.id+'"'+(feitas[t.id]?' checked':'')+'>'+esc(t.nome)+' <span class="mono" style="margin-left:auto;color:var(--ink-2)">+100</span></label></li>';}).join('');
+    [].slice.call(document.querySelectorAll('#trail input')).forEach(function(c){c.onchange=function(){feitas[c.dataset.id]=c.checked;salvar();trilha();marcas();};});}
+  pergunta();selos();trilha();
+
+  /* 05 lacuna */
+  document.getElementById('existe').innerHTML=[
+    '<b>Nemotron-Personas-Brazil:</b> 1 milhão de personas em português, CC BY 4.0, com uso comercial liberado no card.',
+    '<b>Silicon Sampling Brazil</b> e um segundo estudo do Mackenzie, com código: personas do IBGE e gabarito CESOP/IPEC.',
+    'Distribuições brasileiras no <b>GlobalOpinionQA</b> e o dataset <b>AFOS</b> de pesquisas eleitorais agregadas.',
+    'Personas menores: <b>StrataSynth</b> com 1.250 personas e <b>personas-pt_BR</b>, esta sem demografia.'
+  ].map(function(x){return '<li>'+x+'</li>';}).join('');
+  document.getElementById('falta').innerHTML=[
+    'Painel brasileiro aberto no nível do indivíduo, com reteste: o equivalente ao Twin-2K-500.',
+    'Modelo ajustado em pesquisa brasileira.',
+    'Validação aberta com consumidor. Todo gabarito brasileiro achado é de opinião política.',
+    'ESEB, LAPOP e Latinobarómetro no Hugging Face. O microdado do CESOP não pode ser redistribuído.'
+  ].map(function(x){return '<li>'+x+'</li>';}).join('');
+
+  var io=new IntersectionObserver(function(es){es.forEach(function(en){if(!en.isIntersecting)return;idx=scenes.indexOf(en.target);document.getElementById('slideNum').textContent=(idx+1)+' / '+scenes.length;links.forEach(function(a,i){a.classList.toggle('on',i===idx);});});},{root:window.innerWidth<=700?null:deck,rootMargin:'-45% 0px -45% 0px',threshold:0});
+  scenes.forEach(function(s){io.observe(s);});
+  document.addEventListener('keydown',function(e){if(lb.classList.contains('show'))return;var tg=(e.target.tagName||'').toLowerCase();if(tg==='input')return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(idx+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1);}});
+})();
+</script>
+</body>
+</html>

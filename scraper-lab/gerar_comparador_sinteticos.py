@@ -212,8 +212,12 @@ def main() -> None:
         "/*__DADOS__*/{}", json.dumps(dados, ensure_ascii=False, separators=(",", ":")))
     SAIDA.parent.mkdir(parents=True, exist_ok=True)
     SAIDA.write_text(html, encoding="utf-8")
+    shutil.copy(MODELO.parent / "open-source.html", SAIDA.parent / "open-source.html")
     if not args.sem_copia:
         shutil.copy(SAIDA, COPIA)
+        shutil.copy(SAIDA.parent / "open-source.html", COPIA.parent / "open-source.html")
+        if (SAIDA.parent / "img").exists():
+            shutil.copytree(SAIDA.parent / "img", COPIA.parent / "img", dirs_exist_ok=True)
     c = dados["contagem"]
     print(f"{c['total']} empresas ({c['verificadas']} conferidas pela coleta), níveis {c['nivel']}")
     print(SAIDA)
