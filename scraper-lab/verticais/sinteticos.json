@@ -259,7 +259,8 @@
       "none",
       "self_reported",
       "third_party",
-      "peer_reviewed"
+      "peer_reviewed",
+      "client_data"
     ],
     "familia": [
       "construcao",
@@ -873,6 +874,49 @@
         "https://www.cassiai.com/security"
       ]
     },
-    "named_customers": []
+    "named_customers": [],
+    "declaracao": {
+      "texto": "A Cassi.ai valida direto com a base de dados do cliente: as personas e os dados sintéticos são construídos e treinados com os dados do próprio cliente.",
+      "fonte": "declaração da Cassi.ai (Cassiano Albuquerque, 17 out 2026); ainda sem número de acurácia publicado"
+    }
+  },
+  "tipo_empresa": {
+    "nota": "Classificação inferida pelo analista a partir do site de cada empresa. Quem não está listado segue a regra: grupo startup da base vira startup de sintéticos.",
+    "rotulos": {
+      "instituto": "Instituto de pesquisa tradicional",
+      "research_tech": "Research tech",
+      "startup": "Startup de sintéticos",
+      "tecnologia": "Tecnologia, agência ou consultoria"
+    },
+    "mapa": {
+      "ipsos": "instituto",
+      "kantar": "instituto",
+      "nielseniq": "instituto",
+      "yougov": "instituto",
+      "dynata": "instituto",
+      "toluna": "instituto",
+      "macromill-embrain": "instituto",
+      "hsr-specialist-researchers": "instituto",
+      "datadiggers": "instituto",
+      "qualtrics": "research_tech",
+      "questionpro": "research_tech",
+      "zappi": "research_tech",
+      "market-logic-software": "research_tech",
+      "bolt-insight": "research_tech",
+      "gwi": "research_tech",
+      "statista-synthiepop": "research_tech",
+      "opensurvey": "research_tech",
+      "intellisia": "research_tech",
+      "cassi-ai": "research_tech",
+      "wpp": "tecnologia",
+      "almapbbdo": "tecnologia",
+      "mjv-technology-innovation": "tecnologia",
+      "dnp-dai-nippon-printing": "tecnologia",
+      "hakuhodo-dy-group": "tecnologia",
+      "dentsu-japan": "tecnologia",
+      "ntt-data": "tecnologia",
+      "c5i": "tecnologia",
+      "neuroflash": "tecnologia"
+    }
   }
 }

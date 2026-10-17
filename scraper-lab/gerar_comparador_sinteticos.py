@@ -61,6 +61,13 @@ def regiao(cfg: dict, hq: str) -> str:
 
 
 def limpo(t, n=320) -> str:
+    if isinstance(t, str) and t.strip().startswith("{"):
+        try:
+            t = json.loads(t)
+        except ValueError:
+            t = re.sub(r'^\{"(value|list)":\s*', "", t)
+    if isinstance(t, dict) and "list" in t:
+        t = ", ".join(t["list"]) if t["list"] else ""
     if isinstance(t, dict):
         t = t.get("value") or t.get("text") or t.get("valor") or ""
     t = re.sub(r"\s+", " ", str(t or "")).strip()
@@ -87,8 +94,23 @@ def da_coleta(reg: dict) -> dict:
     }
 
 
+def casos_por_empresa(cfg: dict) -> dict[str, list[dict]]:
+    """Cases da base (cases_media.json) ligados ao fornecedor pelo nome."""
+    cases = json.loads(_expandir(cfg["sementes"]["cases"]).read_text(encoding="utf-8"))["cases"]
+    saida: dict[str, list[dict]] = {}
+    for c in cases:
+        forn = _nome_base(c.get("vendor") or "").lower()
+        if forn:
+            saida.setdefault(forn, []).append({
+                "t": c.get("title", ""), "marca": c.get("company", ""), "ano": c.get("year", ""),
+                "obj": c.get("objective", ""), "res": c.get("result_verbatim", ""),
+                "ev": c.get("evidence_type", ""), "u": c.get("url", ""), "data": c.get("date", "")})
+    return saida
+
+
 def montar(cfg: dict, coleta: dict) -> dict:
     base = json.loads(_expandir(cfg["sementes"]["empresas"]).read_text(encoding="utf-8"))
+    casos = casos_por_empresa(cfg)
     grupos: dict[str, list[dict]] = {}
     for s in base:
         if not str(s.get("url", "")).startswith("http") or s.get("status", "").startswith(FORA):
@@ -122,6 +144,8 @@ def montar(cfg: dict, coleta: dict) -> dict:
             "ressalva": limpo(s.get("caution"), 260),
             "fundada": limpo(s.get("founded"), 30) or "not found",
             "fontes": [x["url"] for x in ss],
+            "site": f"https://{dom}/" if "." in dom else s["url"],
+            "casos": casos.get(chave, []),
             "coleta": da_coleta(reg) if reg else None,
             "cassi": False,
         })
@@ -131,8 +155,10 @@ def montar(cfg: dict, coleta: dict) -> dict:
         "id": "cassi-ai", "n": p["name"], "produto": "Synthetic Lab e Synthetic Vertical Simulator",
         "url": p["url"], "dom": p["dominio"], "grupo": "Cassi.ai", "reg": "não informada", "hq": "not found",
         "of": [o["valor"] for o in p["offer_type"]], "base": p["grounding"]["valor"],
-        "base_q": p["grounding"]["quote"], "val": "none", "val_q": "",
-        "val_b": p["validation_claim"]["basis"], "preco": "not found", "fund": "not found", "cli": "not found",
+        "base_q": p["grounding"]["quote"], "val": "client_data", "val_q": p["declaracao"]["texto"],
+        "val_b": p["declaracao"]["fonte"], "preco": "sob consulta (a página convida a pedir acesso)",
+        "fund": "not found", "cli": "not found", "site": p["url"], "casos": [],
+        "produtos": p["produtos"],
         "head": p["headline_oferta"]["quote"], "video": "", "ressalva": p["limites"]["quote"],
         "fundada": "not found", "fontes": [x["url"] for x in p["produtos"]],
         "como": p["como_e_construida"]["quote"], "vies": p["controle_de_vies"]["quote"],
@@ -142,6 +168,9 @@ def montar(cfg: dict, coleta: dict) -> dict:
         "cassi": True,
     })
 
+    te = cfg["tipo_empresa"]
+    for e in empresas:
+        e["tipo"] = te["rotulos"][te["mapa"].get(e["id"], "startup")]
     cont = {
         "total": len(empresas),
         "nivel": dict(Counter(e["val"] for e in empresas)),
@@ -155,6 +184,17 @@ def montar(cfg: dict, coleta: dict) -> dict:
             "contagem": cont, "empresas": empresas}
 
 
+def _textos(x):
+    if isinstance(x, str):
+        yield x
+    elif isinstance(x, dict):
+        for v in x.values():
+            yield from _textos(v)
+    elif isinstance(x, list):
+        for v in x:
+            yield from _textos(v)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--piloto", action="store_true")
@@ -165,6 +205,9 @@ def main() -> None:
     arq = pasta / "empresas.json"
     coleta = json.loads(arq.read_text(encoding="utf-8")) if arq.exists() else {}
     dados = montar(cfg, coleta)
+    trad = json.loads((LAB / "verticais" / "sinteticos_traducoes.json").read_text(encoding="utf-8"))["textos"]
+    usados = {v for e in dados["empresas"] for v in _textos(e)}
+    dados["trad"] = {k: v for k, v in trad.items() if k in usados}
     html = MODELO.read_text(encoding="utf-8").replace(
         "/*__DADOS__*/{}", json.dumps(dados, ensure_ascii=False, separators=(",", ":")))
     SAIDA.parent.mkdir(parents=True, exist_ok=True)
