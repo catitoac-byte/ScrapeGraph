@@ -215,7 +215,9 @@ def main() -> None:
     shutil.copy(MODELO.parent / "open-source.html", SAIDA.parent / "open-source.html")
     if not args.sem_copia:
         shutil.copy(SAIDA, COPIA)
-        shutil.copy(SAIDA.parent / "open-source.html", COPIA.parent / "open-source.html")
+        os_html = (SAIDA.parent / "open-source.html").read_text(encoding="utf-8")
+        (COPIA.parent / "open-source.html").write_text(
+            os_html.replace('href="index.html"', f'href="{COPIA.name}"'), encoding="utf-8")
         if (SAIDA.parent / "img").exists():
             shutil.copytree(SAIDA.parent / "img", COPIA.parent / "img", dirs_exist_ok=True)
     c = dados["contagem"]
