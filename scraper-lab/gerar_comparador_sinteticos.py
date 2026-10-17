@@ -14,7 +14,7 @@ mapa de forcas com envoltorias do slide 02, 2x2 com comparacao automatica do
 slide 04 e rota com pacotes do slide 07.
 
 Saida em sites/sinteticos/index.html (fora do git: carrega dados coletados) e
-uma copia em ~/Projetos/dados-sinteticos-abep/site/comparador-sinteticos.html.
+uma copia no repositorio do curso ABEP, em 04_Apresentacao/Interativos_v9/.
 """
 
 import argparse
@@ -33,7 +33,8 @@ from scraper_lab.sinteticos_paginas import registravel  # noqa: E402
 LAB = Path(__file__).resolve().parent
 MODELO = LAB / "vitrine-web" / "sinteticos" / "comparador.html"
 SAIDA = LAB / "sites" / "sinteticos" / "index.html"
-COPIA = Path.home() / "Projetos" / "dados-sinteticos-abep" / "site" / "comparador-sinteticos.html"
+CURSO = Path.home() / "Antigravity Projects" / "Linkedin automator" / "Curso ABEP Dados Sinteticos"
+COPIA = CURSO / "04_Apresentacao" / "Interativos_v9" / "comparador-sinteticos.html"
 
 FORA = ("no_public", "stance", "exploring", "research", "third_party_evidence")
 GRUPO = {"vendors_startups": "Startup", "vendors_incumbents_regional": "Incumbente regional",
