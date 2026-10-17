@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vozes do Mercado</title>
+<meta name="description" content="O que institutos, fornecedores, associações e executivos dizem sobre os prós e contras de dados e personas sintéticos, em 46 falas com fonte, organizadas em temas e transformadas em jogo.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F5F3F8;--card:#FFFFFF;--ink:#241A3A;--ink-2:#5B5870;--line:#E3DEEC;
+  --plum:#2A1A45;--violet:#8B4BAF;--violet-soft:#F1E8F7;--teal:#4FB39A;--sky:#1FA2E0;--amber:#F3A712;--red:#E4572E;--orange:#F26430;
+  --pro:#2F9E83;--contra:#D8482A;--meio:#C98A0B;--shadow:0 14px 40px rgba(42,26,69,.12);
+  --body:'Poppins',system-ui,Segoe UI,Arial,sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+:root[data-theme="dark"]{--bg:#15102A;--card:#1F1836;--ink:#F3EFFA;--ink-2:#B9B2CC;--line:#352C4F;--plum:#0E0A1C;--violet:#B983D6;--violet-soft:#2C2144;--teal:#5CC7AC;--sky:#4DB8EC;--pro:#5CC7AC;--contra:#F0734F;--meio:#F3B73C;--shadow:0 14px 40px rgba(0,0,0,.45);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;overflow:hidden}
+a{color:var(--sky)}
+h2,h3{text-wrap:balance;margin:0;line-height:1.08}
+h2{font-size:clamp(28px,3.6vw,46px);font-weight:700;letter-spacing:-.01em}
+h3{font-size:19px;font-weight:700}
+p{margin:0}
+.lead{font-size:17px;color:var(--ink-2);max-width:68ch}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--violet);font-weight:500}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;border:2px solid transparent;cursor:pointer;font-family:var(--body);text-decoration:none}
+.btn-teal{background:var(--teal);color:#fff}.btn-ghost{background:transparent;color:var(--violet);border-color:var(--violet)}
+button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.hl{position:relative;display:inline-block;color:var(--violet);padding:.02em .22em;margin:0 .04em;border:1px solid rgba(139,75,175,.5);background:var(--violet-soft)}
+.hl i{position:absolute;width:9px;height:9px;background:var(--orange);border-radius:1px}
+.hl i.c1{left:-5px;top:-5px}.hl i.c2{right:-5px;top:-5px}.hl i.c3{left:18px;bottom:-5px}.hl i.c4{right:18px;bottom:-5px}
+.dot{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violet);font-weight:500;margin-bottom:12px}
+.dot::before{content:"";width:9px;height:9px;border-radius:2px;background:var(--violet)}
+.rail{position:fixed;left:0;right:0;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+.rail .in{display:flex;overflow-x:auto;scrollbar-width:none}
+.rail a{flex:1;min-width:130px;display:flex;flex-direction:column;justify-content:center;padding:9px 14px;text-decoration:none;color:var(--ink);border-right:1px solid var(--line)}
+.rail a .k{font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+.rail a .t{font-size:13px;font-weight:600;white-space:nowrap}
+.rail a .s{font-size:11px;color:var(--ink-2);white-space:nowrap}
+.rail a.on{background:var(--plum);color:#fff}.rail a.on .k,.rail a.on .s{color:#C9A5E0}
+.progress{height:3px;background:var(--amber);width:0;transition:width .2s}
+.deck{height:calc(100% - 50px);overflow-y:auto;scroll-snap-type:y proximity;scroll-behavior:smooth;padding-top:60px}
+.scene{min-height:100%;scroll-snap-align:start;padding:44px 24px 40px}
+.scene > .in{width:100%;max-width:1280px;margin:0 auto}
+.head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:18px}
+.head .lead{margin-top:8px}
+.foot{position:fixed;left:0;right:0;bottom:0;height:50px;padding:0 18px;z-index:6;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.credit{display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--ink);border-left:3px solid var(--violet);padding-left:12px}
+.credit b{font-size:12px}.credit span{font-size:11px;color:var(--ink-2);font-family:var(--mono)}
+.tbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--body);text-decoration:none}
+.slidenav{display:flex;align-items:center;gap:8px}
+.slidenav button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.slidenav .num{font-family:var(--mono);font-size:12px;color:var(--ink-2);min-width:48px;text-align:center}
+.srcnote{font-family:var(--mono);font-size:11px;color:var(--ink-2);margin-top:14px}
+/* lados */
+.lado{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:6px;color:#fff;font-weight:500}
+.lado.pro{background:var(--pro)}.lado.contra{background:var(--contra)}.lado.meio{background:var(--meio)}
+.gp{display:inline-block;font-family:var(--mono);font-size:10.5px;color:var(--ink-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+/* 01 balanço */
+.kpis{display:flex;gap:30px;flex-wrap:wrap;margin:18px 0 22px}
+.big{font-size:44px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.big small{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink-2);font-weight:500;margin-top:6px;max-width:22ch}
+.bal{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);min-width:0}
+.bar2{display:flex;height:34px;border-radius:10px;overflow:hidden;margin:10px 0 6px}
+.bar2 div{display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--mono);font-size:12px;font-weight:500}
+.row{display:grid;grid-template-columns:150px 1fr 34px;gap:10px;align-items:center;margin:6px 0;font-size:13px}
+.row .tr{height:16px;background:var(--line);border-radius:5px;display:flex;overflow:hidden}
+.row .tr i{display:block;height:100%}
+.row b{font-family:var(--mono);font-weight:500;text-align:right}
+.quem{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+/* 02 temas */
+.tema-wrap{display:grid;grid-template-columns:270px 1fr;gap:16px}
+.tlist{display:grid;gap:6px;align-content:start}
+.tlist button{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 12px;cursor:pointer;font-family:var(--body);color:var(--ink);font-size:13.5px;font-weight:600}
+.tlist button .m{grid-column:1/-1;display:flex;height:5px;border-radius:3px;overflow:hidden;background:var(--line)}
+.tlist button .m i{display:block;height:100%}
+.tlist button b{font-family:var(--mono);font-size:11px;color:var(--ink-2);font-weight:500}
+.tlist button.on{background:var(--plum);border-color:var(--plum);color:#fff}.tlist button.on b{color:#C9A5E0}
+.tpane{display:grid;gap:12px;align-content:start}
+.vq{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--violet);border-radius:0 14px 14px 0;padding:14px 16px;display:grid;gap:8px}
+.vq.pro{border-left-color:var(--pro)}.vq.contra{border-left-color:var(--contra)}.vq.meio{border-left-color:var(--meio)}
+.vq blockquote{margin:0;font-size:17px;line-height:1.4;font-weight:600}
+.vq .en{font-size:12.5px;color:var(--ink-2);font-style:italic}
+.vq .who{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px;color:var(--ink-2)}
+.vq .who b{color:var(--ink);font-size:13.5px}
+.vq .ctx{font-size:12.5px;color:var(--ink-2)}
+.vq a{font-size:12px}
+/* jogos */
+.modos{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.modos button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 16px;cursor:pointer;font-family:var(--body);font-weight:700;font-size:14px;text-align:left}
+.modos button small{display:block;font-weight:500;font-size:11.5px;color:var(--ink-2)}
+.modos button.on{background:var(--plum);border-color:var(--plum);color:#fff}.modos button.on small{color:#C9A5E0}
+.game{display:grid;grid-template-columns:1.3fr .7fr;gap:16px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);min-height:470px}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.score{font-family:var(--mono);font-size:13px}.score b{font-size:24px;color:var(--violet);font-family:var(--body)}
+.qbar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:12px 0 16px}
+.qbar i{display:block;height:100%;width:0;background:var(--violet);transition:width .4s}
+.fala{font-size:22px;font-weight:600;line-height:1.35;border-left:6px solid var(--violet);padding:4px 0 4px 16px;margin-bottom:6px}
+.fala small{display:block;font-size:12.5px;color:var(--ink-2);font-weight:500;margin-top:8px;font-style:italic}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.opts.tres{grid-template-columns:repeat(3,1fr)}
+.opts button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:12px 14px;text-align:left;font-family:var(--body);font-size:14.5px;font-weight:600;cursor:pointer}
+.opts button:hover:not(:disabled){border-color:var(--violet)}
+.opts button.ok{border-color:var(--teal);background:rgba(79,179,154,.14)}
+.opts button.no{border-color:var(--red);background:rgba(228,87,46,.09)}
+.opts button:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;min-height:60px}
+.fb .src{font-size:12.5px;color:var(--ink-2);display:block;margin-top:6px}
+.side{display:grid;gap:12px;align-content:start}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{border:1.5px dashed var(--line);border-radius:10px;padding:8px 10px;font-size:12.5px;font-weight:600;color:var(--ink-2);display:grid;gap:2px;min-width:120px}
+.badge small{font-family:var(--mono);font-size:10px;font-weight:500}
+.badge.on{border-style:solid;border-color:var(--amber);color:var(--ink);background:rgba(243,167,18,.1)}
+.lvl{display:flex;justify-content:space-between;align-items:end}
+.lvl b{font-size:18px}.lvl span{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.streak{font-family:var(--mono);font-size:13px}
+/* modo debate */
+.arena{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.lado-col{border:2px dashed var(--line);border-radius:14px;padding:10px;min-height:150px;display:grid;gap:8px;align-content:start}
+.lado-col h4{margin:0 0 4px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.chipq{border:1px solid var(--line);border-left:5px solid var(--violet);border-radius:8px;padding:8px 10px;font-size:13px;background:var(--card)}
+.chipq.pro{border-left-color:var(--pro)}.chipq.contra{border-left-color:var(--contra)}.chipq.meio{border-left-color:var(--meio)}
+.chipq small{display:block;color:var(--ink-2);font-size:11px;font-family:var(--mono)}
+.tabuleiro{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.cartao{perspective:700px;cursor:pointer;border:0;background:none;padding:0;font-family:var(--body);text-align:left;min-height:130px}
+.cartao .f{position:relative;width:100%;height:100%;min-height:130px;transition:transform .5s;transform-style:preserve-3d}
+.cartao.vira .f{transform:rotateY(180deg)}
+.cartao .fr,.cartao .vs{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center}
+.cartao .fr{background:var(--plum);color:#fff;align-items:center;text-align:center;font-weight:700;font-size:13px}
+.cartao .vs{background:var(--card);border:1.5px solid var(--line);transform:rotateY(180deg);font-size:12px}
+.cartao.par .vs{border-color:var(--teal);background:rgba(79,179,154,.12)}
+.cartao .vs b{font-size:12.5px;display:block;margin-bottom:3px}
+@media (max-width:1000px){.bal,.tema-wrap,.game{grid-template-columns:1fr}.tabuleiro{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:700px){html,body{height:auto;overflow:auto}.deck{height:auto;overflow:visible;scroll-snap-type:none;padding-bottom:60px}.scene{min-height:0;padding:34px 16px 30px}.opts,.opts.tres,.arena{grid-template-columns:1fr}.credit span{display:none}.rail a .s{display:none}.big{font-size:32px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="rail"><div class="in" id="rail"></div><div class="progress" id="progress"></div></div>
+<div class="deck" id="deck">
+
+<section class="scene" id="s1"><div class="in">
+  <div class="head"><div><p class="dot">01 · O placar das vozes</p><h2>Quem fala bem do sintético? <span class="hl">Quase só quem vende.</span></h2><p class="lead">Reunimos <span id="nfalas"></span> falas de institutos de pesquisa, fornecedores, associações, executivos de insights, academia e imprensa. Cada uma tem quem falou, o papel, a página e a data. Elas foram agrupadas em dez temas e marcadas como a favor, contra ou no meio.</p></div></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="bal">
+    <div class="card"><h3>Prós, contras e meio-termo</h3><div class="bar2" id="bar2"></div><p class="srcnote" style="margin-top:0">Classificação do analista a partir da frase e do contexto da página. Não é a posição geral da empresa.</p><h3 style="margin-top:18px">Por tipo de voz</h3><div id="porGrupo"></div></div>
+    <div class="card"><h3>O que mais aparece</h3><div id="porTema"></div></div>
+  </div>
+  <p class="srcnote" id="meta1"></p>
+</div></section>
+
+<section class="scene" id="s2"><div class="in">
+  <div class="head"><div><p class="dot">02 · Os dez temas</p><h2>As falas se repetem em <span class="hl">dez preocupações.</span></h2><p class="lead">Escolha um tema. Cada fala mostra quem disse, em que papel, a tradução, o original em aspas e o link da página. A barrinha embaixo do tema mostra a proporção entre a favor, contra e meio-termo.</p></div></div>
+  <div class="tema-wrap"><div class="tlist" id="tlist"></div><div class="tpane" id="tpane"></div></div>
+</div></section>
+
+<section class="scene" id="s3"><div class="in">
+  <div class="head"><div><p class="dot">03 · Jogo das vozes</p><h2>Quatro jeitos de <span class="hl">testar o que você ouviu.</span></h2><p class="lead">Escolha o modo. Acertou, ganha pontos e selos. A trilha ao lado guarda sua sequência neste navegador.</p></div></div>
+  <div class="modos" id="modos"></div>
+  <div class="game"><div class="stage" id="stage"></div>
+  <div class="side"><div class="card"><div class="qtop"><span class="mono">placar</span><span class="score">pontos <b id="pts">0</b></span></div><div class="lvl" style="margin-top:8px"><b id="lvlName"></b><span id="lvlXp"></span></div><div class="qbar"><i id="xpbar"></i></div><p class="streak" id="streak"></p></div>
+  <div class="card"><h3 style="margin-bottom:8px">Selos</h3><div class="badges" id="badges"></div></div></div></div>
+</div></section>
+
+<section class="scene" id="s4"><div class="in">
+  <div class="head"><div><p class="dot">04 · O que levar para a sala</p><h2>Cinco leituras que <span class="hl">as falas sustentam.</span></h2><p class="lead">Cada leitura é uma inferência nossa a partir das falas, com as falas que a sustentam à vista. Use como pergunta para a turma, não como conclusão.</p></div></div>
+  <div class="leit" id="leit"></div>
+</div></section>
+
+</div>
+<div class="foot"><a class="credit" href="https://www.cassiai.com/" target="_blank" rel="noopener"><b>Vozes por Cassiano Albuquerque · Cassi.ai</b><span>curso ABEP de dados e personas sintéticas</span></a><div style="display:flex;gap:8px;align-items:center"><a class="tbtn" href="comparador-sinteticos.html">Comparador</a><a class="tbtn" href="open-source.html">Laboratório</a><button type="button" class="tbtn" id="tema">Tema escuro</button></div><div class="slidenav"><button type="button" id="prevBtn" aria-label="Anterior">‹</button><span class="num" id="slideNum">1 / 4</span><button type="button" id="nextBtn" aria-label="Próximo">›</button></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>window.VOZES=/*__DADOS__*/{};</script>
+<script>
+(function(){
+  var D=window.VOZES,F=D.falas||[],TM=D.meta.temas,G=window.gsap;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+  [].slice.call(document.querySelectorAll('.hl')).forEach(function(h){['c1','c2','c3','c4'].forEach(function(c){var i=document.createElement('i');i.className=c;h.appendChild(i);});});
+  var LADO={pro:'A favor',contra:'Contra',meio:'No meio'},COR={pro:'var(--pro)',contra:'var(--contra)',meio:'var(--meio)'};
+  var GRUPO={instituto:'Instituto de pesquisa',fornecedor:'Fornecedor',associacao:'Associação ou revista do setor',executivo:'Executivo ou podcast da indústria',academico:'Academia ou consultoria',imprensa:'Imprensa'};
+  function conta(f){return F.filter(f).length;}
+  function porLado(f){return {pro:conta(function(x){return f(x)&&x.lado==='pro';}),contra:conta(function(x){return f(x)&&x.lado==='contra';}),meio:conta(function(x){return f(x)&&x.lado==='meio';})};}
+  function mini(c,tot){return ['contra','meio','pro'].map(function(l){return c[l]?'<i style="width:'+(c[l]/tot*100)+'%;background:'+COR[l]+'"></i>':'';}).join('');}
+  document.getElementById('nfalas').textContent=F.length;
+  document.getElementById('meta1').textContent='Fonte: falas_mercado.json, captura de '+D.meta.captura+'. '+D.meta.metodo;
+  /* tema claro e escuro */
+  (function(){var r=document.documentElement,b=document.getElementById('tema');function ap(t){if(t==='dark')r.setAttribute('data-theme','dark');else r.removeAttribute('data-theme');b.textContent=t==='dark'?'Tema claro':'Tema escuro';}
+    var s=null;try{s=localStorage.getItem('tema-sinteticos');}catch(e){}ap(s||'light');b.onclick=function(){var t=r.getAttribute('data-theme')==='dark'?'light':'dark';ap(t);try{localStorage.setItem('tema-sinteticos',t);}catch(e){}};})();
+  /* rail */
+  var SC=[['01','O placar das vozes',F.length+' falas'],['02','Os dez temas','o que se repete'],['03','Jogo das vozes','quatro modos'],['04','Para a sala','cinco leituras']];
+  var rail=document.getElementById('rail');SC.forEach(function(s,i){var a=document.createElement('a');a.href='#s'+(i+1);a.innerHTML='<span class="k">'+s[0]+'</span><span class="t">'+s[1]+'</span><span class="s">'+s[2]+'</span>';rail.appendChild(a);});
+  var deck=document.getElementById('deck'),scenes=[].slice.call(document.querySelectorAll('.scene')),links=[].slice.call(rail.children),idx=0;
+  function go(i){i=Math.max(0,Math.min(scenes.length-1,i));idx=i;scenes[i].scrollIntoView({block:'start'});}
+  document.getElementById('prevBtn').onclick=function(){go(idx-1);};document.getElementById('nextBtn').onclick=function(){go(idx+1);};
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="#s"]');if(!a)return;e.preventDefault();go(parseInt(a.getAttribute('href').slice(2),10)-1);});
+  deck.addEventListener('scroll',function(){document.getElementById('progress').style.width=(deck.scrollTop/(deck.scrollHeight-deck.clientHeight)*100)+'%';},{passive:true});
+  /* 01 */
+  var L=porLado(function(){return true;}),n=F.length;
+  var quemPor=Object.keys(GRUPO).map(function(g){return [g,conta(function(x){return x.grupo===g;})];});
+  document.getElementById('kpis').innerHTML=[[n,'falas com fonte e data'],[quemPor.length,'tipos de voz'],[Object.keys(TM).length,'temas'],[L.contra,'contra'],[L.pro,'a favor']].map(function(k){return '<div class="big">'+k[0]+'<small>'+k[1]+'</small></div>';}).join('');
+  document.getElementById('bar2').innerHTML=['contra','meio','pro'].map(function(l){return '<div style="width:'+(L[l]/n*100)+'%;background:'+COR[l]+'">'+LADO[l]+' · '+L[l]+'</div>';}).join('');
+  document.getElementById('porGrupo').innerHTML=quemPor.map(function(g){var c=porLado(function(x){return x.grupo===g[0];});return '<div class="row"><span>'+GRUPO[g[0]]+'</span><div class="tr">'+mini(c,Math.max(g[1],1))+'</div><b>'+g[1]+'</b></div>';}).join('');
+  var temas=Object.keys(TM).map(function(t){return [t,conta(function(x){return x.tema===t;})];}).sort(function(a,b){return b[1]-a[1];});
+  document.getElementById('porTema').innerHTML=temas.map(function(t){var c=porLado(function(x){return x.tema===t[0];});return '<div class="row"><span>'+esc(TM[t[0]])+'</span><div class="tr">'+mini(c,t[1])+'</div><b>'+t[1]+'</b></div>';}).join('');
+  /* 02 */
+  var cur=temas[0][0];
+  function vq(x){return '<div class="vq '+x.lado+'"><div class="who"><span class="lado '+x.lado+'">'+LADO[x.lado]+'</span><b>'+esc(x.quem)+'</b><span>'+esc(x.papel)+'</span><span class="gp">'+esc(GRUPO[x.grupo])+'</span></div><blockquote>“'+esc(x.pt.valor)+'”</blockquote>'+(x.idioma!=='pt'?'<p class="en">Original: “'+esc(x.quote.valor.replace(/\\u2019/g,'’'))+'”</p>':'<p class="en">Fala em português.</p>')+'<p class="ctx">'+esc(x.contexto)+'</p><a href="'+esc(x.quote.url)+'" target="_blank" rel="noopener">abrir a página'+(x.quote.data_pagina?' · '+esc(x.quote.data_pagina):'')+' ↗</a></div>';}
+  document.getElementById('tlist').innerHTML=temas.map(function(t){var c=porLado(function(x){return x.tema===t[0];});return '<button type="button" data-t="'+t[0]+'"><span>'+esc(TM[t[0]])+'</span><b>'+t[1]+'</b><span class="m">'+mini(c,t[1])+'</span></button>';}).join('');
+  function tema(t){cur=t;[].slice.call(document.querySelectorAll('#tlist button')).forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});
+    var arr=F.filter(function(x){return x.tema===t;}).sort(function(a,b){return ['pro','meio','contra'].indexOf(a.lado)-['pro','meio','contra'].indexOf(b.lado);});
+    document.getElementById('tpane').innerHTML=arr.map(vq).join('');if(G&&!reduce)G.from('#tpane .vq',{y:12,opacity:0,duration:.35,stagger:.06});}
+  [].slice.call(document.querySelectorAll('#tlist button')).forEach(function(b){b.onclick=function(){tema(b.dataset.t);};});
+  tema(cur);
+  /* 03 jogo: estado local */
+  var est={};try{est=JSON.parse(localStorage.getItem('jogo-vozes')||'{}')||{};}catch(e){est={};}
+  est.pts=est.pts||0;est.melhor=est.melhor||0;est.sel=est.sel||{};
+  function salvar(){try{localStorage.setItem('jogo-vozes',JSON.stringify(est));}catch(e){}}
+  function embaralha(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),x=a[i];a[i]=a[j];a[j]=x;}return a;}
+  function nivel(){var p=est.pts;return p>=400?['Mestre das vozes','']:p>=250?['Analista de discurso','']:p>=120?['Leitor atento','']:p>=30?['Ouvinte','']:['Primeiro passo',''];}
+  function placar(){document.getElementById('pts').textContent=est.pts;var nv=nivel();document.getElementById('lvlName').textContent=nv[0];document.getElementById('lvlXp').textContent=est.pts+' XP';document.getElementById('xpbar').style.width=Math.min(100,est.pts/400*100)+'%';document.getElementById('streak').textContent=seq?'sequência atual: '+seq+(seq>=3?' · bônus ativo':''):'sequência atual: 0';
+    var S=[['quem','Quem disse?','acertou 5 em "quem disse"'],['lado','Pró ou contra?','acertou 5 em "pró ou contra"'],['tema','Mestre dos temas','acertou 5 em "qual tema"'],['debate','Debatedor','montou um debate de seis falas sem erro'],['seq','Sequência de 5','acertou 5 seguidas']];
+    document.getElementById('badges').innerHTML=S.map(function(s){var on=est.sel[s[0]];return '<div class="badge'+(on?' on':'')+'">'+s[1]+'<small>'+s[2]+'</small></div>';}).join('');}
+  var seq=0,modo='quem',q=0,ordem=[],resp=false,acs=0,conf=0;
+  function dar(m,pontos,certo){if(certo){seq++;var b=seq>=3?5:0;est.pts+=pontos+b;conf++;est['n_'+m]=(est['n_'+m]||0)+1;if(est['n_'+m]>=5)est.sel[m]=true;if(seq>=5)est.sel.seq=true;}else{seq=0;}salvar();placar();if(G&&!reduce&&certo)G.fromTo('#pts',{scale:1.5},{scale:1,duration:.4,ease:'back.out(3)'});}
+  var MODOS=[['quem','Quem disse?','adivinhe o tipo de voz'],['lado','Pró ou contra?','classifique a fala'],['tema','Qual tema?','agrupe a fala'],['debate','Debate','monte os dois lados']];
+  document.getElementById('modos').innerHTML=MODOS.map(function(m){return '<button type="button" data-m="'+m[0]+'"><span>'+m[1]+'</span><small>'+m[2]+'</small></button>';}).join('');
+  [].slice.call(document.querySelectorAll('#modos button')).forEach(function(b){b.onclick=function(){iniciar(b.dataset.m);};});
+  function topo(){return '<div class="qtop"><span class="mono" id="qn"></span><span class="mono">'+MODOS.filter(function(m){return m[0]===modo;})[0][1]+'</span></div><div class="qbar"><i id="qbar"></i></div>';}
+  function iniciar(m){modo=m;q=0;acs=0;conf=0;seq=0;ordem=embaralha(F).slice(0,10);[].slice.call(document.querySelectorAll('#modos button')).forEach(function(b){b.classList.toggle('on',b.dataset.m===m);});placar();if(m==='debate')debate();else if(m==='memoria')memoria();else pergunta();}
+  function fim(){document.getElementById('stage').innerHTML=topo()+'<p class="fala">Rodada encerrada. Você acertou '+acs+' de '+ordem.length+'.</p><p class="lead">Troque de modo ou jogue de novo. As falas e as opções vêm em outra ordem.</p><div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-teal" id="de-novo" type="button">Jogar de novo</button></div>';document.getElementById('qbar').style.width='100%';document.getElementById('qn').textContent='fim';document.getElementById('de-novo').onclick=function(){iniciar(modo);};}
+  function pergunta(){resp=false;if(q>=ordem.length){fim();return;}var f=ordem[q];
+    var opcoes,certa,pergunta_;
+    if(modo==='quem'){pergunta_='Que tipo de voz disse isto?';certa=f.grupo;var outros=embaralha(Object.keys(GRUPO).filter(function(g){return g!==f.grupo;})).slice(0,3);opcoes=embaralha([f.grupo].concat(outros)).map(function(g){return [g,GRUPO[g]];});}
+    else if(modo==='lado'){pergunta_='Essa fala é a favor, contra ou no meio?';certa=f.lado;opcoes=['pro','meio','contra'].map(function(l){return [l,LADO[l]];});}
+    else{pergunta_='Em qual tema essa fala se encaixa?';certa=f.tema;var o=embaralha(Object.keys(TM).filter(function(t){return t!==f.tema;})).slice(0,3);opcoes=embaralha([f.tema].concat(o)).map(function(t){return [t,TM[t]];});}
+    document.getElementById('stage').innerHTML=topo()+'<p class="fala">“'+esc(f.pt.valor)+'”<small>'+pergunta_+'</small></p><div class="opts'+(opcoes.length===3?' tres':'')+'" id="opts">'+opcoes.map(function(o){return '<button type="button" data-v="'+o[0]+'">'+esc(o[1])+'</button>';}).join('')+'</div><p class="fb" id="fb"></p><div style="display:flex;gap:8px"><button class="btn btn-teal" id="prox" type="button" style="display:none">Próxima ›</button></div>';
+    document.getElementById('qn').textContent='fala '+(q+1)+' de '+ordem.length;document.getElementById('qbar').style.width=(q/ordem.length*100)+'%';
+    [].slice.call(document.querySelectorAll('#opts button')).forEach(function(b){b.onclick=function(){responder(b,f,certa);};});
+    document.getElementById('prox').onclick=function(){q++;pergunta();};
+    if(G&&!reduce)G.from('#opts button',{y:10,opacity:0,duration:.3,stagger:.05});}
+  function responder(b,f,certa){if(resp)return;resp=true;var ok=b.dataset.v===certa;
+    [].slice.call(document.querySelectorAll('#opts button')).forEach(function(x){x.disabled=true;if(x.dataset.v===certa)x.classList.add('ok');else if(x===b)x.classList.add('no');});
+    if(ok)acs++;dar(modo,10,ok);
+    var rev='<b>'+esc(f.quem)+'</b>, '+esc(f.papel)+'. Posição nesta fala: <b>'+LADO[f.lado]+'</b>. Tema: '+esc(TM[f.tema])+'.';
+    document.getElementById('fb').innerHTML=(ok?'<b style="color:var(--teal)">Isso.</b> ':'<b style="color:var(--red)">Quase.</b> ')+rev+'<span class="src">'+esc(f.contexto)+' <a href="'+esc(f.quote.url)+'" target="_blank" rel="noopener">fonte ↗</a></span>';
+    document.getElementById('prox').style.display='';}
+  /* debate: leve seis falas para o lado certo */
+  function debate(){var ar=embaralha(F.filter(function(x){return x.lado!=='meio';})),pro=ar.filter(function(x){return x.lado==='pro';}).slice(0,3),con=ar.filter(function(x){return x.lado==='contra';}).slice(0,3),pool=embaralha(pro.concat(con)),lcol={pro:[],contra:[]},erros=0,i=0;
+    document.getElementById('stage').innerHTML=topo()+'<p class="lead" style="margin-bottom:6px">Leia a fala e escolha o lado em que ela argumenta. Seis falas, sem pistas de cor.</p><div id="vez"></div><div class="arena"><div class="lado-col" id="col-pro"><h4>Defende o sintético</h4></div><div class="lado-col" id="col-contra"><h4>Alerta contra o sintético</h4></div></div><p class="fb" id="fb"></p>';
+    function vez(){if(i>=pool.length){var ok=erros===0;if(ok){est.sel.debate=true;est.pts+=30;salvar();placar();}document.getElementById('vez').innerHTML='<p class="fala">Debate montado. '+(ok?'Sem erro: +30 pontos e o selo de Debatedor.':'Com '+erros+' erro'+(erros>1?'s':'')+'. Tente sem errar para ganhar o selo.')+'</p><button class="btn btn-teal" id="de-novo" type="button">Montar outro</button>';document.getElementById('de-novo').onclick=debate;document.getElementById('qbar').style.width='100%';document.getElementById('qn').textContent='fim';return;}
+      var f=pool[i];document.getElementById('qn').textContent='fala '+(i+1)+' de '+pool.length;document.getElementById('qbar').style.width=(i/pool.length*100)+'%';
+      document.getElementById('vez').innerHTML='<p class="fala">“'+esc(f.pt.valor)+'”<small>'+esc(f.quem)+'</small></p><div class="opts"><button type="button" data-l="pro">Defende o sintético</button><button type="button" data-l="contra">Alerta contra o sintético</button></div>';
+      [].slice.call(document.querySelectorAll('#vez .opts button')).forEach(function(b){b.onclick=function(){var ok=b.dataset.l===f.lado;if(!ok)erros++;dar('debate',ok?10:0,ok);var d=document.createElement('div');d.className='chipq '+f.lado;d.innerHTML=esc(f.pt.valor.length>110?f.pt.valor.slice(0,107)+'…':f.pt.valor)+'<small>'+esc(f.quem)+' · '+LADO[f.lado]+(ok?'':' · você tinha colocado do outro lado')+'</small>';document.getElementById('col-'+f.lado).appendChild(d);i++;vez();};});}
+    placar();vez();}
+  placar();iniciar('quem');
+  /* 04 leituras: inferência nossa, com as falas que sustentam */
+  var LE=[
+    ['Quem pede é quem vende.','Os dois lados do mercado se acusam de interesse. O sintético é empurrado por fornecedores e agências, e a crítica mais dura também vem de um fornecedor, da pesquisa tradicional.',['f02','f17','f16']],
+    ['O consenso é complemento, não substituição.','Institutos, associações e a academia convergem para modelos mistos: o sintético como ferramenta ao lado da pesquisa humana.',['f08','f37','f29']],
+    ['O resultado geral passa. O recorte e o tempo, não.','Os testes de institutos aceitam o topo, mas reprovam o subgrupo e o acompanhamento ao longo do tempo.',['f27','f07','f28']],
+    ['Tudo parte do dado humano.','A fala mais citada é a do poço de petróleo: o sintético só existe porque a pesquisa humana de qualidade existe, e envelhece sem ela.',['f23','f22','f24']],
+    ['Sem aviso, vira problema de credibilidade.','Transparência aparece em pesquisadores corporativos, na imprensa brasileira e nas associações como condição para usar.',['f05','f43','f33']]
+  ];
+  document.getElementById('leit').innerHTML=LE.map(function(l,i){var ids=l[2],fs=ids.map(function(id){return F.filter(function(x){return x.id===id;})[0];}).filter(Boolean);return '<div class="card" style="margin-bottom:12px"><p class="mono">leitura '+(i+1)+'</p><h3 style="margin:4px 0 6px">'+esc(l[0])+'</h3><p class="lead" style="font-size:15px;margin-bottom:10px">'+esc(l[1])+'</p><div style="display:grid;gap:8px">'+fs.map(vq).join('')+'</div></div>';}).join('');
+  var io=new IntersectionObserver(function(es){es.forEach(function(en){if(!en.isIntersecting)return;idx=scenes.indexOf(en.target);document.getElementById('slideNum').textContent=(idx+1)+' / '+scenes.length;links.forEach(function(a,i){a.classList.toggle('on',i===idx);});});},{root:window.innerWidth<=700?null:deck,rootMargin:'-45% 0px -45% 0px',threshold:0});
+  scenes.forEach(function(s){io.observe(s);});
+  document.addEventListener('keydown',function(e){var tg=(e.target.tagName||'').toLowerCase();if(tg==='input')return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(idx+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1);}});
+})();
+</script>
+</body>
+</html>

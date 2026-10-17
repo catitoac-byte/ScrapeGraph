@@ -214,11 +214,16 @@ def main() -> None:
     SAIDA.parent.mkdir(parents=True, exist_ok=True)
     SAIDA.write_text(html, encoding="utf-8")
     shutil.copy(MODELO.parent / "open-source.html", SAIDA.parent / "open-source.html")
+    falas = (CURSO / "02_Referencias" / "base_sinteticos_v9" / "falas_mercado.json").read_text(encoding="utf-8")
+    vozes = (MODELO.parent / "vozes.html").read_text(encoding="utf-8").replace(
+        "/*__DADOS__*/{}", json.dumps(json.loads(falas), ensure_ascii=False, separators=(",", ":")))
+    (SAIDA.parent / "vozes.html").write_text(vozes, encoding="utf-8")
     if not args.sem_copia:
         shutil.copy(SAIDA, COPIA)
         os_html = (SAIDA.parent / "open-source.html").read_text(encoding="utf-8")
         (COPIA.parent / "open-source.html").write_text(
             os_html.replace('href="index.html"', f'href="{COPIA.name}"'), encoding="utf-8")
+        (COPIA.parent / "vozes.html").write_text(vozes, encoding="utf-8")
         if (SAIDA.parent / "img").exists():
             shutil.copytree(SAIDA.parent / "img", COPIA.parent / "img", dirs_exist_ok=True)
     c = dados["contagem"]
