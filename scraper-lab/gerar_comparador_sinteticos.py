@@ -151,6 +151,28 @@ def montar(cfg: dict, coleta: dict) -> dict:
             "cassi": False,
         })
 
+    # empresas descobertas pela coleta, fora da base inicial
+    for reg in coleta.get("companies", []):
+        if reg.get("sementes") or reg.get("dominio") == cfg["empresa_propria"]["dominio"]:
+            continue
+        col = da_coleta(reg)
+        nome = re.split(r",| - | \| ", (reg.get("name") or {}).get("valor") or reg["dominio"])[0].strip()
+        nivel = col.get("nivel") or "none"
+        val = col.get("val") or {}
+        base_c = col.get("base") or {}
+        preco = col.get("preco") or {}
+        empresas.append({
+            "id": re.sub(r"[^a-z0-9]+", "-", reg["dominio"]).strip("-"), "n": nome, "produto": "",
+            "url": reg["url"], "dom": reg["dominio"], "grupo": "Descoberta pela coleta", "reg": "não informada",
+            "hq": "not found", "of": col.get("ofertas") or [], "base": base_c.get("v") or "not_disclosed",
+            "base_q": base_c.get("q", ""), "val": nivel if nivel in ("none", "self_reported", "third_party", "peer_reviewed") else "none",
+            "val_q": val.get("q", "") if val.get("t") == "literal" else "", "val_b": "",
+            "preco": preco.get("q") or "not found", "fund": "not found", "cli": "not found",
+            "head": (col.get("head") or {}).get("q", ""), "video": "", "ressalva": "", "fundada": "not found",
+            "fontes": col.get("urls", [])[:3], "site": reg["url"], "casos": [], "coleta": col, "cassi": False,
+            "nova": True,
+        })
+
     p = cfg["empresa_propria"]
     empresas.insert(0, {
         "id": "cassi-ai", "n": p["name"], "produto": "Synthetic Lab e Synthetic Vertical Simulator",
