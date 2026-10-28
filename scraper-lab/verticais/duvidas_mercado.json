@@ -1,0 +1,775 @@
+{
+  "id": "duvidas_mercado",
+  "titulo": "Perguntas, dores, objeções e mitos do mercado por produto da Cassi.ai",
+  "mercado": "Perguntas e falas literais de compradores, praticantes, fornecedores, associações e comentaristas de pesquisa de mercado, inovação e insights sobre o tema de cada produto da Cassi.ai, para pautar vídeos de 30 a 60 segundos no LinkedIn",
+  "janela": {
+    "inicio": "2025-01-01",
+    "fim": "2026-10-27"
+  },
+  "idiomas": [
+    "en",
+    "pt",
+    "es"
+  ],
+  "regioes": [
+    "global"
+  ],
+  "saida": "duvidas_mercado",
+  "entrada_produtos": "~/Antigravity Projects/portfolio-content-output/videos-linkedin/produtos.json",
+  "saida_final": "~/Antigravity Projects/portfolio-content-output/videos-linkedin/varredura-mercado/achados/<slug>.json",
+  "schema": "~/Antigravity Projects/portfolio-content-output/videos-linkedin/varredura-mercado/achados.schema.json",
+  "ordem": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5"
+  ],
+  "execucao": "uma corrida por produto (slug), com cache e retomada; cada produto grava um arquivo",
+  "teto_buscas": {
+    "P1": 10,
+    "P2": 8,
+    "P3": 6,
+    "P4": 6
+  },
+  "minimo_achados_por_produto": 12,
+  "teto_paginas_por_busca": 6,
+  "fontes_por_varredura": {
+    "P1": [
+      "forums e comunidades de plataformas (Qualtrics, Alchemer, SurveyMonkey, Decipher/Forsta)",
+      "Quirk's",
+      "GreenBook",
+      "Research Live",
+      "ESOMAR",
+      "Insights Association",
+      "MRS",
+      "ABEP",
+      "Mundo do Marketing",
+      "artigos colaborativos do LinkedIn (linkedin.com/advice)",
+      "posts públicos do LinkedIn (sem login)",
+      "YouTube (descrição e transcrição)",
+      "podcasts com transcrição (GreenBook The Exchange e similares)",
+      "Reddit se acessível",
+      "perguntas e respostas de webinar",
+      "blocos de People also ask e FAQ de páginas"
+    ],
+    "P2": [
+      "entrevistas de cliente em Research Live e Quirk's",
+      "relatos de conferência (IIEX, QRCA, ESOMAR)",
+      "posts públicos do LinkedIn",
+      "podcasts",
+      "relatórios de associações (MRS Delphi, Insights Association)"
+    ],
+    "P3": [
+      "relatos de pesquisadores corporativos em Quirk's e GreenBook",
+      "comunicados de institutos de pesquisa",
+      "relatórios de associações",
+      "artigos de crítica à categoria"
+    ],
+    "P4": [
+      "guias de fornecedores que desfazem confusão de termos",
+      "artigos de associações e academia",
+      "imprensa de marketing",
+      "preprints e revisões sistemáticas, só o que a página diz"
+    ],
+    "P5": [
+      "nenhuma: usa só os achados já gravados"
+    ]
+  },
+  "listas_terceiros": [
+    {
+      "nome": "GreenBook, insights podcast e blog",
+      "url": "https://www.greenbook.org/insights"
+    },
+    {
+      "nome": "Quirk's, artigos",
+      "url": "https://www.quirks.com/articles"
+    },
+    {
+      "nome": "Research Live",
+      "url": "https://www.research-live.com"
+    },
+    {
+      "nome": "ESOMAR, notícias e guias",
+      "url": "https://esomar.org"
+    },
+    {
+      "nome": "Insights Association, artigos",
+      "url": "https://www.insightsassociation.org/News-Updates/Articles"
+    },
+    {
+      "nome": "MRS, notícias e relatórios",
+      "url": "https://www.mrs.org.uk"
+    },
+    {
+      "nome": "ABEP",
+      "url": "https://www.abep.org"
+    },
+    {
+      "nome": "Mundo do Marketing",
+      "url": "https://mundodomarketing.com.br"
+    },
+    {
+      "nome": "LinkedIn, artigos colaborativos",
+      "url": "https://www.linkedin.com/advice"
+    }
+  ],
+  "bloqueios_conhecidos": {
+    "reddit.com": "HTTP 403 a acesso direto; arquivos terceiros de Reddit também recusam agentes (Pullpush devolve aviso de limite e recusa raspagem por agente). Registrar not accessible e seguir",
+    "linkedin.com/in/": "HTTP 999 em perfil pessoal",
+    "linkedin.com/posts/": "abre por curl em post de página; conferir caso a caso, sem login",
+    "g2.com": "HTTP 403 a acesso direto",
+    "capterra.com": "HTTP 403 a acesso direto",
+    "trustradius.com": "HTTP 403 a acesso direto",
+    "gartner.com": "HTTP 403 em Gartner Reviews",
+    "html.duckduckgo.com": "desafio anti-robô após poucas consultas seguidas",
+    "bemparana.com.br": "curl devolve página vazia; abrir por navegador renderizado ou registrar not accessible",
+    "perfil.com": "curl devolve página vazia; abrir por navegador renderizado ou registrar not accessible",
+    "mundodomarketing.com.br": "curl devolve página vazia; abre por fetch com renderização",
+    "opionate.com": "curl devolveu vazio; abriu por fetch com renderização",
+    "community.qualtrics.com": "busca escopada não devolveu tópico; testar abertura direta antes de contar como achado",
+    "youtube.com": "transcrição só quando a página expõe; senão not accessible"
+  },
+  "vocabulario": {
+    "varredura": [
+      "P1",
+      "P2",
+      "P3",
+      "P4"
+    ],
+    "tipo_campo": [
+      "literal",
+      "traducao_livre",
+      "inferido",
+      "not found",
+      "not accessible"
+    ],
+    "grupo": [
+      "comprador",
+      "praticante",
+      "fornecedor",
+      "comentarista",
+      "associacao",
+      "academico"
+    ],
+    "idioma": [
+      "en",
+      "pt",
+      "es",
+      "outro"
+    ],
+    "potencial_video": [
+      "alto",
+      "medio",
+      "baixo"
+    ],
+    "data_pagina": "AAAA-MM-DD; AAAA quando a página só mostra o ano; not found quando não há data visível"
+  },
+  "regras_de_coleta": [
+    "Só vale página realmente aberta. Snippet de busca não vira achado.",
+    "pergunta_ou_fala.valor é cópia literal do texto aberto, no idioma original; fragmento fica fragmento. A tradução vai em pt, marcada traducao_livre.",
+    "O validador confere cada valor literal contra o texto guardado da página. Violação falha a corrida.",
+    "Bloqueado vira not accessible na meta.bloqueados; nunca contornar, nunca usar arquivo terceiro que recuse agentes.",
+    "Nunca deduzir número, cliente nem custo. Número só entra quando a fonte o diz, e fica atribuído a ela.",
+    "Nunca escrever nome de content-direction/clientes-nunca-citar.json em campo de saída nosso. Cases de clientes da Cassi.ai não entram.",
+    "Texto nosso (quem, papel, tema, angulo_video, lacunas, nota) em português do Brasil, sem travessão separando orações e sem a estrutura não é X, é Y.",
+    "Mínimo de 12 achados por produto; se faltar, registrar a lacuna em sintese.lacunas em vez de completar com citação fraca.",
+    "P5 é síntese por produto, marcada como inferida, sem busca nova."
+  ],
+  "modelos_por_varredura": {
+    "P1": {
+      "en": [
+        "{tema} how do I",
+        "{tema} questions researchers ask",
+        "{tema} FAQ"
+      ],
+      "pt": [
+        "{tema} como fazer dúvidas",
+        "{tema} perguntas frequentes"
+      ],
+      "es": [
+        "{tema} cómo hacer dudas",
+        "{tema} preguntas frecuentes"
+      ]
+    },
+    "P2": {
+      "en": [
+        "{tema} still manual frustrating",
+        "{tema} biggest pain researchers"
+      ],
+      "pt": [
+        "{tema} ainda manual dor do pesquisador"
+      ],
+      "es": [
+        "{tema} todavía manual dolor del investigador"
+      ]
+    },
+    "P3": {
+      "en": [
+        "{tema} concerns why not adopt",
+        "{tema} can we trust"
+      ],
+      "pt": [
+        "{tema} preocupações por que não adotar"
+      ],
+      "es": [
+        "{tema} preocupaciones por qué no adoptar"
+      ]
+    },
+    "P4": {
+      "en": [
+        "{tema} myth misconception",
+        "{tema} vs difference between"
+      ],
+      "pt": [
+        "{tema} mito confusão diferença entre"
+      ],
+      "es": [
+        "{tema} mito confusión diferencia entre"
+      ]
+    }
+  },
+  "produtos": {
+    "deskor": {
+      "nome": "Deskor",
+      "categoria": "deskor",
+      "temas_de_mercado": [
+        "enterprise AI adoption in insights teams",
+        "knowledge management market research",
+        "research repository",
+        "ChatGPT Copilot limits for research teams",
+        "AI governance insights"
+      ],
+      "consultas": {
+        "en": [
+          "enterprise AI adoption insights teams barriers",
+          "how to build a research knowledge repository insights team",
+          "ChatGPT Copilot limits for market research teams",
+          "AI governance insights function data confidentiality",
+          "why research repositories fail adoption"
+        ],
+        "pt": [
+          "adoção de IA em times de insights empresa",
+          "repositório de pesquisas conhecimento da empresa",
+          "governança de IA em pesquisa de mercado dados confidenciais"
+        ],
+        "es": [
+          "adopción de IA en equipos de insights",
+          "repositorio de investigaciones conocimiento empresa"
+        ]
+      },
+      "tema_pt": "adoção de IA e conhecimento da empresa em times de insights",
+      "trabalho_pt": "O time de insights guarda estudos, relatórios e apresentações de anos e precisa responder perguntas novas com esse acervo",
+      "hoje_pt": "a busca é por pastas, e-mails e pessoas que lembram onde está o estudo antigo"
+    },
+    "survey-qa": {
+      "nome": "Survey QA",
+      "categoria": "quant",
+      "temas_de_mercado": [
+        "survey questionnaire testing",
+        "survey programming QA",
+        "skip logic errors fieldwork",
+        "questionnaire script testing"
+      ],
+      "consultas": {
+        "en": [
+          "survey programming QA testing every path",
+          "skip logic errors found after fieldwork launch",
+          "how to test a questionnaire script before launch",
+          "soft launch survey data quality mistakes",
+          "automated survey testing market research"
+        ],
+        "pt": [
+          "como testar questionário online erros de programação antes do campo",
+          "teste de lógica de questionário pesquisa de mercado"
+        ],
+        "es": [
+          "cómo probar un cuestionario online errores de programación antes del campo",
+          "pruebas de lógica en encuestas investigación de mercados"
+        ]
+      },
+      "tema_pt": "teste de questionário antes do campo",
+      "trabalho_pt": "Antes de abrir o campo, alguém testa o questionário online, caminho por caminho, para achar erro de lógica e de programação",
+      "hoje_pt": "essa conferência ainda é feita à mão, respondendo a pesquisa várias vezes com cada combinação de respostas"
+    },
+    "survey-studio": {
+      "nome": "Survey Studio",
+      "categoria": "quant",
+      "temas_de_mercado": [
+        "survey respondent engagement",
+        "long questionnaire dropout",
+        "gamified surveys",
+        "survey fatigue data quality"
+      ],
+      "consultas": {
+        "en": [
+          "long questionnaire dropout survey fatigue data quality",
+          "gamified surveys respondent engagement does it work",
+          "survey respondent engagement low quality straightlining",
+          "how long is too long survey length dropout"
+        ],
+        "pt": [
+          "pesquisa online muito longa abandono fadiga do respondente",
+          "pesquisa gamificada engajamento respondente"
+        ],
+        "es": [
+          "encuestas largas abandono fatiga del encuestado",
+          "encuestas gamificadas engagement"
+        ]
+      },
+      "tema_pt": "engajamento e abandono em pesquisas longas",
+      "trabalho_pt": "O time desenha o questionário e acompanha quantos respondentes chegam ao fim com respostas de qualidade",
+      "hoje_pt": "o abandono e a resposta apressada só aparecem depois que o campo já rodou"
+    },
+    "shopper-insight-lab": {
+      "nome": "Shopper Insight Lab",
+      "categoria": "quant",
+      "temas_de_mercado": [
+        "virtual shelf testing",
+        "planogram research",
+        "shopper research",
+        "packaging shelf test"
+      ],
+      "consultas": {
+        "en": [
+          "virtual shelf testing vs real shelf accuracy",
+          "planogram research shopper behavior method",
+          "packaging shelf test how it works",
+          "shopper research in-store vs online simulation"
+        ],
+        "pt": [
+          "teste de gôndola virtual pesquisa shopper",
+          "pesquisa de planograma comportamento do comprador"
+        ],
+        "es": [
+          "prueba de góndola virtual investigación shopper",
+          "investigación de planograma comportamiento del comprador"
+        ]
+      },
+      "tema_pt": "teste de gôndola virtual e planograma",
+      "trabalho_pt": "A equipe de shopper testa a disposição de produtos e embalagens na prateleira antes de mudar a loja",
+      "hoje_pt": "o teste depende de loja real ou de montagem física, e leva semanas"
+    },
+    "qualilab": {
+      "nome": "QualiLab",
+      "categoria": "qual",
+      "temas_de_mercado": [
+        "qualitative analysis AI",
+        "focus group analysis transcripts",
+        "qualitative coding",
+        "AI moderator qualitative research"
+      ],
+      "consultas": {
+        "en": [
+          "AI qualitative analysis hallucinate quotes themes",
+          "can ChatGPT analyze interview transcripts qualitative",
+          "AI moderator vs human moderator qualitative research",
+          "how long to code focus group transcripts manually",
+          "qualitative coding AI audit trail researchers"
+        ],
+        "pt": [
+          "análise qualitativa com IA grupo focal transcrição",
+          "moderador de IA pesquisa qualitativa substitui humano",
+          "codificação qualitativa com IA pesquisadores dúvidas"
+        ],
+        "es": [
+          "análisis cualitativo con inteligencia artificial grupos focales",
+          "moderador de IA investigación cualitativa"
+        ]
+      },
+      "tema_pt": "análise de entrevistas e grupos com IA",
+      "trabalho_pt": "O pesquisador transcreve, lê e codifica entrevistas e grupos focais para chegar aos temas do estudo",
+      "hoje_pt": "a codificação ainda é feita linha a linha, em planilha ou em documento, e leva dias"
+    },
+    "video-lab": {
+      "nome": "Video Lab",
+      "categoria": "qual",
+      "temas_de_mercado": [
+        "video ethnography analysis",
+        "video research coding behavior",
+        "say do gap research",
+        "in-home video research"
+      ],
+      "consultas": {
+        "en": [
+          "video ethnography analysis time consuming researchers",
+          "say do gap research what people say versus do",
+          "in-home video research coding behavior",
+          "analyzing video interviews at scale qualitative"
+        ],
+        "pt": [
+          "etnografia em vídeo análise pesquisa de mercado",
+          "diferença entre o que o consumidor diz e faz pesquisa"
+        ],
+        "es": [
+          "etnografía en video análisis investigación de mercados",
+          "diferencia entre lo que dice y hace el consumidor"
+        ]
+      },
+      "tema_pt": "análise de vídeo em pesquisa qualitativa",
+      "trabalho_pt": "O time assiste a horas de vídeo de entrevistas e visitas à casa do consumidor para registrar o que a pessoa faz e diz",
+      "hoje_pt": "alguém assiste a tudo e anota à mão cada trecho que importa"
+    },
+    "community-lab": {
+      "nome": "Community Lab",
+      "categoria": "qual",
+      "temas_de_mercado": [
+        "insight communities MROC",
+        "event networking engagement",
+        "online research community engagement",
+        "WhatsApp research"
+      ],
+      "consultas": {
+        "en": [
+          "insight communities MROC engagement drops",
+          "online research community member engagement tips",
+          "WhatsApp research groups qualitative",
+          "event networking engagement research community"
+        ],
+        "pt": [
+          "comunidade online de pesquisa engajamento dos membros",
+          "pesquisa qualitativa por WhatsApp"
+        ],
+        "es": [
+          "comunidades online de investigación engagement de miembros",
+          "investigación cualitativa por WhatsApp"
+        ]
+      },
+      "tema_pt": "engajamento em comunidades de pesquisa e eventos",
+      "trabalho_pt": "A equipe mantém uma comunidade de participantes ativa ao longo de semanas, em plataforma ou em grupo de WhatsApp",
+      "hoje_pt": "o acompanhamento e a leitura das mensagens são manuais, e o engajamento cai com o tempo"
+    },
+    "synthetic-lab": {
+      "nome": "Synthetic Lab",
+      "categoria": "synthetic",
+      "temas_de_mercado": [
+        "synthetic personas",
+        "synthetic respondents validity",
+        "synthetic data market research",
+        "digital twins consumers"
+      ],
+      "consultas": {
+        "en": [
+          "synthetic respondents can you trust validity",
+          "synthetic personas vs synthetic data difference",
+          "synthetic data market research stakeholders objections",
+          "digital twins of consumers market research skeptical",
+          "synthetic respondents subgroup accuracy"
+        ],
+        "pt": [
+          "respondentes sintéticos pesquisa de mercado confiável",
+          "dados sintéticos pesquisa LGPD diferença persona sintética"
+        ],
+        "es": [
+          "respondentes sintéticos investigación de mercados confiable",
+          "datos sintéticos vs personas sintéticas diferencia"
+        ]
+      },
+      "tema_pt": "respondentes e personas sintéticas",
+      "trabalho_pt": "O time de pesquisa precisa de respostas rápidas de um público antes de ir a campo",
+      "hoje_pt": "a resposta vem de um estudo novo com pessoas reais, com prazo de semanas"
+    },
+    "synthetic-vertical-simulator": {
+      "nome": "Synthetic Vertical Simulator",
+      "categoria": "synthetic",
+      "temas_de_mercado": [
+        "agent based simulation consumers",
+        "what-if scenario simulation market research",
+        "population simulation AI agents"
+      ],
+      "consultas": {
+        "en": [
+          "agent based simulation consumers market research validity",
+          "what-if scenario simulation market research",
+          "population simulation AI agents market research",
+          "synthetic population simulation accuracy"
+        ],
+        "pt": [
+          "simulação de cenários com agentes de IA pesquisa de mercado",
+          "simulação de população sintética"
+        ],
+        "es": [
+          "simulación de escenarios con agentes de IA investigación de mercados",
+          "simulación de población sintética"
+        ]
+      },
+      "tema_pt": "simulação de cenários com agentes de IA",
+      "trabalho_pt": "A equipe testa cenários de tipo e se sobre o público de um setor antes de decidir",
+      "hoje_pt": "o cenário é discutido em reunião ou testado em um estudo isolado para cada hipótese"
+    },
+    "synthetic-mall-simulator": {
+      "nome": "Synthetic Mall Simulator",
+      "categoria": "synthetic",
+      "temas_de_mercado": [
+        "social influence shopping behavior simulation",
+        "mall shopper behavior research"
+      ],
+      "consultas": {
+        "en": [
+          "social influence shopping behavior simulation",
+          "mall shopper behavior research simulation agents",
+          "simulating shopper crowds store traffic AI"
+        ],
+        "pt": [
+          "simulação de comportamento de compra em shopping",
+          "influência social no comportamento de compra pesquisa"
+        ],
+        "es": [
+          "simulación de comportamiento de compra en centros comerciales",
+          "influencia social en compras investigación"
+        ]
+      },
+      "tema_pt": "influência social e comportamento de compra",
+      "trabalho_pt": "A equipe estuda como a presença de outras pessoas muda o que alguém compra num centro de compras",
+      "hoje_pt": "isso é observado em campo, com contagem manual e entrevistas na saída"
+    },
+    "synth-impacts-hub": {
+      "nome": "Synth Impacts Hub",
+      "categoria": "synthetic",
+      "temas_de_mercado": [
+        "bias in synthetic research results",
+        "synthetic research reporting"
+      ],
+      "consultas": {
+        "en": [
+          "bias in synthetic research results disclosure",
+          "synthetic research reporting how to label",
+          "synthetic data validation framework insights",
+          "synthetic respondents bias subgroup error"
+        ],
+        "pt": [
+          "viés em pesquisa sintética como reportar",
+          "rotular resultado sintético relatório pesquisa"
+        ],
+        "es": [
+          "sesgo en investigación sintética cómo reportar",
+          "etiquetar resultados sintéticos informe"
+        ]
+      },
+      "tema_pt": "viés e relato de pesquisa sintética",
+      "trabalho_pt": "Quem usa resultado sintético precisa informar o que veio da máquina e onde pode haver erro",
+      "hoje_pt": "essa rotulagem é escrita à mão em cada relatório, sem padrão entre os estudos"
+    },
+    "shelf-lab": {
+      "nome": "Shelf-Lab",
+      "categoria": "retail",
+      "temas_de_mercado": [
+        "in-store shopper analytics cameras",
+        "retail activation measurement control stores",
+        "shelf conversion measurement",
+        "retail media in-store measurement"
+      ],
+      "consultas": {
+        "en": [
+          "in-store shopper analytics cameras privacy retail",
+          "retail activation measurement control stores",
+          "shelf conversion measurement in store",
+          "retail media in-store measurement incrementality"
+        ],
+        "pt": [
+          "medição de ativação no varejo loja controle",
+          "câmeras analíticas em loja privacidade LGPD",
+          "mídia de varejo na loja medição"
+        ],
+        "es": [
+          "medición de activación en retail tienda control",
+          "analítica con cámaras en tienda privacidad"
+        ]
+      },
+      "tema_pt": "medição de ativação e conversão na loja",
+      "trabalho_pt": "A indústria mede se uma ativação no ponto de venda mudou a conversão da gôndola, comparando com lojas de controle",
+      "hoje_pt": "a comparação é montada em planilha, loja a loja, depois que a campanha acabou"
+    },
+    "review-pulse": {
+      "nome": "Review Pulse",
+      "categoria": "retail",
+      "temas_de_mercado": [
+        "Google reviews analysis retail chains",
+        "customer review monitoring multi-location",
+        "competitor reviews benchmarking"
+      ],
+      "consultas": {
+        "en": [
+          "Google reviews analysis multi-location retail chains",
+          "customer review monitoring multi-location",
+          "competitor reviews benchmarking local",
+          "review analysis for retail store managers"
+        ],
+        "pt": [
+          "análise de avaliações do Google redes de varejo",
+          "monitoramento de avaliações de lojas concorrentes"
+        ],
+        "es": [
+          "análisis de reseñas de Google cadenas minoristas",
+          "monitoreo de reseñas de tiendas competidoras"
+        ]
+      },
+      "tema_pt": "avaliações de clientes de redes de lojas",
+      "trabalho_pt": "O gestor de uma rede lê as avaliações do Google de cada loja e as compara com as dos concorrentes",
+      "hoje_pt": "a leitura ainda é manual, loja a loja, e as comparações vivem em planilha"
+    },
+    "dash-lab": {
+      "nome": "Dash Lab",
+      "categoria": "outputs",
+      "temas_de_mercado": [
+        "market research dashboards",
+        "tracking study reporting",
+        "significance testing crosstabs",
+        "survey data visualization"
+      ],
+      "consultas": {
+        "en": [
+          "market research dashboards tracking study reporting",
+          "significance testing crosstabs dashboard",
+          "survey data visualization researchers pain",
+          "automated tracking study reports"
+        ],
+        "pt": [
+          "dashboard de pesquisa de mercado tracking relatório",
+          "teste de significância tabelas cruzadas"
+        ],
+        "es": [
+          "dashboards de investigación de mercados tracking informes",
+          "pruebas de significancia tablas cruzadas"
+        ]
+      },
+      "tema_pt": "dashboards e relatórios de tracking",
+      "trabalho_pt": "O time monta tabelas cruzadas, testes de significância e gráficos a cada onda de um estudo de acompanhamento",
+      "hoje_pt": "o relatório ainda é montado na mão, onda após onda, em planilha e slides"
+    },
+    "conversational-insight-dashboard": {
+      "nome": "Conversational Insight Dashboard",
+      "categoria": "outputs",
+      "temas_de_mercado": [
+        "conversational analytics insights",
+        "ask your data natural language research"
+      ],
+      "consultas": {
+        "en": [
+          "ask your data natural language market research",
+          "conversational analytics insights team trust",
+          "chat with survey data accuracy",
+          "natural language querying research data hallucination"
+        ],
+        "pt": [
+          "conversar com dados de pesquisa linguagem natural",
+          "analytics conversacional time de insights confiança"
+        ],
+        "es": [
+          "conversar con datos de investigación lenguaje natural",
+          "analítica conversacional equipo de insights"
+        ]
+      },
+      "tema_pt": "perguntas aos dados da pesquisa em linguagem natural",
+      "trabalho_pt": "Quem decide faz perguntas aos dados de pesquisa e espera uma resposta confiável na hora da reunião",
+      "hoje_pt": "a pergunta vai para o analista, que volta com a resposta dias depois"
+    }
+  },
+  "clientes_nunca_citar": "~/Antigravity Projects/portfolio-content-output/content-direction/clientes-nunca-citar.json",
+  "referencia_achados": "~/Antigravity Projects/portfolio-content-output/videos-linkedin/varredura-mercado/achados",
+  "teto_buscas_por_varredura": {
+    "P1": 10,
+    "P2": 8,
+    "P3": 6,
+    "P4": 6
+  },
+  "teto_buscas_por_produto": 30,
+  "dominios_ignorados": [
+    "google.com",
+    "bing.com",
+    "duckduckgo.com",
+    "facebook.com",
+    "instagram.com",
+    "x.com",
+    "twitter.com",
+    "pinterest.com",
+    "amazon.com"
+  ],
+  "dominios_associacoes": [
+    "esomar.org",
+    "insightsassociation.org",
+    "mrs.org.uk",
+    "abep.org",
+    "qrca.org",
+    "aapor.org",
+    "amaonline.org",
+    "insightsassociation.org",
+    "mria-arim.ca",
+    "abipeme.org.br",
+    "anbima.com.br"
+  ],
+  "dominios_academicos": [
+    "academia.edu",
+    "acm.org",
+    "arxiv.org",
+    "ebrary.net",
+    "epicpeople.org",
+    "ieee.org",
+    "journals.sagepub.com",
+    "jstor.org",
+    "nature.com",
+    "pepsic.scielo.org",
+    "redalyc.org",
+    "researchgate.net",
+    "sagepub.com",
+    "scielo.br",
+    "scielo.org",
+    "scielo.org.co",
+    "sciencedirect.com",
+    "springer.com",
+    "ssrn.com",
+    "tandfonline.com",
+    "taylorfrancis.com",
+    "wiley.com"
+  ],
+  "dominios_comentaristas": [
+    "greenbook.org",
+    "quirks.com",
+    "research-live.com",
+    "mundodomarketing.com.br",
+    "linkedin.com",
+    "medium.com",
+    "hbr.org",
+    "marketingweek.com",
+    "adage.com",
+    "forbes.com",
+    "thedrum.com",
+    "propmark.com.br",
+    "meioemensagem.com.br",
+    "exame.com",
+    "infomoney.com.br",
+    "eleconomista.es",
+    "expansion.com",
+    "ipsos.com"
+  ],
+  "tema_minimo_tokens": 1,
+  "max_achados_por_pagina": 3,
+  "max_achados_por_produto": 40,
+  "minimos": {
+    "achados": 12,
+    "grupos": 3,
+    "idiomas": 2
+  },
+  "padroes": {
+    "P1": {
+      "en": "\\?\\s*$",
+      "pt": "\\?\\s*$",
+      "es": "\\?\\s*$"
+    },
+    "P2": {
+      "en": "\\b(still (?:manual|done by hand|rely|use spreadsheets?)|manual(?:ly)?|time[- ]consuming|tedious|pain point|frustrat\\w+|struggl\\w+|bottleneck|takes? (?:days|weeks|hours)|hours of|painful|error[- ]prone)\\b",
+      "pt": "\\b(ainda (?:\\w+ ){0,2}(?:manual|planilha|excel)|manualmente|demorad\\w+|trabalhos[oa]|dor(?:es)? do|gargalo|horas de|dias para|propens[oa] a erro)\\b",
+      "es": "\\b(todav[ií]a (?:\\w+ ){0,2}(?:manual|planilla|excel)|manualmente|lento|tedios[oa]|dolor(?:es)? del|cuello de botella|horas de|propens[oa] a errores)\\b"
+    },
+    "P3": {
+      "en": "\\b(concerns?|trust(?:ed|worthy)?|risks?|privacy|skeptic\\w*|hesitan\\w+|worr(?:y|ied|ies)|hallucinat\\w+|bias(?:ed)?|do(?:es)?n[’']t trust|not (?:ready|reliable)|confidential\\w*|governance)\\b",
+      "pt": "\\b(preocupa\\w+|confian[cç]a|desconfi\\w+|risco\\w*|privacidade|c[eé]tic\\w+|alucin\\w+|vi[eé]s|confidencial\\w*|governan[cç]a|LGPD)\\b",
+      "es": "\\b(preocupa\\w+|confian\\w+|desconfi\\w+|riesgos?|privacidad|esc[eé]ptic\\w+|alucin\\w+|sesgo\\w*|confidencial\\w*|gobernanza)\\b"
+    },
+    "P4": {
+      "en": "\\b(myths?|misconceptions?|mistaken|common mistake|not (?:the same|interchangeable)|difference between|confus\\w+|often (?:mistaken|confused)|versus|vs\\.?)\\b",
+      "pt": "\\b(mitos?|equ[ií]vocos?|confus[aã]o|diferen[cç]a entre|n[aã]o (?:s[aã]o|[eé]) (?:a mesma coisa|sin[oô]nimos?)|versus)\\b",
+      "es": "\\b(mitos?|malentendidos?|confusi[oó]n|diferencia entre|no (?:son|es) (?:lo mismo|sin[oó]nimos?)|versus)\\b"
+    }
+  }
+}

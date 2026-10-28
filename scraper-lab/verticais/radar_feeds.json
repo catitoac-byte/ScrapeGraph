@@ -1,0 +1,404 @@
+{
+  "_comentario": "Feeds e sitemaps do setor de pesquisa, insights e inovação. Cada fonte leva o último status medido por 'raspar_radar.py feeds --atualizar'. Fontes sem feed público usam o sitemap.",
+  "fontes_feeds": [
+    {
+      "publicador": "Quirk's",
+      "idioma": "en",
+      "tipo": "sitemap",
+      "url": "https://www.quirks.com/sitemap.xml",
+      "incluir": "/articles/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "sitemap",
+        "itens": 12914,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 9877,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "GreenBook",
+      "idioma": "en",
+      "tipo": "sitemap",
+      "url": "https://www.greenbook.org/sitemaps/articles.xml",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "sitemap",
+        "itens": 4558,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 250,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Research Live",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.research-live.com/feed/rss.php",
+      "status": {
+        "status_http": 200,
+        "estado": "parado",
+        "tipo_detectado": "rss",
+        "itens": 8,
+        "mais_novo": "2025-01-22",
+        "itens_na_janela": 0,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      },
+      "nota": "Feed oficial (/feed/rss.php) está parado desde jan/2025; o site mudou de domínio e researchlive.com redireciona para uma página estacionada. Acompanhar."
+    },
+    {
+      "publicador": "ESOMAR",
+      "idioma": "en",
+      "tipo": "sitemap",
+      "url": "https://www.esomar.org/sitemap.xml",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "sitemap",
+        "itens": 874,
+        "mais_novo": "2026-10-28",
+        "itens_na_janela": 78,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "MRS",
+      "idioma": "en",
+      "tipo": "sitemap",
+      "url": "https://www.mrs.org.uk/sitemap.xml",
+      "status": {
+        "status_http": 200,
+        "estado": "parado",
+        "tipo_detectado": "sitemap",
+        "itens": 583,
+        "mais_novo": "2018-04-03",
+        "itens_na_janela": 0,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      },
+      "nota": "Sitemap sem lastmod útil (2018); não serve para janela. Sem feed público encontrado."
+    },
+    {
+      "publicador": "Retail Dive",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.retaildive.com/feeds/news/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 10,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 10,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Customer Experience Dive (CX Dive)",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.customerexperiencedive.com/feeds/news/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 10,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 10,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "MarTech",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://martech.org/feed/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 10,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 10,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Marketing Dive",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.marketingdive.com/feeds/news/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 10,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 10,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Marketing Week",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.marketingweek.com/feed/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 40,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 40,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Mundo do Marketing",
+      "idioma": "pt",
+      "tipo": "sitemap",
+      "url": "https://www.mundodomarketing.com.br/sitemap.xml",
+      "status": {
+        "status_http": 200,
+        "estado": "sem_datas",
+        "tipo_detectado": "sitemap",
+        "itens": 13477,
+        "mais_novo": "",
+        "itens_na_janela": 0,
+        "motivo": "sem datas legíveis",
+        "verificado_em": "2026-10-27"
+      },
+      "nota": "Sitemap sem datas e site montado por JavaScript (Framer); /feed-rss é página HTML, não feed. Sem uso na janela até haver feed."
+    },
+    {
+      "publicador": "Meio & Mensagem",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://www.meioemensagem.com.br/feed",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 30,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 30,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Consumidor Moderno",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://www.consumidormoderno.com.br/feed",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 12,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 12,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Mercado & Consumo",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://mercadoeconsumo.com.br/feed/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 10,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 10,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Fast Company Brasil",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://fastcompanybrasil.com/feed/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 10,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 10,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "ABEP",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://abep.org/feed/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 10,
+        "mais_novo": "2026-10-09",
+        "itens_na_janela": 3,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Merca2.0",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.merca20.com/feed/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 300,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 300,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Marketing Directo",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.marketingdirecto.com/feed",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 100,
+        "mais_novo": "2026-10-27",
+        "itens_na_janela": 100,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "GreenBook Podcast",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://feeds.captivate.fm/greenbook/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 181,
+        "mais_novo": "2026-10-26",
+        "itens_na_janela": 7,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "The Exchange by GreenBook (podcast)",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://feeds.captivate.fm/the-exchange-by-greenbook/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 74,
+        "mais_novo": "2026-10-26",
+        "itens_na_janela": 13,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Insights & Innovators, MRII (podcast)",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://feeds.captivate.fm/insights-innovators/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 82,
+        "mais_novo": "2026-10-22",
+        "itens_na_janela": 10,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Data Gurus (podcast)",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.infinity-2.com/feed/podcast/",
+      "status": {
+        "status_http": 200,
+        "estado": "vivo",
+        "tipo_detectado": "rss",
+        "itens": 264,
+        "mais_novo": "2026-10-21",
+        "itens_na_janela": 5,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    },
+    {
+      "publicador": "Detrás del Insight, Eco Market Research (podcast)",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://podcasts.eco-mr.com/rss",
+      "status": {
+        "status_http": 200,
+        "estado": "parado",
+        "tipo_detectado": "rss",
+        "itens": 12,
+        "mais_novo": "2026-06-23",
+        "itens_na_janela": 0,
+        "motivo": "",
+        "verificado_em": "2026-10-27"
+      }
+    }
+  ],
+  "sem_feed_publico": [
+    {
+      "publicador": "Insights Association",
+      "idioma": "en",
+      "nota": "Sem RSS (/feed e /rss.xml dão 404) e /sitemap.xml devolve HTML. Usar consulta de busca com site:insightsassociation.org."
+    },
+    {
+      "publicador": "ESOMAR Research World (rwconnect.esomar.org)",
+      "idioma": "en",
+      "nota": "Sem feed; o conteúdo editorial está no sitemap de esomar.org, já listado como ESOMAR."
+    },
+    {
+      "publicador": "Blog da IIEX/GreenBook",
+      "idioma": "en",
+      "nota": "Sem feed próprio; coberto pelo sitemap de artigos do GreenBook."
+    },
+    {
+      "publicador": "Quirk's podcast",
+      "idioma": "en",
+      "nota": "Sem feed público encontrado."
+    },
+    {
+      "publicador": "CX Dive (cxdive.com)",
+      "idioma": "en",
+      "nota": "Domínio cxdive.com não resolve; o feed vive em customerexperiencedive.com."
+    }
+  ]
+}

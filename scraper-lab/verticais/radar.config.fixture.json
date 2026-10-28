@@ -1,0 +1,231 @@
+{
+  "_comentario": "Config de fixture (formato do radar, ver docs/radar.md). A squad do radar escreve o config definitivo; as chaves abaixo são as que a camada de coleta lê.",
+  "fontes_feeds": [
+    {
+      "publicador": "Quirk's",
+      "idioma": "en",
+      "tipo": "sitemap",
+      "url": "https://www.quirks.com/sitemap.xml",
+      "incluir": "/articles/"
+    },
+    {
+      "publicador": "GreenBook",
+      "idioma": "en",
+      "tipo": "sitemap",
+      "url": "https://www.greenbook.org/sitemaps/articles.xml"
+    },
+    {
+      "publicador": "Research Live",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.research-live.com/feed/rss.php"
+    },
+    {
+      "publicador": "ESOMAR",
+      "idioma": "en",
+      "tipo": "sitemap",
+      "url": "https://www.esomar.org/sitemap.xml"
+    },
+    {
+      "publicador": "MRS",
+      "idioma": "en",
+      "tipo": "sitemap",
+      "url": "https://www.mrs.org.uk/sitemap.xml"
+    },
+    {
+      "publicador": "Retail Dive",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.retaildive.com/feeds/news/"
+    },
+    {
+      "publicador": "Customer Experience Dive (CX Dive)",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.customerexperiencedive.com/feeds/news/"
+    },
+    {
+      "publicador": "MarTech",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://martech.org/feed/"
+    },
+    {
+      "publicador": "Marketing Dive",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.marketingdive.com/feeds/news/"
+    },
+    {
+      "publicador": "Marketing Week",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.marketingweek.com/feed/"
+    },
+    {
+      "publicador": "Mundo do Marketing",
+      "idioma": "pt",
+      "tipo": "sitemap",
+      "url": "https://www.mundodomarketing.com.br/sitemap.xml"
+    },
+    {
+      "publicador": "Meio & Mensagem",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://www.meioemensagem.com.br/feed"
+    },
+    {
+      "publicador": "Consumidor Moderno",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://www.consumidormoderno.com.br/feed"
+    },
+    {
+      "publicador": "Mercado & Consumo",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://mercadoeconsumo.com.br/feed/"
+    },
+    {
+      "publicador": "Fast Company Brasil",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://fastcompanybrasil.com/feed/"
+    },
+    {
+      "publicador": "ABEP",
+      "idioma": "pt",
+      "tipo": "rss",
+      "url": "https://abep.org/feed/"
+    },
+    {
+      "publicador": "Merca2.0",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.merca20.com/feed/"
+    },
+    {
+      "publicador": "Marketing Directo",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.marketingdirecto.com/feed"
+    },
+    {
+      "publicador": "GreenBook Podcast",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://feeds.captivate.fm/greenbook/"
+    },
+    {
+      "publicador": "The Exchange by GreenBook (podcast)",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://feeds.captivate.fm/the-exchange-by-greenbook/"
+    },
+    {
+      "publicador": "Insights & Innovators, MRII (podcast)",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://feeds.captivate.fm/insights-innovators/"
+    },
+    {
+      "publicador": "Data Gurus (podcast)",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.infinity-2.com/feed/podcast/"
+    },
+    {
+      "publicador": "Detrás del Insight, Eco Market Research (podcast)",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://podcasts.eco-mr.com/rss"
+    }
+  ],
+  "consultas": {
+    "synthetic": {
+      "en": [
+        "synthetic respondents market research",
+        "synthetic personas consumer insights",
+        "digital twin consumers market research AI",
+        "synthetic data survey validity"
+      ],
+      "pt": [
+        "respondentes sintéticos pesquisa de mercado",
+        "dados sintéticos pesquisa de consumidor",
+        "persona sintética pesquisa"
+      ],
+      "es": [
+        "respondentes sintéticos investigación de mercados",
+        "datos sintéticos encuestas consumidor"
+      ]
+    }
+  },
+  "vocabulario": {
+    "synthetic": {
+      "en": [
+        "synthetic",
+        "digital twin",
+        "silicon sample",
+        "ai respondent",
+        "ai persona",
+        "simulated consumer",
+        "simulated respondent",
+        "virtual respondent"
+      ],
+      "pt": [
+        "sintético",
+        "sintética",
+        "sintéticos",
+        "sintéticas",
+        "gêmeo digital",
+        "gemeo digital",
+        "persona de ia",
+        "respondente virtual"
+      ],
+      "es": [
+        "sintético",
+        "sintética",
+        "sintéticos",
+        "gemelo digital",
+        "persona de ia",
+        "encuestado virtual"
+      ]
+    }
+  },
+  "termos_de_sinal": {
+    "en": [
+      "trend",
+      "hype",
+      "survey finds",
+      "report",
+      "launch",
+      "study finds",
+      "forecast",
+      "adoption",
+      "raises",
+      "funding"
+    ],
+    "pt": [
+      "tendência",
+      "pesquisa mostra",
+      "lançamento",
+      "relatório",
+      "estudo",
+      "previsão",
+      "adoção"
+    ],
+    "es": [
+      "tendencia",
+      "encuesta",
+      "lanzamiento",
+      "informe",
+      "estudio",
+      "pronóstico",
+      "adopción"
+    ]
+  },
+  "bloqueios_conhecidos": {
+    "linkedin.com": "HTTP 999",
+    "reddit.com": "HTTP 403"
+  }
+}
