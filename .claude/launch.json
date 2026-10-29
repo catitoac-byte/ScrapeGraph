@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "comparador-sinteticos",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "scraper-lab/sites/sinteticos"],
+      "port": 8765
+    }
+  ]
+}
