@@ -47,9 +47,9 @@
   },
   "teto_paginas_por_empresa": 8,
   "sementes": {
-    "empresas": "~/Antigravity Projects/Linkedin automator/Curso ABEP Dados Sinteticos/02_Referencias/base_sinteticos_v9/vendors_all.json",
-    "metodologias": "~/Antigravity Projects/Linkedin automator/Curso ABEP Dados Sinteticos/02_Referencias/base_sinteticos_v9/methods_validation.md",
-    "cases": "~/Antigravity Projects/Linkedin automator/Curso ABEP Dados Sinteticos/02_Referencias/base_sinteticos_v9/cases_media.json"
+    "empresas": "~/Antigravity Projects/01-CassiAI/Linkedin automator/Curso ABEP Dados Sinteticos/02_Referencias/base_sinteticos_v9/vendors_all.json",
+    "metodologias": "~/Antigravity Projects/01-CassiAI/Linkedin automator/Curso ABEP Dados Sinteticos/02_Referencias/base_sinteticos_v9/methods_validation.md",
+    "cases": "~/Antigravity Projects/01-CassiAI/Linkedin automator/Curso ABEP Dados Sinteticos/02_Referencias/base_sinteticos_v9/cases_media.json"
   },
   "ausencias_conhecidas": {
     "Brazilian incumbents checked: Kantar IBOPE Media, Nielsen Brasil, MindMiners, Opinion Box, Offerwise, Netquest, Hibou, Box1824": "registro agregador da base inicial, não é uma empresa"

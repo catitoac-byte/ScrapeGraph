@@ -15,9 +15,9 @@
     "global"
   ],
   "saida": "duvidas_mercado",
-  "entrada_produtos": "~/Antigravity Projects/portfolio-content-output/videos-linkedin/produtos.json",
-  "saida_final": "~/Antigravity Projects/portfolio-content-output/videos-linkedin/varredura-mercado/achados/<slug>.json",
-  "schema": "~/Antigravity Projects/portfolio-content-output/videos-linkedin/varredura-mercado/achados.schema.json",
+  "entrada_produtos": "~/Antigravity Projects/01-CassiAI/portfolio-content-output/videos-linkedin/produtos.json",
+  "saida_final": "~/Antigravity Projects/01-CassiAI/portfolio-content-output/videos-linkedin/varredura-mercado/achados/<slug>.json",
+  "schema": "~/Antigravity Projects/01-CassiAI/portfolio-content-output/videos-linkedin/varredura-mercado/achados.schema.json",
   "ordem": [
     "P1",
     "P2",
@@ -665,8 +665,8 @@
       "hoje_pt": "a pergunta vai para o analista, que volta com a resposta dias depois"
     }
   },
-  "clientes_nunca_citar": "~/Antigravity Projects/portfolio-content-output/content-direction/clientes-nunca-citar.json",
-  "referencia_achados": "~/Antigravity Projects/portfolio-content-output/videos-linkedin/varredura-mercado/achados",
+  "clientes_nunca_citar": "~/Antigravity Projects/01-CassiAI/portfolio-content-output/content-direction/clientes-nunca-citar.json",
+  "referencia_achados": "~/Antigravity Projects/01-CassiAI/portfolio-content-output/videos-linkedin/varredura-mercado/achados",
   "teto_buscas_por_varredura": {
     "P1": 10,
     "P2": 8,

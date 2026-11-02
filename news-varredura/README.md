@@ -77,7 +77,7 @@ Primeira execução em 2026-09-02, janela de 21 dias. 272 itens relevantes de 3.
 A pasta `export/` traz tudo empacotado e autossuficiente.
 
 ```bash
-cp -R "/Users/cassianoalbuquerque/Antigravity Projects/ScrapeGraph/news-varredura/export" /caminho/do/outro/projeto/varredura-ia
+cp -R "/Users/cassianoalbuquerque/Antigravity Projects/04-Ferramentas/ScrapeGraph/news-varredura/export" /caminho/do/outro/projeto/varredura-ia
 ```
 
 Dentro dela, `varredura-ia-dossie-completo.md` reúne os 13 documentos num arquivo só, com

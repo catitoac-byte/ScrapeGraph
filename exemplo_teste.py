@@ -2,7 +2,7 @@
 Teste rapido do ScrapeGraph-AI.
 
 Rode com:
-    cd "/Users/cassianoalbuquerque/Antigravity Projects/ScrapeGraph/Scrapegraph-ai"
+    cd "/Users/cassianoalbuquerque/Antigravity Projects/04-Ferramentas/ScrapeGraph/Scrapegraph-ai"
     uv run python ../exemplo_teste.py
 
 Requer OPENAI_API_KEY preenchida em Scrapegraph-ai/.env

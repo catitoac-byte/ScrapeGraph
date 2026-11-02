@@ -14,7 +14,7 @@ Recriar do zero:
 
 ```
 cd "<worktree>/scraper-lab"
-M="/Users/cassianoalbuquerque/Antigravity Projects/ScrapeGraph/scraper-lab/.venv"
+M="/Users/cassianoalbuquerque/Antigravity Projects/04-Ferramentas/ScrapeGraph/scraper-lab/.venv"
 uv venv .venv --python "$M/bin/python"
 uv pip install --python .venv/bin/python pytest pytest-asyncio
 echo "import sys, site; site.addsitedir('$M/lib/python3.12/site-packages'); sys.path.insert(0, '$PWD/src')" \
