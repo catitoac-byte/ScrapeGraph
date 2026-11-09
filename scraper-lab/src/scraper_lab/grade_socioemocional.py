@@ -535,3 +535,158 @@ def conferir_amostra(*, fracao: float = 0.10, modelo: str = "claude-haiku-5-5", 
     }
     (SAIDA / "conferencia_amostra.json").write_text(json.dumps(resumo, ensure_ascii=False, indent=2), encoding="utf-8")
     return resumo
+
+
+# ---------------------------------------------------------------- plano de ensino
+
+PERIODOS = {"BR": [f"{n}º bimestre" for n in range(1, 5)], "US": [f"Quarter {n}" for n in range(1, 5)]}
+
+PROMPT_PLANO = """Voce monta o plano de ensino socioemocional do ano para a {nome} ({pais_nome}), na plataforma escolar Corredor.
+O ano tem quatro periodos: {periodos}.
+Para cada periodo, nesta ordem:
+- competencia_foco: uma das cinco do CASEL. As cinco aparecem ao longo do ano, com progressao (do eu para o outro
+  e para as escolhas). Um periodo pode ter uma competencia secundaria, que entra so nos objetivos.
+- objetivos: de 3 a 5 ids da lista OBJETIVOS abaixo, coerentes com a competencia do periodo. So ids da lista.
+- atividades: titulos exatos da lista ATIVIDADES. Distribua as {n_ativ} atividades ao longo do ano, cada uma em um
+  periodo so, todas usadas.
+- encontros: de 2 a 4 encontros em tempo de aula, cada um com tema curto e a atividade usada (titulo exato da
+  lista, ou "conversa de abertura" ou "fechamento do periodo").
+- gesto_professor: um gesto do professor no dia a dia da turma, fora dos encontros, que sustente a competencia.
+- avaliacao: so portfolio e autoavaliacao, sem nota.
+- cuidados: o que evitar naquele periodo.
+objetivo_ano: uma ou duas frases com o que a turma desenvolve no ano.
+Toda atividade acontece em tempo de aula, fecha em uma acao concreta e usa exemplo ficticio.
+Escreva em {idioma}.
+{regras}
+
+OBJETIVOS (da grade, com fonte):
+{objetivos}
+
+ATIVIDADES (do catalogo desta serie):
+{atividades}
+"""
+
+
+def _schema_plano(ids_obj: list[str], titulos: list[str]) -> dict:
+    encontro = {"type": "object", "additionalProperties": False, "required": ["tema", "atividade"],
+                "properties": {"tema": {"type": "string"}, "atividade": {"type": "string"}}}
+    periodo = {
+        "type": "object", "additionalProperties": False,
+        "required": ["competencia_foco", "objetivos", "atividades", "encontros", "gesto_professor", "avaliacao", "cuidados"],
+        "properties": {
+            "competencia_foco": {"type": "string", "enum": COMPETENCIAS},
+            "objetivos": {"type": "array", "items": {"type": "string", "enum": ids_obj}},
+            "atividades": {"type": "array", "items": {"type": "string", "enum": titulos}},
+            "encontros": {"type": "array", "items": encontro},
+            "gesto_professor": {"type": "string"},
+            "avaliacao": {"type": "string"},
+            "cuidados": {"type": "string"},
+        }}
+    return {"type": "object", "additionalProperties": False, "required": ["objetivo_ano", "periodos"],
+            "properties": {"objetivo_ano": {"type": "string"},
+                           "periodos": {"type": "array", "items": periodo}}}
+
+
+def _objetivos_da_serie(linha: dict, por_comp: int = 12) -> list[dict]:
+    """Ate por_comp itens de cada competencia, sem repetir descricao, com id curto."""
+    refs, vistos = [], set()
+    for c in COMPETENCIAS:
+        n = 0
+        for i in linha["competencias"][c]:
+            chave = (i["descricao"], i["url"])
+            if chave in vistos or n >= por_comp:
+                continue
+            vistos.add(chave)
+            n += 1
+            refs.append({"id": f"o{len(refs)}", "competencia": c, **i})
+    return refs
+
+
+def conferir_plano(plano: dict, refs: list[dict], titulos: list[str]) -> list[str]:
+    """Problemas deterministicos: objetivo fora da grade, atividade inventada, repetida ou esquecida."""
+    ids = {r["id"] for r in refs}
+    problemas, usadas = [], []
+    if len(plano["periodos"]) != 4:
+        problemas.append(f"{len(plano['periodos'])} periodos em vez de 4")
+    for n, p in enumerate(plano["periodos"], 1):
+        problemas += [f"periodo {n}: objetivo {o} fora da grade" for o in p["objetivos"] if o not in ids]
+        problemas += [f"periodo {n}: atividade inventada {a}" for a in p["atividades"] if a not in titulos]
+        usadas += p["atividades"]
+    problemas += [f"atividade repetida: {a}" for a in sorted({a for a in usadas if usadas.count(a) > 1})]
+    problemas += [f"atividade sem periodo: {a}" for a in titulos if a not in usadas]
+    focos = {p["competencia_foco"] for p in plano["periodos"]}
+    objs = {next(r["competencia"] for r in refs if r["id"] == o) for p in plano["periodos"] for o in p["objetivos"] if o in ids}
+    faltam = set(COMPETENCIAS) - focos - objs
+    problemas += [f"competencia ausente no ano: {c}" for c in sorted(faltam)]
+    return problemas
+
+
+def gerar_plano_ensino(*, series: list[str] | None = None) -> list[dict]:
+    grade = json.loads((SAIDA / "grade.json").read_text(encoding="utf-8"))["grade"]
+    atividades = json.loads((SAIDA / "atividades.json").read_text(encoding="utf-8"))
+    arq = SAIDA / "plano_ensino_brutas.jsonl"
+    feitas = set()
+    if arq.exists():
+        feitas = {json.loads(l)["serie"] for l in arq.read_text(encoding="utf-8").splitlines()}
+    for pais, linhas in grade.items():
+        for linha in linhas:
+            s = linha["serie"]
+            if s in feitas or (series and s not in series):
+                continue
+            refs = _objetivos_da_serie(linha)
+            ativ = [a for a in atividades if a["pais"] == pais and a["serie"] == s]
+            titulos = [a["titulo"] for a in ativ]
+            if not refs or not ativ:
+                print(f"[plano] {s}: sem objetivos ou atividades, pulei")
+                continue
+            prompt = PROMPT_PLANO.format(
+                nome=linha["nome"], pais_nome="Brasil" if pais == "BR" else "Estados Unidos",
+                periodos=", ".join(PERIODOS[pais]), n_ativ=len(titulos), regras=REGRAS_CASA,
+                idioma="portugues do Brasil" if pais == "BR" else "ingles (EUA)",
+                objetivos="\n".join(f"[{r['id']}] ({r['competencia']}) {r['descricao']}" for r in refs),
+                atividades="\n".join(f"- {a['titulo']} ({a['formato']}; {', '.join(a['competencias'])})" for a in ativ))
+            inicio = time.time()
+            plano = chamar_gpt(prompt, _schema_plano([r["id"] for r in refs], titulos))
+            problemas = conferir_plano(plano, refs, titulos)
+            por_id = {r["id"]: r for r in refs}
+            for nome_periodo, p in zip(PERIODOS[pais], plano["periodos"]):
+                p["periodo"] = nome_periodo
+                p["objetivos"] = [{k: por_id[o][k] for k in ("competencia", "descricao", "codigo_oficial", "url", "pagina", "fonte", "citacao")}
+                                  for o in p["objetivos"] if o in por_id]
+            reg = {"pais": pais, "serie": s, "nome_serie": linha["nome"], **plano, "problemas": problemas}
+            with arq.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(reg, ensure_ascii=False) + "\n")
+            print(f"[plano] {pais} {s}: {len(problemas)} problemas em {time.time() - inicio:.0f}s")
+    planos = [json.loads(l) for l in arq.read_text(encoding="utf-8").splitlines()]
+    (SAIDA / "plano_ensino.json").write_text(json.dumps(planos, ensure_ascii=False, indent=2), encoding="utf-8")
+    return planos
+
+
+def escrever_markdown_plano() -> None:
+    planos = json.loads((SAIDA / "plano_ensino.json").read_text(encoding="utf-8"))
+    rotulos = {
+        "BR": {"titulo": "Plano de ensino socioemocional por série: Brasil", "ano": "Objetivo do ano", "foco": "Foco",
+               "obj": "Objetivos de aprendizagem", "ativ": "Atividades do catálogo", "enc": "Encontros",
+               "gesto": "Gesto do professor", "aval": "Avaliação", "cuid": "Cuidados", "fonte": "fonte"},
+        "US": {"titulo": "Social emotional teaching plan by grade: United States", "ano": "Goal for the year",
+               "foco": "Focus", "obj": "Learning objectives", "ativ": "Catalog activities", "enc": "Sessions",
+               "gesto": "Teacher's daily practice", "aval": "Assessment", "cuid": "Cautions", "fonte": "source"},
+    }
+    nome_comp = {"BR": NOME_COMP, "US": {"autoconhecimento": "Self-awareness", "autogestao": "Self-management",
+                 "consciencia_social": "Social awareness", "relacionamento": "Relationship skills",
+                 "tomada_de_decisao": "Responsible decision-making"}}
+    for pais in ("BR", "US"):
+        r = rotulos[pais]
+        linhas = [f"# {r['titulo']}", ""]
+        for pl in [p for p in planos if p["pais"] == pais]:
+            linhas += [f"## {pl['nome_serie']}", "", f"**{r['ano']}:** {pl['objetivo_ano']}", ""]
+            for p in pl["periodos"]:
+                linhas += [f"### {p['periodo']}. {r['foco']}: {nome_comp[pais][p['competencia_foco']]}", "", f"**{r['obj']}**"]
+                for o in p["objetivos"]:
+                    cod = f" `{o['codigo_oficial']}`" if o["codigo_oficial"] else ""
+                    linhas.append(f"- {o['descricao']}{cod} ([{r['fonte']}, p. {o['pagina']}]({o['url']}))")
+                linhas += ["", f"**{r['ativ']}:** " + "; ".join(p["atividades"]) + ".", "", f"**{r['enc']}**"]
+                linhas += [f"{n}. {e['tema']} ({e['atividade']})" for n, e in enumerate(p["encontros"], 1)]
+                linhas += ["", f"**{r['gesto']}:** {p['gesto_professor']}", "", f"**{r['aval']}:** {p['avaliacao']}", "",
+                           f"**{r['cuid']}:** {p['cuidados']}", ""]
+        (SAIDA / f"plano_ensino_{pais.lower()}.md").write_text("\n".join(linhas), encoding="utf-8")

@@ -8,9 +8,10 @@ Grade socioemocional por serie, Brasil e EUA (Corredor Escola). Etapas, em ordem
     uv run python raspar_grade_socioemocional.py montar       # grade.json
     uv run python raspar_grade_socioemocional.py atividades   # GPT, uma chamada por serie
     uv run python raspar_grade_socioemocional.py markdown     # .md legiveis
+    uv run python raspar_grade_socioemocional.py plano        # GPT, plano anual por serie, e seus .md
 
 Fontes em verticais/grade_socioemocional.json. Saida em dados/saida/grade_socioemocional/.
-extrair e atividades retomam de onde pararam (arquivos .jsonl).
+extrair, atividades e plano retomam de onde pararam (arquivos .jsonl).
 """
 
 import json
@@ -21,6 +22,7 @@ from scraper_lab import grade_socioemocional as g
 ETAPAS = {
     "coletar": g.coletar, "filtrar": g.filtrar, "extrair": g.extrair, "conferir": g.conferir_amostra,
     "montar": g.montar_grade, "atividades": g.gerar_atividades, "markdown": g.escrever_markdown,
+    "plano": lambda: (g.gerar_plano_ensino(), g.escrever_markdown_plano())[0],
 }
 
 if __name__ == "__main__":

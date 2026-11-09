@@ -32,3 +32,31 @@ def test_series_do_codigo_bncc():
     assert g.series_do_codigo("EM13CHS101") == ["em1", "em2", "em3"]
     assert g.series_do_codigo("EI03EO01") == ["pre_escola"]
     assert g.series_do_codigo("CG8") is None
+
+
+def _plano(periodos):
+    return {"objetivo_ano": "x", "periodos": periodos}
+
+
+def _periodo(foco, objetivos, atividades):
+    return {"competencia_foco": foco, "objetivos": objetivos, "atividades": atividades, "encontros": [],
+            "gesto_professor": "", "avaliacao": "", "cuidados": ""}
+
+
+def test_conferir_plano_aceita_ano_completo():
+    refs = [{"id": f"o{n}", "competencia": c} for n, c in enumerate(g.COMPETENCIAS)]
+    plano = _plano([_periodo("autoconhecimento", ["o0"], ["A"]), _periodo("autogestao", ["o1"], ["B"]),
+                    _periodo("consciencia_social", ["o2", "o3"], ["C"]), _periodo("tomada_de_decisao", ["o4"], [])])
+    assert g.conferir_plano(plano, refs, ["A", "B", "C"]) == []
+
+
+def test_conferir_plano_aponta_inventado_repetido_e_esquecido():
+    refs = [{"id": "o0", "competencia": "autoconhecimento"}]
+    plano = _plano([_periodo("autoconhecimento", ["o0", "o9"], ["A", "Z"]), _periodo("autoconhecimento", [], ["A"])])
+    problemas = g.conferir_plano(plano, refs, ["A", "B"])
+    assert "2 periodos em vez de 4" in problemas
+    assert any("o9 fora da grade" in p for p in problemas)
+    assert any("inventada Z" in p for p in problemas)
+    assert "atividade repetida: A" in problemas
+    assert "atividade sem periodo: B" in problemas
+    assert any("competencia ausente" in p for p in problemas)
