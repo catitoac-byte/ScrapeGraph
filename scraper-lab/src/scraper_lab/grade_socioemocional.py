@@ -657,7 +657,8 @@ def gerar_plano_ensino(*, series: list[str] | None = None) -> list[dict]:
             with arq.open("a", encoding="utf-8") as fh:
                 fh.write(json.dumps(reg, ensure_ascii=False) + "\n")
             print(f"[plano] {pais} {s}: {len(problemas)} problemas em {time.time() - inicio:.0f}s")
-    planos = [json.loads(l) for l in arq.read_text(encoding="utf-8").splitlines()]
+    ordem = {s: n for n, s in enumerate(SERIES["BR"] + SERIES["US"])}
+    planos = sorted((json.loads(l) for l in arq.read_text(encoding="utf-8").splitlines()), key=lambda p: ordem[p["serie"]])
     (SAIDA / "plano_ensino.json").write_text(json.dumps(planos, ensure_ascii=False, indent=2), encoding="utf-8")
     return planos
 
