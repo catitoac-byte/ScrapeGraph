@@ -303,6 +303,22 @@ SERIES_POR_FONTE = {
 }
 EI_POR_GRUPO = {"01": ["creche"], "02": ["creche"], "03": ["pre_escola"]}
 
+# Fontes e paginas de uma etapa so: a serie lida pelo modelo fica presa a essa etapa.
+ETAPA_EI, ETAPA_EF, ETAPA_EM = ["creche", "pre_escola"], [f"{n}ano" for n in range(1, 10)], ["em1", "em2", "em3"]
+ETAPA_POR_FONTE = {"bncc_em": ETAPA_EM, "novaescola_ei_acolhimento": ETAPA_EI, "novaescola_ei_profissoes": ETAPA_EI}
+# BNCC completa de 2018: ate a p. 34 e introducao geral, depois Educacao Infantil, Fundamental e Medio.
+PAGINAS_BNCC = [(35, 56, ETAPA_EI), (57, 460, ETAPA_EF), (461, 9999, ETAPA_EM)]
+
+
+def series_da_etapa(item: dict) -> list[str] | None:
+    """Series que a etapa da fonte permite, ou None quando a fonte vale para todas."""
+    if item["fonte"] in ETAPA_POR_FONTE:
+        return ETAPA_POR_FONTE[item["fonte"]]
+    if item["fonte"] == "bncc_ei_ef" and str(item.get("pagina", "")).isdigit():
+        pag = int(item["pagina"])
+        return next((etapa for ini, fim, etapa in PAGINAS_BNCC if ini <= pag <= fim), None)
+    return None
+
 
 def series_do_codigo(codigo: str) -> list[str] | None:
     """Series pela regra do codigo da BNCC: EF15 = 1 a 5 ano, EF06 = 6 ano, EM13 = todo o EM, EI03 = pre-escola."""
@@ -326,6 +342,9 @@ def montar_grade() -> dict:
         regra = SERIES_POR_FONTE.get(i["fonte"]) or series_do_codigo(i["codigo_oficial"])
         if regra:
             i["series"], i["series_por_regra"] = regra, True
+        etapa = series_da_etapa(i)
+        if etapa:
+            i["series"] = [s for s in i["series"] if s in etapa]
     grade = {}
     for pais, series in SERIES.items():
         grade[pais] = []
@@ -587,14 +606,19 @@ def _schema_plano(ids_obj: list[str], titulos: list[str]) -> dict:
                            "periodos": {"type": "array", "items": periodo}}}
 
 
+def objetivo_do_aluno(item: dict) -> bool:
+    """So habilidade do aluno vira objetivo. Metodologia, progressao, avaliacao e dinamica falam com o professor."""
+    return item["tipo"] == "habilidade"
+
+
 def _objetivos_da_serie(linha: dict, por_comp: int = 12) -> list[dict]:
-    """Ate por_comp itens de cada competencia, sem repetir descricao, com id curto."""
+    """Ate por_comp habilidades do aluno de cada competencia, sem repetir descricao, com id curto."""
     refs, vistos = [], set()
     for c in COMPETENCIAS:
         n = 0
         for i in linha["competencias"][c]:
             chave = (i["descricao"], i["url"])
-            if chave in vistos or n >= por_comp:
+            if chave in vistos or n >= por_comp or not objetivo_do_aluno(i):
                 continue
             vistos.add(chave)
             n += 1

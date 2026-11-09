@@ -60,3 +60,17 @@ def test_conferir_plano_aponta_inventado_repetido_e_esquecido():
     assert "atividade repetida: A" in problemas
     assert "atividade sem periodo: B" in problemas
     assert any("competencia ausente" in p for p in problemas)
+
+
+def test_series_da_etapa_prende_bncc_a_etapa_da_pagina():
+    assert g.series_da_etapa({"fonte": "bncc_em", "pagina": 14}) == ["em1", "em2", "em3"]
+    assert g.series_da_etapa({"fonte": "bncc_ei_ef", "pagina": "40"}) == ["creche", "pre_escola"]
+    assert g.series_da_etapa({"fonte": "bncc_ei_ef", "pagina": 500}) == ["em1", "em2", "em3"]
+    assert g.series_da_etapa({"fonte": "bncc_ei_ef", "pagina": 10}) is None
+    assert g.series_da_etapa({"fonte": "isbe_padroes_2026", "pagina": 3}) is None
+
+
+def test_objetivo_do_aluno_tira_frase_de_professor():
+    assert g.objetivo_do_aluno({"tipo": "habilidade", "descricao": "Escuta professores e colegas com atenção."})
+    assert not g.objetivo_do_aluno({"tipo": "avaliacao", "descricao": "A observação das brincadeiras permite identificar afetos."})
+    assert not g.objetivo_do_aluno({"tipo": "metodologia", "descricao": "Oferece oportunidades para resolver problemas."})
