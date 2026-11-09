@@ -1,0 +1,355 @@
+{
+  "descricao": "Grade socioemocional por série, Brasil e EUA. Pedido do Cassiano em 09/11/2026 para o Corredor Escola.",
+  "fontes": [
+    {
+      "id": "mec_brasil_na_escola",
+      "pais": "BR",
+      "url": "https://www.gov.br/mec/pt-br/brasil-na-escola",
+      "tipo": "oficial"
+    },
+    {
+      "id": "mec_menu_socioemocional",
+      "pais": "BR",
+      "url": "https://www.gov.br/mec/pt-br/brasil-na-escola/eixos-do-programa/Menu_socioemocional.pdf",
+      "tipo": "oficial"
+    },
+    {
+      "id": "mec_manual_implementacao",
+      "pais": "BR",
+      "url": "https://www.gov.br/mec/pt-br/brasil-na-escola/manual_de_implementacao_socioemocional.pdf/@@download/file",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "bncc_ei_ef",
+      "pais": "BR",
+      "url": "http://basenacionalcomum.mec.gov.br/images/BNCC_EI_EF_110518_versaofinal_site.pdf",
+      "tipo": "oficial"
+    },
+    {
+      "id": "bncc_em",
+      "pais": "BR",
+      "url": "https://www.gov.br/mec/pt-br/cne/arquivos/bncc_ensino_medio.pdf",
+      "tipo": "oficial"
+    },
+    {
+      "id": "ias_cotidiano_escolas",
+      "pais": "BR",
+      "url": "https://institutoayrtonsenna.org.br/app/uploads/2022/11/instituto-ayrton-senna-as-competencias-socioemocionais-no-cotidiano-das-escolas.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "ias_avaliacao",
+      "pais": "BR",
+      "url": "https://institutoayrtonsenna.org.br/app/uploads/2022/11/instituto-ayrton-senna-avaliacao-socioemocional.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "ias_competencias_vida",
+      "pais": "BR",
+      "url": "https://institutoayrtonsenna.org.br/app/uploads/2022/11/competências-para-a-vida.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "ias_materiais",
+      "pais": "BR",
+      "url": "https://institutoayrtonsenna.org.br/app/uploads/2023/10/Materiais-Instituto-Ayrton-Senna.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "novaescola_guia_socioemocionais",
+      "pais": "BR",
+      "url": "https://novaescola.org.br/guias/1293/socioemocionais",
+      "tipo": "referencia"
+    },
+    {
+      "id": "novaescola_ei_acolhimento",
+      "pais": "BR",
+      "url": "https://novaescola.org.br/planos-de-aula/educacao-infantil/pre-escola/sequencia/acolhimento-e-adaptacao/627",
+      "tipo": "referencia"
+    },
+    {
+      "id": "novaescola_ei_profissoes",
+      "pais": "BR",
+      "url": "https://novaescola.org.br/planos-de-aula/educacao-infantil/pre-escola/sequencia/profissoes/436",
+      "tipo": "referencia"
+    },
+    {
+      "id": "efape_impulsiona",
+      "pais": "BR",
+      "url": "https://efape.educacao.sp.gov.br/inspiracao/impulsiona/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "casel_framework",
+      "pais": "US",
+      "url": "https://casel.org/fundamentals-of-sel/what-is-the-casel-framework/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "casel_estados",
+      "pais": "US",
+      "url": "https://casel.org/state-resource-center/frameworks-competencies-standards-and-guidelines/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "casel_signature_practices",
+      "pais": "US",
+      "url": "https://schoolguide.casel.org/uploads/sites/2/2020/10/Summary-The-SEL-3-Signature-Practices.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "isbe_padroes_2026",
+      "pais": "US",
+      "url": "https://www.isbe.net/Documents/Illinois-Social-Emotional-Learning-Standards.pdf",
+      "tipo": "oficial"
+    },
+    {
+      "id": "isbe_introducao",
+      "pais": "US",
+      "url": "https://www.isbe.net/Documents/introduction.pdf",
+      "tipo": "oficial"
+    },
+    {
+      "id": "isbe_pagina_sel",
+      "pais": "US",
+      "url": "https://www.isbe.net/Pages/Social-Emotional-Learning.aspx",
+      "tipo": "oficial"
+    },
+    {
+      "id": "wisconsin_competencias",
+      "pais": "US",
+      "url": "https://dpi.wi.gov/sspw/mental-health/social-emotional-learning/competencies",
+      "tipo": "oficial"
+    },
+    {
+      "id": "washington_sbis",
+      "pais": "US",
+      "url": "https://www.pesb.wa.gov/selstandardsbenchmarksindicatorslongform",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "michigan_competencias",
+      "pais": "US",
+      "url": "https://www.michigan.gov/documents/mde/SEL_Competencies-_ADA_Compliant_FINAL_605109_7.pdf",
+      "tipo": "oficial"
+    },
+    {
+      "id": "new_york_benchmarks",
+      "pais": "US",
+      "url": "http://www.p12.nysed.gov/sss/selbenchmarks.html",
+      "tipo": "oficial"
+    },
+    {
+      "id": "ed_gov",
+      "pais": "US",
+      "url": "https://www.ed.gov/",
+      "tipo": "oficial"
+    },
+    {
+      "id": "porvir_frustracao_copa",
+      "pais": "BR",
+      "url": "https://porvir.org/frustracao-crescimento-socioemocionais-copa/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "porvir_boas_conversas",
+      "pais": "BR",
+      "url": "https://porvir.org/boas-conversas-escola-charles-duhigg/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "porvir_lentes_de_afeto",
+      "pais": "BR",
+      "url": "https://porvir.org/lentes-de-afeto-estudantes-documentario-etarismo/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "porvir_robotica_pertencimento",
+      "pais": "BR",
+      "url": "https://porvir.org/robotica-pertencimento-escola/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "wisconsin_guia",
+      "pais": "US",
+      "url": "https://dpi.wi.gov/media/40286/download?inline",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "wisconsin_pk_5k",
+      "pais": "US",
+      "url": "https://dpi.wi.gov/media/8537/download",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "wisconsin_1_3",
+      "pais": "US",
+      "url": "https://dpi.wi.gov/media/8538/download",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "wisconsin_4_5",
+      "pais": "US",
+      "url": "https://dpi.wi.gov/media/8539/download",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "wisconsin_6_8",
+      "pais": "US",
+      "url": "https://dpi.wi.gov/media/8540/download",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "wisconsin_9_10",
+      "pais": "US",
+      "url": "https://dpi.wi.gov/media/8541/download",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "wisconsin_11_adulto",
+      "pais": "US",
+      "url": "https://dpi.wi.gov/media/8542/download",
+      "tipo": "oficial",
+      "arquivo": true
+    },
+    {
+      "id": "rak_prek",
+      "pais": "US",
+      "url": "https://randomactsofkindness.org/pre-k-lesson-plans",
+      "tipo": "referencia"
+    },
+    {
+      "id": "rak_k5_guia",
+      "pais": "US",
+      "url": "https://cdn.randomactsofkindness.org/lesson-plans/other-materials/K-5_KiC_Quick_Start_Guide.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "rak_68_guia",
+      "pais": "US",
+      "url": "https://cdn.randomactsofkindness.org/lesson-plans/other-materials/6-8_KiC_Quick_Start_Guide.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "casel_sala_de_aula_safe",
+      "pais": "US",
+      "url": "https://casel.org/systemic-implementation/sel-in-the-classroom/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "responsive_morning_meeting",
+      "pais": "US",
+      "url": "https://www.responsiveclassroom.org/what-is-morning-meeting/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "responsive_mm_intro",
+      "pais": "US",
+      "url": "https://www.responsiveclassroom.org/sites/default/files/mm_intro.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "navigate360_curriculo",
+      "pais": "US",
+      "url": "https://navigate360.com/solutions/social-emotional-learning-curriculum/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "soulshoppe_programas",
+      "pais": "US",
+      "url": "https://soulshoppe.org/blog/2026/02/03/sel-programs-for-elementary-schools/",
+      "tipo": "referencia"
+    },
+    {
+      "id": "rak_k5_unidades",
+      "pais": "US",
+      "url": "https://cdn.randomactsofkindness.org/lesson-plans/other-materials/K-5_KiC_Unit_Overviews.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "rak_68_unidades",
+      "pais": "US",
+      "url": "https://cdn.randomactsofkindness.org/lesson-plans/other-materials/6-8_KiC_Unit_Overviews.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "rak_jogos_rapidos",
+      "pais": "US",
+      "url": "https://cdn.randomactsofkindness.org/additional-resources/Grab_and_go_games.pdf",
+      "tipo": "referencia"
+    },
+    {
+      "id": "rak_mapa_padroes",
+      "pais": "US",
+      "url": "https://cdn.randomactsofkindness.org/lesson-plans/reports/RAK_Standards_Mapping_Final_Report.pdf",
+      "tipo": "referencia"
+    }
+  ],
+  "palavras_filtro": [
+    "socioemocion",
+    "emoç",
+    "emoc",
+    "autoconhec",
+    "autogest",
+    "autorregul",
+    "autoestima",
+    "autoconfian",
+    "empatia",
+    "colabora",
+    "cooperaç",
+    "respeito",
+    "diversidade",
+    "convivência",
+    "conflito",
+    "diálogo",
+    "responsabilidade",
+    "tomada de decisão",
+    "projeto de vida",
+    "o eu, o outro e o nós",
+    "resiliência",
+    "cuidado de si",
+    "relacionamento",
+    "consciência social",
+    "sentimento",
+    "escuta",
+    "assembleia",
+    "roda de conversa",
+    "self-awareness",
+    "self-management",
+    "social awareness",
+    "relationship skills",
+    "responsible decision",
+    "emotion",
+    "feelings",
+    "empathy",
+    "grade band",
+    "benchmark",
+    "kindergarten",
+    "early elementary",
+    "late elementary",
+    "middle school",
+    "high school",
+    "grades k",
+    "competenc",
+    "welcoming",
+    "closure",
+    "check-in",
+    "kindness",
+    "respect",
+    "caring",
+    "inclusiv",
+    "integrity",
+    "courage",
+    "morning meeting",
+    "greeting",
+    "sharing"
+  ]
+}
