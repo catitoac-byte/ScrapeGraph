@@ -83,6 +83,16 @@ def pagina(idioma: str, no_ar: bool) -> None:
         tipos = {n["@type"] for n in grafo}
         for tipo in ("Organization", "WebSite", "SoftwareApplication", "WebPage", "FAQPage", "BreadcrumbList"):
             exige(tipo in tipos, f"{onde}: falta {tipo} no JSON-LD")
+        org = next(n for n in grafo if n["@type"] == "Organization")
+        exige(org.get("@id") == seo.ORG_ID, f"{onde}: Organization sem o @id da Cassi.ai")
+        exige(org.get("description") == seo.ORG_DESCRICAO, f"{onde}: descrição da Cassi.ai diferente do site principal")
+        exige(org.get("sameAs") == seo.ORG_SAME_AS, f"{onde}: sameAs diferente do site principal")
+        app = next(n for n in grafo if n["@type"] == "SoftwareApplication")
+        exige(app.get("publisher") == {"@id": seo.ORG_ID}, f"{onde}: produto sem publisher da Cassi.ai")
+        urls = [a["url"] for a in seo.artigos()]
+        exige([x["url"] for x in app.get("subjectOf", [])] == urls, f"{onde}: subjectOf difere dos artigos publicados")
+        exige(all(u in html for u in urls), f"{onde}: artigo publicado fora da página")
+        exige(('id="artigos"' in html) == bool(urls), f"{onde}: seção de artigos fora do previsto")
         faq = next(n for n in grafo if n["@type"] == "FAQPage")
         exige(
             [q["name"] for q in faq["mainEntity"]] == esperadas,
@@ -114,6 +124,8 @@ def raiz(no_ar: bool) -> None:
     llms, _ = ler("/llms.txt", no_ar)
     exige(llms.startswith("# Review Pulse"), "llms.txt: sem título")
     exige("index.md" in llms and "cassiai.com" in llms, "llms.txt: sem os espelhos ou sem a Cassi.ai")
+    exige(seo.ORG_DESCRICAO in llms, "llms.txt: sem a frase canônica da Cassi.ai")
+    exige(all(x["url"] in llms for x in seo.artigos()), "llms.txt: falta artigo publicado")
 
     if no_ar:
         for privado in ("/painel/", "/v/moda/"):

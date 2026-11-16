@@ -15,8 +15,34 @@ Regra da casa que vale aqui: nenhum valor, nenhum preco, nenhum nome de
 cliente. A frase comercial autorizada e a que ja esta na pagina.
 """
 
+import html as _html
+import json as _json
+import os
+import re
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
+
 SITE = "https://reviewpulse.cassiai.com"
 CASSI = "https://www.cassiai.com"
+# Identidade única da Cassi.ai, igual à do site principal (cassi-ai-website,
+# api/_lib/entity.js) e à dos outros sites de produto.
+ORG_ID = f"{CASSI}/#organization"
+ORG_DESCRICAO = ("Cassi.ai is a software engineering company for market research, innovation and insights. "
+                 "It automates the repetitive work of the research operation, built by people who understand research.")
+ORG_SAME_AS = [
+    "https://www.linkedin.com/company/cassi-ai",
+    "https://www.greenbook.org/company/Cassi-ai",
+    "https://maps.google.com/?cid=8648645688649863367",
+    "https://www.wikidata.org/wiki/Q142090717",
+    "https://www.crunchbase.com/organization/cassi-ai",
+    "https://x.com/Cassi_ai_",
+    "https://cassiaiinsights.substack.com",
+    "https://www.youtube.com/@cassi_ai",
+    "https://www.facebook.com/profile.php?id=61596537185391",
+    "https://www.instagram.com/cassi_ai_/",
+    "https://www.tiktok.com/@cassi.ai",
+]
 
 IDIOMAS = ("en", "pt", "es")
 # Inglês na raiz, como nos outros sites de produto (pedido do Cassiano em 24/09/2026).
@@ -30,21 +56,21 @@ HREFLANG = {"pt": "pt-BR", "es": "es", "en": "en"}
 # na frente e a marca no fim.
 META = {
     "pt": {
-        "titulo": "Review Pulse: inteligência competitiva de loja física",
+        "titulo": "Review Pulse: análise de avaliações do Google, loja por loja",
         "descricao": (
             "Painel que compara suas lojas com as dos concorrentes a partir de dados públicos: "
             "movimento por hora, reputação no Google e temas das avaliações, loja a loja."
         ),
     },
     "es": {
-        "titulo": "Review Pulse: inteligencia competitiva de tiendas",
+        "titulo": "Review Pulse: análisis de reseñas de Google, tienda por tienda",
         "descricao": (
             "Panel que compara tus tiendas con las de la competencia a partir de datos públicos: "
             "afluencia por hora, reputación en Google y temas de las reseñas, tienda por tienda."
         ),
     },
     "en": {
-        "titulo": "Review Pulse: competitive intelligence for stores",
+        "titulo": "Review Pulse: Google review sentiment analysis, store by store",
         "descricao": (
             "Dashboard that compares your stores with competitors from public data: "
             "hourly foot traffic, Google reputation, and review topics, store by store."
@@ -296,13 +322,15 @@ Retail chains and franchises, shopping malls, expansion teams, operations and st
 
 ## How to get access
 
-The dashboard is restricted to clients with an active project. Access is requested through the form at {site}/en/. The vertical, brands, cities, and topics are set up with the client's team.
+The dashboard is restricted to clients with an active project. Access is requested through the form at {site}/. The vertical, brands, cities, and topics are set up with the client's team.
 """,
 }
 
 LLMS = """# Review Pulse
 
 > Competitive intelligence dashboard for physical stores, built by Cassi.ai from public store data.
+
+Review Pulse is a product by Cassi.ai ({cassi}). {org}
 
 Review Pulse compares stores across brands using public listings: hourly foot traffic, reputation, and the topics customers write about, store by store, with the brands side by side. Collection runs on explicit rules without a language model, and an AI analyst answers only from the filtered numbers and review excerpts on screen.
 
@@ -343,6 +371,94 @@ Disallow: /api/
 
 Sitemap: {site}/sitemap.xml
 """
+
+
+# Artigos do blog que linkam o Review Pulse. Mesma regra de
+# cassiai-product-sites/gerar.py: tabela posts do Supabase, status publicado e
+# published_at já passado na hora da geração. A chave é a publicável (só
+# leitura). CASSI_SUPABASE_URL e CASSI_SUPABASE_KEY trocam as duas; sem rede a
+# página sai sem a seção, com um aviso; CASSI_SEM_ARTIGOS=1 gera sem consultar.
+ARTIGOS_MAX = 6
+ARTIGOS_TITULO = {"en": "Articles on this subject", "pt": "Artigos sobre o tema", "es": "Artículos sobre el tema"}
+ARTIGOS_APOIO = {"en": "From the Cassi.ai blog.", "pt": "Do blog da Cassi.ai, em inglês.", "es": "Del blog de Cassi.ai, en inglés."}
+_ARTIGOS: list | None = None
+
+
+def _texto(valor: str) -> str:
+    t = re.sub(r"<[^>]*>", " ", valor or "")
+    return re.sub(r"\s+", " ", _html.unescape(t)).strip()
+
+
+def artigos() -> list[dict]:
+    """De 1 a 6 artigos publicados, mais recentes primeiro, que linkam o subdomínio."""
+    global _ARTIGOS
+    if _ARTIGOS is not None:
+        return _ARTIGOS
+    _ARTIGOS = []
+    if os.environ.get("CASSI_SEM_ARTIGOS"):
+        return _ARTIGOS
+    url, chave = os.environ.get("CASSI_SUPABASE_URL"), os.environ.get("CASSI_SUPABASE_KEY")
+    if not (url and chave):
+        # Sem as variáveis, lê a chave publicável do .env do site principal (só leitura).
+        env = Path(os.environ.get("CASSI_SITE_ENV", "/Users/cassianoalbuquerque/Antigravity Projects/01-CassiAI/cassi-ai-website/.env"))
+        valores = {}
+        if env.exists():
+            for linha in env.read_text(encoding="utf-8").splitlines():
+                if "=" in linha and not linha.lstrip().startswith("#"):
+                    k, _, v = linha.partition("=")
+                    valores[k.strip()] = v.strip().strip("'\"")
+        url, chave = valores.get("VITE_BLOG_SUPABASE_URL"), valores.get("VITE_BLOG_SUPABASE_PUBLISHABLE_KEY")
+    if not (url and chave):
+        print("aviso: sem chave do blog, a página sai sem a seção de artigos")
+        return _ARTIGOS
+    url = url.rstrip("/")
+    agora = datetime.now(timezone.utc)
+    consulta = (f"{url}/rest/v1/posts?select=slug,title,excerpt,content,published_at&status=eq.published"
+                f"&published_at=lte.{agora.strftime('%Y-%m-%dT%H:%M:%SZ')}&order=published_at.desc&limit=1000")
+    try:
+        # curl porque o Python desta máquina não carrega a cadeia de certificados do sistema.
+        r = subprocess.run(["curl", "-sS", "--fail", "--max-time", "30", "-H", f"apikey: {chave}",
+                            "-H", f"authorization: Bearer {chave}", consulta], capture_output=True, text=True, check=True)
+        posts = _json.loads(r.stdout)
+    except Exception as erro:  # noqa: BLE001  rede fora não pode parar a geração
+        print(f"aviso: artigos do blog indisponíveis ({erro}); a página sai sem a seção")
+        return _ARTIGOS
+    host = re.escape(SITE.replace("https://", ""))
+    for x in posts:
+        # A data é conferida de novo aqui, para a regra não depender só da consulta.
+        if not x.get("published_at") or datetime.fromisoformat(x["published_at"].replace("Z", "+00:00")) > agora:
+            continue
+        if not re.search(rf"https?://{host}(?:[/\"')#?\s]|$)", x.get("content") or ""):
+            continue
+        resumo = _texto(x.get("excerpt")) or _texto(x.get("content"))
+        _ARTIGOS.append({"titulo": _texto(x["title"]), "url": f"{CASSI}/blog/{x['slug']}", "data": x["published_at"][:10],
+                         "resumo": resumo[:157].rstrip() + ("..." if len(resumo) > 157 else "")})
+        if len(_ARTIGOS) == ARTIGOS_MAX:
+            break
+    return _ARTIGOS
+
+
+def artigos_html(idioma: str) -> str:
+    """Seção "Articles on this subject", antes das perguntas. Sem artigo, nada."""
+    lista = artigos()
+    if not lista:
+        return ""
+    lang = "" if idioma == "en" else ' lang="en"'
+    link = "" if idioma == "en" else ' hreflang="en" lang="en"'
+    itens = "".join(
+        f'<li class="fq"><a href="{_html.escape(a["url"])}"{link} style="font-weight:700;color:var(--ink)">{_html.escape(a["titulo"])}</a>'
+        f'<time datetime="{a["data"]}" style="display:block;margin-top:4px;color:var(--ink-2);font-size:14px">{a["data"]}</time>'
+        + (f'<p{lang}>{_html.escape(a["resumo"])}</p>' if a["resumo"] else "") + "</li>"
+        for a in lista)
+    return (
+        '    <section id="artigos" aria-labelledby="t-artigos">\n'
+        '      <div class="sec-head">\n'
+        f'        <div><h2 id="t-artigos">{ARTIGOS_TITULO[idioma]}</h2></div>\n'
+        f'        <p>{ARTIGOS_APOIO[idioma]}</p>\n'
+        "      </div>\n"
+        f'      <ul class="faq" style="list-style:none;padding:0">{itens}</ul>\n'
+        "    </section>\n"
+    )
 
 
 def sitemap(data_coleta: str) -> str:
@@ -397,10 +513,12 @@ def jsonld(idioma: str, numeros: dict) -> str:
     grafo = [
         {
             "@type": "Organization",
-            "@id": f"{CASSI}/#organization",
+            "@id": ORG_ID,
             "name": "Cassi.ai",
-            "url": CASSI,
-            "sameAs": ["https://www.linkedin.com/company/cassi-ai"],
+            "url": f"{CASSI}/",
+            "description": ORG_DESCRICAO,
+            "foundingDate": "2024",
+            "sameAs": ORG_SAME_AS,
             "founder": {"@type": "Person", "name": "Cassiano Albuquerque", "url": "https://www.linkedin.com/in/cassiano-albuquerque/"},
         },
         {
@@ -430,6 +548,11 @@ def jsonld(idioma: str, numeros: dict) -> str:
                 "AI analyst answering only from the filtered numbers on screen",
             ],
             "audience": {"@type": "BusinessAudience", "audienceType": "Retail chains, shopping malls, expansion and operations teams, market intelligence"},
+            **({"subjectOf": [
+                # O artigo aponta o produto no `about`; o produto aponta o artigo aqui.
+                {"@type": "BlogPosting", "@id": a["url"] + "#article", "headline": a["titulo"], "url": a["url"],
+                 "datePublished": a["data"], "inLanguage": "en", "publisher": {"@id": ORG_ID}}
+                for a in artigos()]} if artigos() else {}),
         },
         {
             "@type": "WebPage",
@@ -455,7 +578,7 @@ def jsonld(idioma: str, numeros: dict) -> str:
             "@type": "BreadcrumbList",
             "@id": f"{url}#trilha",
             "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Cassi.ai", "item": CASSI},
+                {"@type": "ListItem", "position": 1, "name": "Cassi.ai", "item": f"{CASSI}/"},
                 {"@type": "ListItem", "position": 2, "name": "Review Pulse", "item": url},
             ],
         },
@@ -463,7 +586,7 @@ def jsonld(idioma: str, numeros: dict) -> str:
     dados = {"@context": "https://schema.org", "@graph": grafo}
     return (
         '<script type="application/ld+json">'
-        + json.dumps(dados, ensure_ascii=False, separators=(",", ":"))
+        + json.dumps(dados, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
         + "</script>"
     )
 
@@ -483,11 +606,24 @@ def cabeca(idioma: str) -> dict:
 def markdown(idioma: str) -> str:
     # replace, não format: o texto carrega {{N_LOJAS}} e companhia, que a
     # geração troca depois pelos números somados das verticais.
-    return MARKDOWN[idioma].replace("{site}", SITE).replace("{cassi}", CASSI)
+    md = MARKDOWN[idioma].replace("{site}", SITE).replace("{cassi}", CASSI)
+    lista = artigos()
+    if lista:
+        bloco = f"## {ARTIGOS_TITULO[idioma]}\n\n" + "".join(
+            f"- [{a['titulo']}]({a['url']}) ({a['data']}): {a['resumo']}\n" for a in lista) + "\n"
+        # Antes da última seção (acesso), como na página.
+        corte = md.rindex("\n## ") + 1
+        md = md[:corte] + bloco + md[corte:]
+    return md
 
 
 def llms() -> str:
-    return LLMS.replace("{site}", SITE).replace("{cassi}", CASSI)
+    texto = LLMS.replace("{site}", SITE).replace("{cassi}", CASSI).replace("{org}", ORG_DESCRICAO)
+    lista = artigos()
+    if lista:
+        bloco = f"## {ARTIGOS_TITULO['en']}\n\n" + "".join(f"- [{a['titulo']}]({a['url']}): {a['resumo']}\n" for a in lista) + "\n"
+        texto = texto.replace("## Access\n", bloco + "## Access\n", 1)
+    return texto
 
 
 def robots() -> str:

@@ -57,6 +57,10 @@ def carregar_verticais() -> list[tuple[dict, dict]]:
     out = []
     for arq in sorted(VERTICAIS.glob("*.json")):
         cfg = json.loads(arq.read_text(encoding="utf-8"))
+        # verticais/ também guarda configuração do radar, dos sintéticos e das
+        # dúvidas de mercado; painel de loja é só o que tem rótulo de piloto.
+        if "id" not in cfg or "rotulo_piloto" not in cfg:
+            continue
         data_js = DADOS / cfg["id"] / "data.js"
         if not data_js.exists():
             print(f"sem dados, fica de fora: {cfg['id']}")
@@ -163,7 +167,8 @@ def pagina(modelo: str, idioma: str, trocas: dict, dic: dict) -> str:
     if idioma != "pt":
         s = traduzir(s, dic[idioma])
         s = s.replace('<html lang="pt-BR" data-idioma="pt">', f'<html lang="{seo.HTML_LANG[idioma]}" data-idioma="{idioma}">', 1)
-    s = s.replace("{{FAQ}}", seo.faq_html(idioma), 1)
+    # Artigos do blog sobre o produto entram logo antes das perguntas, como nos outros sites de produto.
+    s = s.replace("{{FAQ}}", seo.artigos_html(idioma) + seo.faq_html(idioma), 1)
     s = s.replace("{{JSONLD}}", seo.jsonld(idioma, trocas), 1)
     s = aplicar(s, seo.cabeca(idioma))
     s = aplicar(s, trocas)
@@ -217,6 +222,11 @@ def montar() -> None:
     (pub / "robots.txt").write_text(seo.robots(), encoding="utf-8")
     (pub / "sitemap.xml").write_text(seo.sitemap(coleta or "2026-09-17"), encoding="utf-8")
     (pub / "llms.txt").write_text(seo.llms(), encoding="utf-8")
+    # Arquivo de verificação do IndexNow, o mesmo em todos os sites da Cassi.ai.
+    # A rotina diária de GEO avisa o Bing depois de cada deploy.
+    (pub / "f3b4599bd7d403ec677bf5c4ce1423ae.txt").write_text("f3b4599bd7d403ec677bf5c4ce1423ae", encoding="utf-8")
+    # Verificação da conta no Bing Webmaster Tools (mesmo arquivo em todos os sites).
+    (pub / "BingSiteAuth.xml").write_text('<?xml version="1.0"?>\n<users>\n\t<user>189903B62B791C9072897114A7B5AFFF</user>\n</users>\n', encoding="utf-8")
     (pub / "painel" / "index.html").write_text(escolha(verticais), encoding="utf-8")
     for cfg, _ in verticais:
         alvo = pub / "v" / cfg["id"]
