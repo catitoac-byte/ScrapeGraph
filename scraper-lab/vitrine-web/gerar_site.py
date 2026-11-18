@@ -222,7 +222,7 @@ def montar() -> None:
     (pub / "robots.txt").write_text(seo.robots(), encoding="utf-8")
     (pub / "sitemap.xml").write_text(seo.sitemap(coleta or "2026-09-17"), encoding="utf-8")
     (pub / "llms.txt").write_text(seo.llms(), encoding="utf-8")
-    # Arquivo de verificação do IndexNow, o mesmo em todos os sites da Cassi.ai.
+    # Arquivo de verificação do IndexNow, o mesmo em todos os sites da CassiAI.
     # A rotina diária de GEO avisa o Bing depois de cada deploy.
     (pub / "f3b4599bd7d403ec677bf5c4ce1423ae.txt").write_text("f3b4599bd7d403ec677bf5c4ce1423ae", encoding="utf-8")
     # Verificação da conta no Bing Webmaster Tools (mesmo arquivo em todos os sites).

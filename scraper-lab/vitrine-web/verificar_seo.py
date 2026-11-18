@@ -84,11 +84,13 @@ def pagina(idioma: str, no_ar: bool) -> None:
         for tipo in ("Organization", "WebSite", "SoftwareApplication", "WebPage", "FAQPage", "BreadcrumbList"):
             exige(tipo in tipos, f"{onde}: falta {tipo} no JSON-LD")
         org = next(n for n in grafo if n["@type"] == "Organization")
-        exige(org.get("@id") == seo.ORG_ID, f"{onde}: Organization sem o @id da Cassi.ai")
-        exige(org.get("description") == seo.ORG_DESCRICAO, f"{onde}: descrição da Cassi.ai diferente do site principal")
+        exige(org.get("@id") == seo.ORG_ID, f"{onde}: Organization sem o @id da CassiAI")
+        exige(org.get("description") == seo.ORG_DESCRICAO, f"{onde}: descrição da CassiAI diferente do site principal")
         exige(org.get("sameAs") == seo.ORG_SAME_AS, f"{onde}: sameAs diferente do site principal")
+        exige(org.get("name") == "CassiAI" and org.get("alternateName") == seo.ORG_ALIAS and seo.ORG_DESCRICAO.startswith("CassiAI is a software engineering company"),
+              f"{onde}: o nome canônico da Organization é CassiAI, com Cassi.ai, Cassi ai e cassiai como alias")
         app = next(n for n in grafo if n["@type"] == "SoftwareApplication")
-        exige(app.get("publisher") == {"@id": seo.ORG_ID}, f"{onde}: produto sem publisher da Cassi.ai")
+        exige(app.get("publisher") == {"@id": seo.ORG_ID}, f"{onde}: produto sem publisher da CassiAI")
         urls = [a["url"] for a in seo.artigos()]
         exige([x["url"] for x in app.get("subjectOf", [])] == urls, f"{onde}: subjectOf difere dos artigos publicados")
         exige(all(u in html for u in urls), f"{onde}: artigo publicado fora da página")
@@ -106,7 +108,7 @@ def pagina(idioma: str, no_ar: bool) -> None:
     md, cabecalhos = ler(f"{caminho}index.md", no_ar)
     exige(md.startswith("# "), f"{caminho}index.md: não começa por título")
     exige("{{" not in md and "{N_" not in md, f"{caminho}index.md: campo sem valor")
-    exige("cassiai.com" in md, f"{caminho}index.md: sem link para a Cassi.ai")
+    exige("cassiai.com" in md, f"{caminho}index.md: sem link para a CassiAI")
     if no_ar:
         exige("markdown" in cabecalhos.get("content-type", ""), f"{caminho}index.md: servido fora de text/markdown")
 
@@ -123,8 +125,8 @@ def raiz(no_ar: bool) -> None:
 
     llms, _ = ler("/llms.txt", no_ar)
     exige(llms.startswith("# Review Pulse"), "llms.txt: sem título")
-    exige("index.md" in llms and "cassiai.com" in llms, "llms.txt: sem os espelhos ou sem a Cassi.ai")
-    exige(seo.ORG_DESCRICAO in llms, "llms.txt: sem a frase canônica da Cassi.ai")
+    exige("index.md" in llms and "cassiai.com" in llms, "llms.txt: sem os espelhos ou sem a CassiAI")
+    exige(seo.ORG_DESCRICAO in llms, "llms.txt: sem a frase canônica da CassiAI")
     exige(all(x["url"] in llms for x in seo.artigos()), "llms.txt: falta artigo publicado")
 
     if no_ar:

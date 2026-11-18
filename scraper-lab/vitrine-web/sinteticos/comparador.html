@@ -216,14 +216,14 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 
 <section class="scene" id="s1">
   <div class="in">
-    <div class="head"><div><p class="dot">01 · Quem vende</p><h2><span id="h1n"></span> empresas vendem persona ou respondente sintético. <span class="hl">Clique para juntar e comparar.</span></h2><p class="lead">Começam juntas. Depois o mapa se reagrupa pelo que cada uma vende, pela base da persona e pelo que publica de validação. Passe o mouse para ler a empresa. Clique para colocá-la na comparação ao lado da Cassi.ai.</p></div></div>
+    <div class="head"><div><p class="dot">01 · Quem vende</p><h2><span id="h1n"></span> empresas vendem persona ou respondente sintético. <span class="hl">Clique para juntar e comparar.</span></h2><p class="lead">Começam juntas. Depois o mapa se reagrupa pelo que cada uma vende, pela base da persona e pelo que publica de validação. Passe o mouse para ler a empresa. Clique para colocá-la na comparação ao lado da CassiAI.</p></div></div>
     <div class="mapctl"><div class="seg" id="groupBy"><span class="lbl">Agrupar por</span><button type="button" class="on" data-g="all">Todas</button><button type="button" data-g="oferta">Oferta</button><button type="button" data-g="base">Base da persona</button><button type="button" data-g="val">Validação</button><button type="button" data-g="reg">Região</button><button type="button" data-g="tipo">Tipo de empresa</button></div><span class="count"><i></i><b id="peopleCount"></b></span><div class="filters" id="filters"></div></div>
     <div class="clusters">
       <div class="cluster-svg" id="clusterSvg"></div>
       <div class="heard" id="heard"></div>
     </div>
     <div class="basket" id="basket">
-      <div class="top"><div><p class="mono">Comparação, lado a lado</p><h3 id="bTitle">Cassi.ai e as empresas que você clicar</h3></div><div class="tray" id="tray"></div></div>
+      <div class="top"><div><p class="mono">Comparação, lado a lado</p><h3 id="bTitle">CassiAI e as empresas que você clicar</h3></div><div class="tray" id="tray"></div></div>
       <div class="cmpwrap"><table class="cmp" id="cmp"></table></div>
     </div>
     <p class="srcnote" id="src1"></p>
@@ -261,7 +261,7 @@ button:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:3px solid 
 </section>
 
 </div>
-<div class="foot"><a class="credit" href="https://www.cassiai.com/" target="_blank" rel="noopener"><b>Mapa por Cassiano Albuquerque · Cassi.ai</b><span>curso ABEP de dados e personas sintéticas</span></a><div class="footbtns"><a class="tbtn" href="open-source.html" style="text-decoration:none">Laboratório open source</a><button type="button" class="tbtn" id="tema">Tema escuro</button><button type="button" class="tbtn" id="origBtn">Ver textos originais</button></div><div class="slidenav"><button type="button" id="prevBtn" aria-label="Anterior">‹</button><span class="num" id="slideNum">1 / 3</span><button type="button" id="nextBtn" aria-label="Próximo">›</button></div></div>
+<div class="foot"><a class="credit" href="https://www.cassiai.com/" target="_blank" rel="noopener"><b>Mapa por Cassiano Albuquerque · CassiAI</b><span>curso ABEP de dados e personas sintéticas</span></a><div class="footbtns"><a class="tbtn" href="open-source.html" style="text-decoration:none">Laboratório open source</a><button type="button" class="tbtn" id="tema">Tema escuro</button><button type="button" class="tbtn" id="origBtn">Ver textos originais</button></div><div class="slidenav"><button type="button" id="prevBtn" aria-label="Anterior">‹</button><span class="num" id="slideNum">1 / 3</span><button type="button" id="nextBtn" aria-label="Próximo">›</button></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -303,7 +303,7 @@ window.DADOS=/*__DADOS__*/{};
   document.getElementById('src1').textContent='Fonte: '+D.meta.fonte+'. '+c.verificadas+' de '+c.total+' empresas conferidas página a página pela coleta. Captura de '+D.meta.data+'.';
 
   /* rail e cenas */
-  var SC=[['01','Quem vende',(E.length-1)+' empresas e a Cassi.ai'],['02','O mercado','os quadrantes do mercado'],['03','Por trás do método','dados, persona e grupo focal']];
+  var SC=[['01','Quem vende',(E.length-1)+' empresas e a CassiAI'],['02','O mercado','os quadrantes do mercado'],['03','Por trás do método','dados, persona e grupo focal']];
   var rail=document.getElementById('rail');SC.forEach(function(s,i){var a=document.createElement('a');a.href='#s'+(i+1);a.innerHTML='<span class="k">'+s[0]+'</span><span class="t">'+s[1]+'</span><span class="s">'+s[2]+'</span>';rail.appendChild(a);});
   var deck=document.getElementById('deck'),scenes=[].slice.call(document.querySelectorAll('.scene')),links=[].slice.call(rail.children),idx=0;
   function go(i){i=Math.max(0,Math.min(scenes.length-1,i));idx=i;scenes[i].scrollIntoView({block:'start'});}
@@ -333,7 +333,7 @@ window.DADOS=/*__DADOS__*/{};
     var cols=[cassi].concat(cesta);
     document.getElementById('tray').innerHTML=cols.map(function(e){return '<span class="'+(e.cassi?'cassi':'')+'">'+esc(e.n)+(e.cassi?'':'<button type="button" data-id="'+e.id+'" aria-label="Tirar '+esc(e.n)+'">×</button>')+'</span>';}).join('');
     [].slice.call(document.querySelectorAll('#tray button')).forEach(function(b){b.onclick=function(){tirar(b.dataset.id);};});
-    document.getElementById('bTitle').textContent=cesta.length?'Cassi.ai e mais '+cesta.length+(cesta.length===1?' empresa':' empresas'):'Clique numa empresa do mapa para trazê-la para cá';
+    document.getElementById('bTitle').textContent=cesta.length?'CassiAI e mais '+cesta.length+(cesta.length===1?' empresa':' empresas'):'Clique numa empresa do mapa para trazê-la para cá';
     var h='<tr><th></th>'+cols.map(function(e){return '<th class="'+(e.cassi?'cassi':'')+'" data-id="'+e.id+'">'+esc(e.n)+'</th>';}).join('')+'</tr>';
     h+=LINHAS.map(function(r){return '<tr><td class="k">'+r[0]+'</td>'+cols.map(function(e){return '<td data-id="'+e.id+'">'+r[1](e)+'</td>';}).join('')+'</tr>';}).join('');
     document.getElementById('cmp').innerHTML=h;
@@ -356,7 +356,7 @@ window.DADOS=/*__DADOS__*/{};
       (e.head?'<blockquote>“'+esc(T(e.head))+'”'+(!orig&&TR[e.head]?'<span class="orig" style="display:block">Tradução nossa. Original: “'+esc(e.head)+'”</span>':'')+'</blockquote>':'')+
       '<div><div class="k">Base da persona</div><div class="v">'+esc(BASE[e.base]||e.base)+(e.base_q?'<br><i>“'+esc(T(e.base_q))+'”</i>':'')+'</div></div>'+
       '<div><div class="k">Validação</div><div class="v">'+lvl(e.val)+' '+(e.val_q?esc(T(e.val_q)):'')+(e.val_b?'<div class="orig">'+esc(T(e.val_b))+'</div>':'')+'</div></div>';
-    if(e.cassi)h+='<div class="does"><div class="k">Como a Cassi.ai constrói</div><div>'+esc(T(e.como))+'</div><div class="w">“'+esc(T(e.vies))+'” '+esc(T(e.ressalva))+'</div></div>';
+    if(e.cassi)h+='<div class="does"><div class="k">Como a CassiAI constrói</div><div>'+esc(T(e.como))+'</div><div class="w">“'+esc(T(e.vies))+'” '+esc(T(e.ressalva))+'</div></div>';
     h+='<div><div class="k">Site e fontes</div><div class="links"><a class="site" href="'+esc(e.site)+'" target="_blank" rel="noopener">site ↗</a>'+
       (e.produtos||[]).map(function(p){return '<a href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.nome)+' ↗</a>';}).join('')+
       fontes.filter(function(u){return u!==e.site;}).map(function(u){return '<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(curto(u))+' ↗</a>';}).join('')+'</div></div>';
@@ -508,30 +508,30 @@ window.DADOS=/*__DADOS__*/{};
       arestas:[['d0','d1'],['d0','d2'],['d1','d3'],['d2','d3'],['d2','d4'],['d3','d4'],['d3','d5'],['d4','d5'],['d5','d6'],['d5','d7'],['d6','d8'],['d6','d9'],['d6','d10'],['d7','d8'],['d7','d10'],['d8','d11'],['d9','d11'],['d10','d11']]},
     persona:{nome:'Persona sintética',sub:'entrevista 1:1',inter:'Interação um a um: cada pergunta dispara uma busca no corpus, e a persona responde em primeira pessoa mostrando de onde veio.',
       nos:[
-        N('p0',0,'Estudos do cliente','segmentação e quali','Tudo o que o cliente já sabe do público: segmentação, entrevistas, grupos, pesquisas e CRM quando permitido.','PDFs, transcrições, bases','Acervo do cliente','Persona sem estudo do cliente responde como o modelo genérico.','Synthetic Vertical Simulator, Cassi.ai',U.sim),
+        N('p0',0,'Estudos do cliente','segmentação e quali','Tudo o que o cliente já sabe do público: segmentação, entrevistas, grupos, pesquisas e CRM quando permitido.','PDFs, transcrições, bases','Acervo do cliente','Persona sem estudo do cliente responde como o modelo genérico.','Synthetic Vertical Simulator, CassiAI',U.sim),
         N('p1',1,'Indexação','trechos com fonte','O acervo é cortado em trechos, cada um com documento, página e segmento de origem, e indexado por significado.','Acervo','Índice de trechos','Trecho sem fonte não pode ser auditado depois.','Arora et al., 2025',U.arora),
         N('p2',1,'Recuperação','busca por pergunta','Para cada pergunta, o RAG traz os trechos mais relevantes daquele segmento.','Pergunta e índice','Trechos relevantes','Se nada relevante volta, a persona deve dizer que não sabe.','Arora et al., 2025',U.arora),
         N('p3',2,'Ficha da persona','quem ela é','Demografia, rotina, crenças, vocabulário e tensões do segmento, escritos a partir do estudo.','Segmentação e trechos','Ficha estável','Ficha só demográfica achata o grupo. Peng et al. chamam isso de individuação insuficiente.','Peng et al., 2025',U.peng),
-        N('p4',2,'Regras de conduta','o que ela não pode fazer','Responder só com base no corpus, citar a fonte, admitir quando não sabe e não concordar por educação.','Ficha','Instrução de sistema','Modelos tendem a concordar com quem pergunta; a regra precisa dizer o contrário.','Synthetic Lab, Cassi.ai',U.slab),
+        N('p4',2,'Regras de conduta','o que ela não pode fazer','Responder só com base no corpus, citar a fonte, admitir quando não sabe e não concordar por educação.','Ficha','Instrução de sistema','Modelos tendem a concordar com quem pergunta; a regra precisa dizer o contrário.','Synthetic Lab, CassiAI',U.slab),
         N('p5',3,'Memória da persona','verbatins e histórico','O corpus da persona: verbatins reais do segmento, histórico e o que ela já respondeu na conversa.','Trechos e ficha','Memória consultável','Memória longa demais dilui a ficha. Park et al. usam reflexão para resumir.','Park et al., 2023',U.park23),
         N('p6',4,'Entrevista 1:1','pergunta, busca, resposta','A cada pergunta, a persona recupera trechos, responde em primeira pessoa e mostra de onde veio.','Pergunta do pesquisador','Resposta com evidência','Conversa longa muda a persona. Reinicie o contexto entre entrevistas.','Park et al., 2024',U.park24),
         N('p7',5,'Consistência','mesma pergunta, de novo','Repete perguntas em outra ordem e em outro dia para ver se a persona se mantém.','Respostas','Taxa de consistência','Compare com o teste-reteste humano, que também não chega a 100%.','Park et al., 2024',U.park24),
         N('p8',5,'Holdout','perguntas guardadas','Pergunta à persona algo que o estudo real respondeu, mas que ficou fora do corpus.','Perguntas guardadas','Acerto contra o real','Sem holdout, a persona só repete o que leu.','Pew Research Center, 2026',U.pew),
-        N('p9',5,'Juiz de evidência','cada frase tem fonte?','Um segundo modelo confere se cada afirmação da resposta está no trecho citado.','Resposta e trechos','Respostas aprovadas ou marcadas','O juiz também erra; amostre e revise à mão.','Synthetic Lab, Cassi.ai',U.slab),
+        N('p9',5,'Juiz de evidência','cada frase tem fonte?','Um segundo modelo confere se cada afirmação da resposta está no trecho citado.','Resposta e trechos','Respostas aprovadas ou marcadas','O juiz também erra; amostre e revise à mão.','Synthetic Lab, CassiAI',U.slab),
         N('p10',6,'Respostas com fonte','insight e trecho','Entrega das respostas com o trecho e o documento de origem de cada insight.','Respostas validadas','Relatório','Diga ao cliente que a resposta veio de persona sintética.','ICC/ESOMAR, 2025',U.icc)],
       arestas:[['p0','p1'],['p0','p2'],['p1','p2'],['p1','p3'],['p2','p3'],['p2','p4'],['p3','p5'],['p4','p5'],['p5','p6'],['p6','p7'],['p6','p8'],['p6','p9'],['p7','p10'],['p8','p10'],['p9','p10']]},
     grupo:{nome:'Grupo focal sintético',sub:'debate entre personas',inter:'Interação entre vários agentes: o moderador conduz, as personas respondem a ele e umas às outras, e a discordância fica registrada.',
       nos:[
-        N('g0',0,'Estudo e roteiro','acervo e roteiro','O acervo do cliente e o roteiro do grupo: objetivos, blocos, perguntas e estímulos.','Acervo e roteiro','Material do grupo','Grupo sem roteiro vira conversa solta.','Synthetic Lab, Cassi.ai',U.slab),
+        N('g0',0,'Estudo e roteiro','acervo e roteiro','O acervo do cliente e o roteiro do grupo: objetivos, blocos, perguntas e estímulos.','Acervo e roteiro','Material do grupo','Grupo sem roteiro vira conversa solta.','Synthetic Lab, CassiAI',U.slab),
         N('g1',1,'Índice por segmento','um recorte por perfil','O RAG indexa o acervo separado por segmento, para cada participante buscar só o que é do grupo dele.','Acervo','Índices por segmento','Índice único mistura vozes e apaga diferenças.','Arora et al., 2025',U.arora),
         N('g2',2,'Escalação','6 a 12 participantes','Escolha dos participantes com diversidade real de opinião, não só de demografia.','Segmentos','Lista de personas','Participantes parecidos demais produzem consenso artificial.','Peng et al., 2025',U.peng),
-        N('g3',2,'Guia do moderador','como conduzir','O moderador recebe o roteiro, as regras de condução e o que aprofundar.','Roteiro','Instrução do moderador','Moderador que induz a resposta contamina o grupo inteiro.','Synthetic Lab, Cassi.ai',U.slab),
+        N('g3',2,'Guia do moderador','como conduzir','O moderador recebe o roteiro, as regras de condução e o que aprofundar.','Roteiro','Instrução do moderador','Moderador que induz a resposta contamina o grupo inteiro.','Synthetic Lab, CassiAI',U.slab),
         N('g4',3,'Corpus por pessoa','ficha, memória, trechos','Cada participante ganha ficha, memória e índice próprios, como na persona 1:1.','Índices e escalação','Participantes prontos','Se todos leem o mesmo corpus, todos falam igual.','Park et al., 2024',U.park24),
-        N('g5',3,'Estímulos','texto, imagem, vídeo','Conceitos, embalagens, campanhas ou preços que o grupo vai discutir.','Material do cliente','Estímulos preparados','Estímulo em imagem depende de modelo que lê imagem; descreva quando não houver.','Synthetic Lab, Cassi.ai',U.slab),
+        N('g5',3,'Estímulos','texto, imagem, vídeo','Conceitos, embalagens, campanhas ou preços que o grupo vai discutir.','Material do cliente','Estímulos preparados','Estímulo em imagem depende de modelo que lê imagem; descreva quando não houver.','Synthetic Lab, CassiAI',U.slab),
         N('g6',4,'Moderação','abre blocos e aprofunda','O moderador abre cada bloco, chama quem está quieto e aprofunda as divergências.','Guia e estímulos','Turnos de pergunta','Ordem fixa de fala favorece sempre quem fala primeiro.','Park et al., 2023',U.park23),
         N('g7',4,'Debate entre personas','réplica e tréplica','Cada participante responde ao moderador e aos outros, lembrando o que já foi dito.','Turnos','Transcrição do grupo','Modelos tendem a concordar entre si; a regra de cada persona precisa manter a posição dela.','Park et al., 2023',U.park23),
         N('g8',5,'Diversidade','evita consenso falso','Mede se as opiniões variam como num grupo real ou se convergiram cedo demais.','Transcrição','Índice de variedade','Variância comprimida é a falha mais comum do sintético.','Bisbee et al., 2024',U.bisbee),
-        N('g9',5,'Vários modelos e juiz','discordância registrada','O mesmo grupo é lido por vários modelos; um juiz decide onde eles discordam e registra a discordância.','Transcrição','Leituras consolidadas','Um modelo só carrega um viés só.','Synthetic Lab, Cassi.ai',U.slab),
+        N('g9',5,'Vários modelos e juiz','discordância registrada','O mesmo grupo é lido por vários modelos; um juiz decide onde eles discordam e registra a discordância.','Transcrição','Leituras consolidadas','Um modelo só carrega um viés só.','Synthetic Lab, CassiAI',U.slab),
         N('g10',5,'Grupo real','quando houver','Compara temas e intensidade com um grupo real feito sobre o mesmo roteiro.','Transcrição e grupo real','Temas que batem e que faltam','A MRS pede que achados sintéticos sejam validados contra achados do mundo real.','MRS AIA Council, 2025',U.mrsaia),
         N('g11',6,'Relatório do grupo','temas e verbatins','Mapa de temas, verbatins por participante e os pontos de discordância.','Leituras validadas','Relatório','Rotule como grupo focal sintético; a AAPOR pede não chamar respostas geradas de participantes.','AAPOR, 2026',U.aapor)],
       arestas:[['g0','g1'],['g0','g3'],['g1','g2'],['g1','g3'],['g2','g4'],['g3','g5'],['g2','g5'],['g4','g6'],['g4','g7'],['g5','g6'],['g5','g7'],['g6','g7'],['g7','g8'],['g7','g9'],['g7','g10'],['g8','g11'],['g9','g11'],['g10','g11']]}

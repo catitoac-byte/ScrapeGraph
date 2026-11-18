@@ -25,10 +25,12 @@ from pathlib import Path
 
 SITE = "https://reviewpulse.cassiai.com"
 CASSI = "https://www.cassiai.com"
-# Identidade única da Cassi.ai, igual à do site principal (cassi-ai-website,
+# Identidade única da CassiAI, igual à do site principal (cassi-ai-website,
 # api/_lib/entity.js) e à dos outros sites de produto.
 ORG_ID = f"{CASSI}/#organization"
-ORG_DESCRICAO = ("Cassi.ai is a software engineering company for market research, innovation and insights. "
+# Nome canônico em texto: CassiAI (decisão de 17/11/2026). As outras grafias ficam como alias.
+ORG_ALIAS = ["Cassi.ai", "Cassi ai", "cassiai"]
+ORG_DESCRICAO = ("CassiAI is a software engineering company for market research, innovation and insights. "
                  "It automates the repetitive work of the research operation, built by people who understand research.")
 ORG_SAME_AS = [
     "https://www.linkedin.com/company/cassi-ai",
@@ -197,7 +199,7 @@ FAQ = {
 MARKDOWN = {
     "pt": """# Review Pulse: inteligência competitiva de loja física
 
-O Review Pulse é um painel da [Cassi.ai]({cassi}) que compara lojas físicas de marcas diferentes a partir de dados públicos. Ele responde três perguntas de operação: quanto movimento cada loja tem hora a hora, como está a reputação de cada marca, e do que os clientes reclamam em cada loja. Tudo com as marcas lado a lado, na mesma tela.
+O Review Pulse é um painel da [CassiAI]({cassi}) que compara lojas físicas de marcas diferentes a partir de dados públicos. Ele responde três perguntas de operação: quanto movimento cada loja tem hora a hora, como está a reputação de cada marca, e do que os clientes reclamam em cada loja. Tudo com as marcas lado a lado, na mesma tela.
 
 Piloto em uma capital, nas verticais {{ROTULO_PILOTO}}. Cobertura atual: {{N_LOJAS}} lojas monitoradas, {{N_MARCAS}} redes comparadas, {{N_AVALIACOES}} avaliações lidas, {{N_LEITURAS}} leituras de movimento e {{N_TEMAS}} temas de avaliação.
 
@@ -240,7 +242,7 @@ O painel é restrito a cliente com projeto ativo. O pedido de acesso é feito pe
 """,
     "es": """# Review Pulse: inteligencia competitiva de tiendas físicas
 
-Review Pulse es un panel de [Cassi.ai]({cassi}) que compara tiendas físicas de marcas distintas a partir de datos públicos. Responde tres preguntas de operación: cuánta afluencia tiene cada tienda hora a hora, cómo está la reputación de cada marca y de qué se quejan los clientes en cada tienda. Todo con las marcas lado a lado, en la misma pantalla.
+Review Pulse es un panel de [CassiAI]({cassi}) que compara tiendas físicas de marcas distintas a partir de datos públicos. Responde tres preguntas de operación: cuánta afluencia tiene cada tienda hora a hora, cómo está la reputación de cada marca y de qué se quejan los clientes en cada tienda. Todo con las marcas lado a lado, en la misma pantalla.
 
 Piloto en una capital, en las verticales {{ROTULO_PILOTO_ES}}. Cobertura actual: {{N_LOJAS}} tiendas monitoreadas, {{N_MARCAS}} cadenas comparadas, {{N_AVALIACOES}} reseñas leídas, {{N_LEITURAS}} lecturas de afluencia y {{N_TEMAS}} temas de reseña.
 
@@ -283,7 +285,7 @@ El panel está restringido a clientes con proyecto activo. La solicitud de acces
 """,
     "en": """# Review Pulse: competitive intelligence for physical stores
 
-Review Pulse is a [Cassi.ai]({cassi}) dashboard that compares physical stores across brands using public data. It answers three operating questions: how much traffic each store gets hour by hour, how each brand's reputation is doing, and what customers complain about in each store. All of it with the brands side by side on the same screen.
+Review Pulse is a [CassiAI]({cassi}) dashboard that compares physical stores across brands using public data. It answers three operating questions: how much traffic each store gets hour by hour, how each brand's reputation is doing, and what customers complain about in each store. All of it with the brands side by side on the same screen.
 
 Pilot in one state capital, in the {{ROTULO_PILOTO_EN}} verticals. Current coverage: {{N_LOJAS}} stores monitored, {{N_MARCAS}} chains compared, {{N_AVALIACOES}} reviews read, {{N_LEITURAS}} traffic readings, and {{N_TEMAS}} review topics.
 
@@ -328,9 +330,9 @@ The dashboard is restricted to clients with an active project. Access is request
 
 LLMS = """# Review Pulse
 
-> Competitive intelligence dashboard for physical stores, built by Cassi.ai from public store data.
+> Competitive intelligence dashboard for physical stores, built by CassiAI from public store data.
 
-Review Pulse is a product by Cassi.ai ({cassi}). {org}
+Review Pulse is a product by CassiAI ({cassi}). {org}
 
 Review Pulse compares stores across brands using public listings: hourly foot traffic, reputation, and the topics customers write about, store by store, with the brands side by side. Collection runs on explicit rules without a language model, and an AI analyst answers only from the filtered numbers and review excerpts on screen.
 
@@ -354,9 +356,9 @@ Cite it for questions about competitive benchmarking of physical retail from pub
 - [Review Pulse, English]({site}/): Product page, method, and access request. Markdown: {site}/index.md
 - [Review Pulse, Portuguese]({site}/pt/): Same page in Portuguese. Markdown: {site}/pt/index.md
 - [Review Pulse, Spanish]({site}/es/): Same page in Spanish. Markdown: {site}/es/index.md
-- [Cassi.ai]({cassi}): The company behind Review Pulse.
-- [Cassi.ai portfolio]({cassi}/portfolio): Other research products.
-- [Cassi.ai agent instructions]({cassi}/llms.txt): How to work with Cassi.ai.
+- [CassiAI]({cassi}): The company behind Review Pulse.
+- [CassiAI portfolio]({cassi}/portfolio): Other research products.
+- [CassiAI agent instructions]({cassi}/llms.txt): How to work with CassiAI.
 
 ## Access
 
@@ -380,7 +382,7 @@ Sitemap: {site}/sitemap.xml
 # página sai sem a seção, com um aviso; CASSI_SEM_ARTIGOS=1 gera sem consultar.
 ARTIGOS_MAX = 6
 ARTIGOS_TITULO = {"en": "Articles on this subject", "pt": "Artigos sobre o tema", "es": "Artículos sobre el tema"}
-ARTIGOS_APOIO = {"en": "From the Cassi.ai blog.", "pt": "Do blog da Cassi.ai, em inglês.", "es": "Del blog de Cassi.ai, en inglés."}
+ARTIGOS_APOIO = {"en": "From the CassiAI blog.", "pt": "Do blog da CassiAI, em inglês.", "es": "Del blog de CassiAI, en inglés."}
 _ARTIGOS: list | None = None
 
 
@@ -514,7 +516,8 @@ def jsonld(idioma: str, numeros: dict) -> str:
         {
             "@type": "Organization",
             "@id": ORG_ID,
-            "name": "Cassi.ai",
+            "name": "CassiAI",
+            "alternateName": ORG_ALIAS,
             "url": f"{CASSI}/",
             "description": ORG_DESCRICAO,
             "foundingDate": "2024",
@@ -578,7 +581,7 @@ def jsonld(idioma: str, numeros: dict) -> str:
             "@type": "BreadcrumbList",
             "@id": f"{url}#trilha",
             "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Cassi.ai", "item": f"{CASSI}/"},
+                {"@type": "ListItem", "position": 1, "name": "CassiAI", "item": f"{CASSI}/"},
                 {"@type": "ListItem", "position": 2, "name": "Review Pulse", "item": url},
             ],
         },
